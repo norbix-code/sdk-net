@@ -1,0 +1,10 @@
+﻿[
+  {
+    Method: GET,
+    Path: /v2/echo,
+    Headers: {
+      Authorization: Bearer service-key,
+      X-CM-ProjectId: p1
+    }
+  }
+]

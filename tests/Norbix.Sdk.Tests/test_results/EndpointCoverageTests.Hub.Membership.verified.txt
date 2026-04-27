@@ -1,0 +1,754 @@
+﻿{
+  Target: Hub,
+  Group: membership,
+  Count: 25,
+  Endpoints: [
+    {
+      Target: Hub,
+      Group: membership,
+      MethodName: DisableMembershipAsync,
+      RequestType: DisableMembership,
+      HttpMethod: GET,
+      Path: /{version}/membership/disable,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/membership/disable,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: membership,
+      MethodName: EnableMembershipAsync,
+      RequestType: EnableMembership,
+      HttpMethod: GET,
+      Path: /{version}/membership/enable,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/membership/enable,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: membership,
+      MethodName: DeleteMembershipIntegrationAsync,
+      RequestType: DeleteMembershipIntegrationRequest,
+      HttpMethod: DELETE,
+      Path: /{version}/membership/integrations/{Id},
+      PathParams: [
+        Id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: DELETE,
+        Path: /v2/membership/integrations/{guid},
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: membership,
+      MethodName: DisableMembershipIntegrationAsync,
+      RequestType: DisableMembershipIntegrationRequest,
+      HttpMethod: PUT,
+      Path: /{version}/membership/integrations/{Id}/disable,
+      PathParams: [
+        Id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: PUT,
+        Path: /v2/membership/integrations/{guid}/disable,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: membership,
+      MethodName: EnableMembershipIntegrationAsync,
+      RequestType: EnableMembershipIntegrationRequest,
+      HttpMethod: PUT,
+      Path: /{version}/membership/integrations/{Id}/enable,
+      PathParams: [
+        Id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: PUT,
+        Path: /v2/membership/integrations/{guid}/enable,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: membership,
+      MethodName: GetMembershipIntegrationAsync,
+      RequestType: GetMembershipIntegration,
+      HttpMethod: GET,
+      Path: /{version}/membership/integrations/{id},
+      PathParams: [
+        id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/membership/integrations/{guid},
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: GetMembershipIntegrationResponse,
+      Response: {
+        Item: {},
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: membership,
+      MethodName: GetMembershipIntegrationsAsync,
+      RequestType: GetMembershipIntegrations,
+      HttpMethod: GET,
+      Path: /{version}/membership/integrations,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/membership/integrations,
+        Query: ?paging=Norbix.Sdk.Types.Hub.PagingArgs,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: GetMembershipIntegrationsResponse,
+      Response: {
+        List: {
+          Items: [
+            {}
+          ],
+          HasMore: false,
+          HasPrevious: false,
+          StartingAfter: cursor-start,
+          EndingBefore: cursor-end
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: membership,
+      MethodName: SaveMembershipIntegrationAsync,
+      RequestType: SaveMembershipIntegration,
+      HttpMethod: POST,
+      Path: /{version}/membership/integrations,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/membership/integrations,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          integration: {
+            integrationId: Guid_1,
+            provider: 0.0,
+            integrationName: test-integrationName,
+            isEnabled: true
+          }
+        }
+      },
+      ResponseType: IdResponse,
+      Response: {
+        Id: Guid_1
+      }
+    },
+    {
+      Target: Hub,
+      Group: membership,
+      MethodName: SetMembershipIntegrationAsDefaultAsync,
+      RequestType: SetMembershipIntegrationAsDefaultRequest,
+      HttpMethod: PUT,
+      Path: /{version}/membership/integrations/{Id}/default,
+      PathParams: [
+        Id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: PUT,
+        Path: /v2/membership/integrations/{guid}/default,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: membership,
+      MethodName: CreatePolicyAsync,
+      RequestType: CreatePolicy,
+      HttpMethod: POST,
+      Path: /{version}/membership/policies,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/membership/policies,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          policyName: test-policyName,
+          description: test-description,
+          policyDocumentJson: test-policyDocumentJson
+        }
+      },
+      ResponseType: IdResponse,
+      Response: {
+        Id: Guid_1
+      }
+    },
+    {
+      Target: Hub,
+      Group: membership,
+      MethodName: DeletePolicyAsync,
+      RequestType: DeletePolicy,
+      HttpMethod: DELETE,
+      Path: /{version}/membership/policies,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: DELETE,
+        Path: /v2/membership/policies,
+        Query: ?id={guid},
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: membership,
+      MethodName: GetPoliciesAsync,
+      RequestType: GetPolicies,
+      HttpMethod: GET,
+      Path: /{version}/membership/policies,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/membership/policies,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: GetPoliciesResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: membership,
+      MethodName: GetPolicyAsync,
+      RequestType: GetPolicy,
+      HttpMethod: GET,
+      Path: /{version}/membership/policies/{Id},
+      PathParams: [
+        Id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/membership/policies/{guid},
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: GetPolicyResponse,
+      Response: {
+        Policy: {
+          Id: Guid_1,
+          Name: test-name,
+          Description: test-description,
+          IsSystem: true
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: membership,
+      MethodName: UpdatePolicyAsync,
+      RequestType: UpdatePolicy,
+      HttpMethod: PUT,
+      Path: /{version}/membership/policies,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: PUT,
+        Path: /v2/membership/policies,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          id: Guid_1,
+          policyName: test-policyName,
+          description: test-description,
+          policyDocumentJson: test-policyDocumentJson
+        }
+      },
+      ResponseType: IdResponse,
+      Response: {
+        Id: Guid_1
+      }
+    },
+    {
+      Target: Hub,
+      Group: membership,
+      MethodName: CreateRoleAsync,
+      RequestType: CreateRole,
+      HttpMethod: POST,
+      Path: /{version}/membership/roles,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/membership/roles,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          roleName: test-roleName,
+          description: test-description
+        }
+      },
+      ResponseType: IdResponse,
+      Response: {
+        Id: Guid_1
+      }
+    },
+    {
+      Target: Hub,
+      Group: membership,
+      MethodName: DeleteRoleAsync,
+      RequestType: DeleteRole,
+      HttpMethod: DELETE,
+      Path: /{version}/membership/roles,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: DELETE,
+        Path: /v2/membership/roles,
+        Query: ?id={guid},
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: membership,
+      MethodName: GetRoleAsync,
+      RequestType: GetRole,
+      HttpMethod: GET,
+      Path: /{version}/membership/roles/{Id},
+      PathParams: [
+        Id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/membership/roles/{guid},
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: GetRoleResponse,
+      Response: {
+        Role: {
+          Id: Guid_1,
+          Name: test-name,
+          DisplayName: test-displayName,
+          Description: test-description,
+          IsSystem: true
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: membership,
+      MethodName: GetRolesAsync,
+      RequestType: GetRoles,
+      HttpMethod: GET,
+      Path: /{version}/membership/roles,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/membership/roles,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: GetRolesResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: membership,
+      MethodName: UpdateRolePoliciesAsync,
+      RequestType: UpdateRolePolicies,
+      HttpMethod: PATCH,
+      Path: /{version}/membership/roles,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: PATCH,
+        Path: /v2/membership/roles,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          id: Guid_1,
+          roleName: test-roleName,
+          description: test-description
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: membership,
+      MethodName: DeleteMembershipTriggerAsync,
+      RequestType: DeleteMembershipTrigger,
+      HttpMethod: DELETE,
+      Path: /{version}/membership/triggers/{triggerId},
+      PathParams: [
+        triggerId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: DELETE,
+        Path: /v2/membership/triggers/{guid},
+        Query: ?triggerType=Membership&schemaId={guid},
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: membership,
+      MethodName: DisableMembershipTriggerAsync,
+      RequestType: DisableMembershipTrigger,
+      HttpMethod: PATCH,
+      Path: /{version}/membership/triggers/{triggerId}/disable,
+      PathParams: [
+        triggerId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: PATCH,
+        Path: /v2/membership/triggers/{guid}/disable,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          triggerType: 0.0,
+          schemaId: Guid_1
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: membership,
+      MethodName: EnableMembershipTriggerAsync,
+      RequestType: EnableMembershipTrigger,
+      HttpMethod: PATCH,
+      Path: /{version}/membership/triggers/{triggerId}/enable,
+      PathParams: [
+        triggerId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: PATCH,
+        Path: /v2/membership/triggers/{guid}/enable,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          triggerType: 0.0,
+          schemaId: Guid_1
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: membership,
+      MethodName: GetMembershipTriggerAsync,
+      RequestType: GetMembershipTrigger,
+      HttpMethod: GET,
+      Path: /{version}/membership/triggers/{id},
+      PathParams: [
+        id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/membership/triggers/{guid},
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: GetMembershipTriggerResponse,
+      Response: {
+        Trigger: {
+          ViewId: Guid_1,
+          Name: test-name,
+          ThenAction: {},
+          Description: test-description,
+          IsEnabled: true,
+          ActivationCode: test-activationCode
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: membership,
+      MethodName: GetMembershipTriggersAsync,
+      RequestType: GetMembershipTriggers,
+      HttpMethod: GET,
+      Path: /{version}/membership/triggers,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/membership/triggers,
+        Query: ?paging=Norbix.Sdk.Types.Hub.PagingArgs,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: GetMembershipTriggersResponse,
+      Response: {
+        List: {
+          Items: [
+            {
+              HasPreExecuteCode: false,
+              IsEnabled: false
+            }
+          ],
+          HasMore: false,
+          HasPrevious: false,
+          StartingAfter: cursor-start,
+          EndingBefore: cursor-end
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: membership,
+      MethodName: SaveMembershipTriggerAsync,
+      RequestType: SaveMembershipTrigger,
+      HttpMethod: POST,
+      Path: /{version}/membership/triggers,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/membership/triggers,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          trigger: {
+            type: 0.0,
+            triggerId: Guid_1,
+            name: test-name,
+            description: test-description,
+            isEnabled: true,
+            preExecuteCode: test-preExecuteCode
+          }
+        }
+      },
+      ResponseType: IdResponse,
+      Response: {
+        Id: Guid_1
+      }
+    }
+  ]
+}

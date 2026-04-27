@@ -1,0 +1,248 @@
+﻿{
+  Target: Hub,
+  Group: webhooks,
+  Count: 8,
+  Endpoints: [
+    {
+      Target: Hub,
+      Group: webhooks,
+      MethodName: DisableWebhookDestinationAsync,
+      RequestType: DisableWebhookDestinationRequest,
+      HttpMethod: PUT,
+      Path: /{version}/webhooks/destinations/{DestinationId}/disable,
+      PathParams: [
+        DestinationId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: PUT,
+        Path: /v2/webhooks/destinations/{guid}/disable,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: webhooks,
+      MethodName: EnableWebhookDestinationAsync,
+      RequestType: EnableWebhookDestinationRequest,
+      HttpMethod: PUT,
+      Path: /{version}/webhooks/destinations/{DestinationId}/enable,
+      PathParams: [
+        DestinationId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: PUT,
+        Path: /v2/webhooks/destinations/{guid}/enable,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: webhooks,
+      MethodName: RemoveWebhookDestinationAsync,
+      RequestType: RemoveWebhookDestinationRequest,
+      HttpMethod: DELETE,
+      Path: /{version}/webhooks/destinations/{DestinationId},
+      PathParams: [
+        DestinationId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: DELETE,
+        Path: /v2/webhooks/destinations/{guid},
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: webhooks,
+      MethodName: SaveWebhookDestinationAsync,
+      RequestType: SaveWebhookDestinationRequest,
+      HttpMethod: POST,
+      Path: /{version}/webhooks/destinations,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/webhooks/destinations,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          destinationId: Guid_1,
+          destinationName: test-destinationName,
+          endpointUrl: https://example.test/endpointUrl,
+          selectedEvents: [
+            test-string
+          ],
+          extraHeaders: {
+            test-key: test-string
+          },
+          isEnabled: true
+        }
+      },
+      ResponseType: SaveWebhookDestinationResponse,
+      Response: {
+        DestinationId: Guid_1,
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: webhooks,
+      MethodName: GetWebhookIntegrationAsync,
+      RequestType: GetWebhookIntegration,
+      HttpMethod: GET,
+      Path: /{version}/webhooks/integration,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/webhooks/integration,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: GetWebhookIntegrationResponse,
+      Response: {
+        Item: {
+          Destinations: [
+            {
+              IsEnabled: false
+            }
+          ],
+          ExtraHeaders: {
+            sample-key: test-string
+          }
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: webhooks,
+      MethodName: RevealWebhookIntegrationSecretAsync,
+      RequestType: RevealWebhookIntegrationSecretRequest,
+      HttpMethod: GET,
+      Path: /{version}/webhooks/integration/secret,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/webhooks/integration/secret,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: RevealWebhookIntegrationSecretResponse,
+      Response: {
+        SigningSecret: test-signingSecret,
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: webhooks,
+      MethodName: RotateWebhookIntegrationSecretAsync,
+      RequestType: RotateWebhookIntegrationSecretRequest,
+      HttpMethod: POST,
+      Path: /{version}/webhooks/integration/secret/rotate,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/webhooks/integration/secret/rotate,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: RotateWebhookIntegrationSecretResponse,
+      Response: {
+        SigningSecret: test-signingSecret,
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: webhooks,
+      MethodName: UpdateWebhookIntegrationExtraHeadersAsync,
+      RequestType: UpdateWebhookIntegrationExtraHeadersRequest,
+      HttpMethod: PUT,
+      Path: /{version}/webhooks/integration/extra-headers,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: PUT,
+        Path: /v2/webhooks/integration/extra-headers,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          extraHeaders: {
+            test-key: test-string
+          }
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    }
+  ]
+}

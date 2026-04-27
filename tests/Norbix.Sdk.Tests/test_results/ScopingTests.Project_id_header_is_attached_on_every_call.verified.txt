@@ -1,0 +1,8 @@
+﻿{
+  Method: GET,
+  Path: /v2/echo,
+  Headers: {
+    Authorization: Bearer test-api-key,
+    X-CM-ProjectId: test-project
+  }
+}

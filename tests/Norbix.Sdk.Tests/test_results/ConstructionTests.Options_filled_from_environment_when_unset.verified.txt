@@ -1,0 +1,9 @@
+﻿{
+  ApiKey: env-key,
+  ProjectId: env-project,
+  AccountId: env-account,
+  ApiBaseUrl: https://api.staging.norbix.dev,
+  HubBaseUrl: https://hub.staging.norbix.dev,
+  ApiVersion: v3,
+  TimeoutMs: 5000.0
+}

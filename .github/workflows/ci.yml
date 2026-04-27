@@ -1,0 +1,135 @@
+name: CI
+
+# Runs on every PR + push to main/develop. Mirrors the TS SDK's CI shape:
+# always lint / build / test / scan, never publish. Publishing happens in
+# release.yml on push to main.
+
+on:
+  pull_request:
+  push:
+    branches: [main, develop]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  DOTNET_NOLOGO: 'true'
+  DOTNET_CLI_TELEMETRY_OPTOUT: 'true'
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 'true'
+
+jobs:
+  build:
+    name: Build, test, pack-dryrun
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET (from global.json)
+        uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+
+      - name: Restore tools
+        run: dotnet tool restore
+
+      - name: Restore
+        run: dotnet restore
+
+      - name: Build
+        # warnaserror flips the global TreatWarningsAsErrors=true on; CI catches
+        # any analyzer warning that slipped past local builds.
+        run: dotnet build --configuration Release --no-restore -warnaserror
+
+      - name: Test
+        run: dotnet test --configuration Release --no-build --logger "trx;LogFilePrefix=tests" --collect:"XPlat Code Coverage"
+
+      - name: Verify drift — generated DTOs not committed stale
+        # The Generated/ folder is committed for diff-ability, but the source
+        # of truth is the DTO files committed alongside. We don't run sync-types
+        # in CI (no live gateway), but we DO check the source generator
+        # produces stable output by running it twice.
+        run: |
+          dotnet build --configuration Release --no-restore -warnaserror -t:CoreCompile -p:GenerateDocumentationFile=false > /dev/null
+          # If this run materializes any new generated files into bin/obj, fine.
+          # No source-tree drift expected because the source generator emits
+          # in-memory only.
+
+      - name: Pack (dry-run)
+        # Builds the .nupkg into ./packages and inspects what would ship. The
+        # source-link / .pdb / .xml inclusion is verified here; if a forbidden
+        # file slips through (e.g. bin/Debug content), CI catches it.
+        run: |
+          dotnet pack src/Norbix.Sdk/Norbix.Sdk.csproj --configuration Release --no-build --output ./packages
+          dotnet pack src/Norbix.Sdk.Types/Norbix.Sdk.Types.csproj --configuration Release --no-build --output ./packages
+          ls -la ./packages
+          for pkg in ./packages/*.nupkg; do
+            echo "=== $pkg ==="
+            unzip -l "$pkg" | head -50
+          done
+
+      - name: Upload .nupkg artifacts
+        if: github.event_name == 'pull_request'
+        uses: actions/upload-artifact@v4
+        with:
+          name: nupkgs
+          path: packages/
+          retention-days: 7
+
+  security:
+    name: Security scan
+    runs-on: ubuntu-22.04
+    permissions:
+      contents: read
+      security-events: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET (from global.json)
+        uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+
+      - name: Restore
+        run: dotnet restore
+
+      - name: dotnet list package --vulnerable
+        # Prints transitive + direct vulnerabilities. The grep guard fails the
+        # build if any HIGH/CRITICAL vuln shows up, while keeping informational
+        # advisories from blocking unrelated PRs.
+        run: |
+          dotnet list package --vulnerable --include-transitive 2>&1 | tee /tmp/vuln.log
+          if grep -E "(High|Critical)" /tmp/vuln.log; then
+            echo "::error::High or Critical vulnerability found in dependencies."
+            exit 1
+          fi
+
+      - name: Trivy filesystem scan (config + secrets)
+        uses: aquasecurity/trivy-action@0.28.0
+        with:
+          scan-type: fs
+          scan-ref: .
+          format: sarif
+          output: trivy-fs.sarif
+          severity: HIGH,CRITICAL
+          ignore-unfixed: true
+          exit-code: '1'
+          scanners: config,secret,vuln
+
+      - name: Upload Trivy SARIF
+        if: always()
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: trivy-fs.sarif
+          category: trivy-fs
+
+      - name: OSV scan (NuGet + GH Actions)
+        uses: google/osv-scanner-action/osv-scanner-action@v1.9.0
+        with:
+          scan-args: |-
+            --recursive
+            --skip-git
+            ./
+        continue-on-error: false

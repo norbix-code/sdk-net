@@ -1,0 +1,15 @@
+﻿{
+  options: {
+    ProjectId: new-project,
+    AccountId: new-account
+  },
+  request: {
+    Method: GET,
+    Path: /v2/echo,
+    Headers: {
+      Authorization: Bearer test-api-key,
+      X-CM-AccountId: new-account,
+      X-CM-ProjectId: new-project
+    }
+  }
+}

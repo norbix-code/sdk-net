@@ -1,0 +1,8 @@
+﻿{
+  Method: GET,
+  Path: /v2/echo,
+  Headers: {
+    Authorization: Bearer user-jwt,
+    X-CM-ProjectId: p1
+  }
+}

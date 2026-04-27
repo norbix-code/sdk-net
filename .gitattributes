@@ -1,0 +1,11 @@
+# Default to LF line endings everywhere — matches CI runners.
+* text=auto eol=lf
+
+# Verify snapshots must be byte-exact; never normalize.
+*.verified.txt -text
+*.verified.json -text
+
+# Windows-only files keep CRLF.
+*.bat        eol=crlf
+*.cmd        eol=crlf
+*.ps1        eol=crlf

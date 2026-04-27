@@ -1,0 +1,447 @@
+﻿{
+  Target: Hub,
+  Group: ai,
+  Count: 14,
+  Endpoints: [
+    {
+      Target: Hub,
+      Group: ai,
+      MethodName: DeleteLlmIntegrationAsync,
+      RequestType: DeleteLlmIntegrationRequest,
+      HttpMethod: DELETE,
+      Path: /{version}/ai/integrations/llms/{Id},
+      PathParams: [
+        Id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: DELETE,
+        Path: /v2/ai/integrations/llms/{guid},
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: ai,
+      MethodName: DeleteMcpIntegrationAsync,
+      RequestType: DeleteMcpIntegrationRequest,
+      HttpMethod: DELETE,
+      Path: /{version}/ai/integrations/mcp/{Id},
+      PathParams: [
+        Id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: DELETE,
+        Path: /v2/ai/integrations/mcp/{guid},
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: ai,
+      MethodName: DisableLlmIntegrationAsync,
+      RequestType: DisableLlmIntegrationRequest,
+      HttpMethod: PUT,
+      Path: /{version}/ai/integrations/llms/{Id}/disable,
+      PathParams: [
+        Id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: PUT,
+        Path: /v2/ai/integrations/llms/{guid}/disable,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: ai,
+      MethodName: DisableMcpIntegrationAsync,
+      RequestType: DisableMcpIntegrationRequest,
+      HttpMethod: PUT,
+      Path: /{version}/ai/integrations/mcp/{Id}/disable,
+      PathParams: [
+        Id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: PUT,
+        Path: /v2/ai/integrations/mcp/{guid}/disable,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: ai,
+      MethodName: EnableLlmIntegrationAsync,
+      RequestType: EnableLlmIntegrationRequest,
+      HttpMethod: PUT,
+      Path: /{version}/ai/integrations/llms/{Id}/enable,
+      PathParams: [
+        Id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: PUT,
+        Path: /v2/ai/integrations/llms/{guid}/enable,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: ai,
+      MethodName: EnableMcpIntegrationAsync,
+      RequestType: EnableMcpIntegrationRequest,
+      HttpMethod: PUT,
+      Path: /{version}/ai/integrations/mcp/{Id}/enable,
+      PathParams: [
+        Id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: PUT,
+        Path: /v2/ai/integrations/mcp/{guid}/enable,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: ai,
+      MethodName: GetLlmIntegrationAsync,
+      RequestType: GetLlmIntegration,
+      HttpMethod: GET,
+      Path: /{version}/ai/integrations/llms/{id},
+      PathParams: [
+        id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/ai/integrations/llms/{guid},
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: GetLlmIntegrationResponse,
+      Response: {
+        Item: {
+          BaseUrl: https://example.test/baseUrl,
+          DefaultModel: test-defaultModel,
+          IsConfigured: true,
+          IsSystemOwned: true
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: ai,
+      MethodName: GetLlmIntegrationsAsync,
+      RequestType: GetLlmIntegrations,
+      HttpMethod: GET,
+      Path: /{version}/ai/integrations/llms/integrations,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/ai/integrations/llms/integrations,
+        Query: ?paging=Norbix.Sdk.Types.Hub.PagingArgs,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: GetLlmIntegrationsResponse,
+      Response: {
+        DefaultIntegrationId: Guid_1,
+        List: {
+          Items: [
+            {}
+          ],
+          HasMore: false,
+          HasPrevious: false,
+          StartingAfter: cursor-start,
+          EndingBefore: cursor-end
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: ai,
+      MethodName: GetMcpIntegrationAsync,
+      RequestType: GetMcpIntegration,
+      HttpMethod: GET,
+      Path: /{version}/ai/integrations/mcp/{id},
+      PathParams: [
+        id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/ai/integrations/mcp/{guid},
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: GetMcpIntegrationResponse,
+      Response: {
+        Item: {
+          Metadata: {},
+          IsConfigured: true,
+          IsSystemOwned: true,
+          Command: test-command,
+          Args: [
+            test-string
+          ],
+          ServerUrl: https://example.test/serverUrl
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: ai,
+      MethodName: GetMcpIntegrationsAsync,
+      RequestType: GetMcpIntegrations,
+      HttpMethod: GET,
+      Path: /{version}/ai/integrations/mcp/integrations,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/ai/integrations/mcp/integrations,
+        Query: ?paging=Norbix.Sdk.Types.Hub.PagingArgs,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: GetMcpIntegrationsResponse,
+      Response: {
+        DefaultIntegrationId: Guid_1,
+        List: {
+          Items: [
+            {}
+          ],
+          HasMore: false,
+          HasPrevious: false,
+          StartingAfter: cursor-start,
+          EndingBefore: cursor-end
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: ai,
+      MethodName: SaveLlmIntegrationAsync,
+      RequestType: SaveLlmIntegration,
+      HttpMethod: POST,
+      Path: /{version}/ai/integrations/llms/,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/ai/integrations/llms/,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          integration: {
+            integrationId: Guid_1,
+            provider: 0.0,
+            integrationName: test-integrationName,
+            isEnabled: true,
+            endpoint: test-endpoint,
+            defaultModel: test-defaultModel
+          }
+        }
+      },
+      ResponseType: IdResponse,
+      Response: {
+        Id: Guid_1
+      }
+    },
+    {
+      Target: Hub,
+      Group: ai,
+      MethodName: SaveMcpIntegrationAsync,
+      RequestType: SaveMcpIntegration,
+      HttpMethod: POST,
+      Path: /{version}/ai/integrations/mcp/,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/ai/integrations/mcp/,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          integration: {
+            integrationId: Guid_1,
+            provider: 0.0,
+            transport: 0.0,
+            integrationName: test-integrationName,
+            isEnabled: true,
+            name: test-name,
+            category: test-category,
+            description: test-description
+          }
+        }
+      },
+      ResponseType: IdResponse,
+      Response: {
+        Id: Guid_1
+      }
+    },
+    {
+      Target: Hub,
+      Group: ai,
+      MethodName: TestLlmIntegrationAsync,
+      RequestType: TestLlmIntegration,
+      HttpMethod: POST,
+      Path: /{version}/ai/integrations/llms/test,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/ai/integrations/llms/test,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          integrationId: Guid_1
+        }
+      },
+      ResponseType: TestLlmIntegrationResponse,
+      Response: {
+        Items: [
+          {}
+        ]
+      }
+    },
+    {
+      Target: Hub,
+      Group: ai,
+      MethodName: TestMcpIntegrationAsync,
+      RequestType: TestMcpIntegration,
+      HttpMethod: POST,
+      Path: /{version}/ai/integrations/mcp/test,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/ai/integrations/mcp/test,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          integrationId: Guid_1
+        }
+      },
+      ResponseType: TestLlmIntegrationResponse,
+      Response: {
+        Items: [
+          {}
+        ]
+      }
+    }
+  ]
+}

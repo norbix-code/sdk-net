@@ -1,0 +1,32 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    Internal Roslyn source generator. NOT a published package on its own —
+    it ships as an analyzer asset bundled inside the Norbix.Sdk NuGet so
+    consumers see generated SDK methods automatically.
+
+    Source generators must target netstandard2.0 (Roslyn requirement). We
+    override the solution-wide TargetFramework here.
+  -->
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <IsRoslynComponent>true</IsRoslynComponent>
+    <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+    <IsPackable>false</IsPackable>
+    <RootNamespace>Norbix.Sdk.Generators</RootNamespace>
+    <AssemblyName>Norbix.Sdk.Generators</AssemblyName>
+    <!-- Required so the warning level matches the rest of the solution. -->
+    <NoWarn>$(NoWarn);RS1041;NU5128</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" PrivateAssets="all" />
+  </ItemGroup>
+
+</Project>

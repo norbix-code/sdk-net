@@ -1,0 +1,37 @@
+# dotnet artifacts
+bin/
+obj/
+out/
+build/
+dist/
+*.user
+*.suo
+*.cache
+.vs/
+.vscode/*
+!.vscode/extensions.json
+*.swp
+*.swo
+.DS_Store
+
+# nuget
+*.nupkg
+*.snupkg
+.nuget/
+packages/
+
+# rider
+.idea/
+
+# verify — received snapshots are review-only, never committed
+*.received.txt
+*.received.json
+*.received.*
+
+# secrets
+.env
+.env.local
+*.env
+
+# tooling
+.config/dotnet-suggest-cache/

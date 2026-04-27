@@ -1,0 +1,469 @@
+﻿{
+  Target: Hub,
+  Group: files,
+  Count: 15,
+  Endpoints: [
+    {
+      Target: Hub,
+      Group: files,
+      MethodName: DisableFilesAsync,
+      RequestType: DisableFiles,
+      HttpMethod: GET,
+      Path: /{version}/files/disable,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/files/disable,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: files,
+      MethodName: EnableFilesAsync,
+      RequestType: EnableFiles,
+      HttpMethod: GET,
+      Path: /{version}/files/enable,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/files/enable,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: files,
+      MethodName: DeleteFilesIntegrationAsync,
+      RequestType: DeleteFilesIntegrationRequest,
+      HttpMethod: DELETE,
+      Path: /{version}/files/integrations/{Id},
+      PathParams: [
+        Id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: DELETE,
+        Path: /v2/files/integrations/{guid},
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: files,
+      MethodName: DisableFilesIntegrationAsync,
+      RequestType: DisableFilesIntegrationRequest,
+      HttpMethod: PUT,
+      Path: /{version}/files/integrations/{Id}/disable,
+      PathParams: [
+        Id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: PUT,
+        Path: /v2/files/integrations/{guid}/disable,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: files,
+      MethodName: EnableFilesIntegrationAsync,
+      RequestType: EnableFilesIntegrationRequest,
+      HttpMethod: PUT,
+      Path: /{version}/files/integrations/{Id}/enable,
+      PathParams: [
+        Id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: PUT,
+        Path: /v2/files/integrations/{guid}/enable,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: files,
+      MethodName: GetFilesIntegrationAsync,
+      RequestType: GetFilesIntegration,
+      HttpMethod: GET,
+      Path: /{version}/files/integrations/{id},
+      PathParams: [
+        id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/files/integrations/{guid},
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: GetFilesIntegrationResponse,
+      Response: {
+        Item: {},
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: files,
+      MethodName: GetFilesIntegrationsAsync,
+      RequestType: GetFilesIntegrations,
+      HttpMethod: GET,
+      Path: /{version}/files/integrations,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/files/integrations,
+        Query: ?paging=Norbix.Sdk.Types.Hub.PagingArgs,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: GetFilesIntegrationsResponse,
+      Response: {
+        DefaultIntegrationId: Guid_1,
+        List: {
+          Items: [
+            {}
+          ],
+          HasMore: false,
+          HasPrevious: false,
+          StartingAfter: cursor-start,
+          EndingBefore: cursor-end
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: files,
+      MethodName: SaveFilesIntegrationAsync,
+      RequestType: SaveFilesIntegration,
+      HttpMethod: POST,
+      Path: /{version}/files/integrations,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/files/integrations,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          integration: {
+            integrationId: Guid_1,
+            provider: 0.0,
+            integrationName: test-integrationName,
+            isEnabled: true
+          }
+        }
+      },
+      ResponseType: IdResponse,
+      Response: {
+        Id: Guid_1
+      }
+    },
+    {
+      Target: Hub,
+      Group: files,
+      MethodName: SetFilesIntegrationAsDefaultAsync,
+      RequestType: SetFilesIntegrationAsDefaultRequest,
+      HttpMethod: PUT,
+      Path: /{version}/files/integrations/{Id}/default,
+      PathParams: [
+        Id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: PUT,
+        Path: /v2/files/integrations/{guid}/default,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: files,
+      MethodName: DeleteFilesTriggerAsync,
+      RequestType: DeleteFilesTrigger,
+      HttpMethod: DELETE,
+      Path: /{version}/files/triggers/{triggerId},
+      PathParams: [
+        triggerId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: DELETE,
+        Path: /v2/files/triggers/{guid},
+        Query: ?triggerType=Membership&schemaId={guid},
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: files,
+      MethodName: DisableFilesTriggerAsync,
+      RequestType: DisableFilesTrigger,
+      HttpMethod: PATCH,
+      Path: /{version}/files/triggers/{triggerId}/disable,
+      PathParams: [
+        triggerId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: PATCH,
+        Path: /v2/files/triggers/{guid}/disable,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          triggerType: 0.0,
+          schemaId: Guid_1
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: files,
+      MethodName: EnableFilesTriggerAsync,
+      RequestType: EnableFilesTrigger,
+      HttpMethod: PATCH,
+      Path: /{version}/files/triggers/{triggerId}/enable,
+      PathParams: [
+        triggerId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: PATCH,
+        Path: /v2/files/triggers/{guid}/enable,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          triggerType: 0.0,
+          schemaId: Guid_1
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: files,
+      MethodName: GetFilesTriggerAsync,
+      RequestType: GetFilesTrigger,
+      HttpMethod: GET,
+      Path: /{version}/files/triggers/{id},
+      PathParams: [
+        id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/files/triggers/{guid},
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: GetFilesTriggerResponse,
+      Response: {
+        Trigger: {
+          ViewId: Guid_1,
+          Name: test-name,
+          ThenAction: {},
+          Description: test-description,
+          IsEnabled: true,
+          ActivationCode: test-activationCode
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: files,
+      MethodName: GetFilesTriggersAsync,
+      RequestType: GetFilesTriggers,
+      HttpMethod: GET,
+      Path: /{version}/files/triggers,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/files/triggers,
+        Query: ?paging=Norbix.Sdk.Types.Hub.PagingArgs,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: GetFilesTriggersResponse,
+      Response: {
+        List: {
+          Items: [
+            {
+              HasPreExecuteCode: false,
+              IsEnabled: false
+            }
+          ],
+          HasMore: false,
+          HasPrevious: false,
+          StartingAfter: cursor-start,
+          EndingBefore: cursor-end
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: files,
+      MethodName: SaveFilesTriggerAsync,
+      RequestType: SaveFilesTrigger,
+      HttpMethod: POST,
+      Path: /{version}/files/triggers,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/files/triggers,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          trigger: {
+            type: 0.0,
+            triggerId: Guid_1,
+            name: test-name,
+            description: test-description,
+            isEnabled: true,
+            preExecuteCode: test-preExecuteCode
+          }
+        }
+      },
+      ResponseType: IdResponse,
+      Response: {
+        Id: Guid_1
+      }
+    }
+  ]
+}

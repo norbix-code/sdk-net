@@ -1,0 +1,2171 @@
+﻿{
+  Target: Hub,
+  Group: notifications,
+  Count: 68,
+  Endpoints: [
+    {
+      Target: Hub,
+      Group: notifications,
+      MethodName: DisableEmailAsync,
+      RequestType: DisableEmail,
+      HttpMethod: GET,
+      Path: /{version}/notifications/email/disable,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/notifications/email/disable,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: notifications,
+      MethodName: EnableEmailAsync,
+      RequestType: EnableEmail,
+      HttpMethod: GET,
+      Path: /{version}/notifications/email/enable,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/notifications/email/enable,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: notifications,
+      MethodName: CreateEmailCampaignAsync,
+      RequestType: CreateEmailCampaignRequest,
+      HttpMethod: POST,
+      Path: /{version}/notifications/email/campaigns,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/notifications/email/campaigns,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          campaign: {
+            source: 0.0,
+            templateId: Guid_1,
+            integrationId: Guid_1,
+            language: test-language,
+            initiatorId: Guid_1,
+            notes: test-notes,
+            campaignTime: 1.0
+          },
+          databaseIntegrationId: Guid_1
+        }
+      },
+      ResponseType: IdResponse,
+      Response: {
+        Id: Guid_1
+      }
+    },
+    {
+      Target: Hub,
+      Group: notifications,
+      MethodName: DeleteEmailCampaignAsync,
+      RequestType: DeleteEmailCampaignRequest,
+      HttpMethod: DELETE,
+      Path: /{version}/notifications/email/campaigns/{Id},
+      PathParams: [
+        Id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: DELETE,
+        Path: /v2/notifications/email/campaigns/{guid},
+        Query: ?databaseIntegrationId={guid},
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: notifications,
+      MethodName: GetEmailCampaignAsync,
+      RequestType: GetEmailCampaign,
+      HttpMethod: GET,
+      Path: /{version}/notifications/email/campaigns/{id},
+      PathParams: [
+        id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/notifications/email/campaigns/{guid},
+        Query: ?databaseIntegrationId={guid},
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: GetEmailCampaignResponse,
+      Response: {
+        Item: {
+          DeliverySettings: {},
+          Template: {
+            IsActive: false
+          },
+          TemplateIsSystem: true,
+          ViewId: Guid_1,
+          CreatedOn: DateTime_1,
+          Language: test-language,
+          ForceCampaignLanguage: true,
+          CampaignProcessingIntegrationId: Guid_1
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: notifications,
+      MethodName: GetEmailCampaignBatchesAsync,
+      RequestType: GetEmailCampaignBatches,
+      HttpMethod: GET,
+      Path: /{version}/notifications/email/campaigns/{id}/batches,
+      PathParams: [
+        id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/notifications/email/campaigns/{guid}/batches,
+        Query: ?databaseIntegrationId={guid}&batchId={guid}&emailAddress=user%40example.test&paging=Norbix.Sdk.Types.Hub.PagingArgs,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: GetEmailCampaignBatchesResponse,
+      Response: {
+        List: {
+          Items: [
+            {}
+          ],
+          HasMore: false,
+          HasPrevious: false,
+          StartingAfter: cursor-start,
+          EndingBefore: cursor-end
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: notifications,
+      MethodName: GetEmailCampaignBatchNotificationAsync,
+      RequestType: GetEmailCampaignBatchNotification,
+      HttpMethod: GET,
+      Path: /{version}/notifications/email/campaigns/{id}/batches/{batchId}/{notificationId},
+      PathParams: [
+        id,
+        batchId,
+        notificationId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/notifications/email/campaigns/{guid}/batches/{guid}/{guid},
+        Query: ?databaseIntegrationId={guid}&paging=Norbix.Sdk.Types.Hub.PagingArgs,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: GetEmailCampaignBatchNotificationResponse,
+      Response: {
+        CampaignNotification: {
+          Recipients: {
+            HasMore: false
+          },
+          Content: {},
+          CampaignId: Guid_1,
+          BatchId: Guid_1,
+          NotificationId: Guid_1,
+          RefNotificationId: Guid_1,
+          Subject: test-subject,
+          Body: test-body
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: notifications,
+      MethodName: GetEmailCampaignBatchNotificationsAsync,
+      RequestType: GetEmailCampaignBatchNotifications,
+      HttpMethod: GET,
+      Path: /{version}/notifications/email/campaigns/{id}/batches/{batchId},
+      PathParams: [
+        id,
+        batchId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/notifications/email/campaigns/{guid}/batches/{guid},
+        Query: ?databaseIntegrationId={guid}&paging=Norbix.Sdk.Types.Hub.PagingArgs,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: GetEmailCampaignBatchNotificationsResponse,
+      Response: {
+        BatchStatusHistory: [
+          {}
+        ],
+        List: {
+          Items: [
+            {}
+          ],
+          HasMore: false,
+          HasPrevious: false,
+          StartingAfter: cursor-start,
+          EndingBefore: cursor-end
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: notifications,
+      MethodName: GetEmailCampaignsAsync,
+      RequestType: GetEmailCampaigns,
+      HttpMethod: GET,
+      Path: /{version}/notifications/email/campaigns,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/notifications/email/campaigns,
+        Query: ?databaseIntegrationId={guid}&campaignId={guid}&emailAddress=user%40example.test&templateId={guid}&from=1&to=1&paging=Norbix.Sdk.Types.Hub.PagingArgs,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: GetEmailCampaignsResponse,
+      Response: {
+        List: {
+          Items: [
+            {}
+          ],
+          HasMore: false,
+          HasPrevious: false,
+          StartingAfter: cursor-start,
+          EndingBefore: cursor-end
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: notifications,
+      MethodName: GetEmailCampaignStatisticsAsync,
+      RequestType: GetEmailCampaignStatistics,
+      HttpMethod: GET,
+      Path: /{version}/notifications/email/campaigns/{id}/stats,
+      PathParams: [
+        id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/notifications/email/campaigns/{guid}/stats,
+        Query: ?databaseIntegrationId={guid},
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: GetEmailCampaignStatisticsResponse,
+      Response: {
+        Stats: {
+          Batches: 7,
+          Sent: 7,
+          Failed: 7,
+          SuccessRate: 3.14
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: notifications,
+      MethodName: PreviewEmailNotificationAsync,
+      RequestType: PreviewEmailNotification,
+      HttpMethod: GET,
+      Path: /{version}/notifications/email/preview,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/notifications/email/preview,
+        Query: ?hash=test-hash,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: PreviewEmailNotificationResponse,
+      Response: {
+        Subject: test-subject,
+        Body: test-body,
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: notifications,
+      MethodName: GetEmailCampaignMessageAsync,
+      RequestType: GetEmailCampaignMessage,
+      HttpMethod: GET,
+      Path: /{version}/notifications/emails/campaigns/{campaignId}/messages/{notificationId},
+      PathParams: [
+        campaignId,
+        notificationId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/notifications/emails/campaigns/{guid}/messages/{guid},
+        Query: ?campaignBatchId={guid}&databaseIntegrationId={guid},
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: GetEmailCampaignMessageResponse,
+      Response: {
+        EmailMessageEntity: {
+          Recipients: {
+            HasMore: false
+          },
+          Content: {},
+          CampaignId: Guid_1,
+          BatchId: Guid_1,
+          NotificationId: Guid_1,
+          RefNotificationId: Guid_1,
+          Subject: test-subject,
+          Body: test-body
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: notifications,
+      MethodName: GetEmailCampaignMessagesAsync,
+      RequestType: GetEmailCampaignMessagesRequest,
+      HttpMethod: GET,
+      Path: /{version}/notifications/emails/campaigns/{campaignId}/messages,
+      PathParams: [
+        campaignId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/notifications/emails/campaigns/{guid}/messages,
+        Query: ?campaignBatchId={guid}&databaseIntegrationId={guid}&paging=Norbix.Sdk.Types.Hub.PagingArgs,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: GetEmailCampaignMessagesResponse,
+      Response: {
+        List: {
+          Items: [
+            {}
+          ],
+          HasMore: false,
+          HasPrevious: false,
+          StartingAfter: cursor-start,
+          EndingBefore: cursor-end
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: notifications,
+      MethodName: ArchiveEmailTemplateAsync,
+      RequestType: ArchiveEmailTemplateRequest,
+      HttpMethod: PUT,
+      Path: /{version}/notifications/email/templates/{Id}/archive,
+      PathParams: [
+        Id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: PUT,
+        Path: /v2/notifications/email/templates/{guid}/archive,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: notifications,
+      MethodName: CloneEmailTemplateAsync,
+      RequestType: CloneEmailTemplateRequest,
+      HttpMethod: POST,
+      Path: /{version}/notifications/email/templates/{Id}/clone,
+      PathParams: [
+        Id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/notifications/email/templates/{guid}/clone,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: notifications,
+      MethodName: ConfirmEmailIntegrationHumanDeliveryAsync,
+      RequestType: ConfirmEmailIntegrationHumanDeliveryRequest,
+      HttpMethod: POST,
+      Path: /{version}/notifications/email/integrations/confirm-human-delivery,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/notifications/email/integrations/confirm-human-delivery,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          integrationId: Guid_1
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: notifications,
+      MethodName: DeleteEmailIntegrationAsync,
+      RequestType: DeleteEmailIntegration,
+      HttpMethod: DELETE,
+      Path: /{version}/notifications/email/integrations/{Id},
+      PathParams: [
+        Id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: DELETE,
+        Path: /v2/notifications/email/integrations/{guid},
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: notifications,
+      MethodName: DisableEmailIntegrationAsync,
+      RequestType: DisableEmailIntegration,
+      HttpMethod: PUT,
+      Path: /{version}/notifications/email/integrations/{Id}/disable,
+      PathParams: [
+        Id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: PUT,
+        Path: /v2/notifications/email/integrations/{guid}/disable,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: notifications,
+      MethodName: EnableEmailIntegrationAsync,
+      RequestType: EnableEmailIntegration,
+      HttpMethod: PUT,
+      Path: /{version}/notifications/email/integrations/{Id}/enable,
+      PathParams: [
+        Id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: PUT,
+        Path: /v2/notifications/email/integrations/{guid}/enable,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: notifications,
+      MethodName: GetEmailIntegrationAsync,
+      RequestType: GetEmailIntegration,
+      HttpMethod: GET,
+      Path: /{version}/notifications/email/integrations/{id},
+      PathParams: [
+        id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/notifications/email/integrations/{guid},
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: GetEmailIntegrationResponse,
+      Response: {
+        Item: {
+          EmailAddress: user@example.test,
+          EmailSenderName: user@example.test
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: notifications,
+      MethodName: GetEmailIntegrationsAsync,
+      RequestType: GetEmailIntegrations,
+      HttpMethod: GET,
+      Path: /{version}/notifications/email/integrations,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/notifications/email/integrations,
+        Query: ?paging=Norbix.Sdk.Types.Hub.PagingArgs,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: GetEmailIntegrationsResponse,
+      Response: {
+        DefaultIntegrationId: Guid_1,
+        List: {
+          Items: [
+            {}
+          ],
+          HasMore: false,
+          HasPrevious: false,
+          StartingAfter: cursor-start,
+          EndingBefore: cursor-end
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: notifications,
+      MethodName: SaveEmailIntegrationAsync,
+      RequestType: SaveEmailIntegration,
+      HttpMethod: POST,
+      Path: /{version}/notifications/email/integrations,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/notifications/email/integrations,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          integration: {
+            integrationId: Guid_1,
+            provider: 0.0,
+            integrationName: test-integrationName,
+            isEnabled: true,
+            emailAddress: user@example.test,
+            emailSenderName: user@example.test
+          }
+        }
+      },
+      ResponseType: IdResponse,
+      Response: {
+        Id: Guid_1
+      }
+    },
+    {
+      Target: Hub,
+      Group: notifications,
+      MethodName: SetEmailsIntegrationAsDefaultAsync,
+      RequestType: SetEmailsIntegrationAsDefault,
+      HttpMethod: PUT,
+      Path: /{version}/notifications/email/integrations/{Id}/default,
+      PathParams: [
+        Id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: PUT,
+        Path: /v2/notifications/email/integrations/{guid}/default,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: notifications,
+      MethodName: TestEmailIntegrationAsync,
+      RequestType: TestEmailIntegration,
+      HttpMethod: POST,
+      Path: /{version}/notifications/email/integrations/test,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/notifications/email/integrations/test,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          integrationId: Guid_1,
+          to: test-to
+        }
+      },
+      ResponseType: TestEmailIntegrationResponse,
+      Response: {
+        Items: [
+          {}
+        ]
+      }
+    },
+    {
+      Target: Hub,
+      Group: notifications,
+      MethodName: UnArchiveEmailTemplateAsync,
+      RequestType: UnArchiveEmailTemplateRequest,
+      HttpMethod: PUT,
+      Path: /{version}/notifications/email/templates/{Id}/unarchive,
+      PathParams: [
+        Id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: PUT,
+        Path: /v2/notifications/email/templates/{guid}/unarchive,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: notifications,
+      MethodName: GetEmailSettingsAsync,
+      RequestType: GetEmailSettings,
+      HttpMethod: GET,
+      Path: /{version}/notifications/email/settings,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/notifications/email/settings,
+        Query: ?id={guid},
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: GetEmailSettingsResponse,
+      Response: {
+        Settings: {
+          Signatures: [
+            {}
+          ],
+          Footers: [
+            {}
+          ]
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: notifications,
+      MethodName: DeleteEmailSignatureAsync,
+      RequestType: DeleteEmailSignature,
+      HttpMethod: DELETE,
+      Path: /{version}/notifications/email/signatures/{id},
+      PathParams: [
+        id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: DELETE,
+        Path: /v2/notifications/email/signatures/{guid},
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: notifications,
+      MethodName: GetEmailSignatureAsync,
+      RequestType: GetEmailSignature,
+      HttpMethod: GET,
+      Path: /{version}/notifications/email/signatures/{id},
+      PathParams: [
+        id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/notifications/email/signatures/{guid},
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: GetEmailSignatureResponse,
+      Response: {
+        Item: {
+          ViewId: Guid_1,
+          DisplayName: test-displayName
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: notifications,
+      MethodName: GetEmailSignaturesAsync,
+      RequestType: GetEmailSignatures,
+      HttpMethod: GET,
+      Path: /{version}/notifications/email/signatures,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/notifications/email/signatures,
+        Query: ?paging=Norbix.Sdk.Types.Hub.PagingArgs,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: GetEmailSignaturesResponse,
+      Response: {
+        List: {
+          Items: [
+            {}
+          ],
+          HasMore: false,
+          HasPrevious: false,
+          StartingAfter: cursor-start,
+          EndingBefore: cursor-end
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: notifications,
+      MethodName: SaveEmailSignatureAsync,
+      RequestType: SaveEmailSignatureRequest,
+      HttpMethod: POST,
+      Path: /{version}/notifications/email/signatures,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/notifications/email/signatures,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          viewId: Guid_1,
+          displayName: test-displayName
+        }
+      },
+      ResponseType: IdResponse,
+      Response: {
+        Id: Guid_1
+      }
+    },
+    {
+      Target: Hub,
+      Group: notifications,
+      MethodName: AttachFileToTemplateAsync,
+      RequestType: AttachFileToTemplateRequest,
+      HttpMethod: POST,
+      Path: /{version}/notifications/email/templates/attachments,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/notifications/email/templates/attachments,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          language: test-language,
+          templateId: Guid_1,
+          fileRef: {
+            integrationId: Guid_1,
+            provider: 0.0,
+            path: test-path
+          }
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: notifications,
+      MethodName: CreateEmailTemplateAsync,
+      RequestType: CreateEmailTemplateRequest,
+      HttpMethod: POST,
+      Path: /{version}/notifications/email/templates,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/notifications/email/templates,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          templateName: test-templateName,
+          description: test-description,
+          communicationChannel: 0.0
+        }
+      },
+      ResponseType: IdResponse,
+      Response: {
+        Id: Guid_1
+      }
+    },
+    {
+      Target: Hub,
+      Group: notifications,
+      MethodName: DeleteEmailTemplateAsync,
+      RequestType: DeleteEmailTemplateRequest,
+      HttpMethod: DELETE,
+      Path: /{version}/notifications/email/templates/{Id},
+      PathParams: [
+        Id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: DELETE,
+        Path: /v2/notifications/email/templates/{guid},
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: notifications,
+      MethodName: GetEmailTemplateAsync,
+      RequestType: GetEmailTemplate,
+      HttpMethod: GET,
+      Path: /{version}/notifications/email/templates/{id},
+      PathParams: [
+        id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/notifications/email/templates/{guid},
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: GetEmailTemplateResponse,
+      Response: {
+        Item: {
+          ViewId: Guid_1,
+          TemplateName: test-templateName,
+          Description: test-description,
+          IsActive: true
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: notifications,
+      MethodName: GetEmailTemplateAvailableTokensAsync,
+      RequestType: GetEmailTemplateAvailableTokens,
+      HttpMethod: GET,
+      Path: /{version}/notifications/email/templates/{id}/tokens,
+      PathParams: [
+        id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/notifications/email/templates/{guid}/tokens,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: GetEmailTemplateAvailableTokensResponse,
+      Response: {
+        Tokens: {
+          sample-key: [
+            test-string
+          ]
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: notifications,
+      MethodName: GetEmailTemplatesAsync,
+      RequestType: GetEmailTemplates,
+      HttpMethod: GET,
+      Path: /{version}/notifications/email/templates,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/notifications/email/templates,
+        Query: ?showArchived=True&templateId={guid}&paging=Norbix.Sdk.Types.Hub.PagingArgs,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: GetEmailTemplatesResponse,
+      Response: {
+        List: {
+          Items: [
+            {
+              IsActive: false
+            }
+          ],
+          HasMore: false,
+          HasPrevious: false,
+          StartingAfter: cursor-start,
+          EndingBefore: cursor-end
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: notifications,
+      MethodName: GetMjmlAsync,
+      RequestType: GetMjml,
+      HttpMethod: POST,
+      Path: /{version}/notifications/email/templates/mjml,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/notifications/email/templates/mjml,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          code: test-code,
+          isForPreview: true
+        }
+      },
+      ResponseType: GetHtmlFromMjmlResponse,
+      Response: {
+        HtmlFromMjmlResponse: {
+          html: test-html,
+          errors: [
+            {}
+          ]
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: notifications,
+      MethodName: GetSystemEmailTemplateAsync,
+      RequestType: GetSystemEmailTemplate,
+      HttpMethod: GET,
+      Path: /{version}/notifications/email/system-templates/{id},
+      PathParams: [
+        id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/notifications/email/system-templates/{guid},
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: GetSystemEmailTemplateResponse,
+      Response: {
+        Item: {
+          ImagePreview: test-imagePreview,
+          SystemGroup: test-systemGroup,
+          ForTrigger: Membership,
+          HiddenSystemEmailTemplate: true,
+          Id: Guid_1,
+          IsActive: false
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: notifications,
+      MethodName: GetSystemEmailTemplatesAsync,
+      RequestType: GetSystemEmailTemplates,
+      HttpMethod: GET,
+      Path: /{version}/notifications/email/system-templates,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/notifications/email/system-templates,
+        Query: ?communicationChannel=Transactional&forTrigger=Membership&paging=Norbix.Sdk.Types.Hub.PagingArgs,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: GetSystemEmailTemplatesResponse,
+      Response: {
+        List: {
+          Items: [
+            {
+              HasAttachments: false,
+              IsActive: false
+            }
+          ],
+          HasMore: false,
+          HasPrevious: false,
+          StartingAfter: cursor-start,
+          EndingBefore: cursor-end
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: notifications,
+      MethodName: UpdateEmailTemplateAsync,
+      RequestType: UpdateEmailTemplateRequest,
+      HttpMethod: PUT,
+      Path: /{version}/notifications/email/templates,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: PUT,
+        Path: /v2/notifications/email/templates,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          viewId: Guid_1,
+          templateName: test-templateName,
+          description: test-description,
+          communicationChannel: 0.0
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: notifications,
+      MethodName: DeleteEmailFooterAsync,
+      RequestType: DeleteEmailFooter,
+      HttpMethod: DELETE,
+      Path: /{version}/notifications/email/footers/{id},
+      PathParams: [
+        id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: DELETE,
+        Path: /v2/notifications/email/footers/{guid},
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: notifications,
+      MethodName: GetEmailFooterAsync,
+      RequestType: GetEmailFooter,
+      HttpMethod: GET,
+      Path: /{version}/notifications/email/footers/{id},
+      PathParams: [
+        id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/notifications/email/footers/{guid},
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: GetEmailFooterResponse,
+      Response: {
+        Item: {
+          ViewId: Guid_1,
+          DisplayName: test-displayName
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: notifications,
+      MethodName: GetEmailFootersAsync,
+      RequestType: GetEmailFooters,
+      HttpMethod: GET,
+      Path: /{version}/notifications/email/footers,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/notifications/email/footers,
+        Query: ?paging=Norbix.Sdk.Types.Hub.PagingArgs,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: GetEmailFootersResponse,
+      Response: {
+        List: {
+          Items: [
+            {}
+          ],
+          HasMore: false,
+          HasPrevious: false,
+          StartingAfter: cursor-start,
+          EndingBefore: cursor-end
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: notifications,
+      MethodName: SaveEmailFooterAsync,
+      RequestType: SaveEmailFooterRequest,
+      HttpMethod: POST,
+      Path: /{version}/notifications/email/footers,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/notifications/email/footers,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          viewId: Guid_1,
+          displayName: test-displayName
+        }
+      },
+      ResponseType: IdResponse,
+      Response: {
+        Id: Guid_1
+      }
+    },
+    {
+      Target: Hub,
+      Group: notifications,
+      MethodName: GetUserNotificationPreferencesAsync,
+      RequestType: GetUserNotificationPreferences,
+      HttpMethod: GET,
+      Path: /{version}/notifications/user/preferences,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/notifications/user/preferences,
+        Query: ?userId={guid},
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: GetUserEmailPreferencesResponse,
+      Response: {
+        DefaultLanguage: test-defaultLanguage,
+        BlockAllMarketingMessages: true,
+        SubscribedTags: {
+          Email: null
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: notifications,
+      MethodName: UpdateUserNotificationsPreferencesAsync,
+      RequestType: UpdateUserNotificationsPreferences,
+      HttpMethod: PUT,
+      Path: /{version}/notifications/user/preferences,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: PUT,
+        Path: /v2/notifications/user/preferences,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          userId: Guid_1,
+          blockAllMarketingMessages: true,
+          subscribedToTags: {
+            Email: null
+          }
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: notifications,
+      MethodName: DisablePushAsync,
+      RequestType: DisablePush,
+      HttpMethod: GET,
+      Path: /{version}/notifications/push/disable,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/notifications/push/disable,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: notifications,
+      MethodName: EnablePushAsync,
+      RequestType: EnablePush,
+      HttpMethod: GET,
+      Path: /{version}/notifications/push/enable,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/notifications/push/enable,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: notifications,
+      MethodName: RegisterDeviceAsync,
+      RequestType: RegisterDevice,
+      HttpMethod: POST,
+      Path: /{version}/notifications/push/devices,
+      IsAccountScoped: true,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/notifications/push/devices,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          pushDeviceDto: {
+            deviceId: Guid_1,
+            deviceOs: test-deviceOs,
+            token: test-token,
+            brand: test-brand,
+            manufacturer: test-manufacturer,
+            modelName: test-modelName,
+            deviceName: test-deviceName,
+            deviceType: 0.0
+          },
+          userId: Guid_1,
+          accountId: Guid_1
+        }
+      },
+      ResponseType: IdResponse,
+      Response: {
+        Id: Guid_1
+      }
+    },
+    {
+      Target: Hub,
+      Group: notifications,
+      MethodName: ConfirmPushIntegrationHumanDeliveryAsync,
+      RequestType: ConfirmPushIntegrationHumanDeliveryRequest,
+      HttpMethod: POST,
+      Path: /{version}/notifications/push/integrations/confirm-human-delivery,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/notifications/push/integrations/confirm-human-delivery,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          integrationId: Guid_1
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: notifications,
+      MethodName: DeletePushIntegrationAsync,
+      RequestType: DeletePushIntegrationRequest,
+      HttpMethod: DELETE,
+      Path: /{version}/notifications/push/integrations/{Id},
+      PathParams: [
+        Id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: DELETE,
+        Path: /v2/notifications/push/integrations/{guid},
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: notifications,
+      MethodName: DisablePushIntegrationAsync,
+      RequestType: DisablePushIntegrationRequest,
+      HttpMethod: PUT,
+      Path: /{version}/notifications/push/integrations/{Id}/disable,
+      PathParams: [
+        Id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: PUT,
+        Path: /v2/notifications/push/integrations/{guid}/disable,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: notifications,
+      MethodName: EnablePushIntegrationAsync,
+      RequestType: EnablePushIntegrationRequest,
+      HttpMethod: PUT,
+      Path: /{version}/notifications/push/integrations/{Id}/enable,
+      PathParams: [
+        Id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: PUT,
+        Path: /v2/notifications/push/integrations/{guid}/enable,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: notifications,
+      MethodName: GetPushIntegrationAsync,
+      RequestType: GetPushIntegration,
+      HttpMethod: GET,
+      Path: /{version}/notifications/push/integrations/{id},
+      PathParams: [
+        id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/notifications/push/integrations/{guid},
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: GetPushIntegrationResponse,
+      Response: {
+        Item: {},
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: notifications,
+      MethodName: GetPushIntegrationsAsync,
+      RequestType: GetPushIntegrations,
+      HttpMethod: GET,
+      Path: /{version}/notifications/push/integrations,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/notifications/push/integrations,
+        Query: ?paging=Norbix.Sdk.Types.Hub.PagingArgs,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: GetPushIntegrationsResponse,
+      Response: {
+        DefaultIntegrationId: Guid_1,
+        List: {
+          Items: [
+            {}
+          ],
+          HasMore: false,
+          HasPrevious: false,
+          StartingAfter: cursor-start,
+          EndingBefore: cursor-end
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: notifications,
+      MethodName: SavePushIntegrationAsync,
+      RequestType: SavePushIntegration,
+      HttpMethod: POST,
+      Path: /{version}/notifications/push/integrations,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/notifications/push/integrations,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          integration: {
+            integrationId: Guid_1,
+            provider: 0.0,
+            integrationName: test-integrationName,
+            isEnabled: true
+          }
+        }
+      },
+      ResponseType: IdResponse,
+      Response: {
+        Id: Guid_1
+      }
+    },
+    {
+      Target: Hub,
+      Group: notifications,
+      MethodName: SetPushIntegrationAsDefaultAsync,
+      RequestType: SetPushIntegrationAsDefaultRequest,
+      HttpMethod: PUT,
+      Path: /{version}/notifications/push/integrations/{Id}/default,
+      PathParams: [
+        Id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: PUT,
+        Path: /v2/notifications/push/integrations/{guid}/default,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: notifications,
+      MethodName: TestPushIntegrationAsync,
+      RequestType: TestPushIntegration,
+      HttpMethod: POST,
+      Path: /{version}/notifications/push/integrations/test,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/notifications/push/integrations/test,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          integrationId: Guid_1,
+          testToken: test-testToken,
+          deliveryFamily: test-deliveryFamily
+        }
+      },
+      ResponseType: TestEmailIntegrationResponse,
+      Response: {
+        Items: [
+          {}
+        ]
+      }
+    },
+    {
+      Target: Hub,
+      Group: notifications,
+      MethodName: RegisterCodeMashAppPushIntegrationAsync,
+      RequestType: RegisterCodeMashAppPushIntegration,
+      HttpMethod: POST,
+      Path: /{version}/notifications/push/integrations/app/request,
+      IsAccountScoped: true,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/notifications/push/integrations/app/request,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          accountId: Guid_1,
+          userId: Guid_1,
+          requestId: Guid_1,
+          pin: 1.0,
+          validTill: DateTimeOffset_1,
+          publicKey: test-publicKey
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: notifications,
+      MethodName: ArchivePushTemplateAsync,
+      RequestType: ArchivePushTemplateRequest,
+      HttpMethod: PUT,
+      Path: /{version}/notifications/push/templates/{Id}/archive,
+      PathParams: [
+        Id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: PUT,
+        Path: /v2/notifications/push/templates/{guid}/archive,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: notifications,
+      MethodName: ClonePushTemplateAsync,
+      RequestType: ClonePushTemplateRequest,
+      HttpMethod: POST,
+      Path: /{version}/notifications/push/templates/{Id}/clone,
+      PathParams: [
+        Id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/notifications/push/templates/{guid}/clone,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: notifications,
+      MethodName: CreatePushTemplateAsync,
+      RequestType: CreatePushTemplateRequest,
+      HttpMethod: POST,
+      Path: /{version}/notifications/push/templates,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/notifications/push/templates,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          templateName: test-templateName,
+          description: test-description,
+          communicationChannel: 0.0
+        }
+      },
+      ResponseType: IdResponse,
+      Response: {
+        Id: Guid_1
+      }
+    },
+    {
+      Target: Hub,
+      Group: notifications,
+      MethodName: DeletePushTemplateAsync,
+      RequestType: DeletePushTemplateRequest,
+      HttpMethod: DELETE,
+      Path: /{version}/notifications/push/templates/{Id},
+      PathParams: [
+        Id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: DELETE,
+        Path: /v2/notifications/push/templates/{guid},
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: notifications,
+      MethodName: GetPushMessageContentTokensAsync,
+      RequestType: GetPushMessageContentTokens,
+      HttpMethod: GET,
+      Path: /{version}/notifications/push/templates/{id}/tokens,
+      PathParams: [
+        id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/notifications/push/templates/{guid}/tokens,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: GetPushMessageContentTokensResponse,
+      Response: {
+        Tokens: {
+          sample-key: [
+            test-string
+          ]
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: notifications,
+      MethodName: GetPushTemplateAsync,
+      RequestType: GetPushTemplate,
+      HttpMethod: GET,
+      Path: /{version}/notifications/push/templates/{id},
+      PathParams: [
+        id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/notifications/push/templates/{guid},
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: GetPushTemplateResponse,
+      Response: {
+        Item: {
+          ViewId: Guid_1,
+          TemplateName: test-templateName,
+          Description: test-description,
+          IsActive: true
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: notifications,
+      MethodName: GetPushTemplatesAsync,
+      RequestType: GetPushTemplates,
+      HttpMethod: GET,
+      Path: /{version}/notifications/push/templates,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/notifications/push/templates,
+        Query: ?showArchived=True&templateId={guid}&paging=Norbix.Sdk.Types.Hub.PagingArgs,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: GetPushTemplatesResponse,
+      Response: {
+        List: {
+          Items: [
+            {
+              IsActive: false
+            }
+          ],
+          HasMore: false,
+          HasPrevious: false,
+          StartingAfter: cursor-start,
+          EndingBefore: cursor-end
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: notifications,
+      MethodName: UnArchivePushTemplateAsync,
+      RequestType: UnArchivePushTemplateRequest,
+      HttpMethod: PUT,
+      Path: /{version}/notifications/push/templates/{Id}/unarchive,
+      PathParams: [
+        Id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: PUT,
+        Path: /v2/notifications/push/templates/{guid}/unarchive,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: notifications,
+      MethodName: UpdatePushTemplateAsync,
+      RequestType: UpdatePushTemplateRequest,
+      HttpMethod: PUT,
+      Path: /{version}/notifications/push/templates,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: PUT,
+        Path: /v2/notifications/push/templates,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          viewId: Guid_1,
+          templateName: test-templateName,
+          description: test-description,
+          communicationChannel: 0.0
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    }
+  ]
+}

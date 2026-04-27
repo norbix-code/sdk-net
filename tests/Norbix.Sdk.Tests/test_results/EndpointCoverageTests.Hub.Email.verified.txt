@@ -1,0 +1,36 @@
+﻿{
+  Target: Hub,
+  Group: email,
+  Count: 1,
+  Endpoints: [
+    {
+      Target: Hub,
+      Group: email,
+      MethodName: OneClickUnsubscribeAsync,
+      RequestType: OneClickUnsubscribeRequest,
+      HttpMethod: POST,
+      Path: /{version}/email/one-click-unsubscribe,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/email/one-click-unsubscribe,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          token: test-token
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    }
+  ]
+}

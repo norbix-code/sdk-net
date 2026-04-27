@@ -1,0 +1,7 @@
+﻿{
+  Threw: true,
+  Code: NORBIX_NOT_AUTHENTICATED,
+  Message: Norbix is not authenticated. Provide ApiKey, BearerToken, or call LoginAsync(...) first.,
+  IsAuthenticated: false,
+  FiredHttp: false
+}

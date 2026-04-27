@@ -1,0 +1,266 @@
+﻿{
+  Target: Hub,
+  Group: logs,
+  Count: 9,
+  Endpoints: [
+    {
+      Target: Hub,
+      Group: logs,
+      MethodName: DisableLoggingAsync,
+      RequestType: DisableLogging,
+      HttpMethod: GET,
+      Path: /{version}/logs/disable,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/logs/disable,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: logs,
+      MethodName: EnableLoggingAsync,
+      RequestType: EnableLogging,
+      HttpMethod: GET,
+      Path: /{version}/logs/enable,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/logs/enable,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: logs,
+      MethodName: DeleteLoggingIntegrationAsync,
+      RequestType: DeleteLoggingIntegrationRequest,
+      HttpMethod: DELETE,
+      Path: /{version}/logs/integrations/{Id},
+      PathParams: [
+        Id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: DELETE,
+        Path: /v2/logs/integrations/{guid},
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: logs,
+      MethodName: DisableLoggingIntegrationAsync,
+      RequestType: DisableLoggingIntegrationRequest,
+      HttpMethod: PUT,
+      Path: /{version}/logs/integrations/{Id}/disable,
+      PathParams: [
+        Id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: PUT,
+        Path: /v2/logs/integrations/{guid}/disable,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: logs,
+      MethodName: EnableLoggingIntegrationAsync,
+      RequestType: EnableLoggingIntegrationRequest,
+      HttpMethod: PUT,
+      Path: /{version}/logs/integrations/{Id}/enable,
+      PathParams: [
+        Id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: PUT,
+        Path: /v2/logs/integrations/{guid}/enable,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: logs,
+      MethodName: GetLoggingIntegrationAsync,
+      RequestType: GetLoggingIntegration,
+      HttpMethod: GET,
+      Path: /{version}/logs/integrations/{id},
+      PathParams: [
+        id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/logs/integrations/{guid},
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: GetLoggingIntegrationResponse,
+      Response: {
+        Item: {},
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: logs,
+      MethodName: GetLoggingIntegrationsAsync,
+      RequestType: GetLoggingIntegrations,
+      HttpMethod: GET,
+      Path: /{version}/logs/integrations,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/logs/integrations,
+        Query: ?paging=Norbix.Sdk.Types.Hub.PagingArgs,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: GetLoggingIntegrationsResponse,
+      Response: {
+        List: {
+          Items: [
+            {}
+          ],
+          HasMore: false,
+          HasPrevious: false,
+          StartingAfter: cursor-start,
+          EndingBefore: cursor-end
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: logs,
+      MethodName: SaveLoggingIntegrationAsync,
+      RequestType: SaveLoggingIntegration,
+      HttpMethod: POST,
+      Path: /{version}/logs/integrations,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/logs/integrations,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          integration: {
+            integrationId: Guid_1,
+            provider: 0.0,
+            integrationName: test-integrationName,
+            isEnabled: true
+          }
+        }
+      },
+      ResponseType: IdResponse,
+      Response: {
+        Id: Guid_1
+      }
+    },
+    {
+      Target: Hub,
+      Group: logs,
+      MethodName: TestLoggingIntegrationAsync,
+      RequestType: TestLoggingIntegration,
+      HttpMethod: POST,
+      Path: /{version}/logs/integrations/test,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/logs/integrations/test,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          integrationId: Guid_1
+        }
+      },
+      ResponseType: TestLoggingIntegrationResponse,
+      Response: {
+        Items: [
+          {}
+        ]
+      }
+    }
+  ]
+}

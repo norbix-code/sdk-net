@@ -1,0 +1,58 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    The main client package. Bundles:
+      · the hand-written transport / auth / login / options code
+      · the Norbix.Sdk.Types DTO project (transitive)
+      · the Norbix.Sdk.Generators source generator as an analyzer asset, so
+        every consumer's compilation receives the generated Api / Hub
+        namespaces automatically.
+  -->
+
+  <PropertyGroup>
+    <PackageId>Norbix.Sdk</PackageId>
+    <Description>Official .NET SDK for Norbix. One client wraps both the API (project-scoped data) and the Hub (project &amp; account configuration). JWT bearer + API key auth, project / account scoping, async-first.</Description>
+    <PackageTags>norbix;sdk;baas;backend;database;files;push;email;ai</PackageTags>
+    <RootNamespace>Norbix.Sdk</RootNamespace>
+    <AssemblyName>Norbix.Sdk</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Norbix.Sdk.Types\Norbix.Sdk.Types.csproj" />
+  </ItemGroup>
+
+  <!--
+    The source generator project is an analyzer dependency, NOT a runtime
+    dependency. ReferenceOutputAssembly=false keeps its DLL out of the
+    runtime closure; OutputItemType=Analyzer ships the DLL inside this
+    package's analyzers/dotnet/cs folder.
+  -->
+  <ItemGroup>
+    <ProjectReference
+      Include="..\Norbix.Sdk.Generators\Norbix.Sdk.Generators.csproj"
+      OutputItemType="Analyzer"
+      ReferenceOutputAssembly="false" />
+  </ItemGroup>
+
+  <!--
+    Pack the generator DLL into the published nupkg so consumers receive it
+    without having to install Norbix.Sdk.Generators separately.
+  -->
+  <ItemGroup>
+    <None
+      Include="$(OutputPath)\..\..\Norbix.Sdk.Generators\$(Configuration)\netstandard2.0\Norbix.Sdk.Generators.dll"
+      Pack="true"
+      PackagePath="analyzers/dotnet/cs/Norbix.Sdk.Generators.dll"
+      Visible="false" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" />
+    <PackageReference Include="Microsoft.Extensions.Http" />
+    <PackageReference Include="Microsoft.Extensions.Options" />
+    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" />
+  </ItemGroup>
+
+</Project>

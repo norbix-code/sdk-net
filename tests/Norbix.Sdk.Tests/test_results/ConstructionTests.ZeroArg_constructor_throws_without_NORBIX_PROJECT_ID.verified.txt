@@ -1,0 +1,4 @@
+﻿{
+  Threw: true,
+  Message: Norbix: ProjectId is required. Pass it to NorbixClientOptions or set NORBIX_PROJECT_ID.
+}

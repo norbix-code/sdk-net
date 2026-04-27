@@ -1,0 +1,664 @@
+﻿{
+  Target: Api,
+  Group: membership,
+  Count: 18,
+  Endpoints: [
+    {
+      Target: Api,
+      Group: membership,
+      MethodName: AssignRolePermissionsAsync,
+      RequestType: AssignRolePermissionsRequest,
+      HttpMethod: PUT,
+      Path: /{version}/membership/users/assign-roles,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: PUT,
+        Path: /v2/membership/users/assign-roles,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          id: Guid_1,
+          databaseIntegrationId: Guid_1
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: membership,
+      MethodName: BlockUserAsync,
+      RequestType: BlockUserRequest,
+      HttpMethod: PATCH,
+      Path: /{version}/membership/users/block,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: PATCH,
+        Path: /v2/membership/users/block,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          id: Guid_1,
+          databaseIntegrationId: Guid_1
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: membership,
+      MethodName: DeleteUserAsync,
+      RequestType: DeleteUserRequest,
+      HttpMethod: DELETE,
+      Path: /{version}/membership/users,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: DELETE,
+        Path: /v2/membership/users,
+        Query: ?id={guid}&databaseIntegrationId={guid},
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: membership,
+      MethodName: GetUserPreferencesAsync,
+      RequestType: GetUserPreferencesRequest,
+      HttpMethod: GET,
+      Path: /{version}/membership/users/{id}/preferences,
+      PathParams: [
+        id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/membership/users/{guid}/preferences,
+        Query: ?databaseIntegrationId={guid},
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: GetUserPreferencesResponse,
+      Response: {
+        Preferences: {
+          BlockAllMarketingMessages: true,
+          BlockedTags: {
+            sample-key: null
+          }
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: membership,
+      MethodName: GetUserAsync,
+      RequestType: GetUserRequest,
+      HttpMethod: GET,
+      Path: /{version}/membership/users/{id},
+      PathParams: [
+        id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/membership/users/{guid},
+        Query: ?databaseIntegrationId={guid},
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: GetUserResponse,
+      Response: {
+        User: {
+          Id: Guid_1,
+          Email: user@example.test,
+          UserName: test-userName,
+          Registration: {},
+          Login: {
+            NeedChangePasswordOnNextLogin: false
+          },
+          GeneralInfo: {
+            BlockAllMarketingMessages: false
+          }
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: membership,
+      MethodName: GetUsersAsync,
+      RequestType: GetUsersRequest,
+      HttpMethod: GET,
+      Path: /{version}/membership/users,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/membership/users,
+        Query: ?databaseIntegrationId={guid}&includePermissions=True&userShouldHavePushDevice=True&userShouldHaveEmail=True&includeMeta=True&paging=Norbix.Sdk.Types.Api.PagingArgs,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: GetUsersResponse,
+      Response: {
+        List: {
+          Items: [
+            {}
+          ],
+          HasMore: false,
+          HasPrevious: false,
+          StartingAfter: cursor-start,
+          EndingBefore: cursor-end
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: membership,
+      MethodName: InviteUserAsync,
+      RequestType: InviteUserRequest,
+      HttpMethod: POST,
+      Path: /{version}/membership/users/invite,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/membership/users/invite,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          email: user@example.test,
+          databaseIntegrationId: Guid_1
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: membership,
+      MethodName: SaveEmailUserAsync,
+      RequestType: SaveEmailUser,
+      HttpMethod: POST,
+      Path: /{version}/membership/users/register/email,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/membership/users/register/email,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          password: test-password,
+          email: user@example.test,
+          databaseIntegrationId: Guid_1,
+          userGeneralInfo: {
+            phone: test-phone,
+            primaryEmail: user@example.test,
+            displayName: test-displayName,
+            firstName: test-firstName,
+            lastName: test-lastName,
+            fullName: test-fullName,
+            addressLine1: test-addressLine1,
+            addressLine2: test-addressLine2,
+            blockAllMarketingMessages: false
+          },
+          ignoreUserRegistersAsRole: true
+        }
+      },
+      ResponseType: IdResponse,
+      Response: {
+        Id: Guid_1
+      }
+    },
+    {
+      Target: Api,
+      Group: membership,
+      MethodName: SaveEmailUserNameWithPermissionsAsync,
+      RequestType: SaveEmailUserNameWithPermissions,
+      HttpMethod: POST,
+      Path: /{version}/membership/users/register/email-with-permissions,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/membership/users/register/email-with-permissions,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          password: test-password,
+          email: user@example.test,
+          databaseIntegrationId: Guid_1,
+          userGeneralInfo: {
+            phone: test-phone,
+            primaryEmail: user@example.test,
+            displayName: test-displayName,
+            firstName: test-firstName,
+            lastName: test-lastName,
+            fullName: test-fullName,
+            addressLine1: test-addressLine1,
+            addressLine2: test-addressLine2,
+            blockAllMarketingMessages: false
+          },
+          ignoreUserRegistersAsRole: true
+        }
+      },
+      ResponseType: IdResponse,
+      Response: {
+        Id: Guid_1
+      }
+    },
+    {
+      Target: Api,
+      Group: membership,
+      MethodName: SaveGuestUserAsync,
+      RequestType: SaveGuestUser,
+      HttpMethod: POST,
+      Path: /{version}/membership/users/register/guest,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/membership/users/register/guest,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          databaseIntegrationId: Guid_1,
+          userGeneralInfo: {
+            phone: test-phone,
+            primaryEmail: user@example.test,
+            displayName: test-displayName,
+            firstName: test-firstName,
+            lastName: test-lastName,
+            fullName: test-fullName,
+            addressLine1: test-addressLine1,
+            addressLine2: test-addressLine2,
+            blockAllMarketingMessages: false
+          },
+          ignoreUserRegistersAsRole: true
+        }
+      },
+      ResponseType: IdResponse,
+      Response: {
+        Id: Guid_1
+      }
+    },
+    {
+      Target: Api,
+      Group: membership,
+      MethodName: SavePhoneUserAsync,
+      RequestType: SavePhoneUser,
+      HttpMethod: POST,
+      Path: /{version}/membership/users/register/phone,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/membership/users/register/phone,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          phone: test-phone,
+          databaseIntegrationId: Guid_1,
+          userGeneralInfo: {
+            phone: test-phone,
+            primaryEmail: user@example.test,
+            displayName: test-displayName,
+            firstName: test-firstName,
+            lastName: test-lastName,
+            fullName: test-fullName,
+            addressLine1: test-addressLine1,
+            addressLine2: test-addressLine2,
+            blockAllMarketingMessages: false
+          },
+          ignoreUserRegistersAsRole: true
+        }
+      },
+      ResponseType: IdResponse,
+      Response: {
+        Id: Guid_1
+      }
+    },
+    {
+      Target: Api,
+      Group: membership,
+      MethodName: SavePhoneUserNameWithPermissionsAsync,
+      RequestType: SavePhoneUserNameWithPermissions,
+      HttpMethod: POST,
+      Path: /{version}/membership/users/register/phone-with-permissions,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/membership/users/register/phone-with-permissions,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          phone: test-phone,
+          databaseIntegrationId: Guid_1,
+          userGeneralInfo: {
+            phone: test-phone,
+            primaryEmail: user@example.test,
+            displayName: test-displayName,
+            firstName: test-firstName,
+            lastName: test-lastName,
+            fullName: test-fullName,
+            addressLine1: test-addressLine1,
+            addressLine2: test-addressLine2,
+            blockAllMarketingMessages: false
+          },
+          ignoreUserRegistersAsRole: true
+        }
+      },
+      ResponseType: IdResponse,
+      Response: {
+        Id: Guid_1
+      }
+    },
+    {
+      Target: Api,
+      Group: membership,
+      MethodName: SaveSystemUserWithPermissionsAsync,
+      RequestType: SaveSystemUserWithPermissions,
+      HttpMethod: POST,
+      Path: /{version}/membership/users/register/service,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/membership/users/register/service,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          databaseIntegrationId: Guid_1,
+          userGeneralInfo: {
+            phone: test-phone,
+            primaryEmail: user@example.test,
+            displayName: test-displayName,
+            firstName: test-firstName,
+            lastName: test-lastName,
+            fullName: test-fullName,
+            addressLine1: test-addressLine1,
+            addressLine2: test-addressLine2,
+            blockAllMarketingMessages: false
+          },
+          ignoreUserRegistersAsRole: true
+        }
+      },
+      ResponseType: IdResponse,
+      Response: {
+        Id: Guid_1
+      }
+    },
+    {
+      Target: Api,
+      Group: membership,
+      MethodName: SaveUserNameUserAsync,
+      RequestType: SaveUserNameUser,
+      HttpMethod: POST,
+      Path: /{version}/membership/users/register/user-name,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/membership/users/register/user-name,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          password: test-password,
+          userName: test-userName,
+          databaseIntegrationId: Guid_1,
+          userGeneralInfo: {
+            phone: test-phone,
+            primaryEmail: user@example.test,
+            displayName: test-displayName,
+            firstName: test-firstName,
+            lastName: test-lastName,
+            fullName: test-fullName,
+            addressLine1: test-addressLine1,
+            addressLine2: test-addressLine2,
+            blockAllMarketingMessages: false
+          },
+          ignoreUserRegistersAsRole: true
+        }
+      },
+      ResponseType: IdResponse,
+      Response: {
+        Id: Guid_1
+      }
+    },
+    {
+      Target: Api,
+      Group: membership,
+      MethodName: SaveUserNameWithPermissionsAsync,
+      RequestType: SaveUserNameWithPermissions,
+      HttpMethod: POST,
+      Path: /{version}/membership/users/register/user-name-with-permissions,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/membership/users/register/user-name-with-permissions,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          password: test-password,
+          userName: test-userName,
+          databaseIntegrationId: Guid_1,
+          userGeneralInfo: {
+            phone: test-phone,
+            primaryEmail: user@example.test,
+            displayName: test-displayName,
+            firstName: test-firstName,
+            lastName: test-lastName,
+            fullName: test-fullName,
+            addressLine1: test-addressLine1,
+            addressLine2: test-addressLine2,
+            blockAllMarketingMessages: false
+          },
+          ignoreUserRegistersAsRole: true
+        }
+      },
+      ResponseType: IdResponse,
+      Response: {
+        Id: Guid_1
+      }
+    },
+    {
+      Target: Api,
+      Group: membership,
+      MethodName: UnblockUserAsync,
+      RequestType: UnblockUserRequest,
+      HttpMethod: PATCH,
+      Path: /{version}/membership/users/unblock,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: PATCH,
+        Path: /v2/membership/users/unblock,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          id: Guid_1,
+          databaseIntegrationId: Guid_1
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: membership,
+      MethodName: UpdateUserPreferencesAsync,
+      RequestType: UpdateUserPreferencesRequest,
+      HttpMethod: PUT,
+      Path: /{version}/membership/users/{id}/preferences,
+      PathParams: [
+        id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: PUT,
+        Path: /v2/membership/users/{guid}/preferences,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          blockAllMarketingMessages: true,
+          blockedTags: {
+            test-key: [
+              test-string
+            ]
+          },
+          databaseIntegrationId: Guid_1
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: membership,
+      MethodName: UpdateUserAsync,
+      RequestType: UpdateUserRequest,
+      HttpMethod: PUT,
+      Path: /{version}/membership/users,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: PUT,
+        Path: /v2/membership/users,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          id: Guid_1,
+          databaseIntegrationId: Guid_1,
+          userGeneralInfo: {
+            phone: test-phone,
+            primaryEmail: user@example.test,
+            displayName: test-displayName,
+            firstName: test-firstName,
+            lastName: test-lastName,
+            fullName: test-fullName,
+            addressLine1: test-addressLine1,
+            addressLine2: test-addressLine2,
+            blockAllMarketingMessages: false
+          },
+          ignoreUserRegistersAsRole: true
+        }
+      },
+      ResponseType: IdResponse,
+      Response: {
+        Id: Guid_1
+      }
+    }
+  ]
+}

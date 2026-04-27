@@ -1,0 +1,12 @@
+﻿{
+  Threw: true,
+  StatusCode: 400,
+  Code: ValidationError,
+  Message: name is required,
+  FieldErrors: [
+    {
+      FieldName: name,
+      Message: name is required
+    }
+  ]
+}

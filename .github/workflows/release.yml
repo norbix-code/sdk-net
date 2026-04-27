@@ -1,0 +1,91 @@
+name: Release
+
+# Publishes Norbix.Sdk + Norbix.Sdk.Types to NuGet via semantic-release.
+# Triggers on push to main / next / beta. Uses @semantic-release/exec to call
+# `dotnet pack` and `dotnet nuget push` with the version semantic-release
+# computed from conventional commits.
+#
+# Required secrets:
+#   - NUGET_API_KEY  — push key for nuget.org (or a GitHub Packages PAT).
+#   - GITHUB_TOKEN   — provided automatically; tags + GH release.
+#
+# NuGet trusted publishing (OIDC) is not used yet — keep an API key for now.
+
+on:
+  push:
+    branches: [main, next, beta]
+  workflow_dispatch:
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+  issues: write
+  pull-requests: write
+  id-token: write
+  packages: write
+
+env:
+  DOTNET_NOLOGO: 'true'
+  DOTNET_CLI_TELEMETRY_OPTOUT: 'true'
+
+jobs:
+  release:
+    name: semantic-release
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Setup .NET (from global.json)
+        uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+
+      - name: Setup Node (for semantic-release)
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Restore tools + deps
+        run: |
+          dotnet tool restore
+          dotnet restore
+
+      - name: Build
+        run: dotnet build --configuration Release --no-restore -warnaserror
+
+      - name: Test
+        run: dotnet test --configuration Release --no-build
+
+      - name: Install semantic-release
+        run: |
+          npm install -g \
+            semantic-release@24 \
+            @semantic-release/changelog \
+            @semantic-release/commit-analyzer \
+            @semantic-release/release-notes-generator \
+            @semantic-release/exec \
+            @semantic-release/git \
+            @semantic-release/github
+
+      - name: Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+        run: npx semantic-release
+
+      - name: Summary
+        if: always()
+        run: |
+          echo "### Release · ${{ github.ref_name }}" >> $GITHUB_STEP_SUMMARY
+          if [ -f CHANGELOG.md ]; then
+            echo '```' >> $GITHUB_STEP_SUMMARY
+            head -40 CHANGELOG.md >> $GITHUB_STEP_SUMMARY
+            echo '```' >> $GITHUB_STEP_SUMMARY
+          fi

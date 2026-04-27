@@ -1,0 +1,32 @@
+﻿{
+  session: {
+    BearerToken: fresh-jwt,
+    RefreshToken: r1,
+    UserId: u1,
+    UserName: alice
+  },
+  IsAuthenticated: true,
+  requests: [
+    {
+      Method: POST,
+      Path: /auth,
+      Headers: {
+        Content-Type: application/json; charset=utf-8,
+        X-CM-ProjectId: p1
+      },
+      Body: {
+        provider: credentials,
+        userName: alice,
+        password: secret
+      }
+    },
+    {
+      Method: GET,
+      Path: /v2/echo,
+      Headers: {
+        Authorization: Bearer fresh-jwt,
+        X-CM-ProjectId: p1
+      }
+    }
+  ]
+}

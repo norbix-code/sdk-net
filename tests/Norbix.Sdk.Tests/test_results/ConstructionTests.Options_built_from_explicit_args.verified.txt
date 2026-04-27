@@ -1,0 +1,9 @@
+﻿{
+  ApiKey: explicit-key,
+  ProjectId: explicit-project,
+  AccountId: explicit-account,
+  ApiBaseUrl: https://api.norbix.dev,
+  HubBaseUrl: https://hub.norbix.dev,
+  ApiVersion: v2,
+  IsAuthenticated: true
+}

@@ -1,0 +1,39 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
+    <RootNamespace>Norbix.Sdk.Tests</RootNamespace>
+    <!-- Tests can be a touch noisier than ship code. -->
+    <NoWarn>$(NoWarn);CA1707</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!--
+      Test stack is intentionally minimal:
+        - NUnit + NUnit3TestAdapter for the runner
+        - NUnit.Analyzers for compile-time test smell detection
+        - Verify.NUnit for snapshot-based assertions (the only assertion
+          mechanism we use; matches the gateway tests' SimpleTestBase style)
+      No FluentAssertions / AwesomeAssertions / Shouldly — every test does
+      `await Verify(...)` exactly once.
+    -->
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="NUnit" />
+    <PackageReference Include="NUnit3TestAdapter" />
+    <PackageReference Include="NUnit.Analyzers" />
+    <PackageReference Include="Verify.NUnit" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Norbix.Sdk\Norbix.Sdk.csproj" />
+    <ProjectReference Include="..\..\src\Norbix.Sdk.Types\Norbix.Sdk.Types.csproj" />
+  </ItemGroup>
+
+  <!-- Verify snapshots live alongside their tests. The CI drift check
+       compares received vs verified files inside the Snapshots folder. -->
+  <ItemGroup>
+    <None Update="Snapshots\**\*.verified.*" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+</Project>

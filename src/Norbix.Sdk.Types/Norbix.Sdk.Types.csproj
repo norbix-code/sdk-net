@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <PackageId>Norbix.Sdk.Types</PackageId>
+    <Description>Norbix SDK · request and response DTOs. Generated from the gateway /metadata endpoints; consume via Norbix.Sdk or directly when you only need typed contracts.</Description>
+    <PackageTags>norbix;sdk;types;dto;baas</PackageTags>
+    <RootNamespace>Norbix.Sdk.Types</RootNamespace>
+    <AssemblyName>Norbix.Sdk.Types</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" PrivateAssets="all" />
+  </ItemGroup>
+
+</Project>

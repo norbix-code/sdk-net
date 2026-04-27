@@ -1,0 +1,253 @@
+﻿{
+  Target: Hub,
+  Group: scheduler,
+  Count: 8,
+  Endpoints: [
+    {
+      Target: Hub,
+      Group: scheduler,
+      MethodName: DisableSchedulerAsync,
+      RequestType: DisableScheduler,
+      HttpMethod: GET,
+      Path: /{version}/scheduler/disable,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/scheduler/disable,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: scheduler,
+      MethodName: EnableSchedulerAsync,
+      RequestType: EnableScheduler,
+      HttpMethod: GET,
+      Path: /{version}/scheduler/enable,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/scheduler/enable,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: scheduler,
+      MethodName: DeleteSchedulerTaskAsync,
+      RequestType: DeleteSchedulerTask,
+      HttpMethod: DELETE,
+      Path: /{version}/scheduler/tasks/{Id},
+      PathParams: [
+        Id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: DELETE,
+        Path: /v2/scheduler/tasks/{guid},
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: scheduler,
+      MethodName: DisableSchedulerTaskAsync,
+      RequestType: DisableSchedulerTask,
+      HttpMethod: PUT,
+      Path: /{version}/scheduler/tasks/{Id}/disable,
+      PathParams: [
+        Id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: PUT,
+        Path: /v2/scheduler/tasks/{guid}/disable,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: scheduler,
+      MethodName: EnableSchedulerTaskAsync,
+      RequestType: EnableSchedulerTask,
+      HttpMethod: PUT,
+      Path: /{version}/scheduler/tasks/{Id}/enable,
+      PathParams: [
+        Id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: PUT,
+        Path: /v2/scheduler/tasks/{guid}/enable,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: scheduler,
+      MethodName: GetSchedulerTaskAsync,
+      RequestType: GetSchedulerTask,
+      HttpMethod: GET,
+      Path: /{version}/scheduler/tasks/{id},
+      PathParams: [
+        id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/scheduler/tasks/{guid},
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: GetSchedulerTaskResponse,
+      Response: {
+        Item: {
+          ProjectId: Guid_1,
+          TaskId: Guid_1,
+          Name: test-name,
+          Description: test-description,
+          Cron: test-cron,
+          PayloadJson: test-payloadJson,
+          InitiatorId: Guid_1,
+          IsEnabled: false,
+          StopOnError: false
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: scheduler,
+      MethodName: GetSchedulerTasksAsync,
+      RequestType: GetSchedulerTasks,
+      HttpMethod: GET,
+      Path: /{version}/scheduler/tasks,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/scheduler/tasks,
+        Query: ?type=EmailCampaign&enabled=True&paging=Norbix.Sdk.Types.Hub.PagingArgs,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: GetSchedulerTasksResponse,
+      Response: {
+        List: {
+          Items: [
+            {
+              IsEnabled: false
+            }
+          ],
+          HasMore: false,
+          HasPrevious: false,
+          StartingAfter: cursor-start,
+          EndingBefore: cursor-end
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: scheduler,
+      MethodName: SaveSchedulerTaskAsync,
+      RequestType: SaveSchedulerTaskRequest,
+      HttpMethod: POST,
+      Path: /{version}/scheduler/tasks,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/scheduler/tasks,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          taskId: Guid_1,
+          name: test-name,
+          description: test-description,
+          cron: test-cron,
+          initiatorUserId: Guid_1,
+          isEnabled: true,
+          stopOnError: true,
+          task: {
+            type: 0.0
+          }
+        }
+      },
+      ResponseType: IdResponse,
+      Response: {
+        Id: Guid_1
+      }
+    }
+  ]
+}

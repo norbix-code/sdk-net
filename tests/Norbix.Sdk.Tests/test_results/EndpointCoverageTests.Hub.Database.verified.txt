@@ -1,0 +1,1345 @@
+﻿{
+  Target: Hub,
+  Group: database,
+  Count: 41,
+  Endpoints: [
+    {
+      Target: Hub,
+      Group: database,
+      MethodName: DisableDatabaseAsync,
+      RequestType: DisableDatabase,
+      HttpMethod: GET,
+      Path: /{version}/database/disable,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/database/disable,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: database,
+      MethodName: EnableDatabaseAsync,
+      RequestType: EnableDatabase,
+      HttpMethod: GET,
+      Path: /{version}/database/enable,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/database/enable,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: database,
+      MethodName: DeleteDatabaseAggregateAsync,
+      RequestType: DeleteDatabaseAggregateRequest,
+      HttpMethod: DELETE,
+      Path: /{version}/database/aggregates/{Id},
+      PathParams: [
+        Id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: DELETE,
+        Path: /v2/database/aggregates/{guid},
+        Query: ?schemaId={guid},
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: database,
+      MethodName: GetDatabaseAggregateAsync,
+      RequestType: GetDatabaseAggregate,
+      HttpMethod: GET,
+      Path: /{version}/database/aggregates/{Id},
+      PathParams: [
+        Id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/database/aggregates/{guid},
+        Query: ?schemaId={guid},
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: GetDatabaseAggregateResponse,
+      Response: {
+        Item: {
+          ViewId: Guid_1,
+          DisplayName: test-displayName,
+          Description: test-description,
+          SchemaViewId: Guid_1,
+          Pipeline: test-pipeline
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: database,
+      MethodName: GetDatabaseAggregatesAsync,
+      RequestType: GetDatabaseAggregates,
+      HttpMethod: GET,
+      Path: /{version}/database/aggregates,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/database/aggregates,
+        Query: ?schemaId={guid}&pagingArgs=Norbix.Sdk.Types.Hub.PagingArgs&paging=Norbix.Sdk.Types.Hub.PagingArgs,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: GetDatabaseAggregatesResponse,
+      Response: {
+        List: {
+          Items: [
+            {}
+          ],
+          HasMore: false,
+          HasPrevious: false,
+          StartingAfter: cursor-start,
+          EndingBefore: cursor-end
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: database,
+      MethodName: SaveDatabaseAggregateAsync,
+      RequestType: SaveDatabaseAggregateRequest,
+      HttpMethod: POST,
+      Path: /{version}/database/aggregates,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/database/aggregates,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          viewId: Guid_1,
+          schemaId: Guid_1,
+          displayName: test-displayName,
+          description: test-description,
+          pipeline: test-pipeline
+        }
+      },
+      ResponseType: IdResponse,
+      Response: {
+        Id: Guid_1
+      }
+    },
+    {
+      Target: Hub,
+      Group: database,
+      MethodName: TestDatabaseAggregateAsync,
+      RequestType: TestDatabaseAggregateRequest,
+      HttpMethod: POST,
+      Path: /{version}/database/aggregates/test,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/database/aggregates/test,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          databaseIntegrationId: Guid_1,
+          collectionName: test-collectionName,
+          pipeline: test-pipeline,
+          tokens: {
+            test-key: test-string
+          }
+        }
+      },
+      ResponseType: TestDatabaseAggregateResponse,
+      Response: {
+        Result: [
+          {
+            ValueKind: Object
+          }
+        ],
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: database,
+      MethodName: DeleteDatabaseIntegrationAsync,
+      RequestType: DeleteDatabaseIntegrationRequest,
+      HttpMethod: DELETE,
+      Path: /{version}/database/integrations/{Id},
+      PathParams: [
+        Id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: DELETE,
+        Path: /v2/database/integrations/{guid},
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: database,
+      MethodName: DisableDatabaseIntegrationAsync,
+      RequestType: DisableDatabaseIntegrationRequest,
+      HttpMethod: PUT,
+      Path: /{version}/database/integrations/{Id}/disable,
+      PathParams: [
+        Id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: PUT,
+        Path: /v2/database/integrations/{guid}/disable,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: database,
+      MethodName: EnableDatabaseIntegrationAsync,
+      RequestType: EnableDatabaseIntegrationRequest,
+      HttpMethod: PUT,
+      Path: /{version}/database/integrations/{Id}/enable,
+      PathParams: [
+        Id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: PUT,
+        Path: /v2/database/integrations/{guid}/enable,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: database,
+      MethodName: GetDatabaseIntegrationAsync,
+      RequestType: GetDatabaseIntegration,
+      HttpMethod: GET,
+      Path: /{version}/database/integrations/{id},
+      PathParams: [
+        id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/database/integrations/{guid},
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: GetDatabaseIntegrationResponse,
+      Response: {
+        Item: {},
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: database,
+      MethodName: GetDatabaseIntegrationsAsync,
+      RequestType: GetDatabaseIntegrations,
+      HttpMethod: GET,
+      Path: /{version}/database/integrations,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/database/integrations,
+        Query: ?pagingArgs=Norbix.Sdk.Types.Hub.PagingArgs&paging=Norbix.Sdk.Types.Hub.PagingArgs,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: GetDatabaseIntegrationsResponse,
+      Response: {
+        DefaultIntegrationId: Guid_1,
+        List: {
+          Items: [
+            {}
+          ],
+          HasMore: false,
+          HasPrevious: false,
+          StartingAfter: cursor-start,
+          EndingBefore: cursor-end
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: database,
+      MethodName: SaveDatabaseIntegrationAsync,
+      RequestType: SaveDatabaseIntegration,
+      HttpMethod: POST,
+      Path: /{version}/database/integrations,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/database/integrations,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          integration: {
+            integrationId: Guid_1,
+            provider: 0.0,
+            integrationName: test-integrationName,
+            isEnabled: true
+          }
+        }
+      },
+      ResponseType: IdResponse,
+      Response: {
+        Id: Guid_1
+      }
+    },
+    {
+      Target: Hub,
+      Group: database,
+      MethodName: SetDatabaseIntegrationAsDefaultAsync,
+      RequestType: SetDatabaseIntegrationAsDefaultRequest,
+      HttpMethod: PUT,
+      Path: /{version}/database/integrations/{Id}/default,
+      PathParams: [
+        Id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: PUT,
+        Path: /v2/database/integrations/{guid}/default,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: database,
+      MethodName: DeleteDatabaseSchemaAsync,
+      RequestType: DeleteDatabaseSchemaRequest,
+      HttpMethod: DELETE,
+      Path: /{version}/database/schemas/{Id},
+      PathParams: [
+        Id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: DELETE,
+        Path: /v2/database/schemas/{guid},
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: database,
+      MethodName: DiscardDatabaseSchemaDraftAsync,
+      RequestType: DiscardDatabaseSchemaDraftRequest,
+      HttpMethod: DELETE,
+      Path: /{version}/database/schemas/{Id}/draft,
+      PathParams: [
+        Id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: DELETE,
+        Path: /v2/database/schemas/{guid}/draft,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: database,
+      MethodName: GetDatabaseSchemaAsync,
+      RequestType: GetDatabaseSchema,
+      HttpMethod: GET,
+      Path: /{version}/database/schemas/{id},
+      PathParams: [
+        id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/database/schemas/{guid},
+        Query: ?schemaVersion=1,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: GetDatabaseSchemaResponse,
+      Response: {
+        Item: {
+          ViewId: Guid_1,
+          SchemaName: test-schemaName,
+          SchemaSlug: test-schemaSlug,
+          Version: 7,
+          MetaSchemaVersion: 7,
+          DataSchema: {},
+          VisualSchema: {},
+          PublishedAt: DateTimeOffset_1
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: database,
+      MethodName: GetDatabaseSchemaDraftAsync,
+      RequestType: GetDatabaseSchemaDraft,
+      HttpMethod: GET,
+      Path: /{version}/database/schemas/{Id}/draft,
+      PathParams: [
+        Id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/database/schemas/{guid}/draft,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: GetDatabaseSchemaDraftResponse,
+      Response: {
+        Item: {
+          DataSchema: {},
+          VisualSchema: {},
+          UpdatedAt: DateTimeOffset_1
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: database,
+      MethodName: GetDatabaseSchemasAsync,
+      RequestType: GetDatabaseSchemas,
+      HttpMethod: GET,
+      Path: /{version}/database/schemas,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/database/schemas,
+        Query: ?pagingArgs=Norbix.Sdk.Types.Hub.PagingArgs&paging=Norbix.Sdk.Types.Hub.PagingArgs,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: GetDatabaseSchemasResponse,
+      Response: {
+        List: {
+          Items: [
+            {
+              HasDraft: false
+            }
+          ],
+          HasMore: false,
+          HasPrevious: false,
+          StartingAfter: cursor-start,
+          EndingBefore: cursor-end
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: database,
+      MethodName: GetDatabaseSchemaVersionDiffAsync,
+      RequestType: GetDatabaseSchemaVersionDiff,
+      HttpMethod: GET,
+      Path: /{version}/database/schemas/{Id}/versions/diff,
+      PathParams: [
+        Id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/database/schemas/{guid}/versions/diff,
+        Query: ?fromVersion=1&toVersion=1,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: GetDatabaseSchemaVersionDiffResponse,
+      Response: {
+        Item: {
+          FromVersion: 7,
+          ToVersion: 7,
+          Added: [
+            test-string
+          ],
+          Removed: [
+            test-string
+          ],
+          TypeChanged: [
+            test-string
+          ],
+          ValidatorTightened: [
+            test-string
+          ]
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: database,
+      MethodName: GetDatabaseSchemaVersionsAsync,
+      RequestType: GetDatabaseSchemaVersions,
+      HttpMethod: GET,
+      Path: /{version}/database/schemas/{Id}/versions,
+      PathParams: [
+        Id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/database/schemas/{guid}/versions,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: GetDatabaseSchemaVersionsResponse,
+      Response: {
+        Items: [
+          {}
+        ],
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: database,
+      MethodName: PublishDatabaseSchemaAsync,
+      RequestType: PublishDatabaseSchemaRequest,
+      HttpMethod: POST,
+      Path: /{version}/database/schemas/{Id}/publish,
+      PathParams: [
+        Id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/database/schemas/{guid}/publish,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: database,
+      MethodName: RenameDatabaseSchemaAsync,
+      RequestType: RenameDatabaseSchemaRequest,
+      HttpMethod: PUT,
+      Path: /{version}/database/schemas/{Id}/rename,
+      PathParams: [
+        Id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: PUT,
+        Path: /v2/database/schemas/{guid}/rename,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          title: test-title,
+          renameUniqueName: true
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: database,
+      MethodName: SaveDatabaseSchemaAsync,
+      RequestType: SaveDatabaseSchemaRequest,
+      HttpMethod: POST,
+      Path: /{version}/database/schemas,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/database/schemas,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          viewId: Guid_1,
+          schemaName: test-schemaName,
+          dataSchema: test-dataSchema,
+          visualSchema: test-visualSchema,
+          settings: {
+            softDelete: true
+          }
+        }
+      },
+      ResponseType: IdResponse,
+      Response: {
+        Id: Guid_1
+      }
+    },
+    {
+      Target: Hub,
+      Group: database,
+      MethodName: UpdateDatabaseSchemaDraftAsync,
+      RequestType: UpdateDatabaseSchemaDraftRequest,
+      HttpMethod: PUT,
+      Path: /{version}/database/schemas/{Id}/draft,
+      PathParams: [
+        Id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: PUT,
+        Path: /v2/database/schemas/{guid}/draft,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          dataSchema: test-dataSchema,
+          visualSchema: test-visualSchema
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: database,
+      MethodName: UpdateDatabaseSchemaSettingsAsync,
+      RequestType: UpdateDatabaseSchemaSettingsRequest,
+      HttpMethod: PUT,
+      Path: /{version}/database/schemas/{Id}/settings,
+      PathParams: [
+        Id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: PUT,
+        Path: /v2/database/schemas/{guid}/settings,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          settings: {
+            softDelete: true
+          }
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: database,
+      MethodName: DeleteDatabaseTaxonomyAsync,
+      RequestType: DeleteDatabaseTaxonomyRequest,
+      HttpMethod: DELETE,
+      Path: /{version}/database/taxonomies/{Id},
+      PathParams: [
+        Id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: DELETE,
+        Path: /v2/database/taxonomies/{guid},
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: database,
+      MethodName: GetDatabaseTaxonomiesAsync,
+      RequestType: GetDatabaseTaxonomies,
+      HttpMethod: GET,
+      Path: /{version}/database/taxonomies,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/database/taxonomies,
+        Query: ?pagingArgs=Norbix.Sdk.Types.Hub.PagingArgs&paging=Norbix.Sdk.Types.Hub.PagingArgs,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: GetDatabaseTaxonomiesResponse,
+      Response: {
+        List: {
+          Items: [
+            {}
+          ],
+          HasMore: false,
+          HasPrevious: false,
+          StartingAfter: cursor-start,
+          EndingBefore: cursor-end
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: database,
+      MethodName: GetDatabaseTaxonomyAsync,
+      RequestType: GetDatabaseTaxonomy,
+      HttpMethod: GET,
+      Path: /{version}/database/taxonomies/{id},
+      PathParams: [
+        id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/database/taxonomies/{guid},
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: GetDatabaseTaxonomyResponse,
+      Response: {
+        Item: {
+          ViewId: Guid_1,
+          Name: test-name,
+          Slug: test-slug,
+          ParentId: Guid_1,
+          Description: test-description,
+          TermsMetaDataSchema: {},
+          TermsMetaVisualSchema: {},
+          Dependencies: [
+            test-string
+          ]
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: database,
+      MethodName: SaveDatabaseTaxonomyAsync,
+      RequestType: SaveDatabaseTaxonomyRequest,
+      HttpMethod: POST,
+      Path: /{version}/database/taxonomies,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/database/taxonomies,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          viewId: Guid_1,
+          taxonomyName: test-taxonomyName,
+          description: test-description,
+          termsMetaDataSchema: test-termsMetaDataSchema,
+          termsMetaVisualSchema: test-termsMetaVisualSchema,
+          parentId: Guid_1,
+          dependencies: [
+            test-string
+          ]
+        }
+      },
+      ResponseType: IdResponse,
+      Response: {
+        Id: Guid_1
+      }
+    },
+    {
+      Target: Hub,
+      Group: database,
+      MethodName: DeleteDatabaseTaxonomyTermAsync,
+      RequestType: DeleteDatabaseTaxonomyTermRequest,
+      HttpMethod: DELETE,
+      Path: /{version}/database/taxonomies/{TaxonomyId}/terms/{Id},
+      PathParams: [
+        TaxonomyId,
+        Id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: DELETE,
+        Path: /v2/database/taxonomies/{guid}/terms/{guid},
+        Query: ?databaseIntegrationId={guid},
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: database,
+      MethodName: DeleteManyDatabaseTaxonomyTermsAsync,
+      RequestType: DeleteManyDatabaseTaxonomyTermsRequest,
+      HttpMethod: DELETE,
+      Path: /{version}/database/taxonomies/{TaxonomyId}/terms/many,
+      PathParams: [
+        TaxonomyId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: DELETE,
+        Path: /v2/database/taxonomies/{guid}/terms/many,
+        Query: ?databaseIntegrationId={guid}&filter=test-filter,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: database,
+      MethodName: GetDatabaseTaxonomyTermAsync,
+      RequestType: GetDatabaseTaxonomyTermRequest,
+      HttpMethod: GET,
+      Path: /{version}/database/taxonomies/{TaxonomyId}/terms/{Id},
+      PathParams: [
+        TaxonomyId,
+        Id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/database/taxonomies/{guid}/terms/{guid},
+        Query: ?databaseIntegrationId={guid},
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: GetDatabaseTaxonomyTermResponse,
+      Response: {
+        Item: {
+          Id: Guid_1,
+          TaxonomyId: Guid_1,
+          TaxonomyName: test-taxonomyName,
+          ParentId: Guid_1,
+          Order: 7,
+          Name: test-name,
+          Names: {
+            sample-key: test-string
+          },
+          Description: test-description
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: database,
+      MethodName: SaveDatabaseTaxonomyTermAsync,
+      RequestType: SaveDatabaseTaxonomyTermRequest,
+      HttpMethod: POST,
+      Path: /{version}/database/taxonomies/{TaxonomyId}/terms,
+      PathParams: [
+        TaxonomyId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/database/taxonomies/{guid}/terms,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          databaseIntegrationId: Guid_1,
+          document: test-document
+        }
+      },
+      ResponseType: IdResponse,
+      Response: {
+        Id: Guid_1
+      }
+    },
+    {
+      Target: Hub,
+      Group: database,
+      MethodName: UpdateDatabaseTaxonomyTermAsync,
+      RequestType: UpdateDatabaseTaxonomyTermRequest,
+      HttpMethod: PUT,
+      Path: /{version}/database/taxonomies/{TaxonomyId}/terms/{Id},
+      PathParams: [
+        TaxonomyId,
+        Id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: PUT,
+        Path: /v2/database/taxonomies/{guid}/terms/{guid},
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          databaseIntegrationId: Guid_1,
+          update: test-update
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: database,
+      MethodName: DeleteSchemaTriggerAsync,
+      RequestType: DeleteSchemaTrigger,
+      HttpMethod: DELETE,
+      Path: /{version}/database/schemas/triggers/{triggerId},
+      PathParams: [
+        triggerId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: DELETE,
+        Path: /v2/database/schemas/triggers/{guid},
+        Query: ?triggerType=Membership&schemaId={guid},
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: database,
+      MethodName: DisableSchemaTriggerAsync,
+      RequestType: DisableSchemaTrigger,
+      HttpMethod: PATCH,
+      Path: /{version}/database/schemas/triggers/{triggerId}/disable,
+      PathParams: [
+        triggerId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: PATCH,
+        Path: /v2/database/schemas/triggers/{guid}/disable,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          triggerType: 0.0,
+          schemaId: Guid_1
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: database,
+      MethodName: EnableSchemaTriggerAsync,
+      RequestType: EnableSchemaTrigger,
+      HttpMethod: PATCH,
+      Path: /{version}/database/schemas/triggers/{triggerId}/enable,
+      PathParams: [
+        triggerId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: PATCH,
+        Path: /v2/database/schemas/triggers/{guid}/enable,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          triggerType: 0.0,
+          schemaId: Guid_1
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: database,
+      MethodName: GetSchemaTriggerAsync,
+      RequestType: GetSchemaTrigger,
+      HttpMethod: GET,
+      Path: /{version}/database/schemas/triggers/{id},
+      PathParams: [
+        id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/database/schemas/triggers/{guid},
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: GetSchemaTriggerResponse,
+      Response: {
+        Trigger: {
+          ViewId: Guid_1,
+          Name: test-name,
+          ThenAction: {},
+          Description: test-description,
+          IsEnabled: true,
+          ActivationCode: test-activationCode
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: database,
+      MethodName: GetSchemaTriggersAsync,
+      RequestType: GetSchemaTriggers,
+      HttpMethod: GET,
+      Path: /{version}/database/schemas/triggers,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/database/schemas/triggers,
+        Query: ?schemaId={guid}&paging=Norbix.Sdk.Types.Hub.PagingArgs,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: GetSchemaTriggersResponse,
+      Response: {
+        List: {
+          Items: [
+            {
+              HasPreExecuteCode: false,
+              IsEnabled: false
+            }
+          ],
+          HasMore: false,
+          HasPrevious: false,
+          StartingAfter: cursor-start,
+          EndingBefore: cursor-end
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: database,
+      MethodName: SaveSchemaTriggerAsync,
+      RequestType: SaveSchemaTrigger,
+      HttpMethod: POST,
+      Path: /{version}/database/schemas/triggers,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/database/schemas/triggers,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          trigger: {
+            type: 0.0,
+            triggerId: Guid_1,
+            name: test-name,
+            description: test-description,
+            isEnabled: true,
+            preExecuteCode: test-preExecuteCode
+          }
+        }
+      },
+      ResponseType: IdResponse,
+      Response: {
+        Id: Guid_1
+      }
+    }
+  ]
+}

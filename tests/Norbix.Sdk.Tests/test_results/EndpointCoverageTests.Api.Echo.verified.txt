@@ -1,0 +1,49 @@
+﻿{
+  Target: Api,
+  Group: echo,
+  Count: 1,
+  Endpoints: [
+    {
+      Target: Api,
+      Group: echo,
+      MethodName: EchoAsync,
+      RequestType: Echo,
+      HttpMethod: GET,
+      Path: /{version}/echo,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/echo,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: EchoResponse,
+      Response: {
+        ContainerName: test-containerName,
+        Ip: test-ip,
+        ManagedServiceHubUrl: https://example.test/managedServiceHubUrl,
+        ManagedServiceApiUrl: https://example.test/managedServiceApiUrl,
+        HubUrl: https://example.test/hubUrl,
+        ApiUrl: https://example.test/apiUrl,
+        ApiVersion: test-apiVersion,
+        HubVersion: test-hubVersion,
+        MjmlUrl: https://example.test/mjmlUrl,
+        License: {
+          domain: test-domainFromLicense,
+          accountId: test-accountIdFromLicense,
+          refCustomerId: Guid_1,
+          refSubscriptionId: Guid_1,
+          issued: 42,
+          expire: 42,
+          cap: 7,
+          isTrial: true
+        },
+        AskForEnterpriseLicenseEmail: user@example.test
+      }
+    }
+  ]
+}

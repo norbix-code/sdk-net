@@ -1,0 +1,4 @@
+﻿{
+  ApiKey: explicit,
+  ProjectId: explicit-project
+}

@@ -1,0 +1,634 @@
+﻿{
+  Target: Api,
+  Group: database,
+  Count: 18,
+  Endpoints: [
+    {
+      Target: Api,
+      Group: database,
+      MethodName: AggregateAsync,
+      RequestType: AggregateRequest,
+      HttpMethod: POST,
+      Path: /{version}/database/collections/{collectionName}/aggregate,
+      PathParams: [
+        collectionName
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/database/collections/test-collectionName/aggregate,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          databaseIntegrationId: Guid_1,
+          pipeline: test-pipeline
+        }
+      },
+      ResponseType: AggregateResponse,
+      Response: {
+        Result: [
+          {
+            ValueKind: Object
+          }
+        ],
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: database,
+      MethodName: ChangeResponsibilityAsync,
+      RequestType: ChangeResponsibilityRequest,
+      HttpMethod: PUT,
+      Path: /{version}/database/collections/{collectionName}/{id}/responsibility,
+      PathParams: [
+        collectionName,
+        id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: PUT,
+        Path: /v2/database/collections/test-collectionName/{guid}/responsibility,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          databaseIntegrationId: Guid_1,
+          newResponsibleUserId: Guid_1
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: database,
+      MethodName: CountAsync,
+      RequestType: CountRequest,
+      HttpMethod: GET,
+      Path: /{version}/database/collections/{collectionName}/count,
+      PathParams: [
+        collectionName
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/database/collections/test-collectionName/count,
+        Query: ?databaseIntegrationId={guid}&filter=test-filter&schemaVersion=1,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: CountResponse,
+      Response: {
+        Count: 42,
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: database,
+      MethodName: DeleteManyAsync,
+      RequestType: DeleteManyRequest,
+      HttpMethod: DELETE,
+      Path: /{version}/database/collections/{collectionName}/many,
+      PathParams: [
+        collectionName
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: DELETE,
+        Path: /v2/database/collections/test-collectionName/many,
+        Query: ?databaseIntegrationId={guid}&filter=test-filter,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: database,
+      MethodName: DeleteOneAsync,
+      RequestType: DeleteOneRequest,
+      HttpMethod: DELETE,
+      Path: /{version}/database/collections/{collectionName}/{id},
+      PathParams: [
+        collectionName,
+        id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: DELETE,
+        Path: /v2/database/collections/test-collectionName/{guid},
+        Query: ?databaseIntegrationId={guid},
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: database,
+      MethodName: DistinctAsync,
+      RequestType: DistinctRequest,
+      HttpMethod: GET,
+      Path: /{version}/database/collections/{collectionName}/distinct,
+      PathParams: [
+        collectionName
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/database/collections/test-collectionName/distinct,
+        Query: ?databaseIntegrationId={guid}&field=test-field&filter=test-filter&schemaVersion=1,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: DistinctResponse,
+      Response: {
+        Values: [
+          {
+            ValueKind: Object
+          }
+        ],
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: database,
+      MethodName: ExecuteAggregateAsync,
+      RequestType: ExecuteAggregateRequest,
+      HttpMethod: POST,
+      Path: /{version}/database/collections/{collectionName}/aggregates/{aggregateId}/execute,
+      PathParams: [
+        collectionName,
+        aggregateId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/database/collections/test-collectionName/aggregates/{guid}/execute,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          databaseIntegrationId: Guid_1,
+          tokens: {
+            test-key: test-string
+          }
+        }
+      },
+      ResponseType: ExecuteAggregateResponse,
+      Response: {
+        Result: [
+          {
+            ValueKind: Object
+          }
+        ],
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: database,
+      MethodName: FindOneAsync,
+      RequestType: FindOneRequest,
+      HttpMethod: GET,
+      Path: /{version}/database/collections/{collectionName}/{id},
+      PathParams: [
+        collectionName,
+        id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/database/collections/test-collectionName/{guid},
+        Query: ?databaseIntegrationId={guid},
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: FindOneResponse,
+      Response: {
+        Result: {
+          ValueKind: Object
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: database,
+      MethodName: FindAsync,
+      RequestType: FindRequest,
+      HttpMethod: GET,
+      Path: /{version}/database/collections/{collectionName},
+      PathParams: [
+        collectionName
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/database/collections/test-collectionName,
+        Query: ?databaseIntegrationId={guid}&filter=test-filter&schemaVersion=1&pagingArgs=Norbix.Sdk.Types.Api.PagingArgs&paging=Norbix.Sdk.Types.Api.PagingArgs,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: FindResponse,
+      Response: {
+        List: {
+          Items: [
+            {
+              ValueKind: Object
+            }
+          ],
+          HasMore: false,
+          HasPrevious: false,
+          StartingAfter: cursor-start,
+          EndingBefore: cursor-end
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: database,
+      MethodName: InsertManyAsync,
+      RequestType: InsertManyRequest,
+      HttpMethod: POST,
+      Path: /{version}/database/collections/{collectionName}/many,
+      PathParams: [
+        collectionName
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/database/collections/test-collectionName/many,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          databaseIntegrationId: Guid_1,
+          documents: test-documents
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: database,
+      MethodName: InsertOneAsync,
+      RequestType: InsertOneRequest,
+      HttpMethod: POST,
+      Path: /{version}/database/collections/{collectionName},
+      PathParams: [
+        collectionName
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/database/collections/test-collectionName,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          databaseIntegrationId: Guid_1,
+          document: test-document
+        }
+      },
+      ResponseType: IdResponse,
+      Response: {
+        Id: Guid_1
+      }
+    },
+    {
+      Target: Api,
+      Group: database,
+      MethodName: ReplaceOneAsync,
+      RequestType: ReplaceOneRequest,
+      HttpMethod: PUT,
+      Path: /{version}/database/collections/{collectionName}/{id}/replace,
+      PathParams: [
+        collectionName,
+        id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: PUT,
+        Path: /v2/database/collections/test-collectionName/{guid}/replace,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          databaseIntegrationId: Guid_1,
+          replacement: test-replacement
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: database,
+      MethodName: UpdateManyAsync,
+      RequestType: UpdateManyRequest,
+      HttpMethod: PUT,
+      Path: /{version}/database/collections/{collectionName}/many,
+      PathParams: [
+        collectionName
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: PUT,
+        Path: /v2/database/collections/test-collectionName/many,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          databaseIntegrationId: Guid_1,
+          filter: test-filter,
+          update: test-update
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: database,
+      MethodName: UpdateOneAsync,
+      RequestType: UpdateOneRequest,
+      HttpMethod: PUT,
+      Path: /{version}/database/collections/{collectionName}/{id},
+      PathParams: [
+        collectionName,
+        id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: PUT,
+        Path: /v2/database/collections/test-collectionName/{guid},
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          databaseIntegrationId: Guid_1,
+          update: test-update
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: database,
+      MethodName: GetDatabaseSchemaAsync,
+      RequestType: GetDatabaseSchemaRequest,
+      HttpMethod: GET,
+      Path: /{version}/database/schemas/{id},
+      PathParams: [
+        id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/database/schemas/{guid},
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: GetDatabaseSchemaResponse,
+      Response: {
+        Item: {
+          ViewId: Guid_1,
+          SchemaName: test-schemaName,
+          SchemaSlug: test-schemaSlug,
+          Version: 7,
+          MetaSchemaVersion: 7,
+          DataSchema: {},
+          VisualSchema: {},
+          PublishedAt: DateTimeOffset_1
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: database,
+      MethodName: GetDatabaseSchemasAsync,
+      RequestType: GetDatabaseSchemasRequest,
+      HttpMethod: GET,
+      Path: /{version}/database/schemas,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/database/schemas,
+        Query: ?pagingArgs=Norbix.Sdk.Types.Api.PagingArgs&paging=Norbix.Sdk.Types.Api.PagingArgs,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: GetDatabaseSchemasResponse,
+      Response: {
+        List: {
+          Items: [
+            {
+              HasDraft: false
+            }
+          ],
+          HasMore: false,
+          HasPrevious: false,
+          StartingAfter: cursor-start,
+          EndingBefore: cursor-end
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: database,
+      MethodName: FindTermsChildrenAsync,
+      RequestType: FindTermsChildrenRequest,
+      HttpMethod: GET,
+      Path: /{version}/database/taxonomies/{taxonomyName}/terms/{parentId}/children,
+      PathParams: [
+        taxonomyName,
+        parentId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/database/taxonomies/test-taxonomyName/terms/{guid}/children,
+        Query: ?databaseIntegrationId={guid}&filter=test-filter&pagingArgs=Norbix.Sdk.Types.Api.PagingArgs&paging=Norbix.Sdk.Types.Api.PagingArgs,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: FindTermsChildrenResponse,
+      Response: {
+        List: {
+          Items: [
+            {}
+          ],
+          HasMore: false,
+          HasPrevious: false,
+          StartingAfter: cursor-start,
+          EndingBefore: cursor-end
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: database,
+      MethodName: FindTermsAsync,
+      RequestType: FindTermsRequest,
+      HttpMethod: GET,
+      Path: /{version}/database/taxonomies/{taxonomyName}/terms,
+      PathParams: [
+        taxonomyName
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/database/taxonomies/test-taxonomyName/terms,
+        Query: ?databaseIntegrationId={guid}&filter=test-filter&pagingArgs=Norbix.Sdk.Types.Api.PagingArgs&paging=Norbix.Sdk.Types.Api.PagingArgs,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: FindTermsResponse,
+      Response: {
+        List: {
+          Items: [
+            {}
+          ],
+          HasMore: false,
+          HasPrevious: false,
+          StartingAfter: cursor-start,
+          EndingBefore: cursor-end
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,498 @@
+﻿{
+  Target: Hub,
+  Group: payments,
+  Count: 16,
+  Endpoints: [
+    {
+      Target: Hub,
+      Group: payments,
+      MethodName: DisablePaymentsAsync,
+      RequestType: DisablePayments,
+      HttpMethod: GET,
+      Path: /{version}/payments/disable,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/payments/disable,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: payments,
+      MethodName: EnablePaymentsAsync,
+      RequestType: EnablePayments,
+      HttpMethod: GET,
+      Path: /{version}/payments/enable,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/payments/enable,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: payments,
+      MethodName: ConfirmPaymentsIntegrationHumanDeliveryAsync,
+      RequestType: ConfirmPaymentsIntegrationHumanDeliveryRequest,
+      HttpMethod: POST,
+      Path: /{version}/payments/integrations/confirm-human-delivery,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/payments/integrations/confirm-human-delivery,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          integrationId: Guid_1
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: payments,
+      MethodName: DeletePaymentsIntegrationAsync,
+      RequestType: DeletePaymentsIntegrationRequest,
+      HttpMethod: DELETE,
+      Path: /{version}/payments/integrations/{Id},
+      PathParams: [
+        Id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: DELETE,
+        Path: /v2/payments/integrations/{guid},
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: payments,
+      MethodName: DisablePaymentsIntegrationAsync,
+      RequestType: DisablePaymentsIntegrationRequest,
+      HttpMethod: PUT,
+      Path: /{version}/payments/integrations/{Id}/disable,
+      PathParams: [
+        Id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: PUT,
+        Path: /v2/payments/integrations/{guid}/disable,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: payments,
+      MethodName: EnablePaymentsIntegrationAsync,
+      RequestType: EnablePaymentsIntegrationRequest,
+      HttpMethod: PUT,
+      Path: /{version}/payments/integrations/{Id}/enable,
+      PathParams: [
+        Id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: PUT,
+        Path: /v2/payments/integrations/{guid}/enable,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: payments,
+      MethodName: GetPaymentsIntegrationAsync,
+      RequestType: GetPaymentsIntegration,
+      HttpMethod: GET,
+      Path: /{version}/payments/integrations/{id},
+      PathParams: [
+        id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/payments/integrations/{guid},
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: GetPaymentsIntegrationResponse,
+      Response: {
+        Item: {},
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: payments,
+      MethodName: GetPaymentsIntegrationsAsync,
+      RequestType: GetPaymentsIntegrations,
+      HttpMethod: GET,
+      Path: /{version}/payments/integrations,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/payments/integrations,
+        Query: ?paging=Norbix.Sdk.Types.Hub.PagingArgs,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: GetPaymentsIntegrationsResponse,
+      Response: {
+        List: {
+          Items: [
+            {}
+          ],
+          HasMore: false,
+          HasPrevious: false,
+          StartingAfter: cursor-start,
+          EndingBefore: cursor-end
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: payments,
+      MethodName: SavePaymentsIntegrationAsync,
+      RequestType: SavePaymentsIntegration,
+      HttpMethod: POST,
+      Path: /{version}/payments/integrations,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/payments/integrations,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          integration: {
+            integrationId: Guid_1,
+            gatewayPlatform: 0.0,
+            integrationName: test-integrationName,
+            isEnabled: true
+          }
+        }
+      },
+      ResponseType: IdResponse,
+      Response: {
+        Id: Guid_1
+      }
+    },
+    {
+      Target: Hub,
+      Group: payments,
+      MethodName: TestPaymentsIntegrationAsync,
+      RequestType: TestPaymentsIntegration,
+      HttpMethod: POST,
+      Path: /{version}/payments/integrations/test,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/payments/integrations/test,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          integrationId: Guid_1
+        }
+      },
+      ResponseType: TestPaymentsIntegrationResponse,
+      Response: {
+        Items: [
+          {}
+        ]
+      }
+    },
+    {
+      Target: Hub,
+      Group: payments,
+      MethodName: DeletePaymentsTriggerAsync,
+      RequestType: DeletePaymentsTrigger,
+      HttpMethod: DELETE,
+      Path: /{version}/payments/triggers/{triggerId},
+      PathParams: [
+        triggerId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: DELETE,
+        Path: /v2/payments/triggers/{guid},
+        Query: ?triggerType=Membership&schemaId={guid},
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: payments,
+      MethodName: DisablePaymentsTriggerAsync,
+      RequestType: DisablePaymentsTrigger,
+      HttpMethod: PATCH,
+      Path: /{version}/payments/triggers/{triggerId}/disable,
+      PathParams: [
+        triggerId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: PATCH,
+        Path: /v2/payments/triggers/{guid}/disable,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          triggerType: 0.0,
+          schemaId: Guid_1
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: payments,
+      MethodName: EnablePaymentsTriggerAsync,
+      RequestType: EnablePaymentsTrigger,
+      HttpMethod: PATCH,
+      Path: /{version}/payments/triggers/{triggerId}/enable,
+      PathParams: [
+        triggerId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: PATCH,
+        Path: /v2/payments/triggers/{guid}/enable,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          triggerType: 0.0,
+          schemaId: Guid_1
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: payments,
+      MethodName: GetPaymentsTriggerAsync,
+      RequestType: GetPaymentsTrigger,
+      HttpMethod: GET,
+      Path: /{version}/payments/triggers/{id},
+      PathParams: [
+        id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/payments/triggers/{guid},
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: GetPaymentsTriggerResponse,
+      Response: {
+        Trigger: {
+          ViewId: Guid_1,
+          Name: test-name,
+          ThenAction: {},
+          Description: test-description,
+          IsEnabled: true,
+          ActivationCode: test-activationCode
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: payments,
+      MethodName: GetPaymentsTriggersAsync,
+      RequestType: GetPaymentsTriggers,
+      HttpMethod: GET,
+      Path: /{version}/payments/triggers,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/payments/triggers,
+        Query: ?paging=Norbix.Sdk.Types.Hub.PagingArgs,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: GetPaymentsTriggersResponse,
+      Response: {
+        List: {
+          Items: [
+            {
+              HasPreExecuteCode: false,
+              IsEnabled: false
+            }
+          ],
+          HasMore: false,
+          HasPrevious: false,
+          StartingAfter: cursor-start,
+          EndingBefore: cursor-end
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: payments,
+      MethodName: SavePaymentsTriggerAsync,
+      RequestType: SavePaymentsTrigger,
+      HttpMethod: POST,
+      Path: /{version}/payments/triggers,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/payments/triggers,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          trigger: {
+            type: 0.0,
+            triggerId: Guid_1,
+            name: test-name,
+            description: test-description,
+            isEnabled: true,
+            preExecuteCode: test-preExecuteCode
+          }
+        }
+      },
+      ResponseType: IdResponse,
+      Response: {
+        Id: Guid_1
+      }
+    }
+  ]
+}

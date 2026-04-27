@@ -1,0 +1,73 @@
+name: Release · preview
+
+# On every PR targeting main, runs `semantic-release --dry-run` and posts the
+# computed next version as a sticky PR comment. Never publishes.
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  preview:
+    name: semantic-release dry-run
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha }}
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install semantic-release
+        run: |
+          npm install -g \
+            semantic-release@24 \
+            @semantic-release/commit-analyzer \
+            @semantic-release/release-notes-generator \
+            @semantic-release/exec \
+            @semantic-release/git \
+            @semantic-release/github
+
+      - name: Compute next version
+        id: dry
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set +e
+          npx semantic-release --dry-run --no-ci > /tmp/sr.log 2>&1
+          status=$?
+          set -e
+          {
+            echo 'log<<EOF'
+            cat /tmp/sr.log
+            echo EOF
+          } >> "$GITHUB_OUTPUT"
+          next_version=$(grep -oE 'next release version is [0-9]+\.[0-9]+\.[0-9]+(-[a-z0-9.]+)?' /tmp/sr.log | tail -1 | awk '{print $NF}')
+          echo "next_version=${next_version:-none}" >> "$GITHUB_OUTPUT"
+
+      - name: Comment on PR
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          header: release-preview
+          message: |
+            ### 🚀 Release preview
+
+            **Next version on merge to `main`:** `${{ steps.dry.outputs.next_version }}`
+
+            <details><summary>semantic-release dry-run output</summary>
+
+            ```
+            ${{ steps.dry.outputs.log }}
+            ```
+            </details>
+
+            > _If `next_version` is `none`, your commits don't trigger a release. Use `feat:` for minor, `fix:` / `perf:` for patch, or `feat!:` for major._
