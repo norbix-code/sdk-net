@@ -47,7 +47,8 @@ jobs:
 
       - name: Verify drift — generated DTOs not committed stale
         # The Generated/ folder is committed for diff-ability, but the source
-        # of truth is the DTO files committed alongside. We don't run sync-types
+        # of truth is the DTO files committed alongside. We don't run
+        # contract-refresh tooling
         # in CI (no live gateway), but we DO check the source generator
         # produces stable output by running it twice.
         run: |

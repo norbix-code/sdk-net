@@ -6,10 +6,9 @@ namespace Norbix.Sdk.Types;
 /// on the client.
 /// </summary>
 /// <remarks>
-/// Defined here (and not pulled from ServiceStack) so the public SDK surface
-/// never leaks transport-specific types. The sync-types script rewrites
-/// <c>[ServiceStack.Route(...)]</c> from <c>x csharp</c> output into this
-/// attribute.
+/// Defined here so the public SDK surface never leaks transport-specific
+/// framework types. DTO contracts are normalized into this attribute during
+/// the internal maintenance workflow.
 /// </remarks>
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = true, Inherited = false)]
 public sealed class NorbixRouteAttribute : Attribute
