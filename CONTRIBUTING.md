@@ -5,7 +5,7 @@ The .NET SDK is generated at compile time from the gateway DTOs. The flow below 
 ## Local setup
 
 ```bash
-dotnet tool restore       # installs the `x` ServiceStack CLI per .config/dotnet-tools.json
+dotnet tool restore
 dotnet restore
 dotnet build
 dotnet test
@@ -16,27 +16,6 @@ Requires the .NET 10 SDK (pinned in `global.json`).
 ## Editing the SDK
 
 The source of truth is **the DTO files** in `src/Norbix.Sdk.Types/Generated/{Api,Hub}.dtos.cs`. Almost everything else under `Norbix.Sdk` is *derived* from them by the Roslyn source generator at compile time.
-
-### Refresh the DTOs from the gateways
-
-```bash
-./scripts/sync-types.sh                   # localhost gateways
-./scripts/sync-types.sh --prod            # api.norbix.dev / hub.norbix.dev
-./scripts/sync-types.sh --api-url <url>   # custom URL
-```
-
-PowerShell:
-
-```pwsh
-./scripts/sync-types.ps1
-./scripts/sync-types.ps1 -Mode prod
-```
-
-The script:
-1. Runs `x csharp <metadata-url> <out>` for both gateways.
-2. Strips ServiceStack imports + types (`IReturn<T>` → `INorbixRequest<T>`, `[Route]` → `[NorbixRoute]`, etc.).
-3. Applies the same regex fixes documented in `/cloud/src/types/README.md`.
-4. Writes to `src/Norbix.Sdk.Types/Generated/{Api,Hub}.dtos.cs`.
 
 ### Regenerate the SDK
 
@@ -109,8 +88,8 @@ semantic-release runs `@semantic-release/exec` which:
 
 ```
 .github/workflows/         CI / release / security workflows
-.config/dotnet-tools.json  pins the `x` ServiceStack CLI version
-scripts/                   sync-types.sh + sync-types.ps1
+.config/dotnet-tools.json  local .NET tool configuration
+scripts/                   SDK maintenance scripts
 src/
   Norbix.Sdk.Types/        DTO contracts + post-processed Generated/*.dtos.cs
   Norbix.Sdk.Generators/   Roslyn IIncrementalGenerator (analyzer-only)

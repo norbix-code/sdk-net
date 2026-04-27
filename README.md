@@ -156,11 +156,11 @@ The public endpoint surface is generated from gateway DTOs at compile time. The 
 
 ## Coverage Notes
 
-Generated coverage tracks the gateway metadata exposed through the renewed API and Hub DTO files. Non-metadata flows are not generated automatically:
+Generated coverage tracks the API and Hub DTO contract files. Some flows are not generated automatically:
 
 | Area | Status |
 | --- | --- |
-| File upload/download bytes | Out of scope for the generated endpoint client; metadata flows through normal DTOs. |
+| File upload/download bytes | Out of scope for the generated endpoint client; file metadata flows through normal DTOs. |
 | Server Events / SSE | Requires a hand-written streaming module once the public stream contract is finalized. |
 
 ## Error Handling
@@ -192,13 +192,7 @@ catch (NorbixException ex)
 
 The source of truth is `src/Norbix.Sdk.Types/Generated/Api.dtos.cs` and `src/Norbix.Sdk.Types/Generated/Hub.dtos.cs`.
 
-```bash
-./scripts/sync-types.sh
-dotnet build
-dotnet test
-```
-
-`sync-types` refreshes the DTOs from the gateways and applies the SDK cleanup rules. A Roslyn source generator then walks every `[NorbixRoute]` DTO and emits:
+A Roslyn source generator walks every `[NorbixRoute]` DTO and emits:
 
 - `client.Api.*` and `client.Hub.*` namespace classes
 - one module class per endpoint group
