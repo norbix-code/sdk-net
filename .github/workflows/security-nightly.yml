@@ -36,7 +36,8 @@ jobs:
           # Nightly is informational — surface findings in logs, don't fail.
 
       - name: Trivy filesystem scan
-        uses: aquasecurity/trivy-action@0.28.0
+        # SHA-pinned due to upstream tag rewriting incident (2026-03)
+        uses: aquasecurity/trivy-action@57a97c7e7821a5776cebc9bb87c984fa69cba8f1
         with:
           scan-type: fs
           scan-ref: .
