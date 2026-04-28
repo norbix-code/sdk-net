@@ -1,3 +1,9 @@
+## [1.2.0](https://github.com/norbix-code/sdk-net/compare/v1.1.0...v1.2.0) (2026-04-28)
+
+### Features
+
+* **config:** default to norbix.ai gateways ([ead205b](https://github.com/norbix-code/sdk-net/commit/ead205bef85b6cb403200e67ccad8e6dd9f232ef))
+
 ## [1.1.0](https://github.com/norbix-code/sdk-net/compare/v1.0.0...v1.1.0) (2026-04-28)
 
 ### Features
