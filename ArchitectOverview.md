@@ -26,7 +26,7 @@
 3. **Add a fluent builder for the "1-line" use case.**
    Current "shortest" call is still verbose:
    ```csharp
-   await client.Api.Database.FindAsync(new FindRequest { CollectionName = "orders" });
+   await client.Database.FindAsync(new FindRequest { CollectionName = "orders" });
    ```
    Best-in-class SDKs (Stripe, MongoDB, OpenAI .NET) let you write something
    close to the goal you described:

@@ -27,7 +27,7 @@ public sealed class AuthenticationTests
         // deliberately use LoginAsync's *unauthenticated* /auth path? — no,
         // that one doesn't add Authorization. Use the auto-generated `Echo`
         // endpoint instead (placeholder DTO in Generated/Api.dtos.cs).
-        await fixture.Client.Api.Echo.EchoAsync(new Norbix.Sdk.Types.Api.Echo());
+        await fixture.Client.Echo.EchoAsync(new Norbix.Sdk.Types.Api.Echo());
 
         await Verifier.Verify(fixture.RecordedRequests, VerifyConfig.VerifySettings);
     }
@@ -42,7 +42,7 @@ public sealed class AuthenticationTests
             o.ProjectId = "p1";
         });
 
-        await fixture.Client.Api.Echo.EchoAsync(new Norbix.Sdk.Types.Api.Echo());
+        await fixture.Client.Echo.EchoAsync(new Norbix.Sdk.Types.Api.Echo());
 
         await Verifier.Verify(fixture.LastRequest, VerifyConfig.VerifySettings);
     }
@@ -59,7 +59,7 @@ public sealed class AuthenticationTests
 
         try
         {
-            await fixture.Client.Api.Echo.EchoAsync(new Norbix.Sdk.Types.Api.Echo());
+            await fixture.Client.Echo.EchoAsync(new Norbix.Sdk.Types.Api.Echo());
             await Verifier.Verify(new { Threw = false }, VerifyConfig.VerifySettings);
         }
         catch (NorbixException ex)
@@ -101,7 +101,7 @@ public sealed class AuthenticationTests
 
         // Follow up call after login: should use the JWT, not the API key.
         var authed = fixture.Client.WithBearerToken(session.BearerToken);
-        await authed.Api.Echo.EchoAsync(new Norbix.Sdk.Types.Api.Echo());
+        await authed.Echo.EchoAsync(new Norbix.Sdk.Types.Api.Echo());
 
         await Verifier.Verify(new
         {
@@ -142,7 +142,7 @@ public sealed class AuthenticationTests
         });
 
         var serviceClient = fixture.Client.WithoutBearerToken();
-        await serviceClient.Api.Echo.EchoAsync(new Norbix.Sdk.Types.Api.Echo());
+        await serviceClient.Echo.EchoAsync(new Norbix.Sdk.Types.Api.Echo());
 
         await Verifier.Verify(new
         {

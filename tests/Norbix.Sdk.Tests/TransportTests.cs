@@ -20,7 +20,7 @@ public sealed class TransportTests
         using var fixture = NorbixTestFixture.Create(o => o.HubVersion = "v2");
         // Echo lives on /{version}/echo; use the API echo here since this test
         // suite targets the Norbix.Api package.
-        await fixture.Client.Api.Echo.EchoAsync(new Norbix.Sdk.Types.Api.Echo());
+        await fixture.Client.Echo.EchoAsync(new Norbix.Sdk.Types.Api.Echo());
         await Verifier.Verify(new
         {
             path = fixture.LastRequest!.Path,
@@ -47,7 +47,7 @@ public sealed class TransportTests
 
         try
         {
-            await fixture.Client.Api.Echo.EchoAsync(new Norbix.Sdk.Types.Api.Echo());
+            await fixture.Client.Echo.EchoAsync(new Norbix.Sdk.Types.Api.Echo());
             await Verifier.Verify(new { Threw = false }, VerifyConfig.VerifySettings);
         }
         catch (NorbixException ex)

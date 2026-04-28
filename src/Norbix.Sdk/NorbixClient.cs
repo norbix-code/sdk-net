@@ -23,7 +23,7 @@ namespace Norbix.Sdk;
 /// });
 ///
 /// // Use it
-/// var orders = await client.Api.Database.FindAsync(new() { CollectionName = "orders" });
+/// var orders = await client.Database.FindAsync(new() { CollectionName = "orders" });
 ///
 /// // User mode — exchange credentials for a JWT
 /// using var u = new NorbixClient(new NorbixClientOptions { ProjectId = "proj_123" });
@@ -51,7 +51,7 @@ public sealed partial class NorbixClient : IDisposable, IAsyncDisposable
         _transport = new HttpTransport(_options);
         _ownsTransport = true;
 
-        InitializeNamespaces(); // populated by source generator
+        InitializeModules(); // populated by source generator
     }
 
     /// <summary>
@@ -69,7 +69,7 @@ public sealed partial class NorbixClient : IDisposable, IAsyncDisposable
         _transport = new HttpTransport(_options, http);
         _ownsTransport = true;
 
-        InitializeNamespaces();
+        InitializeModules();
     }
 
     /// <summary>
@@ -86,7 +86,7 @@ public sealed partial class NorbixClient : IDisposable, IAsyncDisposable
         _transport = new HttpTransport(_options, httpClient, logger);
         _ownsTransport = true;
 
-        InitializeNamespaces();
+        InitializeModules();
     }
 
     /// <summary>True when the client has either an API key or a bearer token.</summary>
@@ -158,8 +158,8 @@ public sealed partial class NorbixClient : IDisposable, IAsyncDisposable
         return response ?? new LoginResponse();
     }
 
-    /// <summary>Source-generated partial — wires the Api / Hub namespace classes onto the client.</summary>
-    private partial void InitializeNamespaces();
+    /// <summary>Source-generated partial — wires endpoint modules onto the client.</summary>
+    partial void InitializeModules();
 
     public void Dispose()
     {

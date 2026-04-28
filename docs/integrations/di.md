@@ -39,8 +39,7 @@ If you want to inject just one module instead of the whole client:
 ```csharp
 public sealed class NorbixDatabase(NorbixClient norbix)
 {
-    public DatabaseModule Hub => norbix.Hub.Database;
-    public DatabaseModule Api => norbix.Api.Database;
+    public DatabaseModule Database => norbix.Database;
 }
 
 builder.Services.AddSingleton<NorbixDatabase>();
@@ -67,7 +66,7 @@ public sealed class NorbixWithRefresh(NorbixClient norbix, ITokenRefresher refre
 }
 ```
 
-Now domain code does `await wrapper.CallAsync(c => c.Api.Database.FindAsync(...))` and gets transparent re-auth.
+Now domain code does `await wrapper.CallAsync(c => c.Database.FindAsync(...))` and gets transparent re-auth.
 
 ## Testing
 
@@ -83,7 +82,7 @@ public sealed class NorbixOrdersRepository(NorbixClient norbix) : IOrdersReposit
 {
     public async Task<IEnumerable<Order>> ListAsync(CancellationToken ct)
     {
-        var resp = await norbix.Api.Database.FindAsync(
+        var resp = await norbix.Database.FindAsync(
             new() { CollectionName = "orders" }, ct);
         return resp?.Result ?? [];
     }

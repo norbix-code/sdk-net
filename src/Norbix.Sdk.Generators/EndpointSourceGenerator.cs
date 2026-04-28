@@ -11,8 +11,8 @@ namespace Norbix.Sdk.Generators;
 /// <summary>
 /// Walks every type in the compilation that carries [NorbixRoute(...)] and
 /// emits a partial Norbix class plus per-group module classes (e.g.
-/// AccountModule, DatabaseModule). Wires them onto Norbix.Api and Norbix.Hub
-/// so consumer code looks like <c>norbix.Hub.Database.GetAllSchemasAsync()</c>.
+/// AccountModule, DatabaseModule). Wires them directly onto the client as
+/// flat modules so consumer code looks like <c>norbix.Database.FindAsync(...)</c>.
 /// </summary>
 [Generator(LanguageNames.CSharp)]
 public sealed class EndpointSourceGenerator : IIncrementalGenerator
@@ -20,6 +20,17 @@ public sealed class EndpointSourceGenerator : IIncrementalGenerator
     private const string RouteAttributeFullName = "Norbix.Sdk.Types.NorbixRouteAttribute";
     private const string RequestInterfaceFullName = "Norbix.Sdk.Types.INorbixRequest`1";
     private const string AccountScopedInterfaceFullName = "Norbix.Sdk.Types.INorbixAccountScoped";
+
+    private static DiagnosticDescriptor BothTargetsNotSupportedDescriptor { get; } =
+        new DiagnosticDescriptor(
+            id: "NORBIX001",
+            title: "Both API and Hub SDKs referenced",
+            messageFormat:
+                "This SDK is split into two packages. Reference either Norbix.Api or Norbix.Hub (not both) in the same project.",
+            category: "Norbix.Sdk",
+            defaultSeverity: DiagnosticSeverity.Error,
+            isEnabledByDefault: true
+        );
 
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {
@@ -240,14 +251,7 @@ public sealed class EndpointSourceGenerator : IIncrementalGenerator
     {
         if (endpoints.IsDefaultOrEmpty)
         {
-            // Still emit empty namespaces so consumer code referencing
-            // norbix.Api / norbix.Hub compiles cleanly.
-            ctx.AddSource("Norbix.Api.g.cs", BuildEmptyNamespace("Api"));
-            ctx.AddSource("Norbix.Hub.g.cs", BuildEmptyNamespace("Hub"));
-            ctx.AddSource(
-                "Norbix.Init.g.cs",
-                BuildClientInitializer(ImmutableArray<string>.Empty, ImmutableArray<string>.Empty)
-            );
+            // No endpoints discovered; nothing to generate.
             return;
         }
 
@@ -257,14 +261,10 @@ public sealed class EndpointSourceGenerator : IIncrementalGenerator
         var apiGroups = GroupByPath(apiEndpoints);
         var hubGroups = GroupByPath(hubEndpoints);
 
-        // Per-target namespace classes (Api / Hub). Only emit when DTOs exist.
-        if (apiGroups.Count > 0)
+        if (apiGroups.Count > 0 && hubGroups.Count > 0)
         {
-            ctx.AddSource("Norbix.Api.g.cs", BuildNamespaceClass("Api", apiGroups.Keys));
-        }
-        if (hubGroups.Count > 0)
-        {
-            ctx.AddSource("Norbix.Hub.g.cs", BuildNamespaceClass("Hub", hubGroups.Keys));
+            ctx.ReportDiagnostic(Diagnostic.Create(BothTargetsNotSupportedDescriptor, Location.None));
+            return;
         }
 
         // Per-group module classes.
@@ -608,38 +608,33 @@ public sealed partial class NorbixClient
         sb.AppendLine();
         sb.AppendLine("public sealed partial class NorbixClient");
         sb.AppendLine("{");
-        sb.AppendLine("    private partial void InitializeNamespaces()");
-        sb.AppendLine("    {");
-        if (apiGroups.Length > 0)
+
+        foreach (var g in apiGroups)
         {
-            sb.AppendLine("        Api = new ApiNamespace(this);");
+            sb.AppendLine(
+                $"    public Api{Pascal(g)}Module {Pascal(g)} {{ get; private set; }} = null!;"
+            );
         }
-        if (hubGroups.Length > 0)
+        foreach (var g in hubGroups)
         {
-            sb.AppendLine("        Hub = new HubNamespace(this);");
+            sb.AppendLine(
+                $"    public Hub{Pascal(g)}Module {Pascal(g)} {{ get; private set; }} = null!;"
+            );
+        }
+
+        sb.AppendLine();
+        sb.AppendLine("    partial void InitializeModules()");
+        sb.AppendLine("    {");
+        foreach (var g in apiGroups)
+        {
+            sb.AppendLine($"        {Pascal(g)} = new Api{Pascal(g)}Module(Transport);");
+        }
+        foreach (var g in hubGroups)
+        {
+            sb.AppendLine($"        {Pascal(g)} = new Hub{Pascal(g)}Module(Transport);");
         }
         sb.AppendLine("    }");
         sb.AppendLine("}");
-
-        // Convenience aliases (client.Database, client.Membership, ...) only
-        // when exactly one side is present to avoid ambiguity.
-        var hasApi = apiGroups.Length > 0;
-        var hasHub = hubGroups.Length > 0;
-        if (hasApi ^ hasHub)
-        {
-            var nsName = hasApi ? "Api" : "Hub";
-            var groups = hasApi ? apiGroups : hubGroups;
-            sb.AppendLine();
-            sb.AppendLine("public sealed partial class NorbixClient");
-            sb.AppendLine("{");
-            foreach (var g in groups)
-            {
-                sb.AppendLine(
-                    $"    public {nsName}{Pascal(g)}Module {Pascal(g)} => {nsName}.{Pascal(g)};"
-                );
-            }
-            sb.AppendLine("}");
-        }
 
         return sb.ToString();
     }

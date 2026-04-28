@@ -37,7 +37,7 @@ public sealed class OrdersController(NorbixClient norbix) : ControllerBase
 {
     [HttpGet]
     public Task<object?> Index(CancellationToken ct)
-        => norbix.Api.Database.FindAsync(new() { CollectionName = "orders" }, ct);
+        => norbix.Database.FindAsync(new() { CollectionName = "orders" }, ct);
 }
 ```
 

@@ -181,14 +181,13 @@ internal static class EndpointCoverageDriver
                 $"Hub endpoint encountered in API-only coverage run: {endpoint.Group}.{endpoint.MethodName}"
             );
         }
-        var root = (object)client.Api;
         var prop =
-            root.GetType().GetProperty(endpoint.ModuleProperty) ?? throw new MissingMemberException(
-                root.GetType().FullName,
+            client.GetType().GetProperty(endpoint.ModuleProperty) ?? throw new MissingMemberException(
+                client.GetType().FullName,
                 endpoint.ModuleProperty
             );
 
-        return prop.GetValue(root)
+        return prop.GetValue(client)
             ?? throw new InvalidOperationException(
                 $"{endpoint.Target}.{endpoint.ModuleProperty} was null."
             );

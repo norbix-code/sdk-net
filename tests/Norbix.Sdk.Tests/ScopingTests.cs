@@ -16,7 +16,7 @@ public sealed class ScopingTests
     public async Task Project_id_header_is_attached_on_every_call()
     {
         using var fixture = NorbixTestFixture.Create();
-        await fixture.Client.Api.Echo.EchoAsync(new Norbix.Sdk.Types.Api.Echo());
+        await fixture.Client.Echo.EchoAsync(new Norbix.Sdk.Types.Api.Echo());
         await Verifier.Verify(fixture.LastRequest, VerifyConfig.VerifySettings);
     }
 
@@ -27,7 +27,7 @@ public sealed class ScopingTests
         {
             o.AccountId = "account-1";
         });
-        await fixture.Client.Api.Echo.EchoAsync(new Norbix.Sdk.Types.Api.Echo());
+        await fixture.Client.Echo.EchoAsync(new Norbix.Sdk.Types.Api.Echo());
         await Verifier.Verify(fixture.LastRequest, VerifyConfig.VerifySettings);
     }
 
@@ -37,7 +37,7 @@ public sealed class ScopingTests
         using var fixture = NorbixTestFixture.Create();
         var scoped = fixture.Client.WithScope("new-project", "new-account");
 
-        await scoped.Api.Echo.EchoAsync(new Norbix.Sdk.Types.Api.Echo());
+        await scoped.Echo.EchoAsync(new Norbix.Sdk.Types.Api.Echo());
 
         await Verifier.Verify(new
         {

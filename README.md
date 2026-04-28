@@ -1,10 +1,16 @@
-# Norbix.Sdk
+# Norbix .NET SDK
 
 [![CI](https://github.com/norbix-dev/norbix-net/actions/workflows/ci.yml/badge.svg)](https://github.com/norbix-dev/norbix-net/actions/workflows/ci.yml)
-[![NuGet](https://img.shields.io/nuget/v/Norbix.Sdk.svg?logo=nuget)](https://www.nuget.org/packages/Norbix.Sdk)
-[![License](https://img.shields.io/nuget/l/Norbix.Sdk.svg)](./LICENSE)
+[![NuGet](https://img.shields.io/nuget/v/Norbix.Api.svg?logo=nuget)](https://www.nuget.org/packages/Norbix.Api)
+[![NuGet](https://img.shields.io/nuget/v/Norbix.Hub.svg?logo=nuget)](https://www.nuget.org/packages/Norbix.Hub)
+[![License](https://img.shields.io/nuget/l/Norbix.Api.svg)](./LICENSE)
 
-Official .NET SDK for [Norbix](https://norbix.dev). One client wraps both the **API** (project-scoped data — collections, users, AI chat) and the **Hub** (project & account configuration — schemas, integrations, team, billing). Targets .NET 10.
+Official .NET SDK for [Norbix](https://norbix.dev). There are **two packages**:
+
+- **`Norbix.Api`**: project-scoped data (collections, users, AI chat)
+- **`Norbix.Hub`**: project/account configuration (schemas, integrations, team, billing)
+
+Each package exposes the same ergonomic surface (e.g. `client.Database`, `client.Membership`) but targets only its gateway (API or Hub). Targets .NET 10.
 
 ## Install
 
@@ -12,7 +18,7 @@ Official .NET SDK for [Norbix](https://norbix.dev). One client wraps both the **
 dotnet add package Norbix.Api
 ```
 
-If you need Hub endpoints (schemas, integrations, billing, etc.), also install:
+Or install Hub only:
 
 ```bash
 dotnet add package Norbix.Hub
@@ -20,10 +26,11 @@ dotnet add package Norbix.Hub
 
 ## Quickstart
 
+### API package (`Norbix.Api`)
+
 ```csharp
 using Norbix.Sdk;
 using Norbix.Sdk.Types.Api;
-using Norbix.Sdk.Types.Hub;
 
 // Service mode — long-lived API key
 using var client = new NorbixClient(new NorbixClientOptions
@@ -32,8 +39,7 @@ using var client = new NorbixClient(new NorbixClientOptions
     ProjectId = "proj_123",
 });
 
-await client.Api.Database.FindAsync(new FindRequest { CollectionName = "orders" });
-await client.Hub.Database.GetDatabaseSchemasAsync(new GetDatabaseSchemas());
+await client.Database.FindAsync(new FindRequest { CollectionName = "orders" });
 ```
 
 ```csharp
@@ -49,7 +55,23 @@ await client.LoginAsync(new()
     Password = "secret",
 });
 
-await client.Api.Database.FindAsync(new FindRequest { CollectionName = "orders" }); // acts as Alice
+await client.Database.FindAsync(new FindRequest { CollectionName = "orders" }); // acts as Alice
+```
+
+### Hub package (`Norbix.Hub`)
+
+```csharp
+using Norbix.Sdk;
+using Norbix.Sdk.Types.Hub;
+
+using var client = new NorbixClient(new NorbixClientOptions
+{
+    ApiKey = "<api_key>",
+    ProjectId = "proj_123",
+    AccountId = "acc_456", // only required for account-scoped Hub endpoints
+});
+
+await client.Database.GetDatabaseSchemasAsync(new GetDatabaseSchemas());
 ```
 
 ## Authentication
@@ -133,7 +155,7 @@ public sealed class OrdersController(NorbixClient norbix) : ControllerBase
     [HttpGet]
     public async Task<IActionResult> Index(CancellationToken ct)
     {
-        var orders = await norbix.Api.Database.FindAsync(
+        var orders = await norbix.Database.FindAsync(
             new FindRequest { CollectionName = "orders" },
             ct);
 
@@ -187,7 +209,7 @@ Generated coverage tracks the API and Hub DTO contract files. Some flows are not
 ```csharp
 try
 {
-    await client.Api.Database.FindAsync(new FindRequest { CollectionName = "orders" });
+    await client.Database.FindAsync(new FindRequest { CollectionName = "orders" });
 }
 catch (NorbixException ex)
 {
@@ -213,7 +235,7 @@ The source of truth is `src/Norbix.Sdk.Types/Generated/Api.dtos.cs` and `src/Nor
 
 A Roslyn source generator walks every `[NorbixRoute]` DTO and emits:
 
-- `client.Api.*` and `client.Hub.*` namespace classes
+- flat modules on the client (`client.Database`, `client.Membership`, ...)
 - one module class per endpoint group
 - one strongly typed async method per endpoint
 - an internal endpoint catalog used by the coverage tests

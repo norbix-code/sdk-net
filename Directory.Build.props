@@ -33,7 +33,7 @@
     <Copyright>© UAB Isidos</Copyright>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://norbix.ai</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/norbix-code/norbix-net</RepositoryUrl>
+    <RepositoryUrl>https://github.com/norbix-code/skd-net</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
