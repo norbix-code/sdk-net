@@ -66,6 +66,7 @@ jobs:
         run: |
           npm install -g \
             semantic-release@24 \
+            conventional-changelog-conventionalcommits \
             @semantic-release/changelog \
             @semantic-release/commit-analyzer \
             @semantic-release/release-notes-generator \
