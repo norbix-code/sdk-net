@@ -18,15 +18,13 @@ public sealed class TransportTests
     public async Task Replaces_version_token_in_path()
     {
         using var fixture = NorbixTestFixture.Create(o => o.HubVersion = "v2");
-        // Echo lives on /auth-style root in our placeholder DTOs; use it
-        // as a concrete request that exercises {version} substitution
-        // when sent via the hub. (The placeholder Hub Echo points at
-        // /{version}/echo so it covers the version branch.)
-        await fixture.Client.Hub.Echo.EchoAsync(new Norbix.Sdk.Types.Hub.Echo());
+        // Echo lives on /{version}/echo; use the API echo here since this test
+        // suite targets the Norbix.Api package.
+        await fixture.Client.Api.Echo.EchoAsync(new Norbix.Sdk.Types.Api.Echo());
         await Verifier.Verify(new
         {
             path = fixture.LastRequest!.Path,
-            fixture.Options.HubVersion,
+            fixture.Options.ApiVersion,
         }, VerifyConfig.VerifySettings);
     }
 

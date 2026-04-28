@@ -1,4 +1,4 @@
 ﻿{
   path: /v2/echo,
-  HubVersion: v2
+  ApiVersion: v2
 }

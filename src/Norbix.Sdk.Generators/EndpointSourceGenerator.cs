@@ -257,9 +257,15 @@ public sealed class EndpointSourceGenerator : IIncrementalGenerator
         var apiGroups = GroupByPath(apiEndpoints);
         var hubGroups = GroupByPath(hubEndpoints);
 
-        // Per-target namespace classes (Api / Hub).
-        ctx.AddSource("Norbix.Api.g.cs", BuildNamespaceClass("Api", apiGroups.Keys));
-        ctx.AddSource("Norbix.Hub.g.cs", BuildNamespaceClass("Hub", hubGroups.Keys));
+        // Per-target namespace classes (Api / Hub). Only emit when DTOs exist.
+        if (apiGroups.Count > 0)
+        {
+            ctx.AddSource("Norbix.Api.g.cs", BuildNamespaceClass("Api", apiGroups.Keys));
+        }
+        if (hubGroups.Count > 0)
+        {
+            ctx.AddSource("Norbix.Hub.g.cs", BuildNamespaceClass("Hub", hubGroups.Keys));
+        }
 
         // Per-group module classes.
         foreach (var entry in apiGroups)
@@ -604,10 +610,37 @@ public sealed partial class NorbixClient
         sb.AppendLine("{");
         sb.AppendLine("    private partial void InitializeNamespaces()");
         sb.AppendLine("    {");
-        sb.AppendLine("        Api = new ApiNamespace(this);");
-        sb.AppendLine("        Hub = new HubNamespace(this);");
+        if (apiGroups.Length > 0)
+        {
+            sb.AppendLine("        Api = new ApiNamespace(this);");
+        }
+        if (hubGroups.Length > 0)
+        {
+            sb.AppendLine("        Hub = new HubNamespace(this);");
+        }
         sb.AppendLine("    }");
         sb.AppendLine("}");
+
+        // Convenience aliases (client.Database, client.Membership, ...) only
+        // when exactly one side is present to avoid ambiguity.
+        var hasApi = apiGroups.Length > 0;
+        var hasHub = hubGroups.Length > 0;
+        if (hasApi ^ hasHub)
+        {
+            var nsName = hasApi ? "Api" : "Hub";
+            var groups = hasApi ? apiGroups : hubGroups;
+            sb.AppendLine();
+            sb.AppendLine("public sealed partial class NorbixClient");
+            sb.AppendLine("{");
+            foreach (var g in groups)
+            {
+                sb.AppendLine(
+                    $"    public {nsName}{Pascal(g)}Module {Pascal(g)} => {nsName}.{Pascal(g)};"
+                );
+            }
+            sb.AppendLine("}");
+        }
+
         return sb.ToString();
     }
 

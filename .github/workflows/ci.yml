@@ -60,7 +60,7 @@ jobs:
         # file slips through (e.g. bin/Debug content), CI catches it.
         run: |
           dotnet pack src/Norbix.Sdk/Norbix.Sdk.csproj --configuration Release --no-build --output ./packages
-          dotnet pack src/Norbix.Sdk.Types/Norbix.Sdk.Types.csproj --configuration Release --no-build --output ./packages
+          dotnet pack src/Norbix.Hub/Norbix.Hub.csproj --configuration Release --no-build --output ./packages
           ls -la ./packages
           for pkg in ./packages/*.nupkg; do
             echo "=== $pkg ==="

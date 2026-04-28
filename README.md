@@ -9,10 +9,14 @@ Official .NET SDK for [Norbix](https://norbix.dev). One client wraps both the **
 ## Install
 
 ```bash
-dotnet add package Norbix.Sdk
+dotnet add package Norbix.Api
 ```
 
-DTO contracts are also published separately. Use `Norbix.Sdk.Types` if you only need request/response shapes without the client.
+If you need Hub endpoints (schemas, integrations, billing, etc.), also install:
+
+```bash
+dotnet add package Norbix.Hub
+```
 
 ## Quickstart
 

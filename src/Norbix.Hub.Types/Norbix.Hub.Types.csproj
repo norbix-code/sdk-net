@@ -3,7 +3,7 @@
   <PropertyGroup>
     <IsPackable>false</IsPackable>
     <RootNamespace>Norbix.Sdk.Types</RootNamespace>
-    <AssemblyName>Norbix.Api.Types</AssemblyName>
+    <AssemblyName>Norbix.Hub.Types</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>
@@ -11,10 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Remove="Generated/Hub.dtos.cs" />
-    <Compile Remove="INorbixRequest.cs" />
-    <Compile Remove="ResponseStatus.cs" />
-    <Compile Remove="NorbixRouteAttribute.cs" />
+    <Compile Include="..\Norbix.Sdk.Types\Generated\Hub.dtos.cs" Link="Generated/Hub.dtos.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -22,3 +19,4 @@
   </ItemGroup>
 
 </Project>
+

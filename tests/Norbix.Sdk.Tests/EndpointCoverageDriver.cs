@@ -174,7 +174,14 @@ internal static class EndpointCoverageDriver
 
     private static object ResolveModule(NorbixClient client, NorbixEndpointInfo endpoint)
     {
-        var root = endpoint.Target == "Api" ? client.Api : (object)client.Hub;
+        // This test suite targets the Norbix.Api package only.
+        if (endpoint.Target != "Api")
+        {
+            throw new InvalidOperationException(
+                $"Hub endpoint encountered in API-only coverage run: {endpoint.Group}.{endpoint.MethodName}"
+            );
+        }
+        var root = (object)client.Api;
         var prop =
             root.GetType().GetProperty(endpoint.ModuleProperty) ?? throw new MissingMemberException(
                 root.GetType().FullName,

@@ -2,9 +2,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Norbix.Sdk.Types", "src\Norbix.Sdk.Types\Norbix.Sdk.Types.csproj", "{1A1A1A1A-0001-0001-0001-000000000001}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Norbix.Contracts", "src\Norbix.Contracts\Norbix.Contracts.csproj", "{1A1A1A1A-0007-0007-0007-000000000007}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Norbix.Hub.Types", "src\Norbix.Hub.Types\Norbix.Hub.Types.csproj", "{1A1A1A1A-0005-0005-0005-000000000005}"
+EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Norbix.Sdk.Generators", "src\Norbix.Sdk.Generators\Norbix.Sdk.Generators.csproj", "{1A1A1A1A-0002-0002-0002-000000000002}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Norbix.Sdk", "src\Norbix.Sdk\Norbix.Sdk.csproj", "{1A1A1A1A-0003-0003-0003-000000000003}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Norbix.Hub", "src\Norbix.Hub\Norbix.Hub.csproj", "{1A1A1A1A-0006-0006-0006-000000000006}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Norbix.Sdk.Tests", "tests\Norbix.Sdk.Tests\Norbix.Sdk.Tests.csproj", "{1A1A1A1A-0004-0004-0004-000000000004}"
 EndProject
@@ -18,6 +24,14 @@ Global
 		{1A1A1A1A-0001-0001-0001-000000000001}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1A1A1A1A-0001-0001-0001-000000000001}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1A1A1A1A-0001-0001-0001-000000000001}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1A1A1A1A-0007-0007-0007-000000000007}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1A1A1A1A-0007-0007-0007-000000000007}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1A1A1A1A-0007-0007-0007-000000000007}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1A1A1A1A-0007-0007-0007-000000000007}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1A1A1A1A-0005-0005-0005-000000000005}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1A1A1A1A-0005-0005-0005-000000000005}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1A1A1A1A-0005-0005-0005-000000000005}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1A1A1A1A-0005-0005-0005-000000000005}.Release|Any CPU.Build.0 = Release|Any CPU
 		{1A1A1A1A-0002-0002-0002-000000000002}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{1A1A1A1A-0002-0002-0002-000000000002}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1A1A1A1A-0002-0002-0002-000000000002}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -26,6 +40,10 @@ Global
 		{1A1A1A1A-0003-0003-0003-000000000003}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1A1A1A1A-0003-0003-0003-000000000003}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1A1A1A1A-0003-0003-0003-000000000003}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1A1A1A1A-0006-0006-0006-000000000006}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1A1A1A1A-0006-0006-0006-000000000006}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1A1A1A1A-0006-0006-0006-000000000006}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1A1A1A1A-0006-0006-0006-000000000006}.Release|Any CPU.Build.0 = Release|Any CPU
 		{1A1A1A1A-0004-0004-0004-000000000004}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{1A1A1A1A-0004-0004-0004-000000000004}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1A1A1A1A-0004-0004-0004-000000000004}.Release|Any CPU.ActiveCfg = Release|Any CPU

@@ -28,6 +28,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\Norbix.Sdk\Norbix.Sdk.csproj" />
     <ProjectReference Include="..\..\src\Norbix.Sdk.Types\Norbix.Sdk.Types.csproj" />
+    <ProjectReference Include="..\..\src\Norbix.Contracts\Norbix.Contracts.csproj" />
   </ItemGroup>
 
   <!-- Verify snapshots live alongside their tests. The CI drift check

@@ -28,7 +28,7 @@
       "@semantic-release/exec",
       {
         "verifyConditionsCmd": "test -n \"$NUGET_API_KEY\" || (echo 'NUGET_API_KEY is required' && exit 1)",
-        "prepareCmd": "dotnet pack src/Norbix.Sdk.Types/Norbix.Sdk.Types.csproj -c Release -p:Version=${nextRelease.version} -o ./packages && dotnet pack src/Norbix.Sdk/Norbix.Sdk.csproj -c Release -p:Version=${nextRelease.version} -o ./packages",
+        "prepareCmd": "dotnet pack src/Norbix.Sdk/Norbix.Sdk.csproj -c Release -p:Version=${nextRelease.version} -o ./packages && dotnet pack src/Norbix.Hub/Norbix.Hub.csproj -c Release -p:Version=${nextRelease.version} -o ./packages",
         "publishCmd": "for pkg in ./packages/*.nupkg; do echo \"Pushing $pkg\"; dotnet nuget push \"$pkg\" --api-key \"$NUGET_API_KEY\" --source https://api.nuget.org/v3/index.json --skip-duplicate; done"
       }
     ],

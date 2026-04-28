@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <IsPackable>false</IsPackable>
+    <RootNamespace>Norbix.Sdk.Types</RootNamespace>
+    <AssemblyName>Norbix.Contracts</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\Norbix.Sdk.Types\INorbixRequest.cs" Link="INorbixRequest.cs" />
+    <Compile Include="..\Norbix.Sdk.Types\ResponseStatus.cs" Link="ResponseStatus.cs" />
+    <Compile Include="..\Norbix.Sdk.Types\NorbixRouteAttribute.cs" Link="NorbixRouteAttribute.cs" />
+  </ItemGroup>
+
+</Project>
+

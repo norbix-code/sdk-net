@@ -33,6 +33,7 @@
 
     <!-- Source-link for symbol packages -->
     <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="8.0.0" />
+
   </ItemGroup>
 
 </Project>

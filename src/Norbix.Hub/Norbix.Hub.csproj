@@ -1,33 +1,25 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <!--
-    The main client package. Bundles:
-      · the hand-written transport / auth / login / options code
-      · the Norbix.Sdk.Types DTO project (transitive)
-      · the Norbix.Sdk.Generators source generator as an analyzer asset, so
-        every consumer's compilation receives the generated Api / Hub
-        namespaces automatically.
-  -->
-
   <PropertyGroup>
-    <PackageId>Norbix.Api</PackageId>
-    <Description>Official Norbix API SDK for .NET. Includes the core client runtime + API DTOs and generated API modules.</Description>
-    <PackageTags>norbix;sdk;api;baas;backend;database;membership;ai</PackageTags>
+    <PackageId>Norbix.Hub</PackageId>
+    <Description>Official Norbix Hub SDK for .NET. Includes the core client runtime + Hub DTOs and generated Hub modules.</Description>
+    <PackageTags>norbix;sdk;hub;schemas;integrations;billing;notifications</PackageTags>
     <RootNamespace>Norbix.Sdk</RootNamespace>
-    <AssemblyName>Norbix.Api</AssemblyName>
+    <AssemblyName>Norbix.Hub</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Norbix.Contracts\Norbix.Contracts.csproj" />
-    <ProjectReference Include="..\Norbix.Sdk.Types\Norbix.Sdk.Types.csproj" />
+    <ProjectReference Include="..\Norbix.Hub.Types\Norbix.Hub.Types.csproj" />
   </ItemGroup>
 
-  <!--
-    The source generator project is an analyzer dependency, NOT a runtime
-    dependency. ReferenceOutputAssembly=false keeps its DLL out of the
-    runtime closure; OutputItemType=Analyzer ships the DLL inside this
-    package's analyzers/dotnet/cs folder.
-  -->
+  <ItemGroup>
+    <!-- Share the same runtime sources as Norbix.Api (no extra package). -->
+    <Compile Include="..\Norbix.Sdk\**\*.cs"
+             Exclude="..\Norbix.Sdk\bin\**\*;..\Norbix.Sdk\obj\**\*;..\Norbix.Sdk\HealthChecks\**\*;..\Norbix.Sdk\NorbixClient.Convenience.cs"
+             LinkBase="SharedSdk" />
+  </ItemGroup>
+
   <ItemGroup>
     <ProjectReference
       Include="..\Norbix.Sdk.Generators\Norbix.Sdk.Generators.csproj"
@@ -35,10 +27,6 @@
       ReferenceOutputAssembly="false" />
   </ItemGroup>
 
-  <!--
-    Pack the generator DLL into the published nupkg so consumers receive it
-    without having to install Norbix.Sdk.Generators separately.
-  -->
   <ItemGroup>
     <None
       Include="..\Norbix.Sdk.Generators\bin\$(Configuration)\netstandard2.0\Norbix.Sdk.Generators.dll"
@@ -59,3 +47,4 @@
   </ItemGroup>
 
 </Project>
+
