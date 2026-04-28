@@ -1,3 +1,9 @@
+## [1.1.0](https://github.com/norbix-code/sdk-net/compare/v1.0.0...v1.1.0) (2026-04-28)
+
+### Features
+
+* **packages:** split SDK into Norbix.Api and Norbix.Hub ([ef30b83](https://github.com/norbix-code/sdk-net/commit/ef30b83246bef593085fd777810042be0f062ca8))
+
 ## 1.0.0 (2026-04-28)
 
 ### Features
