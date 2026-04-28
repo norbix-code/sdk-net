@@ -100,12 +100,14 @@ public sealed class AuthenticationTests
         });
 
         // Follow up call after login: should use the JWT, not the API key.
-        await fixture.Client.Api.Echo.EchoAsync(new Norbix.Sdk.Types.Api.Echo());
+        var authed = fixture.Client.WithBearerToken(session.BearerToken);
+        await authed.Api.Echo.EchoAsync(new Norbix.Sdk.Types.Api.Echo());
 
         await Verifier.Verify(new
         {
             session,
-            fixture.Client.IsAuthenticated,
+            ClientAuthenticated = fixture.Client.IsAuthenticated,
+            AuthedAuthenticated = authed.IsAuthenticated,
             requests = fixture.RecordedRequests,
         }, VerifyConfig.VerifySettings);
     }
@@ -130,7 +132,7 @@ public sealed class AuthenticationTests
     }
 
     [Test]
-    public async Task Logout_reverts_to_api_key()
+    public async Task WithoutBearerToken_reverts_to_api_key()
     {
         using var fixture = NorbixTestFixture.Create(o =>
         {
@@ -139,12 +141,13 @@ public sealed class AuthenticationTests
             o.ProjectId = "p1";
         });
 
-        fixture.Client.Logout();
-        await fixture.Client.Api.Echo.EchoAsync(new Norbix.Sdk.Types.Api.Echo());
+        var serviceClient = fixture.Client.WithoutBearerToken();
+        await serviceClient.Api.Echo.EchoAsync(new Norbix.Sdk.Types.Api.Echo());
 
         await Verifier.Verify(new
         {
-            fixture.Client.IsAuthenticated,
+            ClientAuthenticated = fixture.Client.IsAuthenticated,
+            ServiceClientAuthenticated = serviceClient.IsAuthenticated,
             request = fixture.LastRequest,
         }, VerifyConfig.VerifySettings);
     }

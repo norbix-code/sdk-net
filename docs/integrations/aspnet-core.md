@@ -29,7 +29,7 @@ app.Run();
 }
 ```
 
-The SDK is registered as a singleton because it's stateless from the consumer's perspective. Inject it everywhere:
+`AddNorbix(...)` registers `NorbixClient` as **scoped** (safe default for web apps). Inject it everywhere:
 
 ```csharp
 [ApiController, Route("orders")]
@@ -43,7 +43,7 @@ public sealed class OrdersController(NorbixClient norbix) : ControllerBase
 
 ## Per-user requests (acting on behalf of an end user)
 
-If your API forwards a logged-in user's JWT to Norbix, register the SDK as **scoped** instead of singleton, and clone the JWT off the incoming request:
+If your API forwards a logged-in user's JWT to Norbix, the scoped default already matches what you want. You can also override the token per request by constructing the client yourself:
 
 ```csharp
 builder.Services.AddHttpContextAccessor();
@@ -66,24 +66,12 @@ Now every request handler gets a `NorbixClient` already authenticated as the cal
 ## Health checks
 
 ```csharp
-builder.Services.AddHealthChecks()
-    .AddAsyncCheck("norbix", async () =>
-    {
-        try
-        {
-            var client = sp.GetRequiredService<NorbixClient>();
-            await client.Api.Echo.EchoAsync(new() { Message = "hc" });
-            return HealthCheckResult.Healthy();
-        }
-        catch (NorbixException ex)
-        {
-            return HealthCheckResult.Unhealthy(ex.Message);
-        }
-    });
+builder.Services.AddNorbix(builder.Configuration);
+builder.Services.AddNorbixHealthChecks(ping: true);
 ```
 
 ## Common gotchas
 
 - **DI lifetime mismatch**: don't capture the singleton in a scoped service expecting per-request JWTs. Use the scoped factory pattern above.
 - **`NORBIX_*` env vars in containers**: pass them through your orchestration; the SDK reads via `Environment.GetEnvironmentVariable`.
-- **Logging**: there's no built-in HTTP logger. Wrap calls or wire `ILogger` around your controllers — the SDK doesn't take an opinion on logging stacks.
+- **Logging**: the transport emits optional `ILogger` diagnostics (no auth/header logging). Configure `ILogger` levels in your app as usual.

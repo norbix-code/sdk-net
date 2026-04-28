@@ -1,5 +1,7 @@
 using System.Net.Http;
 
+using Microsoft.Extensions.Logging;
+
 using Norbix.Sdk.Auth;
 using Norbix.Sdk.Transport;
 
@@ -28,7 +30,7 @@ namespace Norbix.Sdk;
 /// await u.LoginAsync(new() { UserName = "alice", Password = "secret" });
 /// </code>
 /// </example>
-public sealed partial class NorbixClient : IDisposable
+public sealed partial class NorbixClient : IDisposable, IAsyncDisposable
 {
     private readonly NorbixClientOptions _options;
     private readonly HttpTransport _transport;
@@ -43,7 +45,7 @@ public sealed partial class NorbixClient : IDisposable
     public NorbixClient(NorbixClientOptions options)
     {
         ArgumentNullException.ThrowIfNull(options);
-        _options = options.ApplyEnvironment();
+        _options = options.Clone().ApplyEnvironment();
         _options.Validate();
 
         _transport = new HttpTransport(_options);
@@ -60,11 +62,28 @@ public sealed partial class NorbixClient : IDisposable
     {
         ArgumentNullException.ThrowIfNull(options);
         ArgumentNullException.ThrowIfNull(handler);
-        _options = options.ApplyEnvironment();
+        _options = options.Clone().ApplyEnvironment();
         _options.Validate();
 
         var http = new HttpClient(handler) { Timeout = _options.Timeout };
         _transport = new HttpTransport(_options, http);
+        _ownsTransport = true;
+
+        InitializeNamespaces();
+    }
+
+    /// <summary>
+    /// Internal constructor used by DI to supply an <see cref="HttpClient"/>
+    /// from <c>IHttpClientFactory</c> without exposing it on the public API.
+    /// </summary>
+    internal NorbixClient(NorbixClientOptions options, HttpClient httpClient, ILogger? logger = null)
+    {
+        ArgumentNullException.ThrowIfNull(options);
+        ArgumentNullException.ThrowIfNull(httpClient);
+        _options = options.Clone().ApplyEnvironment();
+        _options.Validate();
+
+        _transport = new HttpTransport(_options, httpClient, logger);
         _ownsTransport = true;
 
         InitializeNamespaces();
@@ -80,27 +99,42 @@ public sealed partial class NorbixClient : IDisposable
     /// <summary>Internal access for the source-generated module classes — no public API leak.</summary>
     internal INorbixTransport Transport => _transport;
 
-    /// <summary>Replace the bearer token without rebuilding the client.</summary>
-    public void SetBearerToken(string? token) => _options.BearerToken = token;
+    /// <summary>Create a new client with a different bearer token.</summary>
+    public NorbixClient WithBearerToken(string? token)
+    {
+        var o = _options.Clone();
+        o.BearerToken = token;
+        return new NorbixClient(o, _transport.HttpClient, _transport.Logger);
+    }
 
-    /// <summary>Replace the API key without rebuilding the client.</summary>
-    public void SetApiKey(string? apiKey) => _options.ApiKey = apiKey;
+    /// <summary>Create a new client with a different API key.</summary>
+    public NorbixClient WithApiKey(string? apiKey)
+    {
+        var o = _options.Clone();
+        o.ApiKey = apiKey;
+        return new NorbixClient(o, _transport.HttpClient, _transport.Logger);
+    }
 
-    /// <summary>Switch project (and optionally account) scope at runtime.</summary>
-    public void SetScope(string projectId, string? accountId = null)
+    /// <summary>Create a new client with a different project/account scope.</summary>
+    public NorbixClient WithScope(string projectId, string? accountId = null)
     {
         if (string.IsNullOrEmpty(projectId))
         {
             throw new ArgumentException("projectId is required.", nameof(projectId));
         }
-        _options.ProjectId = projectId;
-        _options.AccountId = accountId;
+        var o = _options.Clone();
+        o.ProjectId = projectId;
+        o.AccountId = accountId;
+        return new NorbixClient(o, _transport.HttpClient, _transport.Logger);
     }
+
+    /// <summary>Create a new client without a JWT bearer token (falls back to ApiKey if configured).</summary>
+    public NorbixClient WithoutBearerToken() => WithBearerToken(null);
 
     /// <summary>
     /// Exchange credentials for a JWT bearer token. On success, the token is
-    /// stored on the client and used for every subsequent call (it takes
-    /// precedence over a configured API key).
+    /// returned to the caller. Use <see cref="WithBearerToken"/> to create an
+    /// authenticated client for follow-up calls.
     /// </summary>
     public async Task<LoginResponse> LoginAsync(
         LoginCredentials credentials,
@@ -121,16 +155,8 @@ public sealed partial class NorbixClient : IDisposable
             },
             cancellationToken).ConfigureAwait(false);
 
-        if (response is { BearerToken: { Length: > 0 } token })
-        {
-            _options.BearerToken = token;
-        }
-
         return response ?? new LoginResponse();
     }
-
-    /// <summary>Clear the JWT bearer token. Falls back to the API key when one is configured.</summary>
-    public void Logout() => _options.BearerToken = null;
 
     /// <summary>Source-generated partial — wires the Api / Hub namespace classes onto the client.</summary>
     private partial void InitializeNamespaces();
@@ -138,5 +164,11 @@ public sealed partial class NorbixClient : IDisposable
     public void Dispose()
     {
         if (_ownsTransport && _transport is IDisposable d) d.Dispose();
+    }
+
+    public ValueTask DisposeAsync()
+    {
+        Dispose();
+        return ValueTask.CompletedTask;
     }
 }

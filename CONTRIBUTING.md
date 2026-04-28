@@ -29,9 +29,9 @@ The `Norbix.Sdk.Generators` source generator runs as part of `Norbix.Sdk`'s comp
 
 If you need to add behavior that isn't per-endpoint (e.g. a new auth helper, a transport feature, a DI extension), edit:
 
-- `src/Norbix.Sdk/Norbix.cs` — main client
+- `src/Norbix.Sdk/NorbixClient.cs` — main client
 - `src/Norbix.Sdk/Transport/HttpTransport.cs` — HTTP layer
-- `src/Norbix.Sdk/NorbixOptions.cs` — config + env-var loading
+- `src/Norbix.Sdk/NorbixClientOptions.cs` — config + env-var loading
 - `src/Norbix.Sdk/Auth/*.cs` — login flow
 
 ## Conventional commits

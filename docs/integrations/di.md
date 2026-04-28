@@ -27,8 +27,8 @@ public sealed class TenantSwitcher(
     [FromKeyedServices("tenant-a")] NorbixClient a,
     [FromKeyedServices("tenant-b")] NorbixClient b)
 {
-    public Task<object?> A(CancellationToken ct) => a.Api.Echo.EchoAsync(new() { Message = "a" }, ct);
-    public Task<object?> B(CancellationToken ct) => b.Api.Echo.EchoAsync(new() { Message = "b" }, ct);
+    public Task<object?> A(CancellationToken ct) => a.EchoAsync(ct);
+    public Task<object?> B(CancellationToken ct) => b.EchoAsync(ct);
 }
 ```
 
@@ -50,7 +50,7 @@ This keeps your application service signatures focused — `OrdersRepository(Nor
 
 ## Auto-refreshing the JWT
 
-If your auth provider returns refresh tokens, wrap your domain calls with a small retry helper that calls `client.SetBearerToken(...)` after a refresh:
+If your auth provider returns refresh tokens, wrap your domain calls with a small retry helper that creates a derived client via `client.WithBearerToken(...)` after a refresh:
 
 ```csharp
 public sealed class NorbixWithRefresh(NorbixClient norbix, ITokenRefresher refresher)
@@ -61,8 +61,7 @@ public sealed class NorbixWithRefresh(NorbixClient norbix, ITokenRefresher refre
         catch (NorbixException ex) when (ex.StatusCode == 401)
         {
             var fresh = await refresher.RefreshAsync(ct);
-            norbix.SetBearerToken(fresh.AccessToken);
-            return await call(norbix);
+            return await call(norbix.WithBearerToken(fresh.AccessToken));
         }
     }
 }

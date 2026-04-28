@@ -35,16 +35,16 @@ public sealed class ScopingTests
     public async Task SetScope_swaps_project_at_runtime()
     {
         using var fixture = NorbixTestFixture.Create();
-        fixture.Client.SetScope("new-project", "new-account");
+        var scoped = fixture.Client.WithScope("new-project", "new-account");
 
-        await fixture.Client.Api.Echo.EchoAsync(new Norbix.Sdk.Types.Api.Echo());
+        await scoped.Api.Echo.EchoAsync(new Norbix.Sdk.Types.Api.Echo());
 
         await Verifier.Verify(new
         {
             options = new
             {
-                fixture.Options.ProjectId,
-                fixture.Options.AccountId,
+                scoped.Options.ProjectId,
+                scoped.Options.AccountId,
             },
             request = fixture.LastRequest,
         }, VerifyConfig.VerifySettings);

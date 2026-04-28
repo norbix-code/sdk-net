@@ -5,7 +5,8 @@
     UserId: u1,
     UserName: alice
   },
-  IsAuthenticated: true,
+  ClientAuthenticated: true,
+  AuthedAuthenticated: true,
   requests: [
     {
       Method: POST,

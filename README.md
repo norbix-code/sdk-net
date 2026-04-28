@@ -58,9 +58,9 @@ await client.Api.Database.FindAsync(new FindRequest { CollectionName = "orders" 
 Both are sent as `Authorization: Bearer <token>`. If both are set, JWT wins. With neither set the SDK throws `NORBIX_NOT_AUTHENTICATED` on the first call.
 
 ```csharp
-client.Logout(); // clears JWT, falls back to ApiKey if one was configured
-client.SetBearerToken(userToken);
-client.SetApiKey(serviceToken);
+var asUser = client.WithBearerToken(userToken);
+var asService = client.WithoutBearerToken(); // falls back to ApiKey if configured
+var forOtherProject = client.WithScope("proj_456");
 ```
 
 ## Configuration from Environment
@@ -92,13 +92,13 @@ The SDK does not load `.env` files itself. Load them in your app bootstrap or de
 ## Integration Guides
 
 - [**Using with ASP.NET Core**](./docs/integrations/aspnet-core.md) — register `NorbixClient`, bind configuration, inject into controllers/services.
-- [**Using with Generic Host / DI**](./docs/integrations/di.md) — singleton client registration and options patterns.
+- [**Using with Generic Host / DI**](./docs/integrations/di.md) — lifetime patterns, retries (Polly), and advanced options.
 
 ## ASP.NET Core / DI
 
 ```csharp
 // Program.cs
-builder.Services.AddNorbix(builder.Configuration); // reads "Norbix" section + env
+builder.Services.AddNorbix(builder.Configuration); // scoped by default (safe for per-request auth)
 
 // or configure explicitly
 builder.Services.AddNorbix(o =>
@@ -106,6 +106,9 @@ builder.Services.AddNorbix(o =>
     o.ProjectId = "proj_123";
     o.ApiKey = "<api_key>";
 });
+
+// Service-to-service (fixed API key) singleton:
+builder.Services.AddNorbixSingleton(builder.Configuration);
 ```
 
 ```csharp

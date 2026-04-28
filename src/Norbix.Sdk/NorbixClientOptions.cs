@@ -60,6 +60,33 @@ public sealed class NorbixClientOptions
     }
 
     /// <summary>
+    /// Create a copy of these options. Used to prevent accidental shared mutable
+    /// state when options are provided by DI containers.
+    /// </summary>
+    public NorbixClientOptions Clone()
+    {
+        var copy = new NorbixClientOptions
+        {
+            ApiKey = ApiKey,
+            BearerToken = BearerToken,
+            ProjectId = ProjectId,
+            AccountId = AccountId,
+            ApiBaseUrl = ApiBaseUrl,
+            HubBaseUrl = HubBaseUrl,
+            ApiVersion = ApiVersion,
+            HubVersion = HubVersion,
+            Timeout = Timeout,
+        };
+
+        foreach (var (k, v) in DefaultHeaders)
+        {
+            copy.DefaultHeaders[k] = v;
+        }
+
+        return copy;
+    }
+
+    /// <summary>
     /// Apply <c>NORBIX_*</c> environment variables on top of any values that
     /// are still null/empty. Explicit constructor / configuration values
     /// always win.

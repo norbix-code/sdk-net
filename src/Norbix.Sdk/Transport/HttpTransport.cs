@@ -7,6 +7,8 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Web;
 
+using Microsoft.Extensions.Logging;
+
 using Norbix.Sdk.Types;
 
 namespace Norbix.Sdk.Transport;
@@ -17,6 +19,33 @@ namespace Norbix.Sdk.Transport;
 /// </summary>
 internal sealed class HttpTransport : INorbixTransport, IDisposable
 {
+    private static class Log
+    {
+        public static readonly Action<ILogger, string, string, Exception?> RequestStart =
+            LoggerMessage.Define<string, string>(
+                LogLevel.Debug,
+                new EventId(1000, nameof(RequestStart)),
+                "Norbix request {Method} {Url}");
+
+        public static readonly Action<ILogger, string, string, double, Exception?> RequestFinished =
+            LoggerMessage.Define<string, string, double>(
+                LogLevel.Debug,
+                new EventId(1001, nameof(RequestFinished)),
+                "Norbix request finished {Method} {Url} in {ElapsedMs}ms");
+
+        public static readonly Action<ILogger, string, string, Exception?> RequestTimedOut =
+            LoggerMessage.Define<string, string>(
+                LogLevel.Warning,
+                new EventId(1100, nameof(RequestTimedOut)),
+                "Norbix request timed out {Method} {Url}");
+
+        public static readonly Action<ILogger, string, string, Exception?> NetworkError =
+            LoggerMessage.Define<string, string>(
+                LogLevel.Warning,
+                new EventId(1101, nameof(NetworkError)),
+                "Norbix network error {Method} {Url}");
+    }
+
     private static readonly JsonSerializerOptions JsonOptions = new()
     {
         DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
@@ -28,13 +57,21 @@ internal sealed class HttpTransport : INorbixTransport, IDisposable
     private readonly NorbixClientOptions _options;
     private readonly HttpClient _http;
     private readonly bool _ownsHttpClient;
+    private readonly ILogger? _logger;
 
-    public HttpTransport(NorbixClientOptions options, HttpClient? httpClient = null)
+    internal HttpClient HttpClient => _http;
+    internal ILogger? Logger => _logger;
+
+    public HttpTransport(NorbixClientOptions options, HttpClient? httpClient = null, ILogger? logger = null)
     {
         _options = options ?? throw new ArgumentNullException(nameof(options));
         _http = httpClient ?? new HttpClient();
         _ownsHttpClient = httpClient is null;
-        _http.Timeout = _options.Timeout;
+        if (_ownsHttpClient)
+        {
+            _http.Timeout = _options.Timeout;
+        }
+        _logger = logger;
     }
 
     public async Task<TResponse?> SendAsync<TResponse>(
@@ -51,6 +88,7 @@ internal sealed class HttpTransport : INorbixTransport, IDisposable
         var (url, body) = BuildUrlAndBody(spec);
 
         using var request = new HttpRequestMessage(new HttpMethod(spec.Method), url);
+        var started = System.Diagnostics.Stopwatch.GetTimestamp();
 
         if (spec.Scope != NorbixScope.Unauthenticated)
         {
@@ -89,11 +127,19 @@ internal sealed class HttpTransport : INorbixTransport, IDisposable
         HttpResponseMessage response;
         try
         {
+            if (_logger is { } logger && logger.IsEnabled(LogLevel.Debug))
+            {
+                Log.RequestStart(logger, spec.Method, url, null);
+            }
             response = await _http.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cancellationToken)
                 .ConfigureAwait(false);
         }
         catch (TaskCanceledException ex) when (!cancellationToken.IsCancellationRequested)
         {
+            if (_logger is { } logger && logger.IsEnabled(LogLevel.Warning))
+            {
+                Log.RequestTimedOut(logger, spec.Method, url, ex);
+            }
             throw new NorbixException(
                 $"Request timed out after {_options.Timeout.TotalMilliseconds}ms",
                 code: NorbixErrorCodes.NetworkError,
@@ -102,11 +148,23 @@ internal sealed class HttpTransport : INorbixTransport, IDisposable
         }
         catch (HttpRequestException ex)
         {
+            if (_logger is { } logger && logger.IsEnabled(LogLevel.Warning))
+            {
+                Log.NetworkError(logger, spec.Method, url, ex);
+            }
             throw new NorbixException(
                 ex.Message,
                 code: NorbixErrorCodes.NetworkError,
                 url: url,
                 innerException: ex);
+        }
+        finally
+        {
+            if (_logger is { } logger && logger.IsEnabled(LogLevel.Debug))
+            {
+                var elapsedMs = System.Diagnostics.Stopwatch.GetElapsedTime(started).TotalMilliseconds;
+                Log.RequestFinished(logger, spec.Method, url, elapsedMs, null);
+            }
         }
 
         await using var stream = await response.Content.ReadAsStreamAsync(cancellationToken)
