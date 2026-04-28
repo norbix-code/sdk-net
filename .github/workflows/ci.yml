@@ -49,7 +49,7 @@ jobs:
         # in CI (no live gateway), but we DO check the source generator
         # produces stable output by running it twice.
         run: |
-          dotnet build --configuration Release --no-restore -warnaserror -t:CoreCompile -p:GenerateDocumentationFile=false > /dev/null
+          dotnet build --configuration Release --no-restore -warnaserror -t:CoreCompile > /dev/null
           # If this run materializes any new generated files into bin/obj, fine.
           # No source-tree drift expected because the source generator emits
           # in-memory only.

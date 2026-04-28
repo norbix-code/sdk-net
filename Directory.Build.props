@@ -32,8 +32,8 @@
     <Company>UAB Isidos</Company>
     <Copyright>© UAB Isidos</Copyright>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageProjectUrl>https://norbix.dev</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/norbix-dev/norbix-net</RepositoryUrl>
+    <PackageProjectUrl>https://norbix.ai</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/norbix-code/norbix-net</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>

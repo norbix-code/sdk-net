@@ -40,7 +40,7 @@
   -->
   <ItemGroup>
     <None
-      Include="$(OutputPath)\..\..\Norbix.Sdk.Generators\$(Configuration)\netstandard2.0\Norbix.Sdk.Generators.dll"
+      Include="..\Norbix.Sdk.Generators\bin\$(Configuration)\netstandard2.0\Norbix.Sdk.Generators.dll"
       Pack="true"
       PackagePath="analyzers/dotnet/cs/Norbix.Sdk.Generators.dll"
       Visible="false" />
