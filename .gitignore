@@ -18,6 +18,8 @@ dist/
 *.nupkg
 *.snupkg
 .nuget/
+!.nuget/
+!.nuget/NuGet.config
 packages/
 
 # rider

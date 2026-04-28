@@ -207,13 +207,19 @@ CI fails if request/response snapshots drift, so stale DTOs or broken generated 
 ## Development
 
 ```bash
-dotnet tool restore
 dotnet restore
 dotnet build
 dotnet test
 ```
 
 Conventional commits are required. The `release-preview` workflow comments on every PR with the next version it would cut.
+
+## NuGet configuration (.nuget)
+
+This repo contains two NuGet configuration files:
+
+- `nuget.config`: restore sources + package source mapping (CI and local restore)
+- `.nuget/NuGet.config`: sets `defaultPushSource` to help avoid accidentally pushing to the wrong feed when running `dotnet nuget push` locally
 
 ## Releases
 
