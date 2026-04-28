@@ -23,8 +23,8 @@ app.Run();
   "Norbix": {
     "ProjectId": "proj_123",
     "ApiKey": "sk_live_...",
-    "ApiBaseUrl": "https://api.norbix.dev",
-    "HubBaseUrl": "https://hub.norbix.dev"
+    "ApiBaseUrl": "https://api.norbix.ai",
+    "HubBaseUrl": "https://hub.norbix.ai"
   }
 }
 ```

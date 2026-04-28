@@ -30,11 +30,11 @@ public sealed class NorbixClientOptions
     /// </summary>
     public string? AccountId { get; set; }
 
-    /// <summary>API gateway base URL. Default <c>https://api.norbix.dev</c> (or <c>NORBIX_API_URL</c>).</summary>
-    public string ApiBaseUrl { get; set; } = "https://api.norbix.dev";
+    /// <summary>API gateway base URL. Default <c>https://api.norbix.ai</c> (or <c>NORBIX_API_URL</c>).</summary>
+    public string ApiBaseUrl { get; set; } = "https://api.norbix.ai";
 
-    /// <summary>Hub gateway base URL. Default <c>https://hub.norbix.dev</c> (or <c>NORBIX_HUB_URL</c>).</summary>
-    public string HubBaseUrl { get; set; } = "https://hub.norbix.dev";
+    /// <summary>Hub gateway base URL. Default <c>https://hub.norbix.ai</c> (or <c>NORBIX_HUB_URL</c>).</summary>
+    public string HubBaseUrl { get; set; } = "https://hub.norbix.ai";
 
     /// <summary>{version} segment for API routes. Default <c>v2</c>.</summary>
     public string ApiVersion { get; set; } = "v2";

@@ -75,8 +75,8 @@ Any field you do not set on `NorbixClientOptions` is read from environment varia
 NORBIX_API_KEY=sk_live_...
 NORBIX_PROJECT_ID=proj_123
 NORBIX_ACCOUNT_ID=acc_456            # optional
-NORBIX_API_URL=https://api.norbix.dev
-NORBIX_HUB_URL=https://hub.norbix.dev
+NORBIX_API_URL=https://api.norbix.ai
+NORBIX_HUB_URL=https://hub.norbix.ai
 NORBIX_API_VERSION=v2
 NORBIX_HUB_VERSION=v2
 NORBIX_TIMEOUT_MS=30000
@@ -87,6 +87,18 @@ using var client = new NorbixClient(); // reads everything from env
 ```
 
 The SDK does not load `.env` files itself. Load them in your app bootstrap or deployment environment before constructing `NorbixClient`.
+
+You can also override gateways for self-hosted or local deployments:
+
+```csharp
+var client = new NorbixClient(new NorbixClientOptions
+{
+    ProjectId = "proj_123",
+    ApiKey = "<api_key>",
+    ApiBaseUrl = "https://api.norbix.isidos.lt",  // or "http://localhost:5000"
+    HubBaseUrl = "https://hub.norbix.isidos.lt",  // or "http://localhost:5001"
+});
+```
 
 ## Project vs Account Scope
 
