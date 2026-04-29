@@ -1,3 +1,9 @@
+## [1.3.1](https://github.com/norbix-code/sdk-net/compare/v1.3.0...v1.3.1) (2026-04-29)
+
+### Bug Fixes
+
+* **release:** trigger package release after policy alignment ([38073c3](https://github.com/norbix-code/sdk-net/commit/38073c360bc6c7eb89ef19ad55ae0409ae7872e7))
+
 ## [1.3.0](https://github.com/norbix-code/sdk-net/compare/v1.2.0...v1.3.0) (2026-04-29)
 
 ### Features
