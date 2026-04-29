@@ -1,3 +1,9 @@
+## [1.3.0](https://github.com/norbix-code/sdk-net/compare/v1.2.0...v1.3.0) (2026-04-29)
+
+### Features
+
+* flatten .NET SDK modules and enforce API/Hub split ([3d85d54](https://github.com/norbix-code/sdk-net/commit/3d85d5440093e6f9574c9a19b71cf22966b43490))
+
 ## [1.2.0](https://github.com/norbix-code/sdk-net/compare/v1.1.0...v1.2.0) (2026-04-28)
 
 ### Features
