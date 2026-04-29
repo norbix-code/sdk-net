@@ -139,26 +139,26 @@ third-party loader.
 
 ### Module UX is good but verbose
 
-The grouped sub-client model is right:
-`client.Api.Database.FindAsync(...)` and
-`client.Hub.Notifications.GetTemplatesAsync(...)`
-(`README.md:31-32, 117-119`). This scales to 38 API + 244 Hub endpoints
-without becoming a flat soup. But the call site is heavier than the goal
-("`db.FindAll()`, `files.Download()`, `code.Execute()`"). Compare:
+The grouped module model is right:
+`client.Database.FindAsync(...)` and
+`client.Notifications.GetTemplatesAsync(...)`
+(`README.md:42-43, 74-75`). This scales to 38 API + 244 Hub endpoints
+without becoming a flat soup. But the call site is still heavier than the
+goal ("`db.FindAll()`, `files.Download()`, `code.Execute()`"). Compare:
 
 ```csharp
-// Norbix today (README.md:31)
-await client.Api.Database.FindAsync(new FindRequest { CollectionName = "orders" });
+// Norbix today (README.md:42)
+await client.Database.FindAsync(new FindRequest { CollectionName = "orders" });
 
 // What "best library" feel looks like
 await client.Database.FindAllAsync("orders");
 await client.Files.DownloadAsync("file_123", "/tmp/out.pdf");
 ```
 
-The two-level path `client.Api.Database` is correct for separating **API**
-from **Hub**, but for the most-used endpoints, hand-written shortcut
-methods would close the gap. Keep the generated `Api/Hub` surface for full
-power; add shortcuts for the top 10 calls.
+Package-level separation keeps **API** and **Hub** isolated (`Norbix.Api`,
+`Norbix.Hub`), while flat modules on each client keep call-sites concise.
+For the most-used endpoints, hand-written shortcuts could still close the
+gap further.
 
 ### The biggest real risk: singleton + mutable state
 

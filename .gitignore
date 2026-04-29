@@ -35,7 +35,8 @@ packages/
 .env.local
 *.env
 
-# tooling
+# tooling — generation scripts are dev-only and not shipped with the SDK.
+# Generated outputs (Generated/*.cs, DTOs) ARE committed and used by CI.
 .config/dotnet-suggest-cache/
 scripts/sync-types.sh
 scripts/sync-types.ps1
