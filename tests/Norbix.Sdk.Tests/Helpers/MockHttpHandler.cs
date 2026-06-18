@@ -15,6 +15,14 @@ internal sealed class MockHttpHandler : HttpMessageHandler
     public List<RecordedRequest> Requests { get; } = new();
 
     /// <summary>
+    /// Absolute URIs of every outgoing request, in order. Kept separate from
+    /// <see cref="RecordedRequest"/> (which is snapshot-serialized) so URL
+    /// composition tests can assert on scheme/host without churning the
+    /// existing Verify snapshots.
+    /// </summary>
+    public List<Uri?> RequestUris { get; } = new();
+
+    /// <summary>
     /// Register a JSON response for any request whose path ends with <paramref name="pathSuffix"/>.
     /// Last one registered wins (so tests can override defaults set by the fixture).
     /// </summary>
@@ -78,6 +86,7 @@ internal sealed class MockHttpHandler : HttpMessageHandler
             await request.Content.LoadIntoBufferAsync(cancellationToken).ConfigureAwait(false);
         }
         Requests.Add(request.ToRecorded());
+        RequestUris.Add(request.RequestUri);
 
         if (_queuedResponses.Count > 0)
         {

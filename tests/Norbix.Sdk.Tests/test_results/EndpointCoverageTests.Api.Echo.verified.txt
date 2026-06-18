@@ -42,7 +42,10 @@
           cap: 7,
           isTrial: true
         },
-        AskForEnterpriseLicenseEmail: user@example.test
+        AskForEnterpriseLicenseEmail: user@example.test,
+        Regions: [
+          {}
+        ]
       }
     }
   ]

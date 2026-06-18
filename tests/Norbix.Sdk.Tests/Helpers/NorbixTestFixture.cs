@@ -82,5 +82,9 @@ internal sealed class NorbixTestFixture : IDisposable
     public RecordedRequest? LastRequest =>
         RecordedRequests.Count == 0 ? null : RecordedRequests[^1];
 
+    /// <summary>Absolute URI of the last request (scheme + host included).</summary>
+    public Uri? LastRequestUri =>
+        _handler.RequestUris.Count == 0 ? null : _handler.RequestUris[^1];
+
     public void Dispose() => Client.Dispose();
 }

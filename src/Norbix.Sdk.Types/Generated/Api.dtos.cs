@@ -1782,6 +1782,18 @@ public partial class AccountId
         public virtual string MjmlUrl { get; set; }
         public virtual CodeMashLicenseFromEndpointDto? License { get; set; }
         public virtual string? AskForEnterpriseLicenseEmail { get; set; }
+
+        ///<summary>The regions this deployment knows about, with their composed API/Hub endpoints. Empty on SelfHosted deployments in practice.</summary>
+        public virtual EchoRegionDto[]? Regions { get; set; }
+    }
+
+    ///<summary>A Norbix region with its composed per-region API/Hub endpoints.</summary>
+    public partial class EchoRegionDto
+    {
+        public virtual string Code { get; set; }
+        public virtual string DisplayName { get; set; }
+        public virtual string ApiUrl { get; set; }
+        public virtual string HubUrl { get; set; }
     }
 
     public partial class CodeMashListPaginationRequestBase
@@ -1911,4 +1923,317 @@ public partial class AccountId
         public virtual int? PageSize { get; set; }
         public virtual string? StartingAfter { get; set; }
         public virtual string? EndingBefore { get; set; }
+    }
+
+
+// ============================================================
+// Api endpoints synced from gateway 2026-05-21 (25 new endpoints +
+// supporting DTOs/enums). Transpiled from gateway ServiceStack contracts.
+// ============================================================
+
+    [NorbixRoute("/{version}/files/{filesIntegrationId}/commit", "POST")]
+    public partial class CommitUploadRequest
+        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
+    {
+        [DataMember]
+        public virtual string FilesIntegrationId { get; set; }
+        [DataMember]
+        public virtual string Path { get; set; }
+        [DataMember]
+        public virtual string? ContentType { get; set; }
+        [DataMember]
+        public virtual long? SizeBytes { get; set; }
+        [DataMember]
+        public virtual string? FileName { get; set; }
+    }
+
+    [NorbixRoute("/{version}/membership/userauth/email/confirm-verification", "POST")]
+    public partial class ConfirmEmailVerificationRequest
+        : CodeMashRequestBase, INorbixRequest<PasskeyVerificationTokenResponse>
+    {
+    }
+
+    [NorbixRoute("/{version}/membership/userauth/recovery/magic-link/consume", "POST")]
+    public partial class ConsumeMagicLinkRequest
+        : CodeMashRequestBase, INorbixRequest<PasskeyRecoveryResponse>
+    {
+    }
+
+    [NorbixRoute("/{version}/files/{filesIntegrationId}", "DELETE")]
+    public partial class DeleteFileApiRequest
+        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
+    {
+        [DataMember]
+        public virtual string FilesIntegrationId { get; set; }
+        [DataMember]
+        public virtual string Path { get; set; }
+    }
+
+    [NorbixRoute("/{version}/files/{filesIntegrationId}/bulk", "DELETE")]
+    public partial class DeleteManyFilesApiRequest
+        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
+    {
+        [DataMember]
+        public virtual string FilesIntegrationId { get; set; }
+        [DataMember(Name = "paths[]")]
+        public virtual List<string> Paths { get; set; }
+    }
+
+    [NorbixRoute("/{version}/files/{filesIntegrationId}/download", "GET")]
+    public partial class DownloadFileApiRequest
+        : CodeMashRequestBase, INorbixRequest<object>
+    {
+        [DataMember]
+        public virtual string FilesIntegrationId { get; set; }
+        [DataMember]
+        public virtual string Path { get; set; }
+    }
+
+    public partial class FileResourceRefDto
+        : ResourceRefDto
+    {
+        public virtual string FileResourceId { get; set; }
+    }
+
+    [NorbixRoute("/{version}/files/{filesIntegrationId}/info", "GET")]
+    public partial class GetFileInfoRequest
+        : CodeMashRequestBase, INorbixRequest<GetFileInfoResponse>
+    {
+        [DataMember]
+        public virtual string FilesIntegrationId { get; set; }
+        [DataMember]
+        public virtual string Path { get; set; }
+    }
+
+    public partial class GetFileInfoResponse
+        : ResponseBase
+    {
+        public virtual FileResourceRefDto? File { get; set; }
+        public virtual bool? IsPublic { get; set; }
+        public virtual string? PublicUrl { get; set; }
+    }
+
+    [NorbixRoute("/{version}/files/{filesIntegrationId}/sign", "GET")]
+    public partial class GetSignedUrlRequest
+        : CodeMashRequestBase, INorbixRequest<GetSignedUrlResponse>
+    {
+        [DataMember]
+        public virtual string FilesIntegrationId { get; set; }
+        [DataMember]
+        public virtual string Path { get; set; }
+        [DataMember]
+        public virtual int? ExpirationSeconds { get; set; }
+    }
+
+    public partial class GetSignedUrlResponse
+        : ResponseBase
+    {
+        public virtual string? Url { get; set; }
+    }
+
+    [NorbixRoute("/{version}/membership/userauth/has-passkey", "POST")]
+    public partial class HasPasskeyRequest
+        : CodeMashRequestBase, INorbixRequest<PasskeyOkResponse>
+    {
+    }
+
+    [NorbixRoute("/up", "ANY")]
+    public partial class Health
+        : INorbixRequest
+    {
+    }
+
+    [NorbixRoute("/{version}/membership/users/{userId}/link-identity", "POST")]
+    public partial class LinkIdentityRequest
+        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
+    {
+        [DataMember]
+        public virtual string UserId { get; set; }
+        [DataMember]
+        public virtual string Provider { get; set; }
+        [DataMember]
+        public virtual string ProviderToken { get; set; }
+        [DataMember]
+        public virtual string? EmailToVerify { get; set; }
+        [DataMember]
+        public virtual string DatabaseIntegrationId { get; set; }
+    }
+
+    [NorbixRoute("/{version}/files/{filesIntegrationId}", "GET")]
+    public partial class ListFilesRequest
+        : CodeMashListPaginationRequestBase, INorbixRequest<ListFilesResponse>
+    {
+        [DataMember]
+        public virtual string FilesIntegrationId { get; set; }
+        [DataMember]
+        public virtual string? Path { get; set; }
+    }
+
+    public partial class ListFilesResponse
+        : ResponseBase
+    {
+        public virtual PaginatedResponse<FileResourceRefDto>? List { get; set; }
+        public virtual IList<string>? Folders { get; set; }
+    }
+
+    [NorbixRoute("/{version}/membership/userauth/passkeys", "GET")]
+    public partial class ListPasskeysRequest
+        : CodeMashRequestBase, INorbixRequest<PasskeyListResponse>
+    {
+    }
+
+    public partial class PasskeyAuthTokensResponse
+        : ResponseBase
+    {
+        public virtual string AccessToken { get; set; }
+        public virtual string RefreshToken { get; set; }
+        public virtual int ExpiresInSeconds { get; set; }
+        public virtual List<string>? RecoveryCodes { get; set; }
+    }
+
+    [NorbixRoute("/{version}/membership/userauth/passkey/authentication-options", "POST")]
+    public partial class PasskeyAuthenticationOptionsRequest
+        : CodeMashRequestBase, INorbixRequest<PasskeyCeremonyOptionsResponse>
+    {
+    }
+
+    public partial class PasskeyCeremonyOptionsResponse
+        : ResponseBase
+    {
+        public virtual string CeremonyId { get; set; }
+        public virtual string OptionsJson { get; set; }
+    }
+
+    public partial class PasskeyListItemDto
+    {
+        public virtual string CredentialId { get; set; }
+        public virtual string FriendlyName { get; set; }
+        public virtual DateTime RegisteredOnUtc { get; set; }
+        public virtual DateTime LastUsedOnUtc { get; set; }
+        public virtual bool IsRevoked { get; set; }
+    }
+
+    public partial class PasskeyListResponse
+        : ResponseBase
+    {
+        public virtual List<PasskeyListItemDto> Passkeys { get; set; }
+    }
+
+    [NorbixRoute("/{version}/membership/userauth/logout", "POST")]
+    public partial class PasskeyLogoutRequest
+        : CodeMashRequestBase, INorbixRequest<PasskeyOkResponse>
+    {
+    }
+
+    public partial class PasskeyOkResponse
+        : ResponseBase
+    {
+    }
+
+    public partial class PasskeyRecoveryResponse
+        : ResponseBase
+    {
+        public virtual string AccessToken { get; set; }
+        public virtual string RefreshToken { get; set; }
+        public virtual int ExpiresInSeconds { get; set; }
+        public virtual int RemainingCodes { get; set; }
+    }
+
+    [NorbixRoute("/{version}/membership/userauth/passkey/registration-options", "POST")]
+    public partial class PasskeyRegistrationOptionsRequest
+        : CodeMashRequestBase, INorbixRequest<PasskeyCeremonyOptionsResponse>
+    {
+    }
+
+    public partial class PasskeyVerificationTokenResponse
+        : ResponseBase
+    {
+        public virtual string VerificationToken { get; set; }
+    }
+
+    [NorbixRoute("/{version}/membership/userauth/token/refresh", "POST")]
+    public partial class RefreshPasskeyTokenRequest
+        : CodeMashRequestBase, INorbixRequest<PasskeyAuthTokensResponse>
+    {
+    }
+
+    [NorbixRoute("/{version}/membership/userauth/passkeys/{CredentialId}/rename", "POST")]
+    public partial class RenamePasskeyRequest
+        : CodeMashRequestBase, INorbixRequest<PasskeyOkResponse>
+    {
+    }
+
+    [NorbixRoute("/{version}/membership/userauth/recovery/magic-link/request", "POST")]
+    public partial class RequestMagicLinkRequest
+        : CodeMashRequestBase, INorbixRequest<PasskeyOkResponse>
+    {
+    }
+
+    [NorbixRoute("/{version}/files/{filesIntegrationId}/upload-url", "POST")]
+    public partial class RequestUploadUrlRequest
+        : CodeMashRequestBase, INorbixRequest<RequestUploadUrlResponse>
+    {
+        [DataMember]
+        public virtual string FilesIntegrationId { get; set; }
+        [DataMember]
+        public virtual string Path { get; set; }
+        [DataMember]
+        public virtual string ContentType { get; set; }
+        [DataMember]
+        public virtual int? ExpirationSeconds { get; set; }
+    }
+
+    public partial class RequestUploadUrlResponse
+        : ResponseBase
+    {
+        public virtual string? Url { get; set; }
+    }
+
+    public enum ResourceKindDto
+    {
+        [EnumMember(Value = "contact")] Contact,
+        [EnumMember(Value = "document")] Document,
+        [EnumMember(Value = "file")] File,
+        [EnumMember(Value = "paymentCustomer")] PaymentCustomer,
+        [EnumMember(Value = "order")] Order,
+        [EnumMember(Value = "payment")] Payment,
+        [EnumMember(Value = "product")] Product,
+        [EnumMember(Value = "integration")] Integration,
+    }
+
+    public partial class ResourceRefDto
+    {
+        public virtual string ProjectId { get; set; }
+        public virtual string? IntegrationId { get; set; }
+        public virtual ResourceKindDto Kind { get; set; }
+    }
+
+    [NorbixRoute("/{version}/membership/userauth/passkeys/{CredentialId}/revoke", "POST")]
+    public partial class RevokePasskeyRequest
+        : CodeMashRequestBase, INorbixRequest<PasskeyOkResponse>
+    {
+    }
+
+    [NorbixRoute("/{version}/membership/userauth/email/start-verification", "POST")]
+    public partial class StartEmailVerificationRequest
+        : CodeMashRequestBase, INorbixRequest<PasskeyOkResponse>
+    {
+    }
+
+    [NorbixRoute("/{version}/membership/userauth/recovery/use-code", "POST")]
+    public partial class UseRecoveryCodeRequest
+        : CodeMashRequestBase, INorbixRequest<PasskeyRecoveryResponse>
+    {
+    }
+
+    [NorbixRoute("/{version}/membership/userauth/passkey/verify-authentication", "POST")]
+    public partial class VerifyPasskeyAuthenticationRequest
+        : CodeMashRequestBase, INorbixRequest<PasskeyAuthTokensResponse>
+    {
+    }
+
+    [NorbixRoute("/{version}/membership/userauth/passkey/verify-registration", "POST")]
+    public partial class VerifyPasskeyRegistrationRequest
+        : CodeMashRequestBase, INorbixRequest<PasskeyAuthTokensResponse>
+    {
     }

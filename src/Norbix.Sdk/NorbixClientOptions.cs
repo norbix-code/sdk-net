@@ -15,6 +15,12 @@ namespace Norbix.Sdk;
 /// </remarks>
 public sealed class NorbixClientOptions
 {
+    /// <summary>SDK-default API gateway base URL.</summary>
+    public const string DefaultApiBaseUrl = "https://api.norbix.ai";
+
+    /// <summary>SDK-default Hub gateway base URL.</summary>
+    public const string DefaultHubBaseUrl = "https://hub.norbix.ai";
+
     /// <summary>Long-lived API key (or <c>NORBIX_API_KEY</c>).</summary>
     public string? ApiKey { get; set; }
 
@@ -30,11 +36,33 @@ public sealed class NorbixClientOptions
     /// </summary>
     public string? AccountId { get; set; }
 
+    /// <summary>
+    /// Project environment every request targets, sent as the <c>norbix-env</c>
+    /// header. Each project owns a set of named environments; <c>PROD</c> always
+    /// exists and is the default. A non-PROD env (e.g. <c>TEST</c>, <c>STAGING</c>)
+    /// scopes every read and write to that environment's integrations — there is
+    /// no cross-env fallback. Default <c>PROD</c> (or <c>NORBIX_ENV</c>). Use
+    /// <see cref="NorbixClient.WithEnv"/> for a per-call override.
+    /// </summary>
+    public string Env { get; set; } = "PROD";
+
+    /// <summary>
+    /// Norbix region code (e.g. <c>nb-eu-germany</c>) every request targets,
+    /// sent as the <c>nb-region</c> header. Unlike <see cref="Env"/> there is
+    /// NO default region — when unset, no header is sent. Resolution order:
+    /// per-call <see cref="NorbixClient.WithRegion"/> override → this option
+    /// → <c>NORBIX_REGION</c> environment variable → unset. When a region is
+    /// resolved and the base URL is the SDK default, the transport composes
+    /// the regional endpoint (<c>https://{region}.api.norbix.ai</c>) per
+    /// request; a custom base URL is never rewritten.
+    /// </summary>
+    public string? Region { get; set; }
+
     /// <summary>API gateway base URL. Default <c>https://api.norbix.ai</c> (or <c>NORBIX_API_URL</c>).</summary>
-    public string ApiBaseUrl { get; set; } = "https://api.norbix.ai";
+    public string ApiBaseUrl { get; set; } = DefaultApiBaseUrl;
 
     /// <summary>Hub gateway base URL. Default <c>https://hub.norbix.ai</c> (or <c>NORBIX_HUB_URL</c>).</summary>
-    public string HubBaseUrl { get; set; } = "https://hub.norbix.ai";
+    public string HubBaseUrl { get; set; } = DefaultHubBaseUrl;
 
     /// <summary>{version} segment for API routes. Default <c>v2</c>.</summary>
     public string ApiVersion { get; set; } = "v2";
@@ -71,6 +99,8 @@ public sealed class NorbixClientOptions
             BearerToken = BearerToken,
             ProjectId = ProjectId,
             AccountId = AccountId,
+            Env = Env,
+            Region = Region,
             ApiBaseUrl = ApiBaseUrl,
             HubBaseUrl = HubBaseUrl,
             ApiVersion = ApiVersion,
@@ -106,6 +136,11 @@ public sealed class NorbixClientOptions
         BearerToken ??= NullIfEmpty(Read("NORBIX_BEARER_TOKEN"));
         ProjectId ??= NullIfEmpty(Read("NORBIX_PROJECT_ID"));
         AccountId ??= NullIfEmpty(Read("NORBIX_ACCOUNT_ID"));
+
+        var env = NullIfEmpty(Read("NORBIX_ENV"));
+        if (env is not null) Env = env;
+
+        Region ??= NullIfEmpty(Read("NORBIX_REGION"));
 
         var apiUrl = NullIfEmpty(Read("NORBIX_API_URL"));
         if (apiUrl is not null) ApiBaseUrl = apiUrl;

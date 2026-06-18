@@ -128,6 +128,38 @@ public sealed partial class NorbixClient : IDisposable, IAsyncDisposable
         return new NorbixClient(o, _transport.HttpClient, _transport.Logger);
     }
 
+    /// <summary>
+    /// Create a new client scoped to a different project environment. The new
+    /// client shares the underlying <see cref="HttpClient"/> and sends the
+    /// <c>norbix-env</c> header on every request (omitted for <c>PROD</c>).
+    /// Use this for per-call or per-scope environment overrides, e.g.
+    /// <c>await client.WithEnv("TEST").Hub.Account.GetProjectEnvironmentsAsync()</c>.
+    /// </summary>
+    public NorbixClient WithEnv(string? env)
+    {
+        var o = _options.Clone();
+        o.Env = string.IsNullOrEmpty(env) ? "PROD" : env;
+        return new NorbixClient(o, _transport.HttpClient, _transport.Logger);
+    }
+
+    /// <summary>
+    /// Create a new client scoped to a Norbix region. The new client shares
+    /// the underlying <see cref="HttpClient"/> and sends the <c>nb-region</c>
+    /// header on every request (omitted when <paramref name="region"/> is
+    /// null/empty — there is no default region). When the base URL is still
+    /// the SDK default, requests are composed against the regional endpoint
+    /// (<c>https://{region}.api.norbix.ai</c>) per request; a custom base URL
+    /// is never rewritten. Use this for per-call or per-scope region
+    /// overrides, e.g.
+    /// <c>await client.WithRegion("nb-eu-germany").Echo.EchoAsync(new())</c>.
+    /// </summary>
+    public NorbixClient WithRegion(string? region)
+    {
+        var o = _options.Clone();
+        o.Region = string.IsNullOrEmpty(region) ? null : region;
+        return new NorbixClient(o, _transport.HttpClient, _transport.Logger);
+    }
+
     /// <summary>Create a new client without a JWT bearer token (falls back to ApiKey if configured).</summary>
     public NorbixClient WithoutBearerToken() => WithBearerToken(null);
 

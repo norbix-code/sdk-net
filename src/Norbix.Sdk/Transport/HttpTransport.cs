@@ -114,6 +114,24 @@ internal sealed class HttpTransport : INorbixTransport, IDisposable
             request.Headers.TryAddWithoutValidation("X-CM-AccountId", _options.AccountId);
         }
 
+        // Environment selector. "PROD" is the backend default, so the header is
+        // omitted for it to keep production requests byte-identical to before.
+        // Per-call scoping is done by cloning the client with WithEnv(...).
+        if (!string.IsNullOrEmpty(_options.Env) &&
+            !string.Equals(_options.Env, "PROD", StringComparison.Ordinal))
+        {
+            request.Headers.TryAddWithoutValidation("norbix-env", _options.Env);
+        }
+
+        // Region selector. Unlike the environment header there is NO default
+        // region — the header is injected only when a region was resolved
+        // (WithRegion(...) / Options.Region / NORBIX_REGION). Requests with
+        // no region stay byte-identical to before.
+        if (!string.IsNullOrEmpty(_options.Region))
+        {
+            request.Headers.TryAddWithoutValidation("nb-region", _options.Region);
+        }
+
         foreach (var (k, v) in _options.DefaultHeaders)
         {
             request.Headers.TryAddWithoutValidation(k, v);
@@ -253,7 +271,9 @@ internal sealed class HttpTransport : INorbixTransport, IDisposable
 
     private (string Url, string? Body) BuildUrlAndBody(in NorbixRequestSpec spec)
     {
-        var baseUrl = spec.Target == NorbixTarget.Api ? _options.ApiBaseUrl : _options.HubBaseUrl;
+        var baseUrl = ComposeRegionalBaseUrl(
+            spec.Target == NorbixTarget.Api ? _options.ApiBaseUrl : _options.HubBaseUrl,
+            spec.Target);
         var version = spec.Target == NorbixTarget.Api ? _options.ApiVersion : _options.HubVersion;
 
         var path = spec.Path.Replace("{version}", Uri.EscapeDataString(version), StringComparison.Ordinal);
@@ -277,6 +297,36 @@ internal sealed class HttpTransport : INorbixTransport, IDisposable
 
         var body = SerializeBodyOrNull(spec.Request, consumed);
         return (url, body);
+    }
+
+    /// <summary>
+    /// When a region is resolved AND the base URL is still the SDK default,
+    /// compose the regional endpoint by prefixing the region code as a
+    /// subdomain (<c>https://{region}.api.norbix.ai</c>). A user-supplied
+    /// custom base URL is never rewritten. Composition happens here — per
+    /// request — because the transport always builds absolute request URIs
+    /// and never sets <c>HttpClient.BaseAddress</c>, so clients cloned via
+    /// <c>WithRegion(...)</c> can safely share one <see cref="HttpClient"/>.
+    /// </summary>
+    private string ComposeRegionalBaseUrl(string baseUrl, NorbixTarget target)
+    {
+        if (string.IsNullOrEmpty(_options.Region))
+        {
+            return baseUrl;
+        }
+
+        var defaultBase = target == NorbixTarget.Api
+            ? NorbixClientOptions.DefaultApiBaseUrl
+            : NorbixClientOptions.DefaultHubBaseUrl;
+
+        var trimmed = baseUrl.EndsWith('/') ? baseUrl[..^1] : baseUrl;
+        if (!string.Equals(trimmed, defaultBase, StringComparison.OrdinalIgnoreCase))
+        {
+            return baseUrl;
+        }
+
+        var uri = new Uri(defaultBase);
+        return $"{uri.Scheme}://{_options.Region}.{uri.Authority}";
     }
 
     private static string ReplaceTokens(string path, object? request, HashSet<string> consumed)

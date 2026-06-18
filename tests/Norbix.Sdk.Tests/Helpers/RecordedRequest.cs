@@ -22,6 +22,8 @@ internal static class RecordedRequestExtensions
         "Authorization",
         "X-CM-ProjectId",
         "X-CM-AccountId",
+        "norbix-env",
+        "nb-region",
         "Content-Type",
     };
 
