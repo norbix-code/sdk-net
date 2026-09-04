@@ -5,6 +5,8 @@
 #nullable enable annotations
 #nullable disable warnings
 
+#pragma warning disable CS0114, CS1570, CS0102, CS0108, CS0618
+
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
@@ -12,14 +14,30 @@ using Norbix.Sdk.Types;
 
 namespace Norbix.Sdk.Types.Api;
 
-public partial class AccountId
-        : AggregateId
+    public partial class AccountId
+        : AggregateId, IHasDomainEntityId
     {
     }
 
     public partial class AggregateId
     {
         public virtual Guid Value { get; set; }
+    }
+
+    public partial class AuthId
+        : IHasDomainEntityId
+    {
+        public virtual Guid Value { get; set; }
+    }
+
+    public enum AuthType
+    {
+        Service,
+        Email,
+        UserName,
+        Phone,
+        Guest,
+        Social,
     }
 
     public partial class BaseTagDefinition
@@ -46,7 +64,7 @@ public partial class AccountId
     public partial class CodeMashManagedServiceSubscription
     {
         public virtual CodeMashSubscriptionId SubscriptionId { get; set; }
-        public virtual ExternalCustomerId RefCustomerId { get; set; }
+        public virtual PaymentCustomerRef PaymentCustomerRef { get; set; }
         public virtual string RefSubscriptionId { get; set; }
         public virtual UtcDateTime IssuedOn { get; set; }
         public virtual UtcDateTime WillExpireOn { get; set; }
@@ -117,6 +135,12 @@ public partial class AccountId
         public virtual string Address { get; set; }
     }
 
+    public partial class Env
+    {
+        public virtual string Value { get; set; }
+        public virtual bool IsProd { get; set; }
+    }
+
     public partial class ExpirationToken
     {
         public virtual long Items { get; set; }
@@ -133,15 +157,22 @@ public partial class AccountId
 
     }
 
-    public partial class ExternalCustomerId
-    {
-        public virtual string Id { get; set; }
-    }
-
     public partial class FileChecksum
     {
         public virtual string Algorithm { get; set; }
         public virtual string Hash { get; set; }
+    }
+
+    public enum FileProvider
+    {
+        Local,
+        AwsS3,
+        AzureBlobStorage,
+        GoogleCloudStorage,
+        Ftp,
+        AppleICloud,
+        DropBox,
+        GoogleDrive,
     }
 
     [DataContract]
@@ -171,6 +202,22 @@ public partial class AccountId
         public virtual Guid Value { get; set; }
     }
 
+    [DataContract]
+    public partial class FileResourceRef
+    {
+        [DataMember(Order=1)]
+        public virtual FileResource Resource { get; set; }
+
+        [DataMember(Order=2)]
+        public virtual IntegrationId IntegrationId { get; set; }
+
+        [DataMember(Order=3)]
+        public virtual FileProvider Provider { get; set; }
+
+        [DataMember(Order=4)]
+        public virtual string Path { get; set; }
+    }
+
     public partial class GroupDefinition
         : BaseTagDefinition
     {
@@ -186,10 +233,40 @@ public partial class AccountId
         public virtual HashSet<Tag> Tags { get; set; } = [];
     }
 
+    public partial interface IBindableContract
+    {
+    }
 
+    public partial interface IHasDomainEntityId
+    {
+    }
+
+    public partial interface IIntegrationIdentification
+    {
+        IntegrationId IntegrationId { get; set; }
+        string Capability { get; set; }
+        bool IsSystemOwned { get; set; }
+    }
+
+    public partial class Integration
+        : IIntegrationIdentification, IHasDomainEntityId
+    {
+        public virtual IntegrationId IntegrationId { get; set; }
+        public virtual Env Env { get; set; }
+        public virtual string Capability { get; set; }
+        public virtual bool IsSystemOwned { get; set; }
+        public virtual DisplayName IntegrationName { get; set; }
+        public virtual bool IsEnabled { get; set; }
+        public virtual bool IsConfigured { get; set; }
+        public virtual DateTime? LastIntegrationTestAtUtc { get; set; }
+        public virtual bool? LastIntegrationTestSucceeded { get; set; }
+        public virtual IReadOnlyList<string> LastIntegrationTestErrorMessages { get; set; }
+        public virtual DateTime? HumanDeliveryConfirmedAtUtc { get; set; }
+        public virtual bool IsApprovedThatItWorks { get; set; }
+    }
 
     public partial class IntegrationId
-        : AggregateId
+        : AggregateId, IHasDomainEntityId
     {
     }
 
@@ -199,9 +276,32 @@ public partial class AccountId
         public virtual string Name { get; set; }
     }
 
+    public enum MarketingBlockReason
+    {
+        Unspecified,
+        Unsubscribed,
+        Complaint,
+        HardBounce,
+        InvalidEmail,
+        AdminBlock,
+    }
+
     [DataContract]
     public partial class MessageTranslation<TContent>
     {
+    }
+
+    public partial class NorbixRegion
+    {
+        public virtual string Code { get; set; }
+    }
+
+    public partial class PaymentCustomerRef
+        : ResourceRef
+    {
+        public virtual ResourceRefKind Kind { get; set; }
+        public virtual ResourceSource Source { get; set; }
+        public virtual string ExternalId { get; set; }
     }
 
     [DataContract]
@@ -229,19 +329,19 @@ public partial class AccountId
 
     public partial class ProjectIcon
     {
-        public virtual FileResource FileResource { get; set; }
-        public virtual string? PublicUrl { get; set; }
+        public virtual FileResourceRef FileResource { get; set; }
+        public virtual string PublicUrl { get; set; }
     }
 
     public partial class ProjectId
-        : AggregateId
+        : AggregateId, IHasDomainEntityId
     {
     }
 
     public partial class ProjectLogo
     {
-        public virtual FileResource FileResource { get; set; }
-        public virtual string? PublicUrl { get; set; }
+        public virtual FileResourceRef FileResource { get; set; }
+        public virtual string PublicUrl { get; set; }
     }
 
     [DataContract]
@@ -258,7 +358,7 @@ public partial class AccountId
     public partial class ProjectRegion
     {
         [DataMember]
-        public virtual ProjectRegionId Id { get; set; }
+        public virtual NorbixRegion Region { get; set; }
 
         [DataMember]
         public virtual string? Name { get; set; }
@@ -267,9 +367,9 @@ public partial class AccountId
         public virtual Continent? Continent { get; set; }
     }
 
-    public partial class ProjectRegionId
+    public partial class PushBody
     {
-        public virtual string Value { get; set; }
+        public virtual TemplateCode Value { get; set; }
     }
 
     [DataContract]
@@ -330,9 +430,101 @@ public partial class AccountId
         public virtual string Token { get; set; }
     }
 
+    public partial class PushIntegration
+        : Integration
+    {
+        public virtual PushProvider Provider { get; set; }
+    }
+
+    [DataContract]
+    public partial class PushMessageContent
+    {
+        [DataMember(Order=1)]
+        public virtual PushTitle Title { get; set; }
+
+        [DataMember(Order=1)]
+        public virtual PushTitle? SubTitle { get; set; }
+
+        [DataMember(Order=2)]
+        public virtual PushBody Body { get; set; }
+    }
+
+    [DataContract]
+    public enum PushProvider
+    {
+        AppleApns,
+        SafariWeb,
+        SafariPush,
+        AndroidFirebase,
+        ChromeWeb,
+        FirefoxWeb,
+        EdgeWeb,
+        ChromePush,
+        CodeMashIosApp,
+        CodeMashAndroidApp,
+        CodeMashSafariPlugin,
+        CodeMashSafariWeb,
+        CodeMashChromePlugin,
+        CodeMashChromeWeb,
+        Expo,
+        Fake,
+    }
+
+    [DataContract]
+    public partial class PushTemplate
+        : Template<PushMessageContent>
+    {
+    }
+
+    [DataContract]
+    public partial class PushTitle
+    {
+        [DataMember]
+        public virtual TemplateCode Value { get; set; }
+    }
+
     public partial class Quantity
     {
         public virtual int Value { get; set; }
+    }
+
+    public partial class ResourceRef
+    {
+        public virtual ProjectId ProjectId { get; set; }
+        public virtual IntegrationId? IntegrationId { get; set; }
+        public virtual ResourceRefKind Kind { get; set; }
+    }
+
+    public enum ResourceRefKind
+    {
+        Contact,
+        Document,
+        File,
+        PaymentCustomer,
+        Order,
+        Payment,
+        Product,
+        Integration,
+    }
+
+    public enum ResourceSource
+    {
+        Norbix,
+        Stripe,
+        Shopify,
+        PayPal,
+        Adyen,
+        Mollie,
+        Paddle,
+        LemonSqueezy,
+        AppleInApp,
+        GoogleInApp,
+        AuthorizeNet,
+        Braintree,
+        CheckOutCom,
+        WooCommerce,
+        Magento,
+        Worldpay,
     }
 
     public partial class Tag
@@ -357,6 +549,48 @@ public partial class AccountId
     }
 
     [DataContract]
+    public partial class Template<TMessageContent>
+        : IBindableContract
+    {
+        [DataMember]
+        public virtual TemplateId TemplateId { get; set; }
+
+        [DataMember]
+        public virtual DisplayName TemplateName { get; set; }
+
+        [DataMember]
+        public virtual HashSet<MessageTranslation<TMessageContent>> Translations { get; set; } = [];
+
+        [DataMember]
+        public virtual CommunicationChannel CommunicationChannel { get; set; }
+
+        [DataMember]
+        public virtual bool IsActive { get; set; }
+
+        [DataMember]
+        public virtual string? Description { get; set; }
+
+        [DataMember]
+        public virtual HashSet<Tag>? Tags { get; set; }
+
+        [DataMember]
+        public virtual IntegrationId? FileIntegrationId { get; set; }
+
+        [DataMember]
+        public virtual Env Env { get; set; }
+    }
+
+    [DataContract]
+    public partial class TemplateCode
+    {
+    }
+
+    public partial class TemplateId
+    {
+        public virtual Guid Value { get; set; }
+    }
+
+    [DataContract]
     public partial class TimeZone
     {
         [DataMember]
@@ -370,6 +604,8 @@ public partial class AccountId
         Sms,
         Email,
         WebhookCall,
+        SseCall,
+        Marketplace,
     }
 
     public enum TriggerType
@@ -378,21 +614,6 @@ public partial class AccountId
         Schema,
         Files,
         Payments,
-    }
-
-    public partial class UserId
-    {
-        public virtual Guid Value { get; set; }
-    }
-
-    public enum UserType
-    {
-        Service,
-        Email,
-        UserName,
-        Phone,
-        Guest,
-        Social,
     }
 
     public partial class UtcDateTime
@@ -442,7 +663,7 @@ public partial class AccountId
 
     public partial class CustomerCreated
     {
-        public virtual ExternalCustomerId CustomerId { get; set; }
+        public virtual PaymentCustomerRef PaymentCustomerRef { get; set; }
     }
 
     public partial class LicenseCreated
@@ -504,8 +725,10 @@ public partial class AccountId
         public virtual ProjectId Id { get; set; }
         public virtual ProjectName Name { get; set; }
         public virtual IntegrationId DatabaseIntegrationId { get; set; }
-        public virtual HashSet<ProjectRegion>? Regions { get; set; }
+        public virtual ProjectRegion? PrimaryRegion { get; set; }
+        public virtual HashSet<ProjectRegion>? AdditionalRegions { get; set; }
         public virtual string? Description { get; set; }
+        public virtual bool IsProvisioning { get; set; }
     }
 
     public partial class ProjectDefaultLanguageChanged
@@ -523,10 +746,6 @@ public partial class AccountId
     }
 
     public partial class ProjectDisabled
-    {
-    }
-
-    public partial class ProjectEnabled
     {
     }
 
@@ -567,7 +786,8 @@ public partial class AccountId
 
     public partial class ProjectRegionsChanged
     {
-        public virtual HashSet<ProjectRegion>? Regions { get; set; }
+        public virtual ProjectRegion? PrimaryRegion { get; set; }
+        public virtual HashSet<ProjectRegion>? AdditionalRegions { get; set; }
     }
 
     public partial class ProjectTimeZoneChanged
@@ -575,9 +795,103 @@ public partial class AccountId
         public virtual TimeZone? TimeZone { get; set; }
     }
 
+    public partial class PushIntegrationDeleted
+    {
+        public virtual IntegrationId Id { get; set; }
+        public virtual Env? Env { get; set; }
+    }
+
+    public partial class PushIntegrationDisabled
+    {
+        public virtual IntegrationId Id { get; set; }
+        public virtual Env? Env { get; set; }
+    }
+
+    public partial class PushIntegrationEnabled
+    {
+        public virtual IntegrationId Id { get; set; }
+        public virtual Env? Env { get; set; }
+    }
+
+    public partial class PushIntegrationRenamed
+    {
+        public virtual IntegrationId Id { get; set; }
+        public virtual DisplayName Name { get; set; }
+        public virtual Env? Env { get; set; }
+    }
+
+    public partial class PushIntegrationSaved
+    {
+        public virtual PushIntegration Integration { get; set; }
+    }
+
+    public partial class PushIntegrationSetAsDefault
+    {
+        public virtual Env Env { get; set; }
+        public virtual IntegrationId Id { get; set; }
+    }
+
+    public partial class PushServiceDisabled
+    {
+    }
+
+    public partial class PushServiceEnabled
+    {
+    }
+
+    public partial class PushServiceEstablished
+    {
+        public virtual HashSet<PushTemplate>? DefaultTemplates { get; set; }
+    }
+
+    public partial class PushTemplateArchived
+    {
+        public virtual TemplateId TemplateId { get; set; }
+        public virtual Env? Env { get; set; }
+    }
+
+    public partial class PushTemplateCreated
+    {
+        public virtual TemplateId TemplateId { get; set; }
+        public virtual DisplayName DisplayName { get; set; }
+        public virtual HashSet<MessageTranslation<PushMessageContent>> Translations { get; set; } = [];
+        public virtual CommunicationChannel Channel { get; set; }
+        public virtual string? Description { get; set; }
+        public virtual HashSet<Tag>? Tags { get; set; }
+        public virtual Env? Env { get; set; }
+    }
+
+    public partial class PushTemplateDeleted
+    {
+        public virtual TemplateId TemplateId { get; set; }
+        public virtual Env? Env { get; set; }
+    }
+
+    public partial class PushTemplateMirrored
+    {
+        public virtual PushTemplate Template { get; set; }
+    }
+
+    public partial class PushTemplateUnArchived
+    {
+        public virtual TemplateId TemplateId { get; set; }
+        public virtual Env? Env { get; set; }
+    }
+
+    public partial class PushTemplateUpdated
+    {
+        public virtual TemplateId TemplateId { get; set; }
+        public virtual DisplayName DisplayName { get; set; }
+        public virtual HashSet<MessageTranslation<PushMessageContent>> Translations { get; set; } = [];
+        public virtual CommunicationChannel Channel { get; set; }
+        public virtual string? Description { get; set; }
+        public virtual HashSet<Tag>? Tags { get; set; }
+        public virtual Env? Env { get; set; }
+    }
+
     public partial class SubscriptionCanceled
     {
-        public virtual ExternalCustomerId CustomerId { get; set; }
+        public virtual PaymentCustomerRef PaymentCustomerRef { get; set; }
         public virtual string SubscriptionId { get; set; }
     }
 
@@ -616,7 +930,7 @@ public partial class AccountId
         public virtual string CollectionName { get; set; }
 
         [DataMember]
-        public virtual string DatabaseIntegrationId { get; set; }
+        public virtual string? DatabaseIntegrationId { get; set; }
 
         [DataMember]
         public virtual string Pipeline { get; set; }
@@ -643,7 +957,7 @@ public partial class AccountId
         public virtual string Id { get; set; }
 
         [DataMember]
-        public virtual string DatabaseIntegrationId { get; set; }
+        public virtual string? DatabaseIntegrationId { get; set; }
 
         [DataMember]
         public virtual string NewResponsibleUserId { get; set; }
@@ -661,7 +975,7 @@ public partial class AccountId
         public virtual string CollectionName { get; set; }
 
         [DataMember]
-        public virtual string DatabaseIntegrationId { get; set; }
+        public virtual string? DatabaseIntegrationId { get; set; }
 
         [DataMember]
         public virtual string? Filter { get; set; }
@@ -688,7 +1002,7 @@ public partial class AccountId
         public virtual string CollectionName { get; set; }
 
         [DataMember]
-        public virtual string DatabaseIntegrationId { get; set; }
+        public virtual string? DatabaseIntegrationId { get; set; }
 
         [DataMember]
         public virtual string Filter { get; set; }
@@ -709,7 +1023,7 @@ public partial class AccountId
         public virtual string Id { get; set; }
 
         [DataMember]
-        public virtual string DatabaseIntegrationId { get; set; }
+        public virtual string? DatabaseIntegrationId { get; set; }
     }
 
     ///<summary>
@@ -724,7 +1038,7 @@ public partial class AccountId
         public virtual string CollectionName { get; set; }
 
         [DataMember]
-        public virtual string DatabaseIntegrationId { get; set; }
+        public virtual string? DatabaseIntegrationId { get; set; }
 
         [DataMember]
         public virtual string Field { get; set; }
@@ -757,7 +1071,7 @@ public partial class AccountId
         public virtual string AggregateId { get; set; }
 
         [DataMember]
-        public virtual string DatabaseIntegrationId { get; set; }
+        public virtual string? DatabaseIntegrationId { get; set; }
 
         [DataMember]
         public virtual Dictionary<string, string>? Tokens { get; set; }
@@ -784,13 +1098,37 @@ public partial class AccountId
         public virtual string Id { get; set; }
 
         [DataMember]
-        public virtual string DatabaseIntegrationId { get; set; }
+        public virtual string? DatabaseIntegrationId { get; set; }
     }
 
     public partial class FindOneResponse
         : ResponseBase
     {
         public virtual Object? Result { get; set; }
+    }
+
+    ///<summary>
+    ///Database
+    ///</summary>
+    [NorbixRoute("/{version}/database/collections/{collectionName}/own", "GET")]
+    [DataContract]
+    public partial class FindOwnRequest
+        : CodeMashListPaginationRequestBase, INorbixRequest<FindResponse>
+    {
+        [DataMember]
+        public virtual string CollectionName { get; set; }
+
+        [DataMember]
+        public virtual string? DatabaseIntegrationId { get; set; }
+
+        [DataMember]
+        public virtual string? Filter { get; set; }
+
+        [DataMember]
+        public virtual int? SchemaVersion { get; set; }
+
+        [DataMember]
+        public virtual PagingArgs? PagingArgs { get; set; }
     }
 
     ///<summary>
@@ -805,7 +1143,7 @@ public partial class AccountId
         public virtual string CollectionName { get; set; }
 
         [DataMember]
-        public virtual string DatabaseIntegrationId { get; set; }
+        public virtual string? DatabaseIntegrationId { get; set; }
 
         [DataMember]
         public virtual string? Filter { get; set; }
@@ -815,6 +1153,12 @@ public partial class AccountId
 
         [DataMember]
         public virtual PagingArgs? PagingArgs { get; set; }
+
+        [DataMember]
+        public virtual string? SortBy { get; set; }
+
+        [DataMember]
+        public virtual int? SortOrder { get; set; }
     }
 
     public partial class FindResponse
@@ -835,7 +1179,7 @@ public partial class AccountId
         public virtual string CollectionName { get; set; }
 
         [DataMember]
-        public virtual string DatabaseIntegrationId { get; set; }
+        public virtual string? DatabaseIntegrationId { get; set; }
 
         [DataMember]
         public virtual string Documents { get; set; }
@@ -853,7 +1197,7 @@ public partial class AccountId
         public virtual string CollectionName { get; set; }
 
         [DataMember]
-        public virtual string DatabaseIntegrationId { get; set; }
+        public virtual string? DatabaseIntegrationId { get; set; }
 
         [DataMember]
         public virtual string Document { get; set; }
@@ -874,7 +1218,7 @@ public partial class AccountId
         public virtual string Id { get; set; }
 
         [DataMember]
-        public virtual string DatabaseIntegrationId { get; set; }
+        public virtual string? DatabaseIntegrationId { get; set; }
 
         [DataMember]
         public virtual string Replacement { get; set; }
@@ -892,7 +1236,7 @@ public partial class AccountId
         public virtual string CollectionName { get; set; }
 
         [DataMember]
-        public virtual string DatabaseIntegrationId { get; set; }
+        public virtual string? DatabaseIntegrationId { get; set; }
 
         [DataMember]
         public virtual string Filter { get; set; }
@@ -916,7 +1260,7 @@ public partial class AccountId
         public virtual string Id { get; set; }
 
         [DataMember]
-        public virtual string DatabaseIntegrationId { get; set; }
+        public virtual string? DatabaseIntegrationId { get; set; }
 
         [DataMember]
         public virtual string Update { get; set; }
@@ -961,6 +1305,48 @@ public partial class AccountId
     ///<summary>
     ///Database
     ///</summary>
+    [NorbixRoute("/{version}/database/taxonomies/{taxonomyName}/merged-tree", "GET")]
+    [DataContract]
+    public partial class FindMergedTermTreeRequest
+        : CodeMashRequestBase, INorbixRequest<FindMergedTermTreeResponse>
+    {
+        [DataMember]
+        public virtual string TaxonomyName { get; set; }
+
+        [DataMember]
+        public virtual string? DatabaseIntegrationId { get; set; }
+    }
+
+    public partial class FindMergedTermTreeResponse
+        : ResponseBase
+    {
+        public virtual List<TermTreeDto>? Tree { get; set; }
+    }
+
+    ///<summary>
+    ///Database
+    ///</summary>
+    [NorbixRoute("/{version}/database/taxonomies/tree", "GET")]
+    [DataContract]
+    public partial class FindTaxonomyTreeRequest
+        : CodeMashRequestBase, INorbixRequest<FindTaxonomyTreeResponse>
+    {
+        [DataMember]
+        public virtual bool IncludeTerms { get; set; }
+
+        [DataMember]
+        public virtual string? DatabaseIntegrationId { get; set; }
+    }
+
+    public partial class FindTaxonomyTreeResponse
+        : ResponseBase
+    {
+        public virtual List<TaxonomyTreeDto>? Tree { get; set; }
+    }
+
+    ///<summary>
+    ///Database
+    ///</summary>
     [NorbixRoute("/{version}/database/taxonomies/{taxonomyName}/terms/{parentId}/children", "GET")]
     [DataContract]
     public partial class FindTermsChildrenRequest
@@ -973,7 +1359,7 @@ public partial class AccountId
         public virtual string ParentId { get; set; }
 
         [DataMember]
-        public virtual string DatabaseIntegrationId { get; set; }
+        public virtual string? DatabaseIntegrationId { get; set; }
 
         [DataMember]
         public virtual string? Filter { get; set; }
@@ -1000,10 +1386,13 @@ public partial class AccountId
         public virtual string TaxonomyName { get; set; }
 
         [DataMember]
-        public virtual string DatabaseIntegrationId { get; set; }
+        public virtual string? DatabaseIntegrationId { get; set; }
 
         [DataMember]
         public virtual string? Filter { get; set; }
+
+        [DataMember]
+        public virtual bool SortDescending { get; set; }
 
         [DataMember]
         public virtual PagingArgs? PagingArgs { get; set; }
@@ -1016,67 +1405,546 @@ public partial class AccountId
     }
 
     ///<summary>
+    ///Database
+    ///</summary>
+    [NorbixRoute("/{version}/database/taxonomies/{taxonomyName}/terms/tree", "GET")]
+    [DataContract]
+    public partial class FindTermTreeRequest
+        : CodeMashRequestBase, INorbixRequest<FindTermTreeResponse>
+    {
+        [DataMember]
+        public virtual string TaxonomyName { get; set; }
+
+        [DataMember]
+        public virtual string? RootTermId { get; set; }
+
+        [DataMember]
+        public virtual int? Depth { get; set; }
+
+        [DataMember]
+        public virtual string? DatabaseIntegrationId { get; set; }
+    }
+
+    public partial class FindTermTreeResponse
+        : ResponseBase
+    {
+        public virtual List<TermTreeDto>? Tree { get; set; }
+    }
+
+    ///<summary>
+    ///Files
+    ///</summary>
+    [NorbixRoute("/{version}/files/{filesIntegrationId}/commit", "POST")]
+    [DataContract]
+    public partial class CommitUploadRequest
+        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
+    {
+        [DataMember]
+        public virtual string FilesIntegrationId { get; set; }
+
+        [DataMember]
+        public virtual string Path { get; set; }
+
+        [DataMember]
+        public virtual string? ContentType { get; set; }
+
+        [DataMember]
+        public virtual long? SizeBytes { get; set; }
+
+        [DataMember]
+        public virtual string? FileName { get; set; }
+    }
+
+    ///<summary>
+    ///Files
+    ///</summary>
+    [NorbixRoute("/{version}/files/{filesIntegrationId}", "DELETE")]
+    [DataContract]
+    public partial class DeleteFileApiRequest
+        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
+    {
+        [DataMember]
+        public virtual string FilesIntegrationId { get; set; }
+
+        [DataMember]
+        public virtual string Path { get; set; }
+    }
+
+    ///<summary>
+    ///Files
+    ///</summary>
+    [NorbixRoute("/{version}/files/{filesIntegrationId}/bulk", "DELETE")]
+    [DataContract]
+    public partial class DeleteManyFilesApiRequest
+        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
+    {
+        [DataMember]
+        public virtual string FilesIntegrationId { get; set; }
+
+        [DataMember(Name="paths[]")]
+        public virtual List<string> Paths { get; set; } = [];
+    }
+
+    ///<summary>
+    ///Files
+    ///</summary>
+    [NorbixRoute("/{version}/files/{filesIntegrationId}/download", "GET")]
+    [DataContract]
+    public partial class DownloadFileApiRequest
+        : CodeMashRequestBase, INorbixRequest<byte[]>
+    {
+        [DataMember]
+        public virtual string FilesIntegrationId { get; set; }
+
+        [DataMember]
+        public virtual string Path { get; set; }
+    }
+
+    ///<summary>
+    ///Files
+    ///</summary>
+    [NorbixRoute("/{version}/files/{filesIntegrationId}/info", "GET")]
+    [DataContract]
+    public partial class GetFileInfoRequest
+        : CodeMashRequestBase, INorbixRequest<GetFileInfoResponse>
+    {
+        [DataMember]
+        public virtual string FilesIntegrationId { get; set; }
+
+        [DataMember]
+        public virtual string Path { get; set; }
+    }
+
+    public partial class GetFileInfoResponse
+        : ResponseBase
+    {
+        public virtual FileResourceRefDto? File { get; set; }
+        public virtual bool? IsPublic { get; set; }
+        public virtual string? PublicUrl { get; set; }
+    }
+
+    ///<summary>
+    ///Files
+    ///</summary>
+    [NorbixRoute("/{version}/files/{filesIntegrationId}/sign", "GET")]
+    [DataContract]
+    public partial class GetSignedUrlRequest
+        : CodeMashRequestBase, INorbixRequest<GetSignedUrlResponse>
+    {
+        [DataMember]
+        public virtual string FilesIntegrationId { get; set; }
+
+        [DataMember]
+        public virtual string Path { get; set; }
+
+        [DataMember]
+        public virtual int? ExpirationSeconds { get; set; }
+    }
+
+    public partial class GetSignedUrlResponse
+        : ResponseBase
+    {
+        public virtual string? Url { get; set; }
+    }
+
+    ///<summary>
+    ///Files
+    ///</summary>
+    [NorbixRoute("/{version}/files/{filesIntegrationId}", "GET")]
+    [DataContract]
+    public partial class ListFilesRequest
+        : CodeMashListPaginationRequestBase, INorbixRequest<ListFilesResponse>
+    {
+        [DataMember]
+        public virtual string FilesIntegrationId { get; set; }
+
+        [DataMember]
+        public virtual string? Path { get; set; }
+    }
+
+    public partial class ListFilesResponse
+        : ResponseBase
+    {
+        public virtual PaginatedResponse<FileResourceRefDto>? List { get; set; }
+        public virtual IList<string>? Folders { get; set; }
+    }
+
+    ///<summary>
+    ///Files
+    ///</summary>
+    [NorbixRoute("/{version}/files/{filesIntegrationId}/upload-url", "POST")]
+    [DataContract]
+    public partial class RequestUploadUrlRequest
+        : CodeMashRequestBase, INorbixRequest<RequestUploadUrlResponse>
+    {
+        [DataMember]
+        public virtual string FilesIntegrationId { get; set; }
+
+        [DataMember]
+        public virtual string Path { get; set; }
+
+        [DataMember]
+        public virtual string ContentType { get; set; }
+
+        [DataMember]
+        public virtual int? ExpirationSeconds { get; set; }
+    }
+
+    public partial class RequestUploadUrlResponse
+        : ResponseBase
+    {
+        public virtual string? Url { get; set; }
+    }
+
+    ///<summary>
+    ///Membership · Passkey
+    ///</summary>
+    [NorbixRoute("/{version}/membership/userauth/email/confirm-verification", "POST")]
+    [DataContract]
+    public partial class ConfirmEmailVerificationRequest
+        : CodeMashRequestBase, INorbixRequest<PasskeyVerificationTokenResponse>
+    {
+        [DataMember]
+        public virtual string Email { get; set; }
+
+        [DataMember]
+        public virtual string Code { get; set; }
+    }
+
+    ///<summary>
+    ///Membership · Passkey
+    ///</summary>
+    [NorbixRoute("/{version}/membership/userauth/recovery/magic-link/consume", "POST")]
+    [DataContract]
+    public partial class ConsumeMagicLinkRequest
+        : CodeMashRequestBase, INorbixRequest<PasskeyRecoveryResponse>
+    {
+        [DataMember]
+        public virtual string Token { get; set; }
+    }
+
+    ///<summary>
+    ///Membership · Passkey
+    ///</summary>
+    [NorbixRoute("/{version}/membership/userauth/has-passkey", "POST")]
+    [DataContract]
+    public partial class HasPasskeyRequest
+        : CodeMashRequestBase, INorbixRequest<PasskeyOkResponse>
+    {
+        [DataMember]
+        public virtual string Email { get; set; }
+    }
+
+    public partial interface IPasskeyCeremonyRequest
+    {
+    }
+
+    ///<summary>
+    ///Membership · Passkey
+    ///</summary>
+    [NorbixRoute("/{version}/membership/userauth/passkeys", "GET")]
+    [DataContract]
+    public partial class ListPasskeysRequest
+        : CodeMashRequestBase, INorbixRequest<PasskeyListResponse>
+    {
+    }
+
+    ///<summary>
+    ///Membership · Passkey
+    ///</summary>
+    [NorbixRoute("/{version}/membership/userauth/passkey/authentication-options", "POST")]
+    [DataContract]
+    public partial class PasskeyAuthenticationOptionsRequest
+        : CodeMashRequestBase, INorbixRequest<PasskeyCeremonyOptionsResponse>, IPasskeyCeremonyRequest
+    {
+        [DataMember]
+        public virtual string Email { get; set; }
+    }
+
+    public partial class PasskeyAuthTokensResponse
+        : ResponseBase
+    {
+        public virtual string AccessToken { get; set; }
+        public virtual string RefreshToken { get; set; }
+        public virtual int ExpiresInSeconds { get; set; }
+        public virtual List<string>? RecoveryCodes { get; set; }
+    }
+
+    public partial class PasskeyCeremonyOptionsResponse
+        : ResponseBase
+    {
+        public virtual string CeremonyId { get; set; }
+        public virtual string OptionsJson { get; set; }
+    }
+
+    public partial class PasskeyListItemDto
+    {
+        public virtual string CredentialId { get; set; }
+        public virtual string FriendlyName { get; set; }
+        public virtual DateTime RegisteredOnUtc { get; set; }
+        public virtual DateTime LastUsedOnUtc { get; set; }
+        public virtual bool IsRevoked { get; set; }
+    }
+
+    public partial class PasskeyListResponse
+        : ResponseBase
+    {
+        public virtual List<PasskeyListItemDto> Passkeys { get; set; } = [];
+    }
+
+    ///<summary>
+    ///Membership · Passkey
+    ///</summary>
+    [NorbixRoute("/{version}/membership/userauth/logout", "POST")]
+    [DataContract]
+    public partial class PasskeyLogoutRequest
+        : CodeMashRequestBase, INorbixRequest<PasskeyOkResponse>
+    {
+        [DataMember]
+        public virtual string? RefreshToken { get; set; }
+    }
+
+    public partial class PasskeyOkResponse
+        : ResponseBase
+    {
+    }
+
+    public partial class PasskeyRecoveryResponse
+        : ResponseBase
+    {
+        public virtual string AccessToken { get; set; }
+        public virtual string RefreshToken { get; set; }
+        public virtual int ExpiresInSeconds { get; set; }
+        public virtual int RemainingCodes { get; set; }
+    }
+
+    ///<summary>
+    ///Membership · Passkey
+    ///</summary>
+    [NorbixRoute("/{version}/membership/userauth/passkey/registration-options", "POST")]
+    [DataContract]
+    public partial class PasskeyRegistrationOptionsRequest
+        : CodeMashRequestBase, INorbixRequest<PasskeyCeremonyOptionsResponse>, IPasskeyCeremonyRequest
+    {
+        [DataMember]
+        public virtual string VerificationToken { get; set; }
+    }
+
+    public partial class PasskeyVerificationTokenResponse
+        : ResponseBase
+    {
+        public virtual string VerificationToken { get; set; }
+    }
+
+    ///<summary>
+    ///Membership · Passkey
+    ///</summary>
+    [NorbixRoute("/{version}/membership/userauth/token/refresh", "POST")]
+    [DataContract]
+    public partial class RefreshPasskeyTokenRequest
+        : CodeMashRequestBase, INorbixRequest<PasskeyAuthTokensResponse>
+    {
+        [DataMember]
+        public virtual string? RefreshToken { get; set; }
+    }
+
+    ///<summary>
+    ///Membership · Passkey
+    ///</summary>
+    [NorbixRoute("/{version}/membership/userauth/passkeys/{CredentialId}/rename", "POST")]
+    [DataContract]
+    public partial class RenamePasskeyRequest
+        : CodeMashRequestBase, INorbixRequest<PasskeyOkResponse>
+    {
+        ///<summary>
+        ///Base64 credential id of the passkey to rename, from list_passkeys.
+        ///</summary>
+        [DataMember]
+        public virtual string CredentialId { get; set; }
+
+        ///<summary>
+        ///The new friendly name for the passkey.
+        ///</summary>
+        [DataMember]
+        public virtual string FriendlyName { get; set; }
+    }
+
+    ///<summary>
+    ///Membership · Passkey
+    ///</summary>
+    [NorbixRoute("/{version}/membership/userauth/recovery/magic-link/request", "POST")]
+    [DataContract]
+    public partial class RequestMagicLinkRequest
+        : CodeMashRequestBase, INorbixRequest<PasskeyOkResponse>
+    {
+        [DataMember]
+        public virtual string Email { get; set; }
+    }
+
+    ///<summary>
+    ///Membership · Passkey
+    ///</summary>
+    [NorbixRoute("/{version}/membership/userauth/passkeys/{CredentialId}/revoke", "POST")]
+    [DataContract]
+    public partial class RevokePasskeyRequest
+        : CodeMashRequestBase, INorbixRequest<PasskeyOkResponse>
+    {
+        ///<summary>
+        ///Base64 credential id of the passkey to revoke, from list_passkeys.
+        ///</summary>
+        [DataMember]
+        public virtual string CredentialId { get; set; }
+    }
+
+    ///<summary>
+    ///Membership · Passkey
+    ///</summary>
+    [NorbixRoute("/{version}/membership/userauth/email/start-verification", "POST")]
+    [DataContract]
+    public partial class StartEmailVerificationRequest
+        : CodeMashRequestBase, INorbixRequest<PasskeyOkResponse>
+    {
+        [DataMember]
+        public virtual string Email { get; set; }
+    }
+
+    ///<summary>
+    ///Membership · Passkey
+    ///</summary>
+    [NorbixRoute("/{version}/membership/userauth/recovery/use-code", "POST")]
+    [DataContract]
+    public partial class UseRecoveryCodeRequest
+        : CodeMashRequestBase, INorbixRequest<PasskeyRecoveryResponse>
+    {
+        [DataMember]
+        public virtual string Email { get; set; }
+
+        [DataMember]
+        public virtual string RecoveryCode { get; set; }
+    }
+
+    ///<summary>
+    ///Membership · Passkey
+    ///</summary>
+    [NorbixRoute("/{version}/membership/userauth/passkey/verify-authentication", "POST")]
+    [DataContract]
+    public partial class VerifyPasskeyAuthenticationRequest
+        : CodeMashRequestBase, INorbixRequest<PasskeyAuthTokensResponse>, IPasskeyCeremonyRequest
+    {
+        [DataMember]
+        public virtual string CeremonyId { get; set; }
+
+        [DataMember]
+        public virtual string AssertionResponse { get; set; }
+    }
+
+    ///<summary>
+    ///Membership · Passkey
+    ///</summary>
+    [NorbixRoute("/{version}/membership/userauth/passkey/verify-registration", "POST")]
+    [DataContract]
+    public partial class VerifyPasskeyRegistrationRequest
+        : CodeMashRequestBase, INorbixRequest<PasskeyAuthTokensResponse>, IPasskeyCeremonyRequest
+    {
+        [DataMember]
+        public virtual string VerificationToken { get; set; }
+
+        [DataMember]
+        public virtual string CeremonyId { get; set; }
+
+        [DataMember]
+        public virtual string AttestationResponse { get; set; }
+
+        [DataMember]
+        public virtual string? FriendlyName { get; set; }
+    }
+
+    ///<summary>
     ///Membership
     ///</summary>
-    [NorbixRoute("/{version}/membership/users/assign-roles", "PUT")]
+    [NorbixRoute("/{version}/membership/auth/assign-roles", "PUT")]
     [DataContract]
     public partial class AssignRolePermissionsRequest
         : CodeMashRequestBase, INorbixRequest<EmptyResponse>
     {
+        ///<summary>
+        ///Id of the user login to assign roles to, from get_users.
+        ///</summary>
         [DataMember]
         public virtual string Id { get; set; }
 
         ///<summary>
-        ///Database integration id
+        ///Database integration id. Optional — defaults to the request environment's default integration.
         ///</summary>
         [DataMember]
-        public virtual string DatabaseIntegrationId { get; set; }
+        public virtual string? DatabaseIntegrationId { get; set; }
 
+        ///<summary>
+        ///The complete new list of role names (full replacement), from get_roles.
+        ///</summary>
         [DataMember]
-        public virtual HashSet<string>? Roles { get; set; }
+        public virtual List<string>? Roles { get; set; }
     }
 
     ///<summary>
     ///Membership
     ///</summary>
-    [NorbixRoute("/{version}/membership/users/block", "PATCH")]
+    [NorbixRoute("/{version}/membership/auth/block", "PATCH")]
     [DataContract]
     public partial class BlockUserRequest
         : CodeMashRequestBase, INorbixRequest<EmptyResponse>
     {
+        ///<summary>
+        ///Id of the user to block, from get_users.
+        ///</summary>
         [DataMember]
         public virtual string Id { get; set; }
 
+        ///<summary>
+        ///Database integration id. Optional — defaults to the request environment's default integration.
+        ///</summary>
         [DataMember]
-        public virtual string DatabaseIntegrationId { get; set; }
+        public virtual string? DatabaseIntegrationId { get; set; }
     }
 
     ///<summary>
     ///Membership
     ///</summary>
-    [NorbixRoute("/{version}/membership/users", "DELETE")]
+    [NorbixRoute("/{version}/membership/auth", "DELETE")]
     [DataContract]
     public partial class DeleteUserRequest
         : CodeMashRequestBase, INorbixRequest<EmptyResponse>
     {
+        ///<summary>
+        ///Id of the user to delete, from get_users.
+        ///</summary>
         [DataMember]
         public virtual string Id { get; set; }
 
+        ///<summary>
+        ///Database integration id. Optional — defaults to the request environment's default integration.
+        ///</summary>
         [DataMember]
-        public virtual string DatabaseIntegrationId { get; set; }
+        public virtual string? DatabaseIntegrationId { get; set; }
     }
 
     ///<summary>
     ///Membership
     ///</summary>
-    [NorbixRoute("/{version}/membership/users/{id}/preferences", "GET")]
+    [NorbixRoute("/{version}/membership/auth/{id}/preferences", "GET")]
     [DataContract]
     public partial class GetUserPreferencesRequest
         : CodeMashRequestBase, INorbixRequest<GetUserPreferencesResponse>
     {
+        ///<summary>
+        ///Id of the user whose preferences to fetch, from get_users.
+        ///</summary>
         [DataMember]
         public virtual string Id { get; set; }
 
+        ///<summary>
+        ///Database integration id. Optional — defaults to the project's default integration.
+        ///</summary>
         [DataMember]
         public virtual string? DatabaseIntegrationId { get; set; }
     }
@@ -1090,50 +1958,77 @@ public partial class AccountId
     ///<summary>
     ///Membership
     ///</summary>
-    [NorbixRoute("/{version}/membership/users/{id}", "GET")]
+    [NorbixRoute("/{version}/membership/auth/{id}", "GET")]
     [DataContract]
     public partial class GetUserRequest
         : CodeMashRequestBase, INorbixRequest<GetUserResponse>
     {
+        ///<summary>
+        ///Id of the user to fetch, from get_users.
+        ///</summary>
         [DataMember]
         public virtual string Id { get; set; }
 
+        ///<summary>
+        ///Database integration id. Optional — defaults to the request environment's default integration.
+        ///</summary>
         [DataMember]
-        public virtual string DatabaseIntegrationId { get; set; }
+        public virtual string? DatabaseIntegrationId { get; set; }
     }
 
     public partial class GetUserResponse
         : ResponseBase
     {
-        public virtual UserDto? User { get; set; }
+        public virtual AuthDto? User { get; set; }
     }
 
     ///<summary>
     ///Membership
     ///</summary>
-    [NorbixRoute("/{version}/membership/users", "GET")]
+    [NorbixRoute("/{version}/membership/auth", "GET")]
     [DataContract]
     public partial class GetUsersRequest
         : CodeMashListPaginationRequestBase, INorbixRequest<GetUsersResponse>
     {
+        ///<summary>
+        ///Database integration id. Optional — defaults to the request environment's default integration.
+        ///</summary>
         [DataMember]
-        public virtual string DatabaseIntegrationId { get; set; }
+        public virtual string? DatabaseIntegrationId { get; set; }
 
+        ///<summary>
+        ///Include each user's effective permissions in the result.
+        ///</summary>
         [DataMember]
         public virtual bool IncludePermissions { get; set; }
 
+        ///<summary>
+        ///Only return users that have a registered push device.
+        ///</summary>
         [DataMember]
         public virtual bool UserShouldHavePushDevice { get; set; }
 
+        ///<summary>
+        ///Only return users that have an email address.
+        ///</summary>
         [DataMember]
         public virtual bool UserShouldHaveEmail { get; set; }
 
+        ///<summary>
+        ///Include each user's metadata in the result.
+        ///</summary>
         [DataMember]
         public virtual bool IncludeMeta { get; set; }
 
+        ///<summary>
+        ///Filter to users that have any of these role names.
+        ///</summary>
         [DataMember]
         public virtual HashSet<string>? RoleNames { get; set; }
 
+        ///<summary>
+        ///Filter to these specific user ids.
+        ///</summary>
         [DataMember]
         public virtual HashSet<string>? UserIds { get; set; }
     }
@@ -1141,28 +2036,100 @@ public partial class AccountId
     public partial class GetUsersResponse
         : ResponseBase
     {
-        public virtual PaginatedResponse<UserDto>? List { get; set; }
+        public virtual PaginatedResponse<AuthDto>? List { get; set; }
+    }
+
+    [NorbixRoute("/{version}/membership/users/{contactId}/marketing-state/{channel}/consent", "POST")]
+    public partial class GrantContactConsentRequest
+        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
+    {
+        ///<summary>
+        ///Id of the user (contact) to grant consent for.
+        ///</summary>
+        public virtual string ContactId { get; set; }
+
+        ///<summary>
+        ///Delivery channel to grant consent on: Email, Sms, or Push.
+        ///</summary>
+        public virtual string Channel { get; set; }
+
+        ///<summary>
+        ///Lawful basis for the consent, e.g. Consent. Defaults to Consent.
+        ///</summary>
+        public virtual string LawfulBasis { get; set; }
+
+        ///<summary>
+        ///Source of the consent, e.g. UserOptIn. Defaults to UserOptIn.
+        ///</summary>
+        public virtual string Source { get; set; }
+
+        ///<summary>
+        ///Optional free-text reference to evidence of consent (e.g. a form submission id).
+        ///</summary>
+        public virtual string? EvidenceRef { get; set; }
     }
 
     ///<summary>
     ///Membership
     ///</summary>
-    [NorbixRoute("/{version}/membership/users/invite", "POST")]
+    [NorbixRoute("/{version}/membership/auth/invite", "POST")]
     [DataContract]
     public partial class InviteUserRequest
         : CodeMashRequestBase, INorbixRequest<EmptyResponse>
     {
+        ///<summary>
+        ///Email address the invitation is sent to.
+        ///</summary>
         [DataMember]
         public virtual string Email { get; set; }
 
+        ///<summary>
+        ///Database integration id. Optional — defaults to the request environment's default integration.
+        ///</summary>
         [DataMember]
-        public virtual string DatabaseIntegrationId { get; set; }
+        public virtual string? DatabaseIntegrationId { get; set; }
     }
 
     ///<summary>
     ///Membership
     ///</summary>
-    [NorbixRoute("/{version}/membership/users/register/email", "POST")]
+    [NorbixRoute("/{version}/membership/auth/{userId}/link-identity", "POST")]
+    [DataContract]
+    public partial class LinkIdentityRequest
+        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
+    {
+        [DataMember]
+        public virtual string UserId { get; set; }
+
+        [DataMember]
+        public virtual string Provider { get; set; }
+
+        [DataMember]
+        public virtual string ProviderToken { get; set; }
+
+        [DataMember]
+        public virtual string? EmailToVerify { get; set; }
+
+        [DataMember]
+        public virtual string? DatabaseIntegrationId { get; set; }
+    }
+
+    ///<summary>
+    ///Membership
+    ///</summary>
+    [NorbixRoute("/{version}/membership/users/{userId}/map-auth", "POST")]
+    public partial class MapAuthToUserRequest
+        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
+    {
+        public virtual string UserId { get; set; }
+        public virtual string AuthId { get; set; }
+        public virtual string? DatabaseIntegrationId { get; set; }
+    }
+
+    ///<summary>
+    ///Membership
+    ///</summary>
+    [NorbixRoute("/{version}/membership/auth/register/email", "POST")]
     [DataContract]
     public partial class SaveEmailUser
         : SaveUser, INorbixRequest<IdResponse>
@@ -1177,7 +2144,7 @@ public partial class AccountId
     ///<summary>
     ///Membership
     ///</summary>
-    [NorbixRoute("/{version}/membership/users/register/email-with-permissions", "POST")]
+    [NorbixRoute("/{version}/membership/auth/register/email-with-permissions", "POST")]
     [DataContract]
     public partial class SaveEmailUserNameWithPermissions
         : SaveUserWithRolesBase, INorbixRequest<IdResponse>
@@ -1192,7 +2159,7 @@ public partial class AccountId
     ///<summary>
     ///Membership
     ///</summary>
-    [NorbixRoute("/{version}/membership/users/register/guest", "POST")]
+    [NorbixRoute("/{version}/membership/auth/register/guest", "POST")]
     [DataContract]
     public partial class SaveGuestUser
         : SaveUser, INorbixRequest<IdResponse>
@@ -1202,11 +2169,14 @@ public partial class AccountId
     ///<summary>
     ///Membership
     ///</summary>
-    [NorbixRoute("/{version}/membership/users/register/phone", "POST")]
+    [NorbixRoute("/{version}/membership/auth/register/phone", "POST")]
     [DataContract]
     public partial class SavePhoneUser
         : SaveUser, INorbixRequest<IdResponse>
     {
+        ///<summary>
+        ///Phone number for the new user, in E.164 format.
+        ///</summary>
         [DataMember]
         public virtual string Phone { get; set; }
     }
@@ -1214,7 +2184,7 @@ public partial class AccountId
     ///<summary>
     ///Membership
     ///</summary>
-    [NorbixRoute("/{version}/membership/users/register/phone-with-permissions", "POST")]
+    [NorbixRoute("/{version}/membership/auth/register/phone-with-permissions", "POST")]
     [DataContract]
     public partial class SavePhoneUserNameWithPermissions
         : SaveUserWithRolesBase, INorbixRequest<IdResponse>
@@ -1226,7 +2196,7 @@ public partial class AccountId
     ///<summary>
     ///Membership
     ///</summary>
-    [NorbixRoute("/{version}/membership/users/register/service", "POST")]
+    [NorbixRoute("/{version}/membership/auth/register/service", "POST")]
     [DataContract]
     public partial class SaveSystemUserWithPermissions
         : SaveUserWithRolesBase, INorbixRequest<IdResponse>
@@ -1238,16 +2208,22 @@ public partial class AccountId
         : CodeMashRequestBase
     {
         ///<summary>
-        ///Database integration id
+        ///Database integration id. Optional — defaults to the request environment's default integration.
         ///</summary>
         [DataMember]
-        public virtual string DatabaseIntegrationId { get; set; }
+        public virtual string? DatabaseIntegrationId { get; set; }
 
         ///<summary>
         ///User Info
         ///</summary>
         [DataMember]
         public virtual UserGeneralInfoDto? UserGeneralInfo { get; set; }
+
+        ///<summary>
+        ///Attach this login to an existing user id. Optional.
+        ///</summary>
+        [DataMember]
+        public virtual string? UserId { get; set; }
 
         ///<summary>
         ///Ignore UserRegistersAsRole from Membership Settings
@@ -1259,7 +2235,7 @@ public partial class AccountId
     ///<summary>
     ///Membership
     ///</summary>
-    [NorbixRoute("/{version}/membership/users/register/user-name", "POST")]
+    [NorbixRoute("/{version}/membership/auth/register/user-name", "POST")]
     [DataContract]
     public partial class SaveUserNameUser
         : SaveUser, INorbixRequest<IdResponse>
@@ -1274,7 +2250,7 @@ public partial class AccountId
     ///<summary>
     ///Membership
     ///</summary>
-    [NorbixRoute("/{version}/membership/users/register/user-name-with-permissions", "POST")]
+    [NorbixRoute("/{version}/membership/auth/register/user-name-with-permissions", "POST")]
     [DataContract]
     public partial class SaveUserNameWithPermissions
         : SaveUserWithRolesBase, INorbixRequest<IdResponse>
@@ -1291,41 +2267,136 @@ public partial class AccountId
         : SaveUser
     {
         [DataMember]
-        public virtual HashSet<string> Roles { get; set; } = [];
+        public virtual List<string> Roles { get; set; } = [];
     }
 
     ///<summary>
     ///Membership
     ///</summary>
-    [NorbixRoute("/{version}/membership/users/unblock", "PATCH")]
+    [NorbixRoute("/{version}/membership/users/{userId}/roles", "PUT")]
+    [DataContract]
+    public partial class SetContactRolesRequest
+        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
+    {
+        ///<summary>
+        ///Id of the human user to assign roles to.
+        ///</summary>
+        [DataMember]
+        public virtual string UserId { get; set; }
+
+        ///<summary>
+        ///The complete new list of role ids (full replacement), from get_roles. Empty/omitted clears all roles.
+        ///</summary>
+        [DataMember]
+        public virtual List<string>? Roles { get; set; }
+
+        ///<summary>
+        ///Database integration id. Optional — defaults to the request environment's default integration.
+        ///</summary>
+        [DataMember]
+        public virtual string? DatabaseIntegrationId { get; set; }
+    }
+
+    [NorbixRoute("/{version}/membership/users/{contactId}/marketing-state/{commChannel}/{channel}/tags/{tag}", "PUT")]
+    public partial class SetContactTagSubscriptionRequest
+        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
+    {
+        ///<summary>
+        ///Id of the user (contact) to update.
+        ///</summary>
+        public virtual string ContactId { get; set; }
+
+        ///<summary>
+        ///Communication channel type: Marketing or Transactional.
+        ///</summary>
+        public virtual string CommChannel { get; set; }
+
+        ///<summary>
+        ///Delivery channel: Email, Sms, or Push.
+        ///</summary>
+        public virtual string Channel { get; set; }
+
+        ///<summary>
+        ///The tag name; must already exist for the communication channel.
+        ///</summary>
+        public virtual string Tag { get; set; }
+
+        ///<summary>
+        ///True to subscribe (unblock) the tag, false to block it.
+        ///</summary>
+        public virtual bool Subscribed { get; set; }
+    }
+
+    ///<summary>
+    ///Membership
+    ///</summary>
+    [NorbixRoute("/{version}/membership/auth/unblock", "PATCH")]
     [DataContract]
     public partial class UnblockUserRequest
         : CodeMashRequestBase, INorbixRequest<EmptyResponse>
     {
+        ///<summary>
+        ///Id of the user to unblock, from get_users.
+        ///</summary>
         [DataMember]
         public virtual string Id { get; set; }
 
+        ///<summary>
+        ///Database integration id. Optional — defaults to the request environment's default integration.
+        ///</summary>
         [DataMember]
-        public virtual string DatabaseIntegrationId { get; set; }
+        public virtual string? DatabaseIntegrationId { get; set; }
+    }
+
+    [NorbixRoute("/{version}/membership/users/{contactId}/marketing-state/{channel}/unsubscribe", "POST")]
+    public partial class UnsubscribeContactRequest
+        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
+    {
+        ///<summary>
+        ///Id of the user (contact) to unsubscribe.
+        ///</summary>
+        public virtual string ContactId { get; set; }
+
+        ///<summary>
+        ///Delivery channel to unsubscribe from: Email, Sms, or Push.
+        ///</summary>
+        public virtual string Channel { get; set; }
+
+        ///<summary>
+        ///Optional suppression reason name explaining why consent was revoked.
+        ///</summary>
+        public virtual string? Reason { get; set; }
     }
 
     ///<summary>
     ///Membership
     ///</summary>
-    [NorbixRoute("/{version}/membership/users/{id}/preferences", "PUT")]
+    [NorbixRoute("/{version}/membership/auth/{id}/preferences", "PUT")]
     [DataContract]
     public partial class UpdateUserPreferencesRequest
         : CodeMashRequestBase, INorbixRequest<EmptyResponse>
     {
+        ///<summary>
+        ///Id of the user to update, from get_users.
+        ///</summary>
         [DataMember]
         public virtual string Id { get; set; }
 
+        ///<summary>
+        ///When true, blocks all marketing messages to this user.
+        ///</summary>
         [DataMember]
         public virtual bool BlockAllMarketingMessages { get; set; }
 
+        ///<summary>
+        ///Per communication channel, the set of tags blocked for this user. Full replacement.
+        ///</summary>
         [DataMember]
-        public virtual Dictionary<string, IReadOnlySet<String>>? BlockedTags { get; set; }
+        public virtual Dictionary<string, HashSet<String>>? BlockedTags { get; set; }
 
+        ///<summary>
+        ///Database integration id. Optional — defaults to the project's default integration.
+        ///</summary>
         [DataMember]
         public virtual string? DatabaseIntegrationId { get; set; }
     }
@@ -1333,46 +2404,144 @@ public partial class AccountId
     ///<summary>
     ///Membership
     ///</summary>
-    [NorbixRoute("/{version}/membership/users", "PUT")]
+    [NorbixRoute("/{version}/membership/auth", "PUT")]
     [DataContract]
     public partial class UpdateUserRequest
         : SaveUser, INorbixRequest<IdResponse>
     {
+        ///<summary>
+        ///Id of the user to update, from get_users.
+        ///</summary>
         [DataMember]
         public virtual string Id { get; set; }
     }
 
     [DataContract]
-    public partial class CodeMashLicenseFromEndpointDto
+    public partial class FileChecksumDto
+    {
+        [DataMember(Order=1)]
+        public virtual string Algorithm { get; set; }
+
+        [DataMember(Order=2)]
+        public virtual string Hash { get; set; }
+    }
+
+    [DataContract]
+    public partial class FileResourceDto
+    {
+        [DataMember(Order=1)]
+        public virtual string Id { get; set; }
+
+        [DataMember(Order=2)]
+        public virtual string OriginalFileName { get; set; }
+
+        [DataMember(Order=3)]
+        public virtual string Extension { get; set; }
+
+        [DataMember(Order=4)]
+        public virtual string StoredFileName { get; set; }
+
+        [DataMember(Order=5)]
+        public virtual long? SizeBytes { get; set; }
+
+        [DataMember(Order=6)]
+        public virtual FileChecksumDto? Checksum { get; set; }
+    }
+
+    [DataContract]
+    public partial class FileResourceRefDto
+    {
+        [DataMember(Order=1)]
+        public virtual FileResourceDto Resource { get; set; }
+
+        [DataMember(Order=2)]
+        public virtual string IntegrationId { get; set; }
+
+        [DataMember(Order=3)]
+        public virtual FileProvider Provider { get; set; }
+
+        [DataMember(Order=4)]
+        public virtual string Path { get; set; }
+    }
+
+    public partial interface IHasEnv
+    {
+        string? Env { get; set; }
+    }
+
+    public partial class PublicAuthDto
+    {
+        public virtual List<string> SocialProviders { get; set; } = [];
+        public virtual bool Passkey { get; set; }
+        public virtual List<string>? Methods { get; set; }
+        public virtual PublicPasswordPolicyDto? PasswordPolicy { get; set; }
+    }
+
+    public partial class PublicBrandDto
+    {
+        public virtual string DisplayName { get; set; }
+        public virtual string? MainColor { get; set; }
+        public virtual string? AccentColor { get; set; }
+        public virtual string? LogoUrl { get; set; }
+        public virtual string? IconUrl { get; set; }
+    }
+
+    public partial class PublicLegalDocumentDto
+    {
+        public virtual string Kind { get; set; }
+        public virtual string? Title { get; set; }
+        public virtual string Body { get; set; }
+        public virtual bool Available { get; set; }
+    }
+
+    public partial class PublicPasswordPolicyDto
+    {
+        public virtual int MinLength { get; set; }
+        public virtual int? MaxLength { get; set; }
+        public virtual int? MinNumbers { get; set; }
+        public virtual int? MinUpper { get; set; }
+        public virtual int? MinLower { get; set; }
+        public virtual int? MinSpecial { get; set; }
+        public virtual string? AllowedSpecial { get; set; }
+    }
+
+    public partial class PublicProjectConfigDto
+    {
+        public virtual string DisplayName { get; set; }
+        public virtual bool AdminPortalEnabled { get; set; }
+        public virtual PublicBrandDto? Branding { get; set; }
+        public virtual PublicAuthDto Auth { get; set; }
+    }
+
+    [DataContract]
+    public partial class EchoLicenseDto
     {
         [DataMember(Name="domain")]
-        public virtual string DomainFromLicense { get; set; }
+        public virtual string? Domain { get; set; }
 
         [DataMember(Name="accountId")]
-        public virtual string AccountIdFromLicense { get; set; }
+        public virtual string? AccountId { get; set; }
 
-        [DataMember(Name="refCustomerId")]
-        public virtual string RefCustomerId { get; set; }
+        [DataMember(Name="email")]
+        public virtual string? Email { get; set; }
 
-        [DataMember(Name="refSubscriptionId")]
-        public virtual string RefSubscriptionId { get; set; }
-
-        [DataMember(Name="issued")]
-        public virtual long Issued { get; set; }
+        [DataMember(Name="release")]
+        public virtual string? Release { get; set; }
 
         [DataMember(Name="expire")]
         public virtual long Expire { get; set; }
 
-        [DataMember(Name="cap")]
-        public virtual int ProjectsCapFromLicense { get; set; }
-
         [DataMember(Name="isTrial")]
         public virtual bool IsTrial { get; set; }
 
-        [DataMember(Name="release")]
-        public virtual string CodeMashRelease { get; set; }
+        [DataMember(Name="cap")]
+        public virtual int ProjectsCap { get; set; }
     }
 
+    public partial interface IHasProjectId
+    {
+        string ProjectId { get; set; }
+    }
 
     public partial class BooleanFieldDto
         : JsonSchemaFieldDto
@@ -1479,6 +2648,7 @@ public partial class AccountId
     }
 
     public partial class SchemaDto
+        : IHasViewId
     {
         [DataMember]
         public virtual string ViewId { get; set; }
@@ -1512,6 +2682,7 @@ public partial class AccountId
     }
 
     public partial class SchemaListProjection
+        : IHasViewId
     {
         [DataMember]
         public virtual string ViewId { get; set; }
@@ -1530,12 +2701,21 @@ public partial class AccountId
 
         [DataMember]
         public virtual int MetaSchemaVersion { get; set; }
+
+        [DataMember]
+        public virtual string? Description { get; set; }
     }
 
     public partial class SchemaSettingsDto
     {
         [DataMember]
         public virtual bool SoftDelete { get; set; }
+
+        [DataMember]
+        public virtual bool HasRecordOwner { get; set; }
+
+        [DataMember]
+        public virtual string? Description { get; set; }
     }
 
     public partial class StringFieldDto
@@ -1583,6 +2763,27 @@ public partial class AccountId
     {
         [DataMember]
         public virtual string Json { get; set; }
+    }
+
+    public partial class TaxonomyTreeDto
+    {
+        [DataMember]
+        public virtual string ViewId { get; set; }
+
+        [DataMember]
+        public virtual string TaxonomyName { get; set; }
+
+        [DataMember]
+        public virtual string TaxonomySlug { get; set; }
+
+        [DataMember]
+        public virtual string? ParentId { get; set; }
+
+        [DataMember]
+        public virtual List<TaxonomyTreeDto>? Children { get; set; }
+
+        [DataMember]
+        public virtual List<TermTreeDto>? Terms { get; set; }
     }
 
     public partial class TermDto
@@ -1636,11 +2837,68 @@ public partial class AccountId
         public virtual Dictionary<string, string>? Names { get; set; }
     }
 
+    public partial class TermTreeDto
+    {
+        [DataMember]
+        public virtual string Id { get; set; }
+
+        [DataMember]
+        public virtual string? TaxonomyId { get; set; }
+
+        [DataMember]
+        public virtual string? TaxonomyName { get; set; }
+
+        [DataMember]
+        public virtual string? ParentId { get; set; }
+
+        [DataMember]
+        public virtual int? Order { get; set; }
+
+        [DataMember]
+        public virtual string? Name { get; set; }
+
+        [DataMember]
+        public virtual Dictionary<string, string>? Names { get; set; }
+
+        [DataMember]
+        public virtual string? Description { get; set; }
+
+        [DataMember]
+        public virtual Dictionary<string, string>? Descriptions { get; set; }
+
+        [DataMember]
+        public virtual List<TermMultiParentDto>? MultiParents { get; set; }
+
+        [DataMember]
+        public virtual Object? Meta { get; set; }
+
+        [DataMember]
+        public virtual List<TermTreeDto>? Children { get; set; }
+    }
+
     public partial class AccessInformationDto
     {
         public virtual string? Ip { get; set; }
         public virtual DateTime? Date { get; set; }
         public virtual string? TimeZone { get; set; }
+    }
+
+    public partial class AuthDto
+        : IBindableContract
+    {
+        public virtual string Id { get; set; }
+        public virtual AuthType Type { get; set; }
+        public virtual string? Email { get; set; }
+        public virtual string? UserName { get; set; }
+        public virtual RegistrationDto? Registration { get; set; }
+        public virtual LoginDto? Login { get; set; }
+        public virtual UserGeneralInfoDto? GeneralInfo { get; set; }
+        public virtual HashSet<string>? Roles { get; set; }
+        public virtual HashSet<string>? PushDevices { get; set; }
+        public virtual HashSet<string>? Tags { get; set; }
+        public virtual AuthStatus Status { get; set; }
+        public virtual DateTime CreatedOn { get; set; }
+        public virtual DateTime ModifiedOn { get; set; }
     }
 
     public partial class LoginDto
@@ -1652,23 +2910,6 @@ public partial class AccountId
     public partial class RegistrationDto
     {
         public virtual AccessInformationDto RegistrationInformation { get; set; }
-    }
-
-    public partial class UserDto
-    {
-        public virtual string Id { get; set; }
-        public virtual UserType Type { get; set; }
-        public virtual string? Email { get; set; }
-        public virtual string? UserName { get; set; }
-        public virtual RegistrationDto? Registration { get; set; }
-        public virtual LoginDto? Login { get; set; }
-        public virtual UserGeneralInfoDto? GeneralInfo { get; set; }
-        public virtual IReadOnlySet<string>? Roles { get; set; }
-        public virtual IReadOnlySet<string>? PushDevices { get; set; }
-        public virtual IReadOnlySet<string>? Tags { get; set; }
-        public virtual UserStatus Status { get; set; }
-        public virtual DateTime CreatedOn { get; set; }
-        public virtual DateTime ModifiedOn { get; set; }
     }
 
     public partial class UserGeneralInfoDto
@@ -1691,7 +2932,8 @@ public partial class AccountId
         public virtual string? TimeZone { get; set; }
         public virtual string? Language { get; set; }
         public virtual bool BlockAllMarketingMessages { get; set; }
-        public virtual Dictionary<string, IReadOnlySet<String>>? BlockedTags { get; set; }
+        public virtual Dictionary<string, HashSet<String>>? BlockedTags { get; set; }
+        public virtual HashSet<MarketingBlockReason>? BlockReasons { get; set; }
         public virtual string? ExtraMetadata { get; set; }
         public virtual string? Notes { get; set; }
     }
@@ -1699,7 +2941,8 @@ public partial class AccountId
     public partial class UserMarketingPreferencesDto
     {
         public virtual bool BlockAllMarketingMessages { get; set; }
-        public virtual Dictionary<string, IReadOnlySet<String>>? BlockedTags { get; set; }
+        public virtual Dictionary<string, HashSet<String>>? BlockedTags { get; set; }
+        public virtual HashSet<MarketingBlockReason>? BlockReasons { get; set; }
     }
 
     public partial class CodeMashResponseStatus
@@ -1719,10 +2962,15 @@ public partial class AccountId
     {
         [DataMember]
         public virtual string? Id { get; set; }
+
+        [DataMember]
+        public virtual string? Status { get; set; }
     }
 
+    [DataContract]
     public partial class ResponseBase
     {
+        [DataMember]
         public virtual CodeMashResponseStatus ResponseStatus { get; set; }
     }
 
@@ -1738,6 +2986,7 @@ public partial class AccountId
 
     [DataContract]
     public partial class TriggerDto
+        : IHasViewId
     {
         [DataMember]
         public virtual TriggerType Type { get; set; }
@@ -1767,6 +3016,14 @@ public partial class AccountId
     {
     }
 
+    public partial class EchoRegionDto
+    {
+        public virtual string Code { get; set; }
+        public virtual string DisplayName { get; set; }
+        public virtual string ApiUrl { get; set; }
+        public virtual string HubUrl { get; set; }
+    }
+
     public partial class EchoResponse
     {
         public virtual string? ContainerName { get; set; }
@@ -1780,52 +3037,109 @@ public partial class AccountId
         public virtual string ApiVersion { get; set; }
         public virtual string HubVersion { get; set; }
         public virtual string MjmlUrl { get; set; }
-        public virtual CodeMashLicenseFromEndpointDto? License { get; set; }
+        public virtual string? AdminUrlTemplate { get; set; }
+        public virtual EchoLicenseDto? License { get; set; }
         public virtual string? AskForEnterpriseLicenseEmail { get; set; }
-
-        ///<summary>The regions this deployment knows about, with their composed API/Hub endpoints. Empty on SelfHosted deployments in practice.</summary>
-        public virtual EchoRegionDto[]? Regions { get; set; }
+        public virtual bool EmailServiceConfigured { get; set; }
+        public virtual string? RootBootstrapPasswordSource { get; set; }
+        public virtual List<EchoRegionDto>? Regions { get; set; }
+        public virtual bool IsProductionInstallation { get; set; }
+        public virtual string LicensingMode { get; set; }
+        public virtual int? GraceDaysLeft { get; set; }
+        public virtual string? InstallationDomain { get; set; }
+        public virtual string? LicensingDocsUrl { get; set; }
     }
 
-    ///<summary>A Norbix region with its composed per-region API/Hub endpoints.</summary>
-    public partial class EchoRegionDto
+    [NorbixRoute("/{version}/public/projects/{ProjectId}/config", "GET")]
+    public partial class GetPublicProjectConfig
+        : RequestBase, INorbixRequest<PublicProjectConfigDto>
     {
-        public virtual string Code { get; set; }
-        public virtual string DisplayName { get; set; }
-        public virtual string ApiUrl { get; set; }
-        public virtual string HubUrl { get; set; }
+        public virtual string? ProjectId { get; set; }
+    }
+
+    [NorbixRoute("/{version}/public/projects/{ProjectId}/legal/{Kind}", "GET")]
+    public partial class GetPublicProjectLegal
+        : RequestBase, INorbixRequest<PublicLegalDocumentDto>
+    {
+        public virtual string? ProjectId { get; set; }
+        public virtual string? Kind { get; set; }
     }
 
     public partial class CodeMashListPaginationRequestBase
-        : RequestBase
+        : RequestBase, IHasProjectId, IHasEnv
     {
         ///<summary>
         ///ID of your project. Can be passed in a header as norbix-project-id.
         ///</summary>
         [DataMember]
         public virtual string ProjectId { get; set; }
+
+        ///<summary>
+        ///Target environment for this request (e.g. TEST, STAGING). Optional — when omitted the request runs against PROD. Can be passed in a header as norbix-env.
+        ///</summary>
+        [DataMember]
+        public virtual string? Env { get; set; }
+
+        public virtual Env ResolvedEnv { get; set; }
+        ///<summary>
+        ///Cursor token — fetch the page AFTER this item.
+        ///</summary>
+        [DataMember]
+        public virtual string? StartingAfter { get; set; }
+
+        ///<summary>
+        ///Cursor token — fetch the page BEFORE this item.
+        ///</summary>
+        [DataMember]
+        public virtual string? EndingBefore { get; set; }
+
+        ///<summary>
+        ///Amount of records to return.
+        ///</summary>
+        [DataMember]
+        public virtual int? PageSize { get; set; }
 
         ///<summary>
         ///Paging
         ///</summary>
-        [DataMember]
-        public virtual PagingArgs Paging { get; set; }
+        public virtual PagingArgs? Paging { get; set; }
     }
 
+    [DataContract(Namespace="http://codemash.io/types/")]
     public partial class CodeMashRequestBase
-        : RequestBase
+        : RequestBase, IHasProjectId, IHasEnv
     {
         ///<summary>
         ///ID of your project. Can be passed in a header as norbix-project-id.
         ///</summary>
+        [DataMember]
         public virtual string ProjectId { get; set; }
+
+        ///<summary>
+        ///Target environment for this request (e.g. TEST, STAGING). Optional — when omitted the request runs against PROD. Can be passed in a header as norbix-env.
+        ///</summary>
+        [DataMember]
+        public virtual string? Env { get; set; }
     }
 
+    public partial interface ICultureBasedRequest
+    {
+        string? CultureCode { get; set; }
+    }
 
+    public partial interface IHasCorrelationIdRequest
+    {
+        Guid? CorrelationId { get; set; }
+    }
 
+    public partial interface IVersionBasedRequest
+    {
+        string Version { get; set; }
+    }
 
     [DataContract(Namespace="http://codemash.io/types/")]
     public partial class RequestBase
+        : ICultureBasedRequest, IVersionBasedRequest, IHasCorrelationIdRequest
     {
         ///<summary>
         ///Specify culture code when your response from the API should be localised. E.g.: en
@@ -1852,6 +3166,10 @@ public partial class AccountId
         public virtual Guid? CorrelationId { get; set; }
     }
 
+    public partial interface IHasViewId
+    {
+        string ViewId { get; set; }
+    }
 
     [DataContract]
     public enum CodeMashRelease
@@ -1866,23 +3184,17 @@ public partial class AccountId
     {
         Development,
         CI,
+        Staging,
         Production,
     }
 
     public partial class AccountUserPushDeviceCreated
     {
-        public virtual UserId UserId { get; set; }
+        public virtual AuthId AuthId { get; set; }
         public virtual PushDevice PushDevice { get; set; }
     }
 
-    public enum Gender
-    {
-        Male,
-        Female,
-        Other,
-    }
-
-    public enum UserStatus
+    public enum AuthStatus
     {
         Registered = 0,
         PendingValidation = 2,
@@ -1893,7 +3205,15 @@ public partial class AccountId
         Blocked = 128,
     }
 
+    public enum Gender
+    {
+        Male,
+        Female,
+        Other,
+    }
+
     public partial class CursorArgs
+        : ICursorArgs
     {
         public virtual string Field { get; set; }
         public virtual int Order { get; set; }
@@ -1904,9 +3224,14 @@ public partial class AccountId
         public virtual string Message { get; set; }
         public virtual string? ErrorCode { get; set; }
         public virtual Dictionary<string, string>? Context { get; set; }
-        public virtual IReadOnlySet<ErrorDto>? StackTrace { get; set; }
+        public virtual List<ErrorDto>? StackTrace { get; set; }
     }
 
+    public partial interface ICursorArgs
+    {
+        string Field { get; set; }
+        int Order { get; set; }
+    }
 
     public partial class PaginatedResponse<TViewModelProjection>
     {
@@ -1923,317 +3248,4 @@ public partial class AccountId
         public virtual int? PageSize { get; set; }
         public virtual string? StartingAfter { get; set; }
         public virtual string? EndingBefore { get; set; }
-    }
-
-
-// ============================================================
-// Api endpoints synced from gateway 2026-05-21 (25 new endpoints +
-// supporting DTOs/enums). Transpiled from gateway ServiceStack contracts.
-// ============================================================
-
-    [NorbixRoute("/{version}/files/{filesIntegrationId}/commit", "POST")]
-    public partial class CommitUploadRequest
-        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
-    {
-        [DataMember]
-        public virtual string FilesIntegrationId { get; set; }
-        [DataMember]
-        public virtual string Path { get; set; }
-        [DataMember]
-        public virtual string? ContentType { get; set; }
-        [DataMember]
-        public virtual long? SizeBytes { get; set; }
-        [DataMember]
-        public virtual string? FileName { get; set; }
-    }
-
-    [NorbixRoute("/{version}/membership/userauth/email/confirm-verification", "POST")]
-    public partial class ConfirmEmailVerificationRequest
-        : CodeMashRequestBase, INorbixRequest<PasskeyVerificationTokenResponse>
-    {
-    }
-
-    [NorbixRoute("/{version}/membership/userauth/recovery/magic-link/consume", "POST")]
-    public partial class ConsumeMagicLinkRequest
-        : CodeMashRequestBase, INorbixRequest<PasskeyRecoveryResponse>
-    {
-    }
-
-    [NorbixRoute("/{version}/files/{filesIntegrationId}", "DELETE")]
-    public partial class DeleteFileApiRequest
-        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
-    {
-        [DataMember]
-        public virtual string FilesIntegrationId { get; set; }
-        [DataMember]
-        public virtual string Path { get; set; }
-    }
-
-    [NorbixRoute("/{version}/files/{filesIntegrationId}/bulk", "DELETE")]
-    public partial class DeleteManyFilesApiRequest
-        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
-    {
-        [DataMember]
-        public virtual string FilesIntegrationId { get; set; }
-        [DataMember(Name = "paths[]")]
-        public virtual List<string> Paths { get; set; }
-    }
-
-    [NorbixRoute("/{version}/files/{filesIntegrationId}/download", "GET")]
-    public partial class DownloadFileApiRequest
-        : CodeMashRequestBase, INorbixRequest<object>
-    {
-        [DataMember]
-        public virtual string FilesIntegrationId { get; set; }
-        [DataMember]
-        public virtual string Path { get; set; }
-    }
-
-    public partial class FileResourceRefDto
-        : ResourceRefDto
-    {
-        public virtual string FileResourceId { get; set; }
-    }
-
-    [NorbixRoute("/{version}/files/{filesIntegrationId}/info", "GET")]
-    public partial class GetFileInfoRequest
-        : CodeMashRequestBase, INorbixRequest<GetFileInfoResponse>
-    {
-        [DataMember]
-        public virtual string FilesIntegrationId { get; set; }
-        [DataMember]
-        public virtual string Path { get; set; }
-    }
-
-    public partial class GetFileInfoResponse
-        : ResponseBase
-    {
-        public virtual FileResourceRefDto? File { get; set; }
-        public virtual bool? IsPublic { get; set; }
-        public virtual string? PublicUrl { get; set; }
-    }
-
-    [NorbixRoute("/{version}/files/{filesIntegrationId}/sign", "GET")]
-    public partial class GetSignedUrlRequest
-        : CodeMashRequestBase, INorbixRequest<GetSignedUrlResponse>
-    {
-        [DataMember]
-        public virtual string FilesIntegrationId { get; set; }
-        [DataMember]
-        public virtual string Path { get; set; }
-        [DataMember]
-        public virtual int? ExpirationSeconds { get; set; }
-    }
-
-    public partial class GetSignedUrlResponse
-        : ResponseBase
-    {
-        public virtual string? Url { get; set; }
-    }
-
-    [NorbixRoute("/{version}/membership/userauth/has-passkey", "POST")]
-    public partial class HasPasskeyRequest
-        : CodeMashRequestBase, INorbixRequest<PasskeyOkResponse>
-    {
-    }
-
-    [NorbixRoute("/up", "ANY")]
-    public partial class Health
-        : INorbixRequest
-    {
-    }
-
-    [NorbixRoute("/{version}/membership/users/{userId}/link-identity", "POST")]
-    public partial class LinkIdentityRequest
-        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
-    {
-        [DataMember]
-        public virtual string UserId { get; set; }
-        [DataMember]
-        public virtual string Provider { get; set; }
-        [DataMember]
-        public virtual string ProviderToken { get; set; }
-        [DataMember]
-        public virtual string? EmailToVerify { get; set; }
-        [DataMember]
-        public virtual string DatabaseIntegrationId { get; set; }
-    }
-
-    [NorbixRoute("/{version}/files/{filesIntegrationId}", "GET")]
-    public partial class ListFilesRequest
-        : CodeMashListPaginationRequestBase, INorbixRequest<ListFilesResponse>
-    {
-        [DataMember]
-        public virtual string FilesIntegrationId { get; set; }
-        [DataMember]
-        public virtual string? Path { get; set; }
-    }
-
-    public partial class ListFilesResponse
-        : ResponseBase
-    {
-        public virtual PaginatedResponse<FileResourceRefDto>? List { get; set; }
-        public virtual IList<string>? Folders { get; set; }
-    }
-
-    [NorbixRoute("/{version}/membership/userauth/passkeys", "GET")]
-    public partial class ListPasskeysRequest
-        : CodeMashRequestBase, INorbixRequest<PasskeyListResponse>
-    {
-    }
-
-    public partial class PasskeyAuthTokensResponse
-        : ResponseBase
-    {
-        public virtual string AccessToken { get; set; }
-        public virtual string RefreshToken { get; set; }
-        public virtual int ExpiresInSeconds { get; set; }
-        public virtual List<string>? RecoveryCodes { get; set; }
-    }
-
-    [NorbixRoute("/{version}/membership/userauth/passkey/authentication-options", "POST")]
-    public partial class PasskeyAuthenticationOptionsRequest
-        : CodeMashRequestBase, INorbixRequest<PasskeyCeremonyOptionsResponse>
-    {
-    }
-
-    public partial class PasskeyCeremonyOptionsResponse
-        : ResponseBase
-    {
-        public virtual string CeremonyId { get; set; }
-        public virtual string OptionsJson { get; set; }
-    }
-
-    public partial class PasskeyListItemDto
-    {
-        public virtual string CredentialId { get; set; }
-        public virtual string FriendlyName { get; set; }
-        public virtual DateTime RegisteredOnUtc { get; set; }
-        public virtual DateTime LastUsedOnUtc { get; set; }
-        public virtual bool IsRevoked { get; set; }
-    }
-
-    public partial class PasskeyListResponse
-        : ResponseBase
-    {
-        public virtual List<PasskeyListItemDto> Passkeys { get; set; }
-    }
-
-    [NorbixRoute("/{version}/membership/userauth/logout", "POST")]
-    public partial class PasskeyLogoutRequest
-        : CodeMashRequestBase, INorbixRequest<PasskeyOkResponse>
-    {
-    }
-
-    public partial class PasskeyOkResponse
-        : ResponseBase
-    {
-    }
-
-    public partial class PasskeyRecoveryResponse
-        : ResponseBase
-    {
-        public virtual string AccessToken { get; set; }
-        public virtual string RefreshToken { get; set; }
-        public virtual int ExpiresInSeconds { get; set; }
-        public virtual int RemainingCodes { get; set; }
-    }
-
-    [NorbixRoute("/{version}/membership/userauth/passkey/registration-options", "POST")]
-    public partial class PasskeyRegistrationOptionsRequest
-        : CodeMashRequestBase, INorbixRequest<PasskeyCeremonyOptionsResponse>
-    {
-    }
-
-    public partial class PasskeyVerificationTokenResponse
-        : ResponseBase
-    {
-        public virtual string VerificationToken { get; set; }
-    }
-
-    [NorbixRoute("/{version}/membership/userauth/token/refresh", "POST")]
-    public partial class RefreshPasskeyTokenRequest
-        : CodeMashRequestBase, INorbixRequest<PasskeyAuthTokensResponse>
-    {
-    }
-
-    [NorbixRoute("/{version}/membership/userauth/passkeys/{CredentialId}/rename", "POST")]
-    public partial class RenamePasskeyRequest
-        : CodeMashRequestBase, INorbixRequest<PasskeyOkResponse>
-    {
-    }
-
-    [NorbixRoute("/{version}/membership/userauth/recovery/magic-link/request", "POST")]
-    public partial class RequestMagicLinkRequest
-        : CodeMashRequestBase, INorbixRequest<PasskeyOkResponse>
-    {
-    }
-
-    [NorbixRoute("/{version}/files/{filesIntegrationId}/upload-url", "POST")]
-    public partial class RequestUploadUrlRequest
-        : CodeMashRequestBase, INorbixRequest<RequestUploadUrlResponse>
-    {
-        [DataMember]
-        public virtual string FilesIntegrationId { get; set; }
-        [DataMember]
-        public virtual string Path { get; set; }
-        [DataMember]
-        public virtual string ContentType { get; set; }
-        [DataMember]
-        public virtual int? ExpirationSeconds { get; set; }
-    }
-
-    public partial class RequestUploadUrlResponse
-        : ResponseBase
-    {
-        public virtual string? Url { get; set; }
-    }
-
-    public enum ResourceKindDto
-    {
-        [EnumMember(Value = "contact")] Contact,
-        [EnumMember(Value = "document")] Document,
-        [EnumMember(Value = "file")] File,
-        [EnumMember(Value = "paymentCustomer")] PaymentCustomer,
-        [EnumMember(Value = "order")] Order,
-        [EnumMember(Value = "payment")] Payment,
-        [EnumMember(Value = "product")] Product,
-        [EnumMember(Value = "integration")] Integration,
-    }
-
-    public partial class ResourceRefDto
-    {
-        public virtual string ProjectId { get; set; }
-        public virtual string? IntegrationId { get; set; }
-        public virtual ResourceKindDto Kind { get; set; }
-    }
-
-    [NorbixRoute("/{version}/membership/userauth/passkeys/{CredentialId}/revoke", "POST")]
-    public partial class RevokePasskeyRequest
-        : CodeMashRequestBase, INorbixRequest<PasskeyOkResponse>
-    {
-    }
-
-    [NorbixRoute("/{version}/membership/userauth/email/start-verification", "POST")]
-    public partial class StartEmailVerificationRequest
-        : CodeMashRequestBase, INorbixRequest<PasskeyOkResponse>
-    {
-    }
-
-    [NorbixRoute("/{version}/membership/userauth/recovery/use-code", "POST")]
-    public partial class UseRecoveryCodeRequest
-        : CodeMashRequestBase, INorbixRequest<PasskeyRecoveryResponse>
-    {
-    }
-
-    [NorbixRoute("/{version}/membership/userauth/passkey/verify-authentication", "POST")]
-    public partial class VerifyPasskeyAuthenticationRequest
-        : CodeMashRequestBase, INorbixRequest<PasskeyAuthTokensResponse>
-    {
-    }
-
-    [NorbixRoute("/{version}/membership/userauth/passkey/verify-registration", "POST")]
-    public partial class VerifyPasskeyRegistrationRequest
-        : CodeMashRequestBase, INorbixRequest<PasskeyAuthTokensResponse>
-    {
     }

@@ -5,6 +5,8 @@
 #nullable enable annotations
 #nullable disable warnings
 
+#pragma warning disable CS0114, CS1570, CS0102, CS0108, CS0618
+
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -13,12 +15,28 @@ using Norbix.Sdk.Types;
 
 namespace Norbix.Sdk.Types.Hub;
 
-public partial class CronExpression
+    public partial class CronExpression
     {
     }
 
+    public partial class RenderPushResponse
+        : ResponseBase
+    {
+        public virtual HashSet<string>? Variables { get; set; }
+        public virtual string? Title { get; set; }
+        public virtual string? Body { get; set; }
+        public virtual string? Subtitle { get; set; }
+    }
+
+    public partial class RenderSmsTextResponse
+        : ResponseBase
+    {
+        public virtual HashSet<string>? Variables { get; set; }
+        public virtual string? Text { get; set; }
+    }
+
     public partial class AccountId
-        : AggregateId
+        : AggregateId, IHasDomainEntityId
     {
     }
 
@@ -31,6 +49,21 @@ public partial class CronExpression
         InActive = 16,
         Blocked = 32,
         Unregistered = 64,
+    }
+
+    public partial class Address
+    {
+        public virtual City? City { get; set; }
+        public virtual Country? Country { get; set; }
+        public virtual AddressLine? AddressLine1 { get; set; }
+        public virtual AddressLine? AddressLine2 { get; set; }
+        public virtual PostalCode? PostalCode { get; set; }
+        public virtual CountryState? State { get; set; }
+    }
+
+    public partial class AddressLine
+    {
+        public virtual string Value { get; set; }
     }
 
     public partial class AggregateId
@@ -54,12 +87,61 @@ public partial class CronExpression
         ServerEvents = 512,
         Ai = 1024,
         Sms = 2048,
+        Project = 4096,
+        Compliance = 8192,
+        Contacts = 16384,
+        Marketplace = 32768,
+    }
+
+    public partial class AtlasClusterChargeRecord
+    {
+        public virtual string AtlasProjectId { get; set; }
+        public virtual string AtlasClusterName { get; set; }
+        public virtual long Cents { get; set; }
+    }
+
+    public partial class AtlasUsageRecord
+    {
+        public virtual BillingPeriod Period { get; set; }
+        public virtual long TotalCents { get; set; }
+        public virtual IReadOnlyList<AtlasClusterChargeRecord> PerCluster { get; set; }
+        public virtual UtcDateTime RecordedAtUtc { get; set; }
+    }
+
+    public partial class AuthId
+        : IHasDomainEntityId
+    {
+        public virtual Guid Value { get; set; }
+    }
+
+    public enum AuthType
+    {
+        Service,
+        Email,
+        UserName,
+        Phone,
+        Guest,
+        Social,
+    }
+
+    public partial class AuthUserName
+    {
+        public virtual string Value { get; set; }
     }
 
     public partial class BaseTagDefinition
     {
         public virtual Tag Tag { get; set; }
         public virtual HashSet<TagTranslation> Translations { get; set; } = [];
+    }
+
+    public partial class BillingPeriod
+    {
+        public virtual int Year { get; set; }
+        public virtual int Month { get; set; }
+        public virtual DateTimeOffset StartUtc { get; set; }
+        public virtual DateTimeOffset EndExclusiveUtc { get; set; }
+        public virtual DateTimeOffset LastInstantUtc { get; set; }
     }
 
     public partial class BooleanField
@@ -74,7 +156,46 @@ public partial class CronExpression
         public virtual string Value { get; set; }
     }
 
+    public partial class CampaignBatchId
+    {
+        public virtual Guid Id { get; set; }
+    }
+
+    public partial class CampaignId
+    {
+        public virtual Guid Id { get; set; }
+    }
+
+    public partial class CaseResolution
+    {
+        public virtual string Problem { get; set; }
+        public virtual IReadOnlyList<string> Symptoms { get; set; }
+        public virtual string RootCause { get; set; }
+        public virtual CaseResolutionFixKind Fix { get; set; }
+        public virtual string? FixDetail { get; set; }
+        public virtual string? Module { get; set; }
+        public virtual SupportCaseKind Kind { get; set; }
+        public virtual SupportCaseSeverity Severity { get; set; }
+        public virtual IReadOnlyList<string> AffectedVersions { get; set; }
+        public virtual string? ResolvedBy { get; set; }
+    }
+
+    public enum CaseResolutionFixKind
+    {
+        CodeFix,
+        ConfigChange,
+        CustomerInstruction,
+        KnownLimitation,
+        Duplicate,
+    }
+
+    public partial class City
+    {
+        public virtual string Value { get; set; }
+    }
+
     public partial class CodeIntegration
+        : Integration
     {
         public virtual CodeProvider Provider { get; set; }
     }
@@ -90,7 +211,7 @@ public partial class CronExpression
     public partial class CodeMashManagedServiceSubscription
     {
         public virtual CodeMashSubscriptionId SubscriptionId { get; set; }
-        public virtual ExternalCustomerId RefCustomerId { get; set; }
+        public virtual PaymentCustomerRef PaymentCustomerRef { get; set; }
         public virtual string RefSubscriptionId { get; set; }
         public virtual UtcDateTime IssuedOn { get; set; }
         public virtual UtcDateTime WillExpireOn { get; set; }
@@ -143,11 +264,17 @@ public partial class CronExpression
         SouthAmerica,
     }
 
-    public partial class CronExpression
+    public partial class Country
+    {
+        public virtual string Code { get; set; }
+        public virtual string Name { get; set; }
+    }
+
+    public partial class CountryState
     {
         public virtual string Value { get; set; }
-        public virtual CronExpression Parsed { get; set; }
     }
+
 
     public partial class CurrencyField
         : JsonSchemaField
@@ -156,15 +283,19 @@ public partial class CronExpression
     }
 
     public partial class DatabaseIntegration
+        : Integration
     {
         public virtual DatabaseProvider Provider { get; set; }
+        public virtual IntegrationStatus Status { get; set; }
+        public virtual string? AtlasProjectId { get; set; }
+        public virtual string? AtlasClusterName { get; set; }
+        public virtual string? FailureReason { get; set; }
     }
 
     public enum DatabaseProvider
     {
-        CodeMashMongoDbAtlasCluster,
-        CodeMashMongoDbAtlasServerless,
         MongoDbConnectionString,
+        CodeMashMongoDbAtlasFlexManaged,
     }
 
     public partial class DataSchema
@@ -197,6 +328,18 @@ public partial class CronExpression
         InApp,
         ChatBot,
         ChatPlatform,
+    }
+
+    public enum DeploymentMode
+    {
+        Managed,
+        SelfHosted,
+        Enterprise,
+    }
+
+    public partial class DeviceId
+    {
+        public virtual Guid Id { get; set; }
     }
 
     public enum DeviceType
@@ -245,12 +388,21 @@ public partial class CronExpression
         Collection,
     }
 
+    public partial class EmailFooter
+    {
+        public virtual EmailFooterId Id { get; set; }
+        public virtual DisplayName DisplayName { get; set; }
+        public virtual HashSet<MessageTranslation<TemplateCode>> Translations { get; set; } = [];
+        public virtual Env Env { get; set; }
+    }
+
     public partial class EmailFooterId
     {
         public virtual Guid Value { get; set; }
     }
 
     public partial class EmailIntegration
+        : Integration
     {
         public virtual EmailProvider Provider { get; set; }
         public virtual EmailAddress EmailAddress { get; set; }
@@ -277,11 +429,20 @@ public partial class CronExpression
         SendGrid,
         MailGun,
         AwsSes,
+        Fake,
     }
 
     [DataContract]
     public partial class EmailSenderName
     {
+    }
+
+    public partial class EmailSignature
+    {
+        public virtual EmailSignatureId Id { get; set; }
+        public virtual DisplayName DisplayName { get; set; }
+        public virtual HashSet<MessageTranslation<TemplateCode>> Translations { get; set; } = [];
+        public virtual Env Env { get; set; }
     }
 
     public partial class EmailSignatureId
@@ -294,6 +455,14 @@ public partial class CronExpression
     {
     }
 
+    [DataContract]
+    public partial class EmailTemplate
+        : Template<EmailMessageContent>
+    {
+        [DataMember]
+        public virtual HashSet<FileResourceRef>? StaticAttachments { get; set; }
+    }
+
     public enum EmailTemplateEngine
     {
         NotSet,
@@ -304,11 +473,32 @@ public partial class CronExpression
         Mustache,
     }
 
+    public partial class EmailValidationIntegration
+        : Integration
+    {
+        public virtual EmailValidationProvider Provider { get; set; }
+    }
+
+    [DataContract]
+    public enum EmailValidationProvider
+    {
+        ZeroBounce = 1,
+        NeverBounce = 2,
+        Bouncer = 3,
+        MailgunValidate = 4,
+    }
+
     public partial class EnumSelectionField
         : JsonSchemaField
     {
         public virtual IReadOnlyList<string>? Values { get; set; }
         public virtual bool Multiple { get; set; }
+    }
+
+    public partial class Env
+    {
+        public virtual string Value { get; set; }
+        public virtual bool IsProd { get; set; }
     }
 
     public partial class ExpirationToken
@@ -327,11 +517,6 @@ public partial class CronExpression
 
     }
 
-    public partial class ExternalCustomerId
-    {
-        public virtual string Id { get; set; }
-    }
-
     public partial class FileChecksum
     {
         public virtual string Algorithm { get; set; }
@@ -342,6 +527,12 @@ public partial class CronExpression
         : JsonSchemaField
     {
         public virtual IReadOnlyList<string>? Storages { get; set; }
+    }
+
+    public partial class FileIntegration
+        : Integration
+    {
+        public virtual FileProvider Provider { get; set; }
     }
 
     public enum FileProvider
@@ -412,6 +603,21 @@ public partial class CronExpression
         public virtual FileResourceRef? FileResourceRef { get; set; }
     }
 
+    [DataContract]
+    public partial class FirstName
+    {
+        [DataMember]
+        public virtual string Value { get; set; }
+    }
+
+    public partial class FullName
+    {
+        public virtual FirstName? FirstName { get; set; }
+        public virtual MidName? MidName { get; set; }
+        public virtual LastName? LastName { get; set; }
+        public virtual string? Title { get; set; }
+    }
+
     public partial class GeolocationField
         : JsonSchemaField
     {
@@ -433,9 +639,24 @@ public partial class CronExpression
         public virtual HashSet<Tag> Tags { get; set; } = [];
     }
 
+    public partial interface IBindableContract
+    {
+    }
 
+    public partial interface IHasDomainEntityId
+    {
+    }
 
+    public partial interface IHasRazorTemplateCode
+    {
+    }
 
+    public partial interface IIntegrationIdentification
+    {
+        IntegrationId IntegrationId { get; set; }
+        string Capability { get; set; }
+        bool IsSystemOwned { get; set; }
+    }
 
     public partial class IntegerField
         : JsonSchemaField
@@ -445,8 +666,10 @@ public partial class CronExpression
     }
 
     public partial class Integration
+        : IIntegrationIdentification, IHasDomainEntityId
     {
         public virtual IntegrationId IntegrationId { get; set; }
+        public virtual Env Env { get; set; }
         public virtual string Capability { get; set; }
         public virtual bool IsSystemOwned { get; set; }
         public virtual DisplayName IntegrationName { get; set; }
@@ -460,8 +683,23 @@ public partial class CronExpression
     }
 
     public partial class IntegrationId
-        : AggregateId
+        : AggregateId, IHasDomainEntityId
     {
+    }
+
+    public enum IntegrationStatus
+    {
+        Unknown,
+        Pending,
+        Provisioning,
+        Active,
+        Failed,
+        Deprovisioning,
+    }
+
+    public partial class IpAddress
+    {
+        public virtual string Ip { get; set; }
     }
 
     public partial class JsonSchemaField
@@ -480,30 +718,46 @@ public partial class CronExpression
         public virtual string Name { get; set; }
     }
 
-    public partial class MarketplaceFunctionBinding
+    [DataContract]
+    public partial class LastName
     {
-        public virtual Guid BindingId { get; set; }
+        [DataMember]
+        public virtual string Value { get; set; }
+    }
+
+    public enum MarketingBlockReason
+    {
+        Unspecified,
+        Unsubscribed,
+        Complaint,
+        HardBounce,
+        InvalidEmail,
+        AdminBlock,
+    }
+
+    public partial class MarketplaceFunction
+        : IHasDomainEntityId
+    {
+        public virtual MarketplaceFunctionId FunctionId { get; set; }
         public virtual IntegrationId IntegrationId { get; set; }
+        public virtual Env Env { get; set; }
         public virtual string FunctionKey { get; set; }
         public virtual DisplayName DisplayName { get; set; }
         public virtual string? Description { get; set; }
         public virtual bool IsEnabled { get; set; }
-        public virtual IReadOnlyList<MarketplaceFunctionMapping> Mappings { get; set; }
+        public virtual string RequestTemplate { get; set; }
+        public virtual IReadOnlyList<MarketplaceTokenMapping> MappedTokens { get; set; }
         public virtual string ViewId { get; set; }
     }
 
-    public partial class MarketplaceFunctionMapping
+    public partial class MarketplaceFunctionId
+        : IHasDomainEntityId
     {
-        public virtual string ParameterName { get; set; }
-        public virtual MarketplaceMappingSourceKind Source { get; set; }
-        public virtual string? DefaultValue { get; set; }
-        public virtual TokenMappingResolverType? Resolver { get; set; }
-        public virtual string? TokenKey { get; set; }
-        public virtual string? FromRequestPath { get; set; }
-        public virtual bool IsRequired { get; set; }
+        public virtual Guid Value { get; set; }
     }
 
     public partial class MarketplaceIntegration
+        : Integration
     {
         public virtual string Capability { get; set; }
         public virtual string ListingViewId { get; set; }
@@ -512,6 +766,7 @@ public partial class CronExpression
         public virtual MarketplaceIntegrationCategory Category { get; set; }
         public virtual string? Description { get; set; }
         public virtual IReadOnlyDictionary<string, string> Config { get; set; }
+        public virtual IReadOnlyList<MarketplaceTokenMapping> TokenMappings { get; set; }
     }
 
     public enum MarketplaceIntegrationCategory
@@ -538,16 +793,32 @@ public partial class CronExpression
         Mcp,
         Rest,
         Code,
+        Internal,
+        Sdk,
     }
 
-    public enum MarketplaceMappingSourceKind
+    public partial class MarketplaceTokenMapping
     {
-        Default,
-        Resolver,
-        FromRequest,
+        public virtual string Token { get; set; }
+        public virtual MarketplaceTokenResolver Resolver { get; set; }
+        public virtual string? Value { get; set; }
+        public virtual IReadOnlyList<string>? SecretKeys { get; set; }
+        public virtual SecretValueFormat Format { get; set; }
+    }
+
+    public enum MarketplaceTokenResolver
+    {
+        Static,
+        Request,
+        Project,
+        Initiator,
+        Custom,
+        IntegrationConfig,
+        IntegrationSecret,
     }
 
     public partial class MembershipIntegration
+        : Integration
     {
         public virtual MembershipProvider Provider { get; set; }
     }
@@ -557,7 +828,7 @@ public partial class CronExpression
         public virtual PolicyId Id { get; set; }
         public virtual DisplayName Name { get; set; }
         public virtual string? Description { get; set; }
-        public virtual HashSet<PolicyStatement> Statements { get; set; } = [];
+        public virtual HashSet<Permission> Permissions { get; set; } = [];
         public virtual bool Disabled { get; set; }
         public virtual bool IsSystem { get; set; }
     }
@@ -600,6 +871,7 @@ public partial class CronExpression
         OnDeleted,
         OnBlocked,
         OnReactivated,
+        OnUserCreated,
     }
 
     [DataContract]
@@ -612,6 +884,11 @@ public partial class CronExpression
         public virtual int Value { get; set; }
     }
 
+    public partial class MidName
+    {
+        public virtual string Value { get; set; }
+    }
+
     public partial class MongoDbAggregate
     {
         public virtual MongoDbAggregateId Id { get; set; }
@@ -622,13 +899,38 @@ public partial class CronExpression
     }
 
     public partial class MongoDbAggregateId
-        : AggregateId
+        : AggregateId, IHasDomainEntityId
     {
     }
 
     public partial class MongoDbAggregateQuery
     {
         public virtual string Value { get; set; }
+    }
+
+    public partial class NorbixRegion
+    {
+        public virtual string Code { get; set; }
+    }
+
+    public partial class NotificationId
+        : AggregateId, IHasDomainEntityId
+    {
+    }
+
+    public enum NotificationMedium
+    {
+        Email,
+        Sms,
+        Push,
+    }
+
+    public partial class PaymentCustomerRef
+        : ResourceRef
+    {
+        public virtual ResourceRefKind Kind { get; set; }
+        public virtual ResourceSource Source { get; set; }
+        public virtual string ExternalId { get; set; }
     }
 
     public enum PaymentGatewayPlatform
@@ -650,10 +952,18 @@ public partial class CronExpression
         Worldpay,
     }
 
+    public partial class PaymentIntegration
+        : Integration
+    {
+        public virtual PaymentGatewayPlatform Provider { get; set; }
+    }
+
     public partial class PaymentTrigger
         : Trigger
     {
         public virtual PaymentTriggerType When { get; set; }
+        public virtual HashSet<IntegrationId>? Integrations { get; set; }
+        public virtual HashSet<string>? Events { get; set; }
     }
 
     public enum PaymentTriggerType
@@ -661,6 +971,14 @@ public partial class CronExpression
         OnOrderCreated,
         OnOrderPaid,
         OnWebhookCallReceived,
+    }
+
+    public partial class Permission
+    {
+        public virtual string? Sid { get; set; }
+        public virtual PermissionEffect Effect { get; set; }
+        public virtual HashSet<PermissionAction> Actions { get; set; } = [];
+        public virtual HashSet<ResourcePattern> Resources { get; set; } = [];
     }
 
     public partial class PermissionAction
@@ -679,6 +997,11 @@ public partial class CronExpression
         Deny,
     }
 
+    public partial class Phone
+    {
+        public virtual string Value { get; set; }
+    }
+
     public partial class PolicyId
     {
         public virtual Guid Template { get; set; }
@@ -687,12 +1010,9 @@ public partial class CronExpression
         public virtual bool IsSystem { get; set; }
     }
 
-    public partial class PolicyStatement
+    public partial class PostalCode
     {
-        public virtual string? Sid { get; set; }
-        public virtual PermissionEffect Effect { get; set; }
-        public virtual HashSet<PermissionAction> Actions { get; set; } = [];
-        public virtual HashSet<ResourcePattern> Resources { get; set; } = [];
+        public virtual string Value { get; set; }
     }
 
     [DataContract]
@@ -720,19 +1040,25 @@ public partial class CronExpression
 
     public partial class ProjectIcon
     {
-        public virtual FileResource FileResource { get; set; }
-        public virtual string? PublicUrl { get; set; }
+        public virtual FileResourceRef FileResource { get; set; }
+        public virtual string PublicUrl { get; set; }
     }
 
     public partial class ProjectId
-        : AggregateId
+        : AggregateId, IHasDomainEntityId
     {
+    }
+
+    public partial class ProjectLegalDocuments
+    {
+        public virtual string? TermsMarkdown { get; set; }
+        public virtual string? PrivacyMarkdown { get; set; }
     }
 
     public partial class ProjectLogo
     {
-        public virtual FileResource FileResource { get; set; }
-        public virtual string? PublicUrl { get; set; }
+        public virtual FileResourceRef FileResource { get; set; }
+        public virtual string PublicUrl { get; set; }
     }
 
     [DataContract]
@@ -749,7 +1075,7 @@ public partial class CronExpression
     public partial class ProjectRegion
     {
         [DataMember]
-        public virtual ProjectRegionId Id { get; set; }
+        public virtual NorbixRegion Region { get; set; }
 
         [DataMember]
         public virtual string? Name { get; set; }
@@ -758,15 +1084,14 @@ public partial class CronExpression
         public virtual Continent? Continent { get; set; }
     }
 
-    public partial class ProjectRegionId
-    {
-        public virtual string Value { get; set; }
-    }
-
     public enum ProjectStatus
     {
         Active,
+        Provisioning,
+        ProvisioningFailed,
+        NoDatabase,
         Disabled,
+        Suspended,
         Removed,
     }
 
@@ -784,7 +1109,71 @@ public partial class CronExpression
         public virtual TemplateCode Value { get; set; }
     }
 
+    [DataContract]
+    public partial class PushDevice
+    {
+        [DataMember]
+        public virtual DeviceId Id { get; set; }
+
+        [DataMember]
+        public virtual string? Brand { get; set; }
+
+        [DataMember]
+        public virtual string? Manufacturer { get; set; }
+
+        [DataMember]
+        public virtual string? ModelName { get; set; }
+
+        [DataMember]
+        public virtual string? DeviceName { get; set; }
+
+        [DataMember]
+        public virtual DeviceType? DeviceType { get; set; }
+
+        [DataMember]
+        public virtual string? OsName { get; set; }
+
+        [DataMember]
+        public virtual string? OsVersion { get; set; }
+
+        [DataMember]
+        public virtual int? PlatformApiLevel { get; set; }
+
+        [DataMember]
+        public virtual PushDeviceDeliveryToken Token { get; set; }
+    }
+
+    public enum PushDeviceDeliveryFamily
+    {
+        Ios,
+        Android,
+        Chrome,
+        Safari,
+        Expo,
+    }
+
+    [DataContract]
+    public partial class PushDeviceDeliveryToken
+    {
+        [DataMember]
+        public virtual PushDeviceToken PushDeviceToken { get; set; }
+
+        [DataMember]
+        public virtual PushDeviceDeliveryFamily DeliveryFamily { get; set; }
+    }
+
+    public partial class PushDevices
+        : HashSet<PushDevice>
+    {
+    }
+
+    public partial class PushDeviceToken
+    {
+        public virtual string Token { get; set; }
+    }
+
     public partial class PushIntegration
+        : Integration
     {
         public virtual PushProvider Provider { get; set; }
     }
@@ -820,6 +1209,7 @@ public partial class CronExpression
         CodeMashChromePlugin,
         CodeMashChromeWeb,
         Expo,
+        Fake,
     }
 
     [DataContract]
@@ -872,6 +1262,45 @@ public partial class CronExpression
         public virtual int Specificity { get; set; }
     }
 
+    public partial class ResourceRef
+    {
+        public virtual ProjectId ProjectId { get; set; }
+        public virtual IntegrationId? IntegrationId { get; set; }
+        public virtual ResourceRefKind Kind { get; set; }
+    }
+
+    public enum ResourceRefKind
+    {
+        Contact,
+        Document,
+        File,
+        PaymentCustomer,
+        Order,
+        Payment,
+        Product,
+        Integration,
+    }
+
+    public enum ResourceSource
+    {
+        Norbix,
+        Stripe,
+        Shopify,
+        PayPal,
+        Adyen,
+        Mollie,
+        Paddle,
+        LemonSqueezy,
+        AppleInApp,
+        GoogleInApp,
+        AuthorizeNet,
+        Braintree,
+        CheckOutCom,
+        WooCommerce,
+        Magento,
+        Worldpay,
+    }
+
     [Flags]
     public enum RespectTimeZoneSettings
     {
@@ -893,10 +1322,19 @@ public partial class CronExpression
         public virtual string Name { get; set; }
         public virtual string DisplayName { get; set; }
         public virtual bool IsAdministrator { get; set; }
+
         public virtual bool IsAuthenticated { get; set; }
+
         public virtual bool IsGuest { get; set; }
+
         public virtual bool IsRootRole { get; set; }
+
         public virtual bool IsCollaboratorRole { get; set; }
+
+        public virtual bool IsProjectSystemRole { get; set; }
+
+        public virtual bool IsAccountSystemRole { get; set; }
+
         public virtual bool IsSystemRole { get; set; }
     }
 
@@ -907,6 +1345,7 @@ public partial class CronExpression
     }
 
     public partial class SchedulerTask
+        : IHasDomainEntityId
     {
         public virtual TaskId Id { get; set; }
         public virtual SchedulerTaskType Type { get; set; }
@@ -914,7 +1353,7 @@ public partial class CronExpression
         public virtual string? Description { get; set; }
         public virtual CronExpression Cron { get; set; }
         public virtual string PayloadJson { get; set; }
-        public virtual UserId InitiatorId { get; set; }
+        public virtual AuthId InitiatorId { get; set; }
         public virtual bool IsEnabled { get; set; }
         public virtual bool StopOnError { get; set; }
     }
@@ -929,9 +1368,11 @@ public partial class CronExpression
     }
 
     public partial class Schema
+        : IHasDomainEntityId
     {
         public virtual SchemaName SchemaName { get; set; }
         public virtual SchemaId Id { get; set; }
+        public virtual Env Env { get; set; }
         public virtual SchemaDraft? Draft { get; set; }
         public virtual IReadOnlyList<PublishedSchemaVersion> PublishedVersions { get; set; }
         public virtual HashSet<Trigger>? Triggers { get; set; }
@@ -955,7 +1396,7 @@ public partial class CronExpression
     }
 
     public partial class SchemaId
-        : AggregateId
+        : AggregateId, IHasDomainEntityId
     {
     }
 
@@ -968,6 +1409,8 @@ public partial class CronExpression
     public partial class SchemaSettings
     {
         public virtual bool SoftDelete { get; set; }
+        public virtual bool HasRecordOwner { get; set; }
+        public virtual string? Description { get; set; }
     }
 
     public partial class SchemaTrigger
@@ -990,6 +1433,19 @@ public partial class CronExpression
         public virtual int Value { get; set; }
     }
 
+    public enum SecretValueFormat
+    {
+        Raw,
+        Bearer,
+        Basic,
+        Prefixed,
+    }
+
+    public partial class SmsBody
+    {
+        public virtual TemplateCode Value { get; set; }
+    }
+
     public enum SmsCampaignRecipientsSourceTypes
     {
         AllUsers,
@@ -997,6 +1453,27 @@ public partial class CronExpression
         AccountUsers,
         PhoneNumbers,
         Collection,
+    }
+
+    [DataContract]
+    public partial class SmsMessageContent
+    {
+        [DataMember(Order=1)]
+        public virtual SmsTitle Title { get; set; }
+
+        [DataMember(Order=2)]
+        public virtual SmsBody Body { get; set; }
+    }
+
+    [DataContract]
+    public partial class SmsTemplate
+        : Template<SmsMessageContent>
+    {
+    }
+
+    public partial class SmsTitle
+    {
+        public virtual TemplateCode Value { get; set; }
     }
 
     public partial class StringField
@@ -1013,6 +1490,62 @@ public partial class CronExpression
     {
         ManagedService,
         License,
+    }
+
+    public enum SupportCaseCloseReason
+    {
+        Manual,
+        AutoClosedAfterResolve,
+    }
+
+    public partial class SupportCaseId
+        : AggregateId
+    {
+        public virtual string ViewId { get; set; }
+    }
+
+    public enum SupportCaseKind
+    {
+        Question,
+        Bug,
+        Incident,
+        Billing,
+        Security,
+        FeatureRequest,
+    }
+
+    public enum SupportCaseSeverity
+    {
+        S1 = 1,
+        S2 = 2,
+        S3 = 3,
+        S4 = 4,
+    }
+
+    public enum SupportCaseStatus
+    {
+        Open,
+        Triaged,
+        InProgress,
+        WaitingOnCustomer,
+        Resolved,
+        Closed,
+    }
+
+    public enum SupportMessageAuthorKind
+    {
+        Customer,
+        Staff,
+        Ai,
+        System,
+    }
+
+    public partial class SupportMessageRef
+    {
+        public virtual string MessageId { get; set; }
+        public virtual SupportMessageAuthorKind AuthorKind { get; set; }
+        public virtual string? AuthorId { get; set; }
+        public virtual UtcDateTime SentOn { get; set; }
     }
 
     public enum SystemEmailTemplateTheme
@@ -1054,6 +1587,7 @@ public partial class CronExpression
     }
 
     public partial class Taxonomy
+        : IHasDomainEntityId
     {
         public virtual TaxonomyId? ParentId { get; set; }
         public virtual TaxonomyId Id { get; set; }
@@ -1066,7 +1600,7 @@ public partial class CronExpression
     }
 
     public partial class TaxonomyId
-        : AggregateId
+        : AggregateId, IHasDomainEntityId
     {
     }
 
@@ -1085,6 +1619,7 @@ public partial class CronExpression
 
     [DataContract]
     public partial class Template<TMessageContent>
+        : IBindableContract
     {
         [DataMember]
         public virtual TemplateId TemplateId { get; set; }
@@ -1109,6 +1644,9 @@ public partial class CronExpression
 
         [DataMember]
         public virtual IntegrationId? FileIntegrationId { get; set; }
+
+        [DataMember]
+        public virtual Env Env { get; set; }
     }
 
     [DataContract]
@@ -1148,6 +1686,7 @@ public partial class CronExpression
     }
 
     public partial class Trigger
+        : IHasDomainEntityId
     {
         public virtual TriggerId TriggerId { get; set; }
         public virtual DisplayName Name { get; set; }
@@ -1155,15 +1694,14 @@ public partial class CronExpression
         public virtual TemplateCode? ActivationCode { get; set; }
         public virtual string? Description { get; set; }
         public virtual bool IsEnabled { get; set; }
+        public virtual Env Env { get; set; }
         public virtual IntegrationId? IntegrationId { get; set; }
-        public virtual TriggerType Type { get; set; }
     }
 
     public partial class TriggerAction
     {
         public virtual TriggerActionType Type { get; set; }
         public virtual IntegrationId? IntegrationId { get; set; }
-        public virtual TemplateId TemplateId { get; set; }
     }
 
     public enum TriggerActionType
@@ -1173,6 +1711,8 @@ public partial class CronExpression
         Sms,
         Email,
         WebhookCall,
+        SseCall,
+        Marketplace,
     }
 
     public partial class TriggerEventName
@@ -1181,7 +1721,7 @@ public partial class CronExpression
     }
 
     public partial class TriggerId
-        : AggregateId
+        : AggregateId, IHasDomainEntityId
     {
     }
 
@@ -1193,25 +1733,40 @@ public partial class CronExpression
         Payments,
     }
 
+    public partial class UsageIngestionFailure
+    {
+        public virtual UsageIngestionFailureReason Reason { get; set; }
+        public virtual BillingPeriod? Period { get; set; }
+        public virtual string StripeEventId { get; set; }
+        public virtual string Message { get; set; }
+        public virtual UtcDateTime ReportedAtUtc { get; set; }
+    }
+
+    public enum UsageIngestionFailureReason
+    {
+        UnknownCustomer = 1,
+        MeterNotFound = 2,
+        ValidationFailed = 3,
+        ImportSetFailed = 4,
+    }
+
     public partial class UserId
+        : IHasDomainEntityId
     {
         public virtual Guid Value { get; set; }
+    }
+
+    public partial class UserRef
+        : ResourceRef
+    {
+        public virtual ResourceRefKind Kind { get; set; }
+        public virtual UserId UserId { get; set; }
     }
 
     public partial class UserSelectionField
         : JsonSchemaField
     {
         public virtual bool Multiple { get; set; }
-    }
-
-    public enum UserType
-    {
-        Service,
-        Email,
-        UserName,
-        Phone,
-        Guest,
-        Social,
     }
 
     public partial class UtcDateTime
@@ -1228,21 +1783,29 @@ public partial class CronExpression
         public virtual WebhookDestinationId DestinationId { get; set; }
         public virtual DisplayName DestinationName { get; set; }
         public virtual DomainUrl EndpointUrl { get; set; }
-        public virtual IReadOnlySet<TriggerEventName> SelectedEvents { get; set; }
+        public virtual HashSet<TriggerEventName> SelectedEvents { get; set; } = [];
         public virtual IReadOnlyDictionary<string, string>? ExtraHeaders { get; set; }
         public virtual bool IsEnabled { get; set; }
     }
 
     public partial class WebhookDestinationId
-        : AggregateId
+        : AggregateId, IHasDomainEntityId
     {
     }
 
     public partial class WebhookIntegration
+        : Integration
     {
         public virtual string Capability { get; set; }
-        public virtual IReadOnlySet<WebhookDestination> Destinations { get; set; }
+        public virtual HashSet<WebhookDestination> Destinations { get; set; } = [];
         public virtual IReadOnlyDictionary<string, string>? ExtraHeaders { get; set; }
+    }
+
+    public partial class LlmIntegration
+        : Integration
+    {
+        public virtual LlmProvider Provider { get; set; }
+        public virtual string DefaultModel { get; set; }
     }
 
     public enum LlmProvider
@@ -1255,6 +1818,7 @@ public partial class CronExpression
         Mistral,
         OpenRouter,
         Grok,
+        NorbixHosted,
     }
 
     public enum McpAuth
@@ -1262,6 +1826,14 @@ public partial class CronExpression
         OAuth2,
         ApiKey,
         None,
+    }
+
+    public partial class McpIntegration
+        : Integration
+    {
+        public virtual McpProvider Provider { get; set; }
+        public virtual McpTransport Transport { get; set; }
+        public virtual McpMetadata Metadata { get; set; }
     }
 
     public partial class McpMetadata
@@ -1277,6 +1849,11 @@ public partial class CronExpression
         Docker,
         Obsidian,
         GoogleCalendar,
+        Stripe,
+        GitHub,
+        MongoDb,
+        Playwright,
+        BraveSearch,
     }
 
     public enum McpTransport
@@ -1314,6 +1891,36 @@ public partial class CronExpression
     {
     }
 
+    public partial class AccountTeamPolicyCreated
+    {
+        public virtual MembershipPolicy Policy { get; set; }
+    }
+
+    public partial class AccountTeamPolicyDeleted
+    {
+        public virtual PolicyId PolicyId { get; set; }
+    }
+
+    public partial class AccountTeamPolicyUpdated
+    {
+        public virtual MembershipPolicy Policy { get; set; }
+    }
+
+    public partial class AccountTeamRoleCreated
+    {
+        public virtual MembershipRole Role { get; set; }
+    }
+
+    public partial class AccountTeamRoleDeleted
+    {
+        public virtual RoleId RoleId { get; set; }
+    }
+
+    public partial class AccountTeamRoleUpdated
+    {
+        public virtual MembershipRole Role { get; set; }
+    }
+
     public partial class AccountUnregistered
     {
     }
@@ -1327,19 +1934,27 @@ public partial class CronExpression
     {
     }
 
+    public partial class AtlasUsageRecorded
+    {
+        public virtual AtlasUsageRecord Record { get; set; }
+    }
+
     public partial class CodeIntegrationDeleted
     {
         public virtual IntegrationId Id { get; set; }
+        public virtual Env? Env { get; set; }
     }
 
     public partial class CodeIntegrationDisabled
     {
         public virtual IntegrationId Id { get; set; }
+        public virtual Env? Env { get; set; }
     }
 
     public partial class CodeIntegrationEnabled
     {
         public virtual IntegrationId Id { get; set; }
+        public virtual Env? Env { get; set; }
     }
 
     public partial class CodeIntegrationHumanDeliveryConfirmed
@@ -1352,6 +1967,7 @@ public partial class CronExpression
     {
         public virtual IntegrationId Id { get; set; }
         public virtual DisplayName Name { get; set; }
+        public virtual Env? Env { get; set; }
     }
 
     public partial class CodeIntegrationSaved
@@ -1370,11 +1986,12 @@ public partial class CronExpression
         public virtual bool Succeeded { get; set; }
         public virtual IReadOnlyList<string> ErrorMessages { get; set; }
         public virtual DateTime TestedAtUtc { get; set; }
+        public virtual Env? Env { get; set; }
     }
 
     public partial class CustomerCreated
     {
-        public virtual ExternalCustomerId CustomerId { get; set; }
+        public virtual PaymentCustomerRef PaymentCustomerRef { get; set; }
     }
 
     public partial class DatabaseDisabled
@@ -1392,22 +2009,53 @@ public partial class CronExpression
     public partial class DatabaseIntegrationDeleted
     {
         public virtual IntegrationId Id { get; set; }
+        public virtual Env? Env { get; set; }
+    }
+
+    public partial class DatabaseIntegrationDeprovisioned
+    {
+        public virtual IntegrationId IntegrationId { get; set; }
+        public virtual string AtlasProjectId { get; set; }
+        public virtual string AtlasClusterName { get; set; }
     }
 
     public partial class DatabaseIntegrationDisabled
     {
         public virtual IntegrationId Id { get; set; }
+        public virtual Env? Env { get; set; }
     }
 
     public partial class DatabaseIntegrationEnabled
     {
         public virtual IntegrationId Id { get; set; }
+        public virtual Env? Env { get; set; }
+    }
+
+    public partial class DatabaseIntegrationProvisioningCompleted
+    {
+        public virtual IntegrationId IntegrationId { get; set; }
+        public virtual string ConnectionStringTemplate { get; set; }
+    }
+
+    public partial class DatabaseIntegrationProvisioningFailed
+    {
+        public virtual IntegrationId IntegrationId { get; set; }
+        public virtual string Reason { get; set; }
+        public virtual bool Retryable { get; set; }
+    }
+
+    public partial class DatabaseIntegrationProvisioningStarted
+    {
+        public virtual IntegrationId IntegrationId { get; set; }
+        public virtual string AtlasProjectId { get; set; }
+        public virtual string AtlasClusterName { get; set; }
     }
 
     public partial class DatabaseIntegrationRenamed
     {
         public virtual IntegrationId Id { get; set; }
         public virtual DisplayName Name { get; set; }
+        public virtual Env? Env { get; set; }
     }
 
     public partial class DatabaseIntegrationSaved
@@ -1417,6 +2065,7 @@ public partial class CronExpression
 
     public partial class DatabaseIntegrationSetAsDefault
     {
+        public virtual Env Env { get; set; }
         public virtual IntegrationId Id { get; set; }
     }
 
@@ -1426,11 +2075,23 @@ public partial class CronExpression
         public virtual bool Succeeded { get; set; }
         public virtual IReadOnlyList<string> ErrorMessages { get; set; }
         public virtual DateTime TestedAtUtc { get; set; }
+        public virtual Env? Env { get; set; }
+    }
+
+    public partial class DatabaseTriggerMirrored
+    {
+        public virtual Trigger Trigger { get; set; }
     }
 
     public partial class EmailFooterDeleted
     {
         public virtual EmailFooterId Id { get; set; }
+        public virtual Env? Env { get; set; }
+    }
+
+    public partial class EmailFooterMirrored
+    {
+        public virtual EmailFooter Footer { get; set; }
     }
 
     public partial class EmailFooterSaved
@@ -1438,21 +2099,25 @@ public partial class CronExpression
         public virtual EmailFooterId Id { get; set; }
         public virtual DisplayName Name { get; set; }
         public virtual HashSet<MessageTranslation<TemplateCode>> Translations { get; set; } = [];
+        public virtual Env? Env { get; set; }
     }
 
     public partial class EmailIntegrationDeleted
     {
         public virtual IntegrationId Id { get; set; }
+        public virtual Env? Env { get; set; }
     }
 
     public partial class EmailIntegrationDisabled
     {
         public virtual IntegrationId Id { get; set; }
+        public virtual Env? Env { get; set; }
     }
 
     public partial class EmailIntegrationEnabled
     {
         public virtual IntegrationId Id { get; set; }
+        public virtual Env? Env { get; set; }
     }
 
     public partial class EmailIntegrationHumanDeliveryConfirmed
@@ -1465,6 +2130,7 @@ public partial class CronExpression
     {
         public virtual IntegrationId Id { get; set; }
         public virtual DisplayName Name { get; set; }
+        public virtual Env? Env { get; set; }
     }
 
     public partial class EmailIntegrationSaved
@@ -1474,6 +2140,7 @@ public partial class CronExpression
 
     public partial class EmailIntegrationSetAsDefault
     {
+        public virtual Env Env { get; set; }
         public virtual IntegrationId Id { get; set; }
     }
 
@@ -1483,6 +2150,7 @@ public partial class CronExpression
         public virtual bool Succeeded { get; set; }
         public virtual IReadOnlyList<string> ErrorMessages { get; set; }
         public virtual DateTime TestedAtUtc { get; set; }
+        public virtual Env? Env { get; set; }
     }
 
     public partial class EmailServiceDisabled
@@ -1500,6 +2168,12 @@ public partial class CronExpression
     public partial class EmailSignatureDeleted
     {
         public virtual EmailSignatureId Id { get; set; }
+        public virtual Env? Env { get; set; }
+    }
+
+    public partial class EmailSignatureMirrored
+    {
+        public virtual EmailSignature Signature { get; set; }
     }
 
     public partial class EmailSignatureSaved
@@ -1507,11 +2181,18 @@ public partial class CronExpression
         public virtual EmailSignatureId Id { get; set; }
         public virtual DisplayName Name { get; set; }
         public virtual HashSet<MessageTranslation<TemplateCode>> Translations { get; set; } = [];
+        public virtual Env? Env { get; set; }
     }
 
     public partial class EmailTemplateArchived
     {
         public virtual TemplateId TemplateId { get; set; }
+        public virtual Env? Env { get; set; }
+    }
+
+    public partial class EmailTemplateBackfilled
+    {
+        public virtual EmailTemplate Template { get; set; }
     }
 
     public partial class EmailTemplateCreated
@@ -1523,6 +2204,7 @@ public partial class CronExpression
         public virtual string? Description { get; set; }
         public virtual HashSet<Tag>? Tags { get; set; }
         public virtual HashSet<FileResourceRef>? LanguageAgnosticAttachments { get; set; }
+        public virtual Env? Env { get; set; }
     }
 
     public partial class EmailTemplateDeleted
@@ -1530,11 +2212,18 @@ public partial class CronExpression
         public virtual TemplateId TemplateId { get; set; }
         public virtual HashSet<FileResourceRef>? FilesToBeDeleted { get; set; }
         public virtual IntegrationId? FileIntegrationId { get; set; }
+        public virtual Env? Env { get; set; }
+    }
+
+    public partial class EmailTemplateMirrored
+    {
+        public virtual EmailTemplate Template { get; set; }
     }
 
     public partial class EmailTemplateUnArchived
     {
         public virtual TemplateId TemplateId { get; set; }
+        public virtual Env? Env { get; set; }
     }
 
     public partial class EmailTemplateUpdated
@@ -1547,11 +2236,173 @@ public partial class CronExpression
         public virtual HashSet<Tag>? Tags { get; set; }
         public virtual HashSet<FileResourceRef>? LanguageAgnosticAttachments { get; set; }
         public virtual HashSet<FileResourceRef>? AttachmentsToBeDeleted { get; set; }
+        public virtual Env? Env { get; set; }
+    }
+
+    public partial class EmailValidationIntegrationDeleted
+    {
+        public virtual IntegrationId Id { get; set; }
+        public virtual Env? Env { get; set; }
+    }
+
+    public partial class EmailValidationIntegrationSaved
+    {
+        public virtual EmailValidationIntegration Integration { get; set; }
+    }
+
+    public partial class EmailValidationIntegrationSecretsConfigurationFailed
+    {
+        public virtual IntegrationId Id { get; set; }
+        public virtual Env? Env { get; set; }
+    }
+
+    public partial class EmailValidationIntegrationSecretsConfigured
+    {
+        public virtual IntegrationId Id { get; set; }
+        public virtual Env? Env { get; set; }
+    }
+
+    public partial class EmailValidationIntegrationTested
+    {
+        public virtual IntegrationId Id { get; set; }
+        public virtual bool Succeeded { get; set; }
+        public virtual IReadOnlyList<string> ErrorMessages { get; set; }
+        public virtual DateTime TestedAtUtc { get; set; }
+        public virtual Env? Env { get; set; }
+    }
+
+    public partial class FilesDisabled
+    {
+    }
+
+    public partial class FilesEnabled
+    {
+    }
+
+    public partial class FilesEstablished
+    {
+    }
+
+    public partial class FilesIntegrationDeleted
+    {
+        public virtual IntegrationId Id { get; set; }
+        public virtual Env? Env { get; set; }
+    }
+
+    public partial class FilesIntegrationDisabled
+    {
+        public virtual IntegrationId Id { get; set; }
+        public virtual Env? Env { get; set; }
+    }
+
+    public partial class FilesIntegrationEnabled
+    {
+        public virtual IntegrationId Id { get; set; }
+        public virtual Env? Env { get; set; }
+    }
+
+    public partial class FilesIntegrationRenamed
+    {
+        public virtual IntegrationId Id { get; set; }
+        public virtual DisplayName Name { get; set; }
+        public virtual Env? Env { get; set; }
+    }
+
+    public partial class FilesIntegrationSaved
+    {
+        public virtual FileIntegration Integration { get; set; }
+    }
+
+    public partial class FilesIntegrationSetAsDefault
+    {
+        public virtual Env Env { get; set; }
+        public virtual IntegrationId Id { get; set; }
+    }
+
+    public partial class FilesIntegrationTested
+    {
+        public virtual IntegrationId Id { get; set; }
+        public virtual bool Succeeded { get; set; }
+        public virtual IReadOnlyList<string> ErrorMessages { get; set; }
+        public virtual DateTime TestedAtUtc { get; set; }
+        public virtual Env? Env { get; set; }
+    }
+
+    public partial class FilesTriggerDeleted
+        : TriggerByIdEventBase
+    {
+        public virtual Env Env { get; set; }
+    }
+
+    public partial class FilesTriggerDisabled
+        : TriggerByIdEventBase
+    {
+        public virtual Env Env { get; set; }
+    }
+
+    public partial class FilesTriggerEnabled
+        : TriggerByIdEventBase
+    {
+        public virtual Env Env { get; set; }
+    }
+
+    public partial class FilesTriggerMirrored
+    {
+        public virtual Trigger Trigger { get; set; }
+    }
+
+    public partial class FilesTriggerSaved
+    {
+        public virtual FileTrigger Trigger { get; set; }
     }
 
     public partial class LicenseCreated
     {
         public virtual CodeMashLicense License { get; set; }
+    }
+
+    public partial class LlmIntegrationDeleted
+    {
+        public virtual IntegrationId Id { get; set; }
+        public virtual Env? Env { get; set; }
+    }
+
+    public partial class LlmIntegrationDisabled
+    {
+        public virtual IntegrationId Id { get; set; }
+        public virtual Env? Env { get; set; }
+    }
+
+    public partial class LlmIntegrationEnabled
+    {
+        public virtual IntegrationId Id { get; set; }
+        public virtual Env? Env { get; set; }
+    }
+
+    public partial class LlmIntegrationSaved
+    {
+        public virtual LlmIntegration LlmIntegration { get; set; }
+    }
+
+    public partial class LlmIntegrationSecretsConfigurationFailed
+    {
+        public virtual IntegrationId Id { get; set; }
+        public virtual Env? Env { get; set; }
+    }
+
+    public partial class LlmIntegrationSecretsConfigured
+    {
+        public virtual IntegrationId Id { get; set; }
+        public virtual Env? Env { get; set; }
+    }
+
+    public partial class LlmIntegrationTested
+    {
+        public virtual IntegrationId Id { get; set; }
+        public virtual bool Succeeded { get; set; }
+        public virtual IReadOnlyList<string> ErrorMessages { get; set; }
+        public virtual DateTime TestedAtUtc { get; set; }
+        public virtual Env? Env { get; set; }
     }
 
     public partial class LoggingDisabled
@@ -1569,27 +2420,60 @@ public partial class CronExpression
     public partial class LoggingIntegrationDeleted
     {
         public virtual IntegrationId Id { get; set; }
+        public virtual Env? Env { get; set; }
     }
 
     public partial class LoggingIntegrationDisabled
     {
         public virtual IntegrationId Id { get; set; }
+        public virtual Env? Env { get; set; }
     }
 
     public partial class LoggingIntegrationEnabled
     {
         public virtual IntegrationId Id { get; set; }
+        public virtual Env? Env { get; set; }
     }
 
     public partial class LoggingIntegrationRenamed
     {
         public virtual IntegrationId Id { get; set; }
         public virtual DisplayName Name { get; set; }
+        public virtual Env? Env { get; set; }
     }
 
     public partial class LoggingIntegrationSaved
     {
         public virtual LoggingIntegration Integration { get; set; }
+    }
+
+    public partial class LoggingIntegrationSecretsCleared
+    {
+        public virtual IntegrationId Id { get; set; }
+        public virtual Env? Env { get; set; }
+    }
+
+    public partial class LoggingIntegrationSecretsClearingFailed
+    {
+        public virtual IntegrationId Id { get; set; }
+        public virtual Env? Env { get; set; }
+    }
+
+    public partial class LoggingIntegrationSecretsConfigurationFailed
+    {
+        public virtual IntegrationId Id { get; set; }
+        public virtual Env? Env { get; set; }
+    }
+
+    public partial class LoggingIntegrationSecretsConfigured
+    {
+        public virtual IntegrationId Id { get; set; }
+        public virtual Env? Env { get; set; }
+    }
+
+    public partial class LoggingIntegrationSetAsDefault
+    {
+        public virtual IntegrationId Id { get; set; }
     }
 
     public partial class LoggingIntegrationTested
@@ -1598,44 +2482,48 @@ public partial class CronExpression
         public virtual bool Succeeded { get; set; }
         public virtual IReadOnlyList<string> ErrorMessages { get; set; }
         public virtual DateTime TestedAtUtc { get; set; }
+        public virtual Env? Env { get; set; }
     }
 
-    public partial class MarketplaceFunctionBindingDeleted
+    public partial class MarketplaceFunctionDeleted
     {
         public virtual IntegrationId IntegrationId { get; set; }
-        public virtual Guid BindingId { get; set; }
+        public virtual MarketplaceFunctionId FunctionId { get; set; }
     }
 
-    public partial class MarketplaceFunctionBindingDisabled
+    public partial class MarketplaceFunctionDisabled
     {
         public virtual IntegrationId IntegrationId { get; set; }
-        public virtual Guid BindingId { get; set; }
+        public virtual MarketplaceFunctionId FunctionId { get; set; }
     }
 
-    public partial class MarketplaceFunctionBindingEnabled
+    public partial class MarketplaceFunctionEnabled
     {
         public virtual IntegrationId IntegrationId { get; set; }
-        public virtual Guid BindingId { get; set; }
+        public virtual MarketplaceFunctionId FunctionId { get; set; }
     }
 
-    public partial class MarketplaceFunctionBindingSaved
+    public partial class MarketplaceFunctionSaved
     {
-        public virtual MarketplaceFunctionBinding Binding { get; set; }
+        public virtual MarketplaceFunction Function { get; set; }
     }
 
     public partial class MarketplaceIntegrationDeleted
     {
         public virtual IntegrationId Id { get; set; }
+        public virtual Env? Env { get; set; }
     }
 
     public partial class MarketplaceIntegrationDisabled
     {
         public virtual IntegrationId Id { get; set; }
+        public virtual Env? Env { get; set; }
     }
 
     public partial class MarketplaceIntegrationEnabled
     {
         public virtual IntegrationId Id { get; set; }
+        public virtual Env? Env { get; set; }
     }
 
     public partial class MarketplaceIntegrationSaved
@@ -1646,11 +2534,66 @@ public partial class CronExpression
     public partial class MarketplaceIntegrationSecretsConfigurationFailed
     {
         public virtual IntegrationId Id { get; set; }
+        public virtual Env? Env { get; set; }
     }
 
     public partial class MarketplaceIntegrationSecretsConfigured
     {
         public virtual IntegrationId Id { get; set; }
+        public virtual Env? Env { get; set; }
+    }
+
+    public partial class MarketplaceIntegrationTested
+    {
+        public virtual IntegrationId Id { get; set; }
+        public virtual bool Succeeded { get; set; }
+        public virtual IReadOnlyList<string> ErrorMessages { get; set; }
+        public virtual DateTime TestedAtUtc { get; set; }
+        public virtual Env? Env { get; set; }
+    }
+
+    public partial class McpIntegrationDeleted
+    {
+        public virtual IntegrationId Id { get; set; }
+        public virtual Env? Env { get; set; }
+    }
+
+    public partial class McpIntegrationDisabled
+    {
+        public virtual IntegrationId Id { get; set; }
+        public virtual Env? Env { get; set; }
+    }
+
+    public partial class McpIntegrationEnabled
+    {
+        public virtual IntegrationId Id { get; set; }
+        public virtual Env? Env { get; set; }
+    }
+
+    public partial class McpIntegrationSaved
+    {
+        public virtual McpIntegration McpIntegration { get; set; }
+    }
+
+    public partial class McpIntegrationSecretsConfigurationFailed
+    {
+        public virtual IntegrationId Id { get; set; }
+        public virtual Env? Env { get; set; }
+    }
+
+    public partial class McpIntegrationSecretsConfigured
+    {
+        public virtual IntegrationId Id { get; set; }
+        public virtual Env? Env { get; set; }
+    }
+
+    public partial class McpIntegrationTested
+    {
+        public virtual IntegrationId Id { get; set; }
+        public virtual bool Succeeded { get; set; }
+        public virtual IReadOnlyList<string> ErrorMessages { get; set; }
+        public virtual DateTime TestedAtUtc { get; set; }
+        public virtual Env? Env { get; set; }
     }
 
     public partial class MembershipDisabled
@@ -1668,22 +2611,26 @@ public partial class CronExpression
     public partial class MembershipIntegrationDeleted
     {
         public virtual IntegrationId Id { get; set; }
+        public virtual Env? Env { get; set; }
     }
 
     public partial class MembershipIntegrationDisabled
     {
         public virtual IntegrationId Id { get; set; }
+        public virtual Env? Env { get; set; }
     }
 
     public partial class MembershipIntegrationEnabled
     {
         public virtual IntegrationId Id { get; set; }
+        public virtual Env? Env { get; set; }
     }
 
     public partial class MembershipIntegrationRenamed
     {
         public virtual IntegrationId Id { get; set; }
         public virtual DisplayName Name { get; set; }
+        public virtual Env? Env { get; set; }
     }
 
     public partial class MembershipIntegrationSaved
@@ -1702,21 +2649,30 @@ public partial class CronExpression
         public virtual bool Succeeded { get; set; }
         public virtual IReadOnlyList<string> ErrorMessages { get; set; }
         public virtual DateTime TestedAtUtc { get; set; }
+        public virtual Env? Env { get; set; }
     }
 
     public partial class MembershipTriggerDeleted
         : TriggerByIdEventBase
     {
+        public virtual Env Env { get; set; }
     }
 
     public partial class MembershipTriggerDisabled
         : TriggerByIdEventBase
     {
+        public virtual Env Env { get; set; }
     }
 
     public partial class MembershipTriggerEnabled
         : TriggerByIdEventBase
     {
+        public virtual Env Env { get; set; }
+    }
+
+    public partial class MembershipTriggerMirrored
+    {
+        public virtual Trigger Trigger { get; set; }
     }
 
     public partial class MembershipTriggerSaved
@@ -1738,6 +2694,97 @@ public partial class CronExpression
     public partial class MongoDbAggregateUpdated
     {
         public virtual MongoDbAggregate Aggregate { get; set; }
+    }
+
+    public partial class NorbixLoggingLogsWipeRequested
+    {
+        public virtual IntegrationId DeletedIntegrationId { get; set; }
+        public virtual IntegrationId DatabaseIntegrationId { get; set; }
+    }
+
+    public partial class PaymentsDisabled
+    {
+    }
+
+    public partial class PaymentsEnabled
+    {
+    }
+
+    public partial class PaymentsEstablished
+    {
+    }
+
+    public partial class PaymentsIntegrationDeleted
+    {
+        public virtual IntegrationId Id { get; set; }
+        public virtual Env? Env { get; set; }
+    }
+
+    public partial class PaymentsIntegrationDisabled
+    {
+        public virtual IntegrationId Id { get; set; }
+        public virtual Env? Env { get; set; }
+    }
+
+    public partial class PaymentsIntegrationEnabled
+    {
+        public virtual IntegrationId Id { get; set; }
+        public virtual Env? Env { get; set; }
+    }
+
+    public partial class PaymentsIntegrationHumanDeliveryConfirmed
+    {
+        public virtual IntegrationId Id { get; set; }
+        public virtual DateTime ConfirmedAtUtc { get; set; }
+    }
+
+    public partial class PaymentsIntegrationRenamed
+    {
+        public virtual IntegrationId Id { get; set; }
+        public virtual DisplayName Name { get; set; }
+        public virtual Env? Env { get; set; }
+    }
+
+    public partial class PaymentsIntegrationSaved
+    {
+        public virtual PaymentIntegration Integration { get; set; }
+    }
+
+    public partial class PaymentsIntegrationTested
+    {
+        public virtual IntegrationId Id { get; set; }
+        public virtual bool Succeeded { get; set; }
+        public virtual IReadOnlyList<string> ErrorMessages { get; set; }
+        public virtual DateTime TestedAtUtc { get; set; }
+        public virtual Env? Env { get; set; }
+    }
+
+    public partial class PaymentsTriggerDeleted
+        : TriggerByIdEventBase
+    {
+        public virtual Env Env { get; set; }
+    }
+
+    public partial class PaymentsTriggerDisabled
+        : TriggerByIdEventBase
+    {
+        public virtual Env Env { get; set; }
+    }
+
+    public partial class PaymentsTriggerEnabled
+        : TriggerByIdEventBase
+    {
+        public virtual Env Env { get; set; }
+    }
+
+    public partial class PaymentsTriggerSaved
+    {
+        public virtual PaymentTrigger Trigger { get; set; }
+    }
+
+    public partial class PaymentTriggerMirrored
+    {
+        public virtual Trigger Trigger { get; set; }
     }
 
     public partial class PolicyCreated
@@ -1762,6 +2809,16 @@ public partial class CronExpression
 
     public partial class ProjectActivated
     {
+    }
+
+    public partial class ProjectAdminPortalServiceUserAssigned
+    {
+        public virtual AuthId ServiceUserId { get; set; }
+    }
+
+    public partial class ProjectAdminUrlChanged
+    {
+        public virtual DomainUrl? Url { get; set; }
     }
 
     public partial class ProjectAllowedOriginsChanged
@@ -1809,8 +2866,15 @@ public partial class CronExpression
         public virtual ProjectId Id { get; set; }
         public virtual ProjectName Name { get; set; }
         public virtual IntegrationId DatabaseIntegrationId { get; set; }
-        public virtual HashSet<ProjectRegion>? Regions { get; set; }
+        public virtual ProjectRegion? PrimaryRegion { get; set; }
+        public virtual HashSet<ProjectRegion>? AdditionalRegions { get; set; }
         public virtual string? Description { get; set; }
+        public virtual bool IsProvisioning { get; set; }
+    }
+
+    public partial class ProjectDatabaseConnected
+    {
+        public virtual Env Env { get; set; }
     }
 
     public partial class ProjectDefaultLanguageChanged
@@ -1831,8 +2895,26 @@ public partial class CronExpression
     {
     }
 
-    public partial class ProjectEnabled
+    public partial class ProjectEnvironmentCreated
     {
+        public virtual Env Env { get; set; }
+        public virtual Dictionary<string, int> Ranks { get; set; } = new();
+    }
+
+    public partial class ProjectEnvironmentDeleted
+    {
+        public virtual Env Env { get; set; }
+        public virtual Dictionary<string, int> Ranks { get; set; } = new();
+    }
+
+    public partial class ProjectEnvironmentRanksChanged
+    {
+        public virtual Dictionary<string, int> Ranks { get; set; } = new();
+    }
+
+    public partial class ProjectExposeLegalToAdminPortalChanged
+    {
+        public virtual bool Exposed { get; set; }
     }
 
     public partial class ProjectIconChanged
@@ -1843,6 +2925,11 @@ public partial class CronExpression
     public partial class ProjectLanguagesChanged
     {
         public virtual HashSet<Language> Languages { get; set; } = [];
+    }
+
+    public partial class ProjectLegalDocumentsChanged
+    {
+        public virtual ProjectLegalDocuments Documents { get; set; }
     }
 
     public partial class ProjectLogoChanged
@@ -1872,7 +2959,21 @@ public partial class CronExpression
 
     public partial class ProjectRegionsChanged
     {
-        public virtual HashSet<ProjectRegion>? Regions { get; set; }
+        public virtual ProjectRegion? PrimaryRegion { get; set; }
+        public virtual HashSet<ProjectRegion>? AdditionalRegions { get; set; }
+    }
+
+    public partial class ProjectResumedFromLicenseSuspension
+    {
+    }
+
+    public partial class ProjectStatusChanged
+    {
+        public virtual ProjectStatus Status { get; set; }
+    }
+
+    public partial class ProjectSuspendedByLicense
+    {
     }
 
     public partial class ProjectTimeZoneChanged
@@ -1883,16 +2984,19 @@ public partial class CronExpression
     public partial class PushIntegrationDeleted
     {
         public virtual IntegrationId Id { get; set; }
+        public virtual Env? Env { get; set; }
     }
 
     public partial class PushIntegrationDisabled
     {
         public virtual IntegrationId Id { get; set; }
+        public virtual Env? Env { get; set; }
     }
 
     public partial class PushIntegrationEnabled
     {
         public virtual IntegrationId Id { get; set; }
+        public virtual Env? Env { get; set; }
     }
 
     public partial class PushIntegrationHumanDeliveryConfirmed
@@ -1905,6 +3009,7 @@ public partial class CronExpression
     {
         public virtual IntegrationId Id { get; set; }
         public virtual DisplayName Name { get; set; }
+        public virtual Env? Env { get; set; }
     }
 
     public partial class PushIntegrationSaved
@@ -1914,6 +3019,7 @@ public partial class CronExpression
 
     public partial class PushIntegrationSetAsDefault
     {
+        public virtual Env Env { get; set; }
         public virtual IntegrationId Id { get; set; }
     }
 
@@ -1923,6 +3029,7 @@ public partial class CronExpression
         public virtual bool Succeeded { get; set; }
         public virtual IReadOnlyList<string> ErrorMessages { get; set; }
         public virtual DateTime TestedAtUtc { get; set; }
+        public virtual Env? Env { get; set; }
     }
 
     public partial class PushModuleTagDeleted
@@ -1953,6 +3060,7 @@ public partial class CronExpression
     public partial class PushTemplateArchived
     {
         public virtual TemplateId TemplateId { get; set; }
+        public virtual Env? Env { get; set; }
     }
 
     public partial class PushTemplateCreated
@@ -1963,16 +3071,24 @@ public partial class CronExpression
         public virtual CommunicationChannel Channel { get; set; }
         public virtual string? Description { get; set; }
         public virtual HashSet<Tag>? Tags { get; set; }
+        public virtual Env? Env { get; set; }
     }
 
     public partial class PushTemplateDeleted
     {
         public virtual TemplateId TemplateId { get; set; }
+        public virtual Env? Env { get; set; }
+    }
+
+    public partial class PushTemplateMirrored
+    {
+        public virtual PushTemplate Template { get; set; }
     }
 
     public partial class PushTemplateUnArchived
     {
         public virtual TemplateId TemplateId { get; set; }
+        public virtual Env? Env { get; set; }
     }
 
     public partial class PushTemplateUpdated
@@ -1983,6 +3099,7 @@ public partial class CronExpression
         public virtual CommunicationChannel Channel { get; set; }
         public virtual string? Description { get; set; }
         public virtual HashSet<Tag>? Tags { get; set; }
+        public virtual Env? Env { get; set; }
     }
 
     public partial class RoleCreated
@@ -2037,22 +3154,31 @@ public partial class CronExpression
     {
         public virtual SchemaId Id { get; set; }
         public virtual HashSet<IntegrationId> Integrations { get; set; } = [];
+        public virtual Env Env { get; set; }
     }
 
     public partial class SchemaDeleted
     {
         public virtual SchemaId Id { get; set; }
+        public virtual Env Env { get; set; }
     }
 
     public partial class SchemaDraftDiscarded
     {
         public virtual SchemaId Id { get; set; }
+        public virtual Env Env { get; set; }
     }
 
     public partial class SchemaDraftUpdated
     {
         public virtual SchemaId Id { get; set; }
         public virtual SchemaDraft Draft { get; set; }
+        public virtual Env Env { get; set; }
+    }
+
+    public partial class SchemaMirrored
+    {
+        public virtual Schema Schema { get; set; }
     }
 
     public partial class SchemaRenamed
@@ -2060,30 +3186,35 @@ public partial class CronExpression
         public virtual SchemaId SchemaId { get; set; }
         public virtual SchemaName NewName { get; set; }
         public virtual bool RenameUniqueName { get; set; }
+        public virtual Env Env { get; set; }
     }
 
     public partial class SchemaSettingsUpdated
     {
         public virtual SchemaId Id { get; set; }
         public virtual SchemaSettings Settings { get; set; }
+        public virtual Env Env { get; set; }
     }
 
     public partial class SchemaTriggerDeleted
         : TriggerByIdEventBase
     {
         public virtual SchemaId SchemaId { get; set; }
+        public virtual Env Env { get; set; }
     }
 
     public partial class SchemaTriggerDisabled
         : TriggerByIdEventBase
     {
         public virtual SchemaId SchemaId { get; set; }
+        public virtual Env Env { get; set; }
     }
 
     public partial class SchemaTriggerEnabled
         : TriggerByIdEventBase
     {
         public virtual SchemaId SchemaId { get; set; }
+        public virtual Env Env { get; set; }
     }
 
     public partial class SchemaTriggerSaved
@@ -2096,6 +3227,15 @@ public partial class CronExpression
         public virtual SchemaId Id { get; set; }
         public virtual PublishedSchemaVersion Version { get; set; }
         public virtual SchemaDiff Diff { get; set; }
+        public virtual Env Env { get; set; }
+    }
+
+    public partial class ServerlessDisabled
+    {
+    }
+
+    public partial class ServerlessEnabled
+    {
     }
 
     public partial class SetUserRegistersAsRole
@@ -2104,15 +3244,201 @@ public partial class CronExpression
         public virtual RoleName Role { get; set; }
     }
 
+    public partial class SmsIntegrationDeleted
+    {
+        public virtual IntegrationId Id { get; set; }
+        public virtual Env? Env { get; set; }
+    }
+
+    public partial class SmsIntegrationDisabled
+    {
+        public virtual IntegrationId Id { get; set; }
+        public virtual Env? Env { get; set; }
+    }
+
+    public partial class SmsIntegrationEnabled
+    {
+        public virtual IntegrationId Id { get; set; }
+        public virtual Env? Env { get; set; }
+    }
+
+    public partial class SmsIntegrationHumanDeliveryConfirmed
+    {
+        public virtual IntegrationId Id { get; set; }
+        public virtual DateTime ConfirmedAtUtc { get; set; }
+    }
+
+    public partial class SmsIntegrationRenamed
+    {
+        public virtual IntegrationId Id { get; set; }
+        public virtual DisplayName Name { get; set; }
+        public virtual Env? Env { get; set; }
+    }
+
+    public partial class SmsIntegrationSaved
+    {
+        public virtual SmsIntegration Integration { get; set; }
+    }
+
+    public partial class SmsIntegrationSetAsDefault
+    {
+        public virtual Env Env { get; set; }
+        public virtual IntegrationId Id { get; set; }
+    }
+
+    public partial class SmsIntegrationTested
+    {
+        public virtual IntegrationId Id { get; set; }
+        public virtual bool Succeeded { get; set; }
+        public virtual IReadOnlyList<string> ErrorMessages { get; set; }
+        public virtual DateTime TestedAtUtc { get; set; }
+        public virtual Env? Env { get; set; }
+    }
+
+    public partial class SmsServiceDisabled
+    {
+    }
+
+    public partial class SmsServiceEnabled
+    {
+    }
+
+    public partial class SmsServiceEstablished
+    {
+        public virtual HashSet<SmsTemplate>? DefaultTemplates { get; set; }
+    }
+
+    public partial class SmsTemplateArchived
+    {
+        public virtual TemplateId TemplateId { get; set; }
+        public virtual Env? Env { get; set; }
+    }
+
+    public partial class SmsTemplateCreated
+    {
+        public virtual TemplateId TemplateId { get; set; }
+        public virtual DisplayName DisplayName { get; set; }
+        public virtual HashSet<MessageTranslation<SmsMessageContent>> Translations { get; set; } = [];
+        public virtual CommunicationChannel Channel { get; set; }
+        public virtual string? Description { get; set; }
+        public virtual HashSet<Tag>? Tags { get; set; }
+        public virtual Env? Env { get; set; }
+    }
+
+    public partial class SmsTemplateDeleted
+    {
+        public virtual TemplateId TemplateId { get; set; }
+        public virtual Env? Env { get; set; }
+    }
+
+    public partial class SmsTemplateMirrored
+    {
+        public virtual SmsTemplate Template { get; set; }
+    }
+
+    public partial class SmsTemplateUnArchived
+    {
+        public virtual TemplateId TemplateId { get; set; }
+        public virtual Env? Env { get; set; }
+    }
+
+    public partial class SmsTemplateUpdated
+    {
+        public virtual TemplateId TemplateId { get; set; }
+        public virtual DisplayName DisplayName { get; set; }
+        public virtual HashSet<MessageTranslation<SmsMessageContent>> Translations { get; set; } = [];
+        public virtual CommunicationChannel Channel { get; set; }
+        public virtual string? Description { get; set; }
+        public virtual HashSet<Tag>? Tags { get; set; }
+        public virtual Env? Env { get; set; }
+    }
+
     public partial class SubscriptionCanceled
     {
-        public virtual ExternalCustomerId CustomerId { get; set; }
+        public virtual PaymentCustomerRef PaymentCustomerRef { get; set; }
         public virtual string SubscriptionId { get; set; }
     }
 
     public partial class SubscriptionChanged
     {
         public virtual CodeMashManagedServiceSubscription Subscription { get; set; }
+    }
+
+    public partial class SupportCaseAttachmentLinked
+    {
+        public virtual SupportCaseId CaseId { get; set; }
+        public virtual string AttachmentRef { get; set; }
+        public virtual string? FileName { get; set; }
+        public virtual UtcDateTime LinkedOn { get; set; }
+    }
+
+    public partial class SupportCaseClosed
+    {
+        public virtual SupportCaseId CaseId { get; set; }
+        public virtual string? ClosedBy { get; set; }
+        public virtual UtcDateTime ClosedOn { get; set; }
+        public virtual SupportCaseCloseReason Reason { get; set; }
+    }
+
+    public partial class SupportCaseMessageAppended
+    {
+        public virtual SupportCaseId CaseId { get; set; }
+        public virtual SupportMessageRef Message { get; set; }
+    }
+
+    public partial class SupportCaseOpened
+    {
+        public virtual SupportCaseId CaseId { get; set; }
+        public virtual AccountId AccountId { get; set; }
+        public virtual ProjectId? ProjectId { get; set; }
+        public virtual string? ReporterId { get; set; }
+        public virtual SupportCaseKind Kind { get; set; }
+        public virtual SupportCaseSeverity Severity { get; set; }
+        public virtual string Subject { get; set; }
+        public virtual DeploymentMode DeploymentMode { get; set; }
+        public virtual string? GatewayVersion { get; set; }
+        public virtual string? Region { get; set; }
+        public virtual string? PlanTier { get; set; }
+        public virtual UtcDateTime OpenedOn { get; set; }
+    }
+
+    public partial class SupportCaseReopened
+    {
+        public virtual SupportCaseId CaseId { get; set; }
+        public virtual string Reason { get; set; }
+        public virtual UtcDateTime ReopenedOn { get; set; }
+    }
+
+    public partial class SupportCaseResolved
+    {
+        public virtual SupportCaseId CaseId { get; set; }
+        public virtual CaseResolution Resolution { get; set; }
+        public virtual UtcDateTime ResolvedOn { get; set; }
+    }
+
+    public partial class SupportCaseStatusChanged
+    {
+        public virtual SupportCaseId CaseId { get; set; }
+        public virtual SupportCaseStatus From { get; set; }
+        public virtual SupportCaseStatus To { get; set; }
+        public virtual UtcDateTime ChangedOn { get; set; }
+    }
+
+    public partial class SupportCaseTriaged
+    {
+        public virtual SupportCaseId CaseId { get; set; }
+        public virtual SupportCaseKind Kind { get; set; }
+        public virtual SupportCaseSeverity Severity { get; set; }
+        public virtual string? AffectedModule { get; set; }
+        public virtual string? TriagedBy { get; set; }
+        public virtual UtcDateTime TriagedOn { get; set; }
+    }
+
+    public partial class SupportCaseWaitingReminderSent
+    {
+        public virtual SupportCaseId CaseId { get; set; }
+        public virtual int TierDays { get; set; }
+        public virtual UtcDateTime SentOn { get; set; }
     }
 
     public partial class TaxonomyCreated
@@ -2139,6 +3465,11 @@ public partial class CronExpression
     public partial class TriggerByIdEventBase
     {
         public virtual TriggerId TriggerId { get; set; }
+    }
+
+    public partial class UsageBillingIngestionFailed
+    {
+        public virtual UsageIngestionFailure Failure { get; set; }
     }
 
     public partial class WebhookDestinationDisabled
@@ -2179,19 +3510,23 @@ public partial class CronExpression
     public partial class WebhookIntegrationSecretsCleared
     {
         public virtual IntegrationId Id { get; set; }
+        public virtual Env? Env { get; set; }
     }
 
     public partial class WebhookIntegrationSecretsConfigurationFailed
     {
         public virtual IntegrationId Id { get; set; }
+        public virtual Env? Env { get; set; }
     }
 
     public partial class WebhookIntegrationSecretsConfigured
     {
         public virtual IntegrationId Id { get; set; }
+        public virtual Env? Env { get; set; }
     }
 
     public partial class LoggingIntegration
+        : Integration
     {
         public virtual LoggingProvider Provider { get; set; }
     }
@@ -2199,14 +3534,19 @@ public partial class CronExpression
     public enum LoggingProvider
     {
         Console,
+        NorbixLogging,
         DataDog,
-        Kafka,
-        Zabbix,
-        MicrosoftTeams,
-        Slack,
-        Telegram,
-        AMQP,
         NewRelic,
+        Sentry,
+        GrafanaLoki,
+        Axiom,
+        ElasticCloud,
+        AWSCloudWatch,
+        GCPCloudLogging,
+        AzureMonitorLogs,
+        GenericHttp,
+        Kafka,
+        AMQP,
         Prometheus,
         AzureOTel,
         Splunk,
@@ -2219,6 +3559,12 @@ public partial class CronExpression
         InternalKafka,
     }
 
+    public partial class SmsIntegration
+        : Integration
+    {
+        public virtual SmsProvider Provider { get; set; }
+    }
+
     public enum SmsProvider
     {
         Twilio,
@@ -2228,6 +3574,14 @@ public partial class CronExpression
         Bird,
         Telesign,
         Sinch,
+        Fake,
+    }
+
+    public partial class UserMarketingPreferences
+    {
+        public virtual bool BlockAllMarketingMessages { get; set; }
+        public virtual Dictionary<DeliveryChannel, HashSet<Tag>>? BlockedTags { get; set; }
+        public virtual HashSet<MarketingBlockReason>? BlockReasons { get; set; }
     }
 
     [NorbixRoute("/internal/_typegen", "GET")]
@@ -2246,9 +3600,8 @@ public partial class CronExpression
         public virtual SchemaTriggerRequest? Typegen_10_SchemaTriggerRequest { get; set; }
         public virtual FilesTriggerRequest? Typegen_11_FilesTriggerRequest { get; set; }
         public virtual PaymentTriggerRequest? Typegen_12_PaymentTriggerRequest { get; set; }
-        public virtual MongoDbAtlasServerlessDatabaseIntegrationRequest? Typegen_13_MongoDbAtlasServerlessDatabaseIntegrationRequest { get; set; }
-        public virtual MongoDbAtlasClusterDatabaseIntegrationRequest? Typegen_14_MongoDbAtlasClusterDatabaseIntegrationRequest { get; set; }
         public virtual MongoDbConnectionStringDatabaseIntegrationRequest? Typegen_15_MongoDbConnectionStringDatabaseIntegrationRequest { get; set; }
+        public virtual MongoDbAtlasFlexManagedDatabaseIntegrationRequest? Typegen_16_MongoDbAtlasFlexManagedDatabaseIntegrationRequest { get; set; }
         public virtual GoogleDriveFilesIntegrationRequest? Typegen_16_GoogleDriveFilesIntegrationRequest { get; set; }
         public virtual FtpFilesIntegrationRequest? Typegen_17_FtpFilesIntegrationRequest { get; set; }
         public virtual DropBoxFilesIntegrationRequest? Typegen_18_DropBoxFilesIntegrationRequest { get; set; }
@@ -2260,16 +3613,13 @@ public partial class CronExpression
         public virtual AmqpLoggingIntegrationRequest? Typegen_24_AmqpLoggingIntegrationRequest { get; set; }
         public virtual AwsKinesisLoggingIntegrationRequest? Typegen_25_AwsKinesisLoggingIntegrationRequest { get; set; }
         public virtual AwsS3LoggingIntegrationRequest? Typegen_26_AwsS3LoggingIntegrationRequest { get; set; }
-        public virtual TelegramLoggingIntegrationRequest? Typegen_27_TelegramLoggingIntegrationRequest { get; set; }
         public virtual NewRelicLoggingIntegrationRequest? Typegen_28_NewRelicLoggingIntegrationRequest { get; set; }
-        public virtual MicrosoftTeamsLoggingIntegrationRequest? Typegen_29_MicrosoftTeamsLoggingIntegrationRequest { get; set; }
         public virtual MongoDbLoggingIntegrationRequest? Typegen_30_MongoDbLoggingIntegrationRequest { get; set; }
         public virtual KafkaLoggingIntegrationRequest? Typegen_31_KafkaLoggingIntegrationRequest { get; set; }
         public virtual PrometheusLoggingIntegrationRequest? Typegen_32_PrometheusLoggingIntegrationRequest { get; set; }
         public virtual DataDogLoggingIntegrationRequest? Typegen_33_DataDogLoggingIntegrationRequest { get; set; }
         public virtual InternalKafkaLoggingIntegrationRequest? Typegen_34_InternalKafkaLoggingIntegrationRequest { get; set; }
         public virtual ElasticSearchLoggingIntegrationRequest? Typegen_35_ElasticSearchLoggingIntegrationRequest { get; set; }
-        public virtual ZabbixLoggingIntegrationRequest? Typegen_36_ZabbixLoggingIntegrationRequest { get; set; }
         public virtual SplunkLoggingIntegrationRequest? Typegen_37_SplunkLoggingIntegrationRequest { get; set; }
         public virtual AzureOtelLoggingIntegrationRequest? Typegen_38_AzureOtelLoggingIntegrationRequest { get; set; }
         public virtual KibanaLoggingIntegrationRequest? Typegen_39_KibanaLoggingIntegrationRequest { get; set; }
@@ -2321,6 +3671,12 @@ public partial class CronExpression
         public virtual TriggerActionPushDto? Typegen_87_TriggerActionPushDto { get; set; }
         public virtual TriggerActionCodeDto? Typegen_88_TriggerActionCodeDto { get; set; }
         public virtual TriggerActionWebhookDto? Typegen_89_TriggerActionWebhookDto { get; set; }
+        public virtual TriggerActionSmsDto? Typegen_236_TriggerActionSmsDto { get; set; }
+        public virtual TriggerActionSseDto? Typegen_237_TriggerActionSseDto { get; set; }
+        public virtual TriggerActionMarketplaceDto? Typegen_238_TriggerActionMarketplaceDto { get; set; }
+        public virtual SseDeliverySettingsDto? Typegen_239_SseDeliverySettingsDto { get; set; }
+        public virtual GetTriggers? Typegen_240_GetTriggers { get; set; }
+        public virtual GetTriggersResponse? Typegen_241_GetTriggersResponse { get; set; }
         public virtual EmailToAllUsersDeliverySettingsDto? Typegen_90_EmailToAllUsersDeliverySettingsDto { get; set; }
         public virtual EmailToAccountUsersDeliverySettingsDto? Typegen_91_EmailToAccountUsersDeliverySettingsDto { get; set; }
         public virtual EmailToUsersDeliverySettingsDto? Typegen_92_EmailToUsersDeliverySettingsDto { get; set; }
@@ -2328,6 +3684,7 @@ public partial class CronExpression
         public virtual EmailToCollectionRecordsDeliverySettingsDto? Typegen_94_EmailToCollectionRecordsDeliverySettingsDto { get; set; }
         public virtual PushToAllUsersDeliverySettingsDto? Typegen_95_PushToAllUsersDeliverySettingsDto { get; set; }
         public virtual PushToUsersDeliverySettingsDto? Typegen_96_PushToUsersDeliverySettingsDto { get; set; }
+        public virtual PushToAccountUsersDeliverySettingsDto? Typegen_229_PushToAccountUsersDeliverySettingsDto { get; set; }
         public virtual PushToCollectionRecordsDeliverySettingsDto? Typegen_97_PushToCollectionRecordsDeliverySettingsDto { get; set; }
         public virtual PushToDevicesDeliverySettingsDto? Typegen_98_PushToDevicesDeliverySettingsDto { get; set; }
         public virtual SmsToAllUsersDeliverySettingsDto? Typegen_99_SmsToAllUsersDeliverySettingsDto { get; set; }
@@ -2382,14 +3739,10 @@ public partial class CronExpression
         public virtual KafkaLoggingIntegrationDto? Typegen_143_KafkaLoggingIntegrationDto { get; set; }
         public virtual KibanaLoggingIntegrationDto? Typegen_144_KibanaLoggingIntegrationDto { get; set; }
         public virtual LocalFileLoggingIntegrationDto? Typegen_145_LocalFileLoggingIntegrationDto { get; set; }
-        public virtual MicrosoftTeamsLoggingIntegrationDto? Typegen_146_MicrosoftTeamsLoggingIntegrationDto { get; set; }
         public virtual MongoDbLoggingIntegrationDto? Typegen_147_MongoDbLoggingIntegrationDto { get; set; }
         public virtual NewRelicLoggingIntegrationDto? Typegen_148_NewRelicLoggingIntegrationDto { get; set; }
         public virtual PrometheusLoggingIntegrationDto? Typegen_149_PrometheusLoggingIntegrationDto { get; set; }
         public virtual SplunkLoggingIntegrationDto? Typegen_150_SplunkLoggingIntegrationDto { get; set; }
-        public virtual TelegramLoggingIntegrationDto? Typegen_151_TelegramLoggingIntegrationDto { get; set; }
-        public virtual ZabbixLoggingIntegrationDto? Typegen_152_ZabbixLoggingIntegrationDto { get; set; }
-        public virtual SlackLoggingIntegrationDto? Typegen_191_SlackLoggingIntegrationDto { get; set; }
         public virtual AppleICloudFilesIntegrationDto? Typegen_153_AppleICloudFilesIntegrationDto { get; set; }
         public virtual AwsS3CrossAccountRoleFilesIntegrationDto? Typegen_154_AwsS3CrossAccountRoleFilesIntegrationDto { get; set; }
         public virtual AwsS3IamFilesIntegrationDto? Typegen_155_AwsS3IamFilesIntegrationDto { get; set; }
@@ -2399,9 +3752,8 @@ public partial class CronExpression
         public virtual GoogleCloudFilesIntegrationDto? Typegen_159_GoogleCloudFilesIntegrationDto { get; set; }
         public virtual GoogleDriveFilesIntegrationDto? Typegen_160_GoogleDriveFilesIntegrationDto { get; set; }
         public virtual LocalFilesIntegrationDto? Typegen_161_LocalFilesIntegrationDto { get; set; }
-        public virtual MongoDbAtlasClusterIntegrationDto? Typegen_162_MongoDbAtlasClusterIntegrationDto { get; set; }
-        public virtual MongoDbAtlasServerlessIntegrationDto? Typegen_163_MongoDbAtlasServerlessIntegrationDto { get; set; }
         public virtual MongoDbConnectionStringIntegrationDto? Typegen_164_MongoDbConnectionStringIntegrationDto { get; set; }
+        public virtual MongoDbAtlasFlexManagedIntegrationDto? Typegen_165_MongoDbAtlasFlexManagedIntegrationDto { get; set; }
         public virtual BirdSmsIntegrationDto? Typegen_165_BirdSmsIntegrationDto { get; set; }
         public virtual PlivoSmsIntegrationDto? Typegen_166_PlivoSmsIntegrationDto { get; set; }
         public virtual SinchSmsIntegrationDto? Typegen_167_SinchSmsIntegrationDto { get; set; }
@@ -2426,11 +3778,53 @@ public partial class CronExpression
         public virtual SchedulerTaskDto? Typegen_194_SchedulerTaskDto { get; set; }
         public virtual MongoDbAggregateDto? Typegen_195_MongoDbAggregateDto { get; set; }
         public virtual MarketplaceIntegrationDto? Typegen_196_MarketplaceIntegrationDto { get; set; }
-        public virtual MarketplaceFunctionBindingDto? Typegen_197_MarketplaceFunctionBindingDto { get; set; }
+        public virtual MarketplaceFunctionDto? Typegen_197_MarketplaceFunctionDto { get; set; }
         public virtual MarketplaceListingDto? Typegen_198_MarketplaceListingDto { get; set; }
         public virtual MarketplaceFunctionDefinitionDto? Typegen_199_MarketplaceFunctionDefinitionDto { get; set; }
         public virtual MarketplaceFunctionParameterDto? Typegen_200_MarketplaceFunctionParameterDto { get; set; }
-        public virtual MarketplaceMappingDto? Typegen_201_MarketplaceMappingDto { get; set; }
+        public virtual EnableCode? Typegen_201_EnableCode { get; set; }
+        public virtual DisableCode? Typegen_202_DisableCode { get; set; }
+        public virtual GetCodeIntegrations? Typegen_203_GetCodeIntegrations { get; set; }
+        public virtual GetCodeIntegration? Typegen_204_GetCodeIntegration { get; set; }
+        public virtual SaveCodeIntegration? Typegen_205_SaveCodeIntegration { get; set; }
+        public virtual TestCodeIntegration? Typegen_206_TestCodeIntegration { get; set; }
+        public virtual ConfirmCodeIntegrationHumanDeliveryRequest? Typegen_207_ConfirmCodeIntegrationHumanDeliveryRequest { get; set; }
+        public virtual SetCodeIntegrationAsDefault? Typegen_208_SetCodeIntegrationAsDefault { get; set; }
+        public virtual DeleteCodeIntegrationRequest? Typegen_209_DeleteCodeIntegrationRequest { get; set; }
+        public virtual EnableCodeIntegrationRequest? Typegen_210_EnableCodeIntegrationRequest { get; set; }
+        public virtual DisableCodeIntegrationRequest? Typegen_211_DisableCodeIntegrationRequest { get; set; }
+        public virtual GetMarketplaceListings? Typegen_212_GetMarketplaceListings { get; set; }
+        public virtual GetMarketplaceListingFunctionTokens? Typegen_213_GetMarketplaceListingFunctionTokens { get; set; }
+        public virtual GetMarketplaceIntegrations? Typegen_214_GetMarketplaceIntegrations { get; set; }
+        public virtual GetMarketplaceIntegration? Typegen_215_GetMarketplaceIntegration { get; set; }
+        public virtual SaveMarketplaceIntegration? Typegen_216_SaveMarketplaceIntegration { get; set; }
+        public virtual DeleteMarketplaceIntegration? Typegen_217_DeleteMarketplaceIntegration { get; set; }
+        public virtual EnableMarketplaceIntegration? Typegen_218_EnableMarketplaceIntegration { get; set; }
+        public virtual DisableMarketplaceIntegration? Typegen_219_DisableMarketplaceIntegration { get; set; }
+        public virtual GetMarketplaceFunctions? Typegen_221_GetMarketplaceFunctions { get; set; }
+        public virtual GetMarketplaceFunction? Typegen_222_GetMarketplaceFunction { get; set; }
+        public virtual SaveMarketplaceFunction? Typegen_223_SaveMarketplaceFunction { get; set; }
+        public virtual DeleteMarketplaceFunction? Typegen_224_DeleteMarketplaceFunction { get; set; }
+        public virtual EnableMarketplaceFunction? Typegen_225_EnableMarketplaceFunction { get; set; }
+        public virtual DisableMarketplaceFunction? Typegen_226_DisableMarketplaceFunction { get; set; }
+        public virtual GetMarketplaceFunctionTokens? Typegen_227_GetMarketplaceFunctionTokens { get; set; }
+        public virtual InvokeMarketplaceFunction? Typegen_228_InvokeMarketplaceFunction { get; set; }
+        public virtual GetMarketplaceListing? Typegen_232_GetMarketplaceListing { get; set; }
+        public virtual TestMarketplaceIntegration? Typegen_233_TestMarketplaceIntegration { get; set; }
+        public virtual TestMarketplaceIntegrationResponse? Typegen_234_TestMarketplaceIntegrationResponse { get; set; }
+        public virtual GetMarketplaceListingResponse? Typegen_235_GetMarketplaceListingResponse { get; set; }
+        public virtual AdminPortalStructureDto? Typegen_230_AdminPortalStructureDto { get; set; }
+        public virtual AdminPortalModuleDto? Typegen_231_AdminPortalModuleDto { get; set; }
+        public virtual UserMessageEntryWireDto? Typegen_236_UserMessageEntryWireDto { get; set; }
+        public virtual AssistantTextEntryWireDto? Typegen_237_AssistantTextEntryWireDto { get; set; }
+        public virtual AssistantQuestionEntryWireDto? Typegen_238_AssistantQuestionEntryWireDto { get; set; }
+        public virtual UserAnswerEntryWireDto? Typegen_239_UserAnswerEntryWireDto { get; set; }
+        public virtual PlanEntryWireDto? Typegen_240_PlanEntryWireDto { get; set; }
+        public virtual UserDecisionEntryWireDto? Typegen_241_UserDecisionEntryWireDto { get; set; }
+        public virtual RunStepEntryWireDto? Typegen_242_RunStepEntryWireDto { get; set; }
+        public virtual ActionPendingEntryWireDto? Typegen_243_ActionPendingEntryWireDto { get; set; }
+        public virtual NoticeEntryWireDto? Typegen_244_NoticeEntryWireDto { get; set; }
+        public virtual ConversationSnapshotEntryWireDto? Typegen_245_ConversationSnapshotEntryWireDto { get; set; }
     }
 
     [DataContract]
@@ -2489,6 +3883,21 @@ public partial class CronExpression
         public virtual bool TrialWasIssued { get; set; }
     }
 
+    public partial class AdminPortalModuleDto
+    {
+        public virtual string Key { get; set; }
+        public virtual string DisplayName { get; set; }
+        public virtual bool Enabled { get; set; }
+    }
+
+    public partial class AdminPortalStructureDto
+    {
+        public virtual string ProjectId { get; set; }
+        public virtual bool AdminPortalEnabled { get; set; }
+        public virtual string DisplayName { get; set; }
+        public virtual List<AdminPortalModuleDto> Modules { get; set; } = [];
+    }
+
     [DataContract]
     public partial class AiDto
     {
@@ -2500,22 +3909,55 @@ public partial class CronExpression
     }
 
     [DataContract]
+    public partial class AuthenticationFlowPasswordPolicyDto
+    {
+        [DataMember]
+        public virtual int MinLength { get; set; }
+
+        [DataMember]
+        public virtual int? MaxLength { get; set; }
+
+        [DataMember]
+        public virtual int? MinNumbers { get; set; }
+
+        [DataMember]
+        public virtual int? MinUpper { get; set; }
+
+        [DataMember]
+        public virtual int? MinLower { get; set; }
+
+        [DataMember]
+        public virtual int? MinSpecial { get; set; }
+
+        [DataMember]
+        public virtual string? AllowedSpecial { get; set; }
+    }
+
+    [DataContract]
+    public partial class AuthenticationFlowSummaryDto
+    {
+        [DataMember]
+        public virtual string Type { get; set; }
+
+        [DataMember]
+        public virtual string? Provider { get; set; }
+
+        [DataMember]
+        public virtual AuthenticationFlowPasswordPolicyDto? PasswordComplexity { get; set; }
+    }
+
+    [DataContract]
     public partial class EmailDto
     {
         [DataMember]
         public virtual bool IsEnabled { get; set; }
 
         [DataMember]
-        public virtual string? DefaultIntegrationViewId { get; set; }
-
-        [DataMember]
-        public virtual HashSet<EmailSignatureDto>? Signatures { get; set; }
-
-        [DataMember]
-        public virtual HashSet<EmailFooterDto>? Footers { get; set; }
+        public virtual Dictionary<string, string> DefaultIntegrationViewIds { get; set; } = new();
     }
 
     public partial class EmailIntegrationDto
+        : IntegrationDto
     {
         public virtual EmailProvider Provider { get; set; }
         public virtual string EmailAddress { get; set; }
@@ -2576,6 +4018,23 @@ public partial class CronExpression
     {
     }
 
+    public partial interface IHasEnv
+    {
+        string? Env { get; set; }
+    }
+
+    public partial class IssueServiceUserApiKeyResponse
+    {
+        public virtual int Id { get; set; }
+        public virtual string Name { get; set; }
+        public virtual string Key { get; set; }
+    }
+
+    public partial class ListServiceUserApiKeysResponse
+    {
+        public virtual List<ServiceUserApiKeyDto> Keys { get; set; } = [];
+    }
+
     public partial class NotificationSettingsChannelDto
     {
         public virtual CommunicationChannel Channel { get; set; }
@@ -2613,6 +4072,7 @@ public partial class CronExpression
 
     [DataContract]
     public partial class ProjectDto
+        : IHasViewId, IBindableContract
     {
         [DataMember]
         public virtual string AccountViewId { get; set; }
@@ -2645,18 +4105,28 @@ public partial class CronExpression
         public virtual string? MarketingUrl { get; set; }
 
         [DataMember]
+        public virtual string? CanonicalAdminUrl { get; set; }
+
+        [DataMember]
+        public virtual string? AdminUrl { get; set; }
+
+        [DataMember]
+        public virtual string? EffectiveAdminUrl { get; set; }
+
+        [DataMember]
         public virtual string DefaultLanguage { get; set; }
 
         [DataMember]
         public virtual HashSet<string> Languages { get; set; } = [];
 
-        ///<summary>Primary Norbix region — where the project's main DB / control data live.</summary>
         [DataMember]
         public virtual ProjectRegionDto? PrimaryRegion { get; set; }
 
-        ///<summary>Additional regions where app-data infrastructure may be placed.</summary>
         [DataMember]
-        public virtual ProjectRegionDto[]? AdditionalRegions { get; set; }
+        public virtual HashSet<ProjectRegionDto>? AdditionalRegions { get; set; }
+
+        [DataMember]
+        public virtual bool IsMultiRegionEligible { get; set; }
 
         [DataMember]
         public virtual ProjectBrandDto? Brand { get; set; }
@@ -2666,6 +4136,36 @@ public partial class CronExpression
 
         [DataMember]
         public virtual HashSet<string>? AllowedOrigins { get; set; }
+
+        [DataMember]
+        public virtual bool ExposeBrandToAdminPortal { get; set; }
+
+        [DataMember]
+        public virtual bool ExposeAuthToAdminPortal { get; set; }
+
+        [DataMember]
+        public virtual bool AdminPortalEnabled { get; set; }
+
+        [DataMember]
+        public virtual string? AdminPortalServiceUserId { get; set; }
+
+        [DataMember]
+        public virtual List<AuthenticationFlowSummaryDto>? MembershipAuthenticationFlows { get; set; }
+
+        [DataMember]
+        public virtual bool ExposeLegalToAdminPortal { get; set; }
+
+        [DataMember]
+        public virtual string? LegalTermsMarkdown { get; set; }
+
+        [DataMember]
+        public virtual string? LegalPrivacyMarkdown { get; set; }
+
+        [DataMember]
+        public virtual HashSet<string> Environments { get; set; } = [];
+
+        [DataMember]
+        public virtual Dictionary<string, int> EnvironmentRanks { get; set; } = new();
 
         [DataMember]
         public virtual DatabaseDto? Database { get; set; }
@@ -2737,29 +4237,10 @@ public partial class CronExpression
         public virtual bool SmsEnabled { get; set; }
 
         [DataMember]
-        public virtual string? DefaultFilesIntegrationViewId { get; set; }
-
-        [DataMember]
-        public virtual string? DefaultDatabaseIntegrationViewId { get; set; }
-
-        [DataMember]
-        public virtual string? DefaultEmailIntegrationViewId { get; set; }
-
-        [DataMember]
         public virtual string? DefaultLlmIntegrationViewId { get; set; }
 
         [DataMember]
-        public virtual string? DefaultPushIntegrationViewId { get; set; }
-
-        [DataMember]
-        public virtual string? DefaultSmsIntegrationViewId { get; set; }
-
-        [DataMember]
         public virtual int Connections { get; set; }
-
-        ///<summary>Environments that exist on this project. Always includes "PROD".</summary>
-        [DataMember]
-        public virtual List<string> Environments { get; set; } = [];
     }
 
     [DataContract]
@@ -2772,18 +4253,19 @@ public partial class CronExpression
         public virtual bool IsActive { get; set; }
 
         [DataMember]
+        public virtual ProjectStatus ProjectStatus { get; set; }
+
+        [DataMember]
         public virtual string Name { get; set; }
 
         [DataMember]
         public virtual string UniqueName { get; set; }
 
-        ///<summary>Primary Norbix region — where the project's main DB / control data live.</summary>
         [DataMember]
         public virtual ProjectRegionDto? PrimaryRegion { get; set; }
 
-        ///<summary>Additional regions where app-data infrastructure may be placed.</summary>
         [DataMember]
-        public virtual ProjectRegionDto[]? AdditionalRegions { get; set; }
+        public virtual HashSet<ProjectRegionDto>? AdditionalRegions { get; set; }
     }
 
     public partial class ProjectRegionDto
@@ -2793,6 +4275,50 @@ public partial class CronExpression
         public virtual string? Name { get; set; }
     }
 
+    public partial class PublicAuthDto
+    {
+        public virtual List<string> SocialProviders { get; set; } = [];
+        public virtual bool Passkey { get; set; }
+        public virtual List<string>? Methods { get; set; }
+        public virtual PublicPasswordPolicyDto? PasswordPolicy { get; set; }
+    }
+
+    public partial class PublicBrandDto
+    {
+        public virtual string DisplayName { get; set; }
+        public virtual string? MainColor { get; set; }
+        public virtual string? AccentColor { get; set; }
+        public virtual string? LogoUrl { get; set; }
+        public virtual string? IconUrl { get; set; }
+    }
+
+    public partial class PublicLegalDocumentDto
+    {
+        public virtual string Kind { get; set; }
+        public virtual string? Title { get; set; }
+        public virtual string Body { get; set; }
+        public virtual bool Available { get; set; }
+    }
+
+    public partial class PublicPasswordPolicyDto
+    {
+        public virtual int MinLength { get; set; }
+        public virtual int? MaxLength { get; set; }
+        public virtual int? MinNumbers { get; set; }
+        public virtual int? MinUpper { get; set; }
+        public virtual int? MinLower { get; set; }
+        public virtual int? MinSpecial { get; set; }
+        public virtual string? AllowedSpecial { get; set; }
+    }
+
+    public partial class PublicProjectConfigDto
+    {
+        public virtual string DisplayName { get; set; }
+        public virtual bool AdminPortalEnabled { get; set; }
+        public virtual PublicBrandDto? Branding { get; set; }
+        public virtual PublicAuthDto Auth { get; set; }
+    }
+
     [DataContract]
     public partial class PushDto
     {
@@ -2800,13 +4326,25 @@ public partial class CronExpression
         public virtual bool IsEnabled { get; set; }
 
         [DataMember]
-        public virtual string? DefaultIntegrationViewId { get; set; }
+        public virtual Dictionary<string, string> DefaultIntegrationViewIds { get; set; } = new();
 
         [DataMember]
         public virtual HashSet<TagDefinitionDto>? MarketingTags { get; set; }
 
         [DataMember]
         public virtual HashSet<TagDefinitionDto>? TransactionalTags { get; set; }
+    }
+
+    public partial class ServiceUserApiKeyDto
+    {
+        public virtual int Id { get; set; }
+        public virtual string Name { get; set; }
+        public virtual string? VisibleKey { get; set; }
+        public virtual List<string> Scopes { get; set; } = [];
+        public virtual DateTime CreatedDate { get; set; }
+        public virtual DateTime? ExpiryDate { get; set; }
+        public virtual DateTime? CancelledDate { get; set; }
+        public virtual bool Active { get; set; }
     }
 
     [DataContract]
@@ -2827,37 +4365,6 @@ public partial class CronExpression
         public virtual Dictionary<DeliveryChannel, bool> DefaultDelivery { get; set; } = new();
     }
 
-    [DataContract]
-    public partial class CodeMashLicenseFromEndpointDto
-    {
-        [DataMember(Name="domain")]
-        public virtual string DomainFromLicense { get; set; }
-
-        [DataMember(Name="accountId")]
-        public virtual string AccountIdFromLicense { get; set; }
-
-        [DataMember(Name="refCustomerId")]
-        public virtual string RefCustomerId { get; set; }
-
-        [DataMember(Name="refSubscriptionId")]
-        public virtual string RefSubscriptionId { get; set; }
-
-        [DataMember(Name="issued")]
-        public virtual long Issued { get; set; }
-
-        [DataMember(Name="expire")]
-        public virtual long Expire { get; set; }
-
-        [DataMember(Name="cap")]
-        public virtual int ProjectsCapFromLicense { get; set; }
-
-        [DataMember(Name="isTrial")]
-        public virtual bool IsTrial { get; set; }
-
-        [DataMember(Name="release")]
-        public virtual string CodeMashRelease { get; set; }
-    }
-
     public partial class CodeMashSubscriptionDto
     {
         public virtual string ViewId { get; set; }
@@ -2868,6 +4375,159 @@ public partial class CronExpression
         public virtual string SubscriptionRefId { get; set; }
     }
 
+    [DataContract]
+    public partial class EchoLicenseDto
+    {
+        [DataMember(Name="domain")]
+        public virtual string? Domain { get; set; }
+
+        [DataMember(Name="accountId")]
+        public virtual string? AccountId { get; set; }
+
+        [DataMember(Name="email")]
+        public virtual string? Email { get; set; }
+
+        [DataMember(Name="release")]
+        public virtual string? Release { get; set; }
+
+        [DataMember(Name="expire")]
+        public virtual long Expire { get; set; }
+
+        [DataMember(Name="isTrial")]
+        public virtual bool IsTrial { get; set; }
+
+        [DataMember(Name="cap")]
+        public virtual int ProjectsCap { get; set; }
+    }
+
+    [DataContract]
+    public partial class InstallationLicenseStatusDto
+    {
+        [DataMember(Name="storedMode")]
+        public virtual string StoredMode { get; set; }
+
+        [DataMember(Name="effectiveMode")]
+        public virtual string EffectiveMode { get; set; }
+
+        [DataMember(Name="isProduction")]
+        public virtual bool IsProduction { get; set; }
+
+        [DataMember(Name="graceDaysLeft")]
+        public virtual int? GraceDaysLeft { get; set; }
+
+        [DataMember(Name="graceUntilUtc")]
+        public virtual DateTime? GraceUntilUtc { get; set; }
+
+        [DataMember(Name="lastProvenAtUtc")]
+        public virtual DateTime? LastProvenAtUtc { get; set; }
+
+        [DataMember(Name="lastHeartbeatAtUtc")]
+        public virtual DateTime? LastHeartbeatAtUtc { get; set; }
+
+        [DataMember(Name="installationDomain")]
+        public virtual string? InstallationDomain { get; set; }
+
+        [DataMember(Name="licensedDomain")]
+        public virtual string? LicensedDomain { get; set; }
+
+        [DataMember(Name="hostKind")]
+        public virtual string? HostKind { get; set; }
+
+        [DataMember(Name="isTrialLicense")]
+        public virtual bool IsTrialLicense { get; set; }
+
+        [DataMember(Name="licenseExpireUtc")]
+        public virtual DateTime? LicenseExpireUtc { get; set; }
+
+        [DataMember(Name="message")]
+        public virtual string? Message { get; set; }
+    }
+
+    [DataContract]
+    public partial class LicenseDomainDnsRecordDto
+    {
+        [DataMember]
+        public virtual string Host { get; set; }
+
+        [DataMember]
+        public virtual string RecordType { get; set; }
+
+        [DataMember]
+        public virtual bool Resolved { get; set; }
+
+        [DataMember]
+        public virtual bool Required { get; set; }
+    }
+
+    [DataContract]
+    public partial class LicenseDomainDnsStatusDto
+    {
+        [DataMember]
+        public virtual string Domain { get; set; }
+
+        [DataMember]
+        public virtual bool AllRequiredResolved { get; set; }
+
+        [DataMember]
+        public virtual List<LicenseDomainDnsRecordDto> Records { get; set; } = [];
+    }
+
+    [DataContract]
+    public partial class LicenseDomainVerificationChallengeDto
+    {
+        [DataMember]
+        public virtual string Domain { get; set; }
+
+        [DataMember]
+        public virtual string TxtHost { get; set; }
+
+        [DataMember]
+        public virtual string TxtValue { get; set; }
+
+        [DataMember]
+        public virtual DateTime ExpiresAtUtc { get; set; }
+
+        [DataMember]
+        public virtual bool Verified { get; set; }
+
+        [DataMember]
+        public virtual DateTime? VerifiedAtUtc { get; set; }
+
+        [DataMember]
+        public virtual bool Skipped { get; set; }
+    }
+
+    [DataContract]
+    public partial class LicenseDomainVerificationStatusDto
+    {
+        [DataMember]
+        public virtual string Domain { get; set; }
+
+        [DataMember]
+        public virtual bool Verified { get; set; }
+
+        [DataMember]
+        public virtual bool Skipped { get; set; }
+
+        [DataMember]
+        public virtual string? TxtHost { get; set; }
+
+        [DataMember]
+        public virtual string? ExpectedTxtValue { get; set; }
+
+        [DataMember]
+        public virtual string? ObservedTxtValue { get; set; }
+
+        [DataMember]
+        public virtual DateTime? ExpiresAtUtc { get; set; }
+
+        [DataMember]
+        public virtual DateTime? VerifiedAtUtc { get; set; }
+
+        [DataMember]
+        public virtual string? Message { get; set; }
+    }
+
     public partial class LicenseDto
         : CodeMashSubscriptionDto
     {
@@ -2875,15 +4535,522 @@ public partial class CronExpression
         public virtual int ProjectCap { get; set; }
     }
 
+    [DataContract]
+    public partial class LicenseHeartbeatVerdictDto
+    {
+        [DataMember(Name="status")]
+        public virtual string Status { get; set; }
+
+        [DataMember(Name="proofToken")]
+        public virtual string? ProofToken { get; set; }
+
+        [DataMember(Name="serverTimeUtc")]
+        public virtual DateTime ServerTimeUtc { get; set; }
+
+        [DataMember(Name="graceUntilUtc")]
+        public virtual DateTime? GraceUntilUtc { get; set; }
+
+        [DataMember(Name="installationId")]
+        public virtual Guid InstallationId { get; set; }
+
+        [DataMember(Name="licenseAccountId")]
+        public virtual string? LicenseAccountId { get; set; }
+
+        [DataMember(Name="domain")]
+        public virtual string? Domain { get; set; }
+
+        [DataMember(Name="signature")]
+        public virtual string? Signature { get; set; }
+
+        [DataMember(Name="message")]
+        public virtual string? Message { get; set; }
+    }
+
+    [DataContract]
+    public partial class ProjectEnvironmentsDto
+    {
+        [DataMember]
+        public virtual List<string> Environments { get; set; } = [];
+    }
+
+    [DataContract]
+    public partial class PromotionBlockerDto
+    {
+        [DataMember]
+        public virtual string ContentType { get; set; }
+
+        [DataMember]
+        public virtual string ContentId { get; set; }
+
+        [DataMember]
+        public virtual string RefKind { get; set; }
+
+        [DataMember]
+        public virtual string UnresolvedRef { get; set; }
+    }
+
+    [DataContract]
+    public partial class PromotionItemDto
+    {
+        [DataMember]
+        public virtual string Type { get; set; }
+
+        [DataMember]
+        public virtual string Id { get; set; }
+    }
+
+    [DataContract]
+    public partial class PromotionResultDto
+    {
+        [DataMember]
+        public virtual List<PromotionItemDto> ContentMirrored { get; set; } = [];
+
+        [DataMember]
+        public virtual List<PromotionItemDto> ContentDeleted { get; set; } = [];
+
+        [DataMember]
+        public virtual List<PromotionItemDto> IntegrationsSeeded { get; set; } = [];
+
+        [DataMember]
+        public virtual List<PromotionItemDto> IntegrationsSkipped { get; set; } = [];
+
+        [DataMember]
+        public virtual List<PromotionBlockerDto> Blockers { get; set; } = [];
+
+        [DataMember]
+        public virtual long? FromVersion { get; set; }
+
+        [DataMember]
+        public virtual bool WasDryRun { get; set; }
+    }
+
+    [DataContract]
+    public partial class UsageBillingClusterChargeDto
+    {
+        [DataMember]
+        public virtual string AtlasProjectId { get; set; }
+
+        [DataMember]
+        public virtual string AtlasClusterName { get; set; }
+
+        [DataMember]
+        public virtual long Cents { get; set; }
+    }
+
+    [DataContract]
+    public partial class UsageBillingDto
+    {
+        [DataMember]
+        public virtual string AccountId { get; set; }
+
+        [DataMember]
+        public virtual Dictionary<string, UsageBillingPeriodDto> Atlas { get; set; } = new();
+
+        [DataMember]
+        public virtual List<UsageBillingIngestionFailureDto> IngestionFailures { get; set; } = [];
+    }
+
+    [DataContract]
+    public partial class UsageBillingIngestionFailureDto
+    {
+        [DataMember]
+        public virtual string Reason { get; set; }
+
+        [DataMember]
+        public virtual string? Period { get; set; }
+
+        [DataMember]
+        public virtual string StripeEventId { get; set; }
+
+        [DataMember]
+        public virtual string Message { get; set; }
+
+        [DataMember]
+        public virtual DateTime ReportedAtUtc { get; set; }
+    }
+
+    [DataContract]
+    public partial class UsageBillingPeriodDto
+    {
+        [DataMember]
+        public virtual string Period { get; set; }
+
+        [DataMember]
+        public virtual long TotalCents { get; set; }
+
+        [DataMember]
+        public virtual List<UsageBillingClusterChargeDto> PerCluster { get; set; } = [];
+
+        [DataMember]
+        public virtual DateTime RecordedAtUtc { get; set; }
+    }
+
+    public partial class ActionPendingEntryWireDto
+        : AiChatEntryWireDto
+    {
+        public virtual string Kind { get; set; }
+        public virtual string Tool { get; set; }
+        public virtual string ArgumentsJson { get; set; }
+        public virtual string Status { get; set; }
+    }
+
+    public partial class AiChatEntryAttachmentWireDto
+    {
+        public virtual string Id { get; set; }
+        public virtual string Name { get; set; }
+    }
+
+    public partial class AiChatEntrySourceWireDto
+    {
+        public virtual string Kind { get; set; }
+        public virtual string? RequirementId { get; set; }
+        public virtual string? SessionId { get; set; }
+        public virtual string? EntryId { get; set; }
+        public virtual long? EntrySeq { get; set; }
+        public virtual string? ArtifactId { get; set; }
+        public virtual string? Label { get; set; }
+        public virtual int? Step { get; set; }
+    }
+
+    public partial class AiChatEntryWireDto
+    {
+        public virtual string Kind { get; set; }
+        public virtual string Id { get; set; }
+        public virtual long Seq { get; set; }
+        public virtual DateTime AtUtc { get; set; }
+        public virtual string? RefEntryId { get; set; }
+        public virtual string? WorkItemId { get; set; }
+        public virtual string? Feedback { get; set; }
+        public virtual DateTime? FeedbackAtUtc { get; set; }
+        public virtual string? FeedbackByUserAuthId { get; set; }
+    }
+
+    public partial class AiChatGateResultWireDto
+    {
+        public virtual string Class { get; set; }
+        public virtual string Reason { get; set; }
+        public virtual List<string> AffectedRequirementIds { get; set; } = [];
+    }
+
+    public partial class AiChatPlanStepDoneCheckWireDto
+    {
+        public virtual string Check { get; set; }
+        public virtual string ArgsJson { get; set; }
+    }
+
+    public partial class AiChatPlanStepInputsWireDto
+    {
+        public virtual List<string> Artifacts { get; set; } = [];
+        public virtual List<string> Requirements { get; set; } = [];
+    }
+
+    public partial class AiChatPlanStepLoopWireDto
+    {
+        public virtual int? MaxIterations { get; set; }
+        public virtual int MaxToolCalls { get; set; }
+    }
+
+    public partial class AiChatPlanStepWireDto
+    {
+        public virtual int N { get; set; }
+        public virtual string Tool { get; set; }
+        public virtual string Title { get; set; }
+        public virtual string? Goal { get; set; }
+        public virtual AiChatPlanStepInputsWireDto Inputs { get; set; }
+        public virtual List<int> DependsOn { get; set; } = [];
+        public virtual int? Replaces { get; set; }
+        public virtual List<AiChatPlanStepDoneCheckWireDto> Done { get; set; } = [];
+        public virtual AiChatPlanStepLoopWireDto Loop { get; set; }
+        public virtual int? Difficulty { get; set; }
+    }
+
+    public partial class AiChatQuestionOptionWireDto
+    {
+        public virtual string Value { get; set; }
+        public virtual string Label { get; set; }
+    }
+
+    public partial class AiChatQuestionWireDto
+    {
+        public virtual string Id { get; set; }
+        public virtual string Text { get; set; }
+        public virtual List<AiChatQuestionOptionWireDto> Options { get; set; } = [];
+        public virtual string? Default { get; set; }
+        public virtual bool AllowFreeText { get; set; }
+    }
+
+    public partial class AiChatStepLogLineWireDto
+    {
+        public virtual int Seq { get; set; }
+        public virtual string Tool { get; set; }
+        public virtual string? Agent { get; set; }
+        public virtual string Status { get; set; }
+        public virtual string? Detail { get; set; }
+    }
+
+    public partial class AssistantQuestionEntryWireDto
+        : AiChatEntryWireDto
+    {
+        public virtual string Kind { get; set; }
+        public virtual List<AiChatQuestionWireDto> Questions { get; set; } = [];
+        public virtual string Status { get; set; }
+        public virtual string Scope { get; set; }
+        public virtual AiChatGateResultWireDto? Gate { get; set; }
+    }
+
+    public partial class AssistantTextEntryWireDto
+        : AiChatEntryWireDto
+    {
+        public virtual string Kind { get; set; }
+        public virtual string Text { get; set; }
+        public virtual bool IsStreaming { get; set; }
+        public virtual List<AiChatEntrySourceWireDto> Sources { get; set; } = [];
+    }
+
+    public partial class ChatScreenContextDto
+    {
+        public virtual string Kind { get; set; }
+        public virtual string? ViewId { get; set; }
+    }
+
+    public partial class ConversationSnapshotEntryWireDto
+        : AiChatEntryWireDto
+    {
+        public virtual string Kind { get; set; }
+        public virtual string SnapshotId { get; set; }
+        public virtual long CoversUpToSeq { get; set; }
+    }
+
+    public partial class NoticeEntryWireDto
+        : AiChatEntryWireDto
+    {
+        public virtual string Kind { get; set; }
+        public virtual string Text { get; set; }
+        public virtual string Level { get; set; }
+    }
+
+    public partial class PlanEntryWireDto
+        : AiChatEntryWireDto
+    {
+        public virtual string Kind { get; set; }
+        public virtual string Goal { get; set; }
+        public virtual List<AiChatPlanStepWireDto> Steps { get; set; } = [];
+        public virtual string Status { get; set; }
+        public virtual AiChatGateResultWireDto? Gate { get; set; }
+        public virtual int? Difficulty { get; set; }
+        public virtual string? DifficultyReason { get; set; }
+        public virtual string? DeltaOf { get; set; }
+    }
+
+    public partial class ProjectBriefAssumptionWireDto
+    {
+        public virtual string RequirementId { get; set; }
+        public virtual string EventId { get; set; }
+        public virtual string Text { get; set; }
+        public virtual double Confidence { get; set; }
+        public virtual DateTime AtUtc { get; set; }
+    }
+
+    public partial class ProjectBriefDecisionWireDto
+    {
+        public virtual string EventId { get; set; }
+        public virtual string Text { get; set; }
+        public virtual double Confidence { get; set; }
+        public virtual DateTime AtUtc { get; set; }
+        public virtual List<ProjectBriefSourceWireDto> Sources { get; set; } = [];
+    }
+
+    public partial class ProjectBriefEventWireDto
+    {
+        public virtual string Id { get; set; }
+        public virtual string ProjectId { get; set; }
+        public virtual long Seq { get; set; }
+        public virtual DateTime AtUtc { get; set; }
+        public virtual string Kind { get; set; }
+        public virtual string? RequirementId { get; set; }
+        public virtual string? SupersedesEventId { get; set; }
+        public virtual string Text { get; set; }
+        public virtual double Confidence { get; set; }
+        public virtual List<ProjectBriefSourceWireDto> Sources { get; set; } = [];
+        public virtual string Origin { get; set; }
+        public virtual List<ProjectBriefSatisfiedByWireDto> SatisfiedBy { get; set; } = [];
+    }
+
+    public partial class ProjectBriefRequirementWireDto
+    {
+        public virtual string Id { get; set; }
+        public virtual string Text { get; set; }
+        public virtual string Status { get; set; }
+        public virtual double Confidence { get; set; }
+        public virtual bool IsAssumption { get; set; }
+        public virtual List<ProjectBriefSourceWireDto> Sources { get; set; } = [];
+        public virtual List<ProjectBriefSatisfiedByWireDto> SatisfiedBy { get; set; } = [];
+        public virtual string SinceEventId { get; set; }
+    }
+
+    public partial class ProjectBriefSatisfiedByWireDto
+    {
+        public virtual string ArtifactId { get; set; }
+        public virtual string Tool { get; set; }
+        public virtual bool Orphaned { get; set; }
+    }
+
+    public partial class ProjectBriefSnapshotWireDto
+    {
+        public virtual string ProjectId { get; set; }
+        public virtual long UpToSeq { get; set; }
+        public virtual DateTime AtUtc { get; set; }
+        public virtual List<ProjectBriefRequirementWireDto> Requirements { get; set; } = [];
+        public virtual List<ProjectBriefDecisionWireDto> Decisions { get; set; } = [];
+        public virtual List<ProjectBriefAssumptionWireDto> OpenAssumptions { get; set; } = [];
+        public virtual string? Summary { get; set; }
+    }
+
+    public partial class ProjectBriefSourceWireDto
+    {
+        public virtual string Kind { get; set; }
+        public virtual string? SessionId { get; set; }
+        public virtual string? EntryId { get; set; }
+        public virtual long? EntrySeq { get; set; }
+        public virtual string? EventId { get; set; }
+        public virtual string? UserAuthId { get; set; }
+        public virtual DateTime AtUtc { get; set; }
+        public virtual string? Surface { get; set; }
+        public virtual string? Quote { get; set; }
+        public virtual string? WorkItemId { get; set; }
+    }
+
+    public partial class RunStepEntryWireDto
+        : AiChatEntryWireDto
+    {
+        public virtual string Kind { get; set; }
+        public virtual int N { get; set; }
+        public virtual string Tool { get; set; }
+        public virtual string Title { get; set; }
+        public virtual string Status { get; set; }
+        public virtual string? ResultSummary { get; set; }
+        public virtual string? Error { get; set; }
+        public virtual List<AiChatStepLogLineWireDto> Log { get; set; } = [];
+    }
+
+    public partial class UserAnswerEntryWireDto
+        : AiChatEntryWireDto
+    {
+        public virtual string Kind { get; set; }
+        public virtual Dictionary<string, string> Answers { get; set; } = new();
+    }
+
+    public partial class UserDecisionEntryWireDto
+        : AiChatEntryWireDto
+    {
+        public virtual string Kind { get; set; }
+        public virtual string Decision { get; set; }
+        public virtual string? Comment { get; set; }
+    }
+
+    public partial class UserMessageEntryWireDto
+        : AiChatEntryWireDto
+    {
+        public virtual string Kind { get; set; }
+        public virtual string Text { get; set; }
+        public virtual List<AiChatEntryAttachmentWireDto> Attachments { get; set; } = [];
+    }
+
+    public partial class WorkItemArtifactWireDto
+    {
+        public virtual string ArtifactId { get; set; }
+        public virtual string What { get; set; }
+        public virtual int Step { get; set; }
+        public virtual string? PlanEntryId { get; set; }
+        public virtual string? Kind { get; set; }
+        public virtual string? Name { get; set; }
+    }
+
+    public partial class WorkItemDoneConditionWireDto
+    {
+        public virtual int Condition { get; set; }
+        public virtual bool Holds { get; set; }
+        public virtual string Reason { get; set; }
+    }
+
+    public partial class WorkItemEntryRefWireDto
+    {
+        public virtual string SessionId { get; set; }
+        public virtual string EntryId { get; set; }
+    }
+
+    public partial class WorkItemMovedOutWireDto
+    {
+        public virtual string Text { get; set; }
+        public virtual string Reason { get; set; }
+        public virtual string? MovedTo { get; set; }
+        public virtual string Source { get; set; }
+        public virtual WorkItemEntryRefWireDto? EntryRef { get; set; }
+        public virtual DateTime AtUtc { get; set; }
+    }
+
+    public partial class WorkItemNeedsYouWireDto
+    {
+        public virtual string Text { get; set; }
+        public virtual string Kind { get; set; }
+        public virtual WorkItemEntryRefWireDto? EntryRef { get; set; }
+        public virtual bool Done { get; set; }
+        public virtual DateTime? DoneAtUtc { get; set; }
+        public virtual string? DoneByUserAuthId { get; set; }
+    }
+
+    public partial class WorkItemOpenQuestionWireDto
+    {
+        public virtual WorkItemEntryRefWireDto EntryRef { get; set; }
+        public virtual bool Blocking { get; set; }
+        public virtual string Text { get; set; }
+        public virtual DateTime AtUtc { get; set; }
+    }
+
+    public partial class WorkItemRunRefWireDto
+    {
+        public virtual string SessionId { get; set; }
+        public virtual string PlanEntryId { get; set; }
+        public virtual string? RunId { get; set; }
+    }
+
+    public partial class WorkItemWireDto
+    {
+        public virtual string Id { get; set; }
+        public virtual string? ProjectId { get; set; }
+        public virtual string Status { get; set; }
+        public virtual string Goal { get; set; }
+        public virtual List<string> NotInScope { get; set; } = [];
+        public virtual List<string> ScopeRequirementIds { get; set; } = [];
+        public virtual int? Difficulty { get; set; }
+        public virtual string? DifficultyReason { get; set; }
+        public virtual List<WorkItemEntryRefWireDto> PlanEntryRefs { get; set; } = [];
+        public virtual List<WorkItemRunRefWireDto> RunRefs { get; set; } = [];
+        public virtual List<WorkItemArtifactWireDto> Artifacts { get; set; } = [];
+        public virtual List<WorkItemMovedOutWireDto> MovedOut { get; set; } = [];
+        public virtual List<WorkItemNeedsYouWireDto> NeedsYou { get; set; } = [];
+        public virtual List<WorkItemOpenQuestionWireDto> OpenQuestions { get; set; } = [];
+        public virtual List<string> SessionIds { get; set; } = [];
+        public virtual string? ParentId { get; set; }
+        public virtual List<string> Children { get; set; } = [];
+        public virtual WorkItemEntryRefWireDto? SummaryEntryRef { get; set; }
+        public virtual string? CreatedBy { get; set; }
+        public virtual DateTime CreatedAtUtc { get; set; }
+        public virtual DateTime UpdatedAtUtc { get; set; }
+        public virtual string? DoneVerdict { get; set; }
+        public virtual List<WorkItemDoneConditionWireDto> DoneConditions { get; set; } = [];
+    }
+
     public partial class BatchStatusChangeEntryDto
     {
         public virtual DateTime Time { get; set; }
         public virtual CampaignBatchStatus Status { get; set; }
-        public virtual IReadOnlySet<ErrorDto>? Errors { get; set; }
+        public virtual HashSet<ErrorDto>? Errors { get; set; }
     }
 
     [DataContract]
     public partial class CampaignBatchDto
+        : IHasDatabaseId
     {
         [DataMember]
         public virtual string CampaignId { get; set; }
@@ -2903,6 +5070,7 @@ public partial class CronExpression
 
     [DataContract]
     public partial class CampaignBatchNotificationDto
+        : IHasDatabaseId
     {
         [DataMember]
         public virtual string CampaignId { get; set; }
@@ -2926,7 +5094,7 @@ public partial class CronExpression
         public virtual Dictionary<string, string>? Model { get; set; }
 
         [DataMember]
-        public virtual IReadOnlySet<NotificationStatusChangeEntryDto> StatusHistory { get; set; }
+        public virtual HashSet<NotificationStatusChangeEntryDto> StatusHistory { get; set; } = [];
 
         [DataMember]
         public virtual string Id { get; set; }
@@ -2934,6 +5102,7 @@ public partial class CronExpression
 
     [DataContract]
     public partial class CampaignDto
+        : IHasResponsibleUserId, IHasDatabaseId
     {
         [DataMember]
         public virtual string ViewId { get; set; }
@@ -2951,13 +5120,13 @@ public partial class CronExpression
         public virtual string? CampaignProcessingIntegrationId { get; set; }
 
         [DataMember]
-        public virtual IReadOnlySet<CampaignStatusChangeEntryDto> StatusHistory { get; set; }
+        public virtual HashSet<CampaignStatusChangeEntryDto> StatusHistory { get; set; } = [];
 
         [DataMember]
         public virtual CampaignStatusChangeEntryDto? Status { get; set; }
 
         [DataMember]
-        public virtual IReadOnlySet<TokenMappingDto>? TokenMappingValues { get; set; }
+        public virtual HashSet<TokenMappingDto>? TokenMappingValues { get; set; }
 
         [DataMember]
         public virtual string? Notes { get; set; }
@@ -2989,7 +5158,7 @@ public partial class CronExpression
     {
         public virtual DateTime Time { get; set; }
         public virtual CampaignStatus Status { get; set; }
-        public virtual IReadOnlySet<ErrorDto>? Errors { get; set; }
+        public virtual HashSet<ErrorDto>? Errors { get; set; }
     }
 
     [DataContract]
@@ -3017,7 +5186,7 @@ public partial class CronExpression
         public virtual EmailCampaignRecipientsSourceTypes RecipientsSourceType { get; set; }
 
         [DataMember]
-        public virtual IReadOnlySet<TokenMappingDto>? MappedTokens { get; set; }
+        public virtual HashSet<TokenMappingDto>? MappedTokens { get; set; }
 
         [DataMember]
         public virtual long? CampaignTime { get; set; }
@@ -3035,6 +5204,9 @@ public partial class CronExpression
 
         [DataMember]
         public virtual EmailTemplateDto Template { get; set; }
+
+        [DataMember]
+        public virtual string? ValidationIntegrationId { get; set; }
 
         [DataMember]
         public virtual bool TemplateIsSystem { get; set; }
@@ -3072,13 +5244,13 @@ public partial class CronExpression
     public partial class EmailRecipientsDto
     {
         [DataMember]
-        public virtual IReadOnlySet<EmailRecipientDto>? To { get; set; }
+        public virtual HashSet<EmailRecipientDto>? To { get; set; }
 
         [DataMember]
-        public virtual IReadOnlySet<EmailRecipientDto>? Cc { get; set; }
+        public virtual HashSet<EmailRecipientDto>? Cc { get; set; }
 
         [DataMember]
-        public virtual IReadOnlySet<EmailRecipientDto>? Bcc { get; set; }
+        public virtual HashSet<EmailRecipientDto>? Bcc { get; set; }
 
         [DataMember]
         public virtual string? StartingAfter { get; set; }
@@ -3092,13 +5264,13 @@ public partial class CronExpression
         : EmailCampaignDeliverySettingsDto
     {
         [DataMember]
-        public virtual IReadOnlySet<string> UserRecipients { get; set; }
+        public virtual HashSet<string> UserRecipients { get; set; } = [];
 
         [DataMember]
-        public virtual IReadOnlySet<string>? UserCc { get; set; }
+        public virtual HashSet<string>? UserCc { get; set; }
 
         [DataMember]
-        public virtual IReadOnlySet<string>? UserBcc { get; set; }
+        public virtual HashSet<string>? UserBcc { get; set; }
 
         [DataMember]
         public virtual bool SingleEmailStrategy { get; set; }
@@ -3109,10 +5281,10 @@ public partial class CronExpression
         : EmailCampaignDeliverySettingsDto
     {
         [DataMember]
-        public virtual IReadOnlySet<string>? RolesNames { get; set; }
+        public virtual HashSet<string>? RolesNames { get; set; }
 
         [DataMember]
-        public virtual IReadOnlySet<string>? UserTags { get; set; }
+        public virtual HashSet<string>? UserTags { get; set; }
     }
 
     [DataContract]
@@ -3120,7 +5292,7 @@ public partial class CronExpression
         : EmailCampaignDeliverySettingsDto
     {
         [DataMember]
-        public virtual IReadOnlySet<string> Fields { get; set; }
+        public virtual HashSet<string> Fields { get; set; } = [];
 
         [DataMember]
         public virtual string SchemaName { get; set; }
@@ -3129,10 +5301,10 @@ public partial class CronExpression
         public virtual CollectionEmailCampaignRecipientField FieldType { get; set; }
 
         [DataMember]
-        public virtual IReadOnlySet<string>? RoleNames { get; set; }
+        public virtual HashSet<string>? RoleNames { get; set; }
 
         [DataMember]
-        public virtual IReadOnlySet<string>? Languages { get; set; }
+        public virtual HashSet<string>? Languages { get; set; }
     }
 
     [DataContract]
@@ -3140,13 +5312,13 @@ public partial class CronExpression
         : EmailCampaignDeliverySettingsDto
     {
         [DataMember]
-        public virtual IReadOnlySet<string> Recipients { get; set; }
+        public virtual HashSet<string> Recipients { get; set; } = [];
 
         [DataMember]
-        public virtual IReadOnlySet<string>? RecipientsCc { get; set; }
+        public virtual HashSet<string>? RecipientsCc { get; set; }
 
         [DataMember]
-        public virtual IReadOnlySet<string>? RecipientsBcc { get; set; }
+        public virtual HashSet<string>? RecipientsBcc { get; set; }
 
         [DataMember]
         public virtual bool SingleEmailStrategy { get; set; }
@@ -3157,29 +5329,64 @@ public partial class CronExpression
         : EmailCampaignDeliverySettingsDto
     {
         [DataMember]
-        public virtual IReadOnlySet<string> UserRecipients { get; set; }
+        public virtual HashSet<string> UserRecipients { get; set; } = [];
 
         [DataMember]
-        public virtual IReadOnlySet<string>? UserCc { get; set; }
+        public virtual HashSet<string>? UserCc { get; set; }
 
         [DataMember]
-        public virtual IReadOnlySet<string>? UserBcc { get; set; }
+        public virtual HashSet<string>? UserBcc { get; set; }
 
         [DataMember]
         public virtual bool SingleEmailStrategy { get; set; }
     }
 
+    public partial interface IHasAccountId
+    {
+        string AccountId { get; set; }
+    }
 
+    public partial interface IHasDatabaseId
+    {
+        string? Id { get; set; }
+    }
 
+    public partial interface IHasProjectId
+    {
+        string ProjectId { get; set; }
+    }
 
+    public partial interface IHasResponsibleUserId
+    {
+        string UserId { get; set; }
+    }
 
     public partial class NotificationStatusChangeEntryDto
     {
         public virtual DateTime Time { get; set; }
         public virtual CampaignNotificationStatus Status { get; set; }
         public virtual string? SourceId { get; set; }
-        public virtual IReadOnlySet<ErrorDto>? Errors { get; set; }
-        public virtual IReadOnlySet<string>? Tags { get; set; }
+        public virtual HashSet<ErrorDto>? Errors { get; set; }
+        public virtual HashSet<string>? Tags { get; set; }
+    }
+
+    [DataContract]
+    public partial class PushCampaignBatchDto
+        : CampaignBatchDto
+    {
+        [DataMember]
+        public virtual PushRecipientsDto Recipients { get; set; }
+    }
+
+    [DataContract]
+    public partial class PushCampaignBatchNotificationDto
+        : CampaignBatchNotificationDto
+    {
+        [DataMember]
+        public virtual PushRecipientsDto Recipients { get; set; }
+
+        [DataMember]
+        public virtual PushMessageContentDto? Content { get; set; }
     }
 
     [DataContract]
@@ -3199,8 +5406,62 @@ public partial class CronExpression
     }
 
     [DataContract]
+    public partial class PushCampaignDto
+        : CampaignDto
+    {
+        [DataMember]
+        public virtual PushCampaignDeliverySettingsDto Recipients { get; set; }
+
+        [DataMember]
+        public virtual PushTemplateDto Template { get; set; }
+    }
+
+    [DataContract]
     public partial class PushDeviceDeliveryTokenDto
     {
+    }
+
+    [DataContract]
+    public partial class PushRecipientDto
+    {
+        [DataMember]
+        public virtual HashSet<PushDeviceDeliveryTokenDto> DeviceTokens { get; set; } = [];
+
+        [DataMember]
+        public virtual string UserId { get; set; }
+
+        [DataMember]
+        public virtual string? Language { get; set; }
+
+        [DataMember]
+        public virtual HashSet<TokenMappingDto>? UserTokenMappings { get; set; }
+
+        [DataMember]
+        public virtual string? TimeZoneId { get; set; }
+
+        [DataMember]
+        public virtual string? Record { get; set; }
+    }
+
+    [DataContract]
+    public partial class PushRecipientsDto
+    {
+        [DataMember]
+        public virtual HashSet<PushRecipientDto>? To { get; set; }
+
+        [DataMember]
+        public virtual string? StartingAfter { get; set; }
+
+        [DataMember]
+        public virtual bool HasMore { get; set; }
+    }
+
+    [DataContract]
+    public partial class PushToAccountUsersDeliverySettingsDto
+        : PushCampaignDeliverySettingsDto
+    {
+        [DataMember]
+        public virtual HashSet<string> Recipients { get; set; } = [];
     }
 
     [DataContract]
@@ -3251,6 +5512,25 @@ public partial class CronExpression
     }
 
     [DataContract]
+    public partial class SmsCampaignBatchDto
+        : CampaignBatchDto
+    {
+        [DataMember]
+        public virtual SmsRecipientsDto Recipients { get; set; }
+    }
+
+    [DataContract]
+    public partial class SmsCampaignBatchNotificationDto
+        : CampaignBatchNotificationDto
+    {
+        [DataMember]
+        public virtual SmsRecipientsDto Recipients { get; set; }
+
+        [DataMember]
+        public virtual SmsMessageContentDto? Content { get; set; }
+    }
+
+    [DataContract]
     public partial class SmsCampaignDeliverySettingsDto
     {
         [DataMember]
@@ -3264,6 +5544,52 @@ public partial class CronExpression
 
         [DataMember]
         public virtual RespectTimeZoneSettings? RespectTimeZoneSettings { get; set; }
+    }
+
+    [DataContract]
+    public partial class SmsCampaignDto
+        : CampaignDto
+    {
+        [DataMember]
+        public virtual SmsCampaignDeliverySettingsDto Recipients { get; set; }
+
+        [DataMember]
+        public virtual SmsTemplateDto Template { get; set; }
+    }
+
+    [DataContract]
+    public partial class SmsRecipientDto
+    {
+        [DataMember]
+        public virtual string PhoneNumber { get; set; }
+
+        [DataMember]
+        public virtual string UserId { get; set; }
+
+        [DataMember]
+        public virtual string? Language { get; set; }
+
+        [DataMember]
+        public virtual HashSet<TokenMappingDto>? UserTokenMappings { get; set; }
+
+        [DataMember]
+        public virtual string? TimeZoneId { get; set; }
+
+        [DataMember]
+        public virtual string? Record { get; set; }
+    }
+
+    [DataContract]
+    public partial class SmsRecipientsDto
+    {
+        [DataMember]
+        public virtual HashSet<SmsRecipientDto>? To { get; set; }
+
+        [DataMember]
+        public virtual string? StartingAfter { get; set; }
+
+        [DataMember]
+        public virtual bool HasMore { get; set; }
     }
 
     [DataContract]
@@ -3328,7 +5654,15 @@ public partial class CronExpression
     }
 
     public partial class CodeIntegrationDto
+        : IntegrationDto
     {
+        public virtual CodeProvider Provider { get; set; }
+    }
+
+    public partial class CodeIntegrationListProjection
+        : IntegrationListProjection
+    {
+        [DataMember]
         public virtual CodeProvider Provider { get; set; }
     }
 
@@ -3380,7 +5714,87 @@ public partial class CronExpression
     }
 
     [DataContract]
-    public partial class MarketplaceFunctionBindingDto
+    public partial class MarketplaceFieldDefinitionDto
+    {
+        [DataMember]
+        public virtual string Key { get; set; }
+
+        [DataMember]
+        public virtual string Label { get; set; }
+
+        [DataMember]
+        public virtual string? Description { get; set; }
+
+        [DataMember]
+        public virtual string? DocumentationUrl { get; set; }
+
+        [DataMember]
+        public virtual MarketplaceFieldType Type { get; set; }
+
+        [DataMember]
+        public virtual bool IsRequired { get; set; }
+
+        [DataMember]
+        public virtual string? DefaultValue { get; set; }
+
+        [DataMember]
+        public virtual string? Placeholder { get; set; }
+
+        [DataMember]
+        public virtual string? ValidationPattern { get; set; }
+
+        [DataMember]
+        public virtual IReadOnlyList<string>? AllowedValues { get; set; }
+    }
+
+    public enum MarketplaceFieldType
+    {
+        String,
+        Number,
+        Boolean,
+        Url,
+        Email,
+        Json,
+        MultilineText,
+    }
+
+    [DataContract]
+    public partial class MarketplaceFunctionDefinitionDto
+    {
+        [DataMember]
+        public virtual string? DefinitionId { get; set; }
+
+        [DataMember]
+        public virtual string FunctionKey { get; set; }
+
+        [DataMember]
+        public virtual string DisplayName { get; set; }
+
+        [DataMember]
+        public virtual string? Description { get; set; }
+
+        [DataMember]
+        public virtual string? Group { get; set; }
+
+        [DataMember]
+        public virtual IReadOnlyList<MarketplaceFunctionParameterDto> Parameters { get; set; }
+
+        [DataMember]
+        public virtual string? RequestSchema { get; set; }
+
+        [DataMember]
+        public virtual string? RequestTemplate { get; set; }
+
+        [DataMember]
+        public virtual MarketplaceHttpRequestSpecDto? Request { get; set; }
+
+        [DataMember]
+        public virtual List<MarketplaceTokenMappingDto> DefaultTokenMappings { get; set; } = [];
+    }
+
+    [DataContract]
+    public partial class MarketplaceFunctionDto
+        : IHasViewId
     {
         [DataMember]
         public virtual string ViewId { get; set; }
@@ -3401,26 +5815,10 @@ public partial class CronExpression
         public virtual bool IsEnabled { get; set; }
 
         [DataMember]
-        public virtual IReadOnlyList<MarketplaceMappingDto> Mappings { get; set; }
-    }
-
-    [DataContract]
-    public partial class MarketplaceFunctionDefinitionDto
-    {
-        [DataMember]
-        public virtual string FunctionKey { get; set; }
+        public virtual string RequestTemplate { get; set; }
 
         [DataMember]
-        public virtual string DisplayName { get; set; }
-
-        [DataMember]
-        public virtual string? Description { get; set; }
-
-        [DataMember]
-        public virtual string? Group { get; set; }
-
-        [DataMember]
-        public virtual IReadOnlyList<MarketplaceFunctionParameterDto> Parameters { get; set; }
+        public virtual List<MarketplaceTokenMappingDto> MappedTokens { get; set; } = [];
     }
 
     [DataContract]
@@ -3443,7 +5841,47 @@ public partial class CronExpression
     }
 
     [DataContract]
+    public partial class MarketplaceFunctionProjection
+        : IHasViewId
+    {
+        [DataMember]
+        public virtual string ViewId { get; set; }
+
+        [DataMember]
+        public virtual string IntegrationViewId { get; set; }
+
+        [DataMember]
+        public virtual string FunctionKey { get; set; }
+
+        [DataMember]
+        public virtual string DisplayName { get; set; }
+
+        [DataMember]
+        public virtual bool IsEnabled { get; set; }
+
+        [DataMember]
+        public virtual int MappingCount { get; set; }
+    }
+
+    [DataContract]
+    public partial class MarketplaceHttpRequestSpecDto
+    {
+        [DataMember]
+        public virtual string Method { get; set; }
+
+        [DataMember]
+        public virtual string PathTemplate { get; set; }
+
+        [DataMember]
+        public virtual IReadOnlyList<MarketplaceParameterSpecDto> Parameters { get; set; }
+
+        [DataMember]
+        public virtual string? ContentType { get; set; }
+    }
+
+    [DataContract]
     public partial class MarketplaceIntegrationDto
+        : IntegrationDto
     {
         [DataMember]
         public virtual string ListingViewId { get; set; }
@@ -3465,7 +5903,49 @@ public partial class CronExpression
     }
 
     [DataContract]
+    public partial class MarketplaceIntegrationListProjection
+        : IHasViewId
+    {
+        [DataMember]
+        public virtual string ViewId { get; set; }
+
+        [DataMember]
+        public virtual string IntegrationName { get; set; }
+
+        [DataMember]
+        public virtual bool IsEnabled { get; set; }
+
+        [DataMember]
+        public virtual string ListingViewId { get; set; }
+
+        [DataMember]
+        public virtual string Vendor { get; set; }
+
+        [DataMember]
+        public virtual MarketplaceCategory Category { get; set; }
+
+        [DataMember]
+        public virtual MarketplaceTransport Transport { get; set; }
+
+        [DataMember]
+        public virtual DateTime? LastIntegrationTestAtUtc { get; set; }
+
+        [DataMember]
+        public virtual bool? LastIntegrationTestSucceeded { get; set; }
+
+        [DataMember]
+        public virtual IReadOnlyList<string> LastIntegrationTestErrors { get; set; }
+
+        [DataMember]
+        public virtual DateTime? HumanDeliveryConfirmedAtUtc { get; set; }
+
+        [DataMember]
+        public virtual bool RequiresHumanDeliveryConfirmation { get; set; }
+    }
+
+    [DataContract]
     public partial class MarketplaceListingDto
+        : IHasViewId
     {
         [DataMember]
         public virtual string ViewId { get; set; }
@@ -3498,39 +5978,128 @@ public partial class CronExpression
         public virtual bool IsOfficial { get; set; }
 
         [DataMember]
+        public virtual IReadOnlyList<string> Tags { get; set; }
+
+        [DataMember]
+        public virtual int SpecVersion { get; set; }
+
+        [DataMember]
+        public virtual IReadOnlyList<MarketplaceFieldDefinitionDto> ConfigFields { get; set; }
+
+        [DataMember]
+        public virtual IReadOnlyList<MarketplaceFieldDefinitionDto> SecretFields { get; set; }
+
+        [DataMember]
         public virtual IReadOnlyList<MarketplaceFunctionDefinitionDto> Functions { get; set; }
     }
 
     [DataContract]
-    public partial class MarketplaceMappingDto
+    public partial class MarketplaceListingProjection
+        : IHasViewId
     {
         [DataMember]
-        public virtual string ParameterName { get; set; }
+        public virtual string ViewId { get; set; }
 
         [DataMember]
-        public virtual MarketplaceMappingSource Source { get; set; }
+        public virtual string Slug { get; set; }
 
         [DataMember]
-        public virtual string? DefaultValue { get; set; }
+        public virtual string DisplayName { get; set; }
 
         [DataMember]
-        public virtual TokenMappingResolverType? Resolver { get; set; }
+        public virtual string Vendor { get; set; }
 
         [DataMember]
-        public virtual string? TokenKey { get; set; }
+        public virtual MarketplaceCategory Category { get; set; }
 
         [DataMember]
-        public virtual string? FromRequestPath { get; set; }
+        public virtual MarketplaceTransport Transport { get; set; }
+
+        [DataMember]
+        public virtual string? IconUrl { get; set; }
+
+        [DataMember]
+        public virtual bool IsOfficial { get; set; }
+
+        [DataMember]
+        public virtual IReadOnlyList<string> Tags { get; set; }
+
+        [DataMember]
+        public virtual int FunctionCount { get; set; }
+    }
+
+    public enum MarketplaceParameterLocation
+    {
+        Body,
+        Header,
+        Query,
+        Path,
+    }
+
+    [DataContract]
+    public partial class MarketplaceParameterSpecDto
+    {
+        [DataMember]
+        public virtual string Name { get; set; }
+
+        [DataMember]
+        public virtual MarketplaceParameterLocation Location { get; set; }
+
+        [DataMember]
+        public virtual string? ValueTemplate { get; set; }
+
+        [DataMember]
+        public virtual string? Label { get; set; }
+
+        [DataMember]
+        public virtual string? Description { get; set; }
+
+        [DataMember]
+        public virtual string? DocumentationUrl { get; set; }
+
+        [DataMember]
+        public virtual string? Type { get; set; }
 
         [DataMember]
         public virtual bool IsRequired { get; set; }
     }
 
-    public enum MarketplaceMappingSource
+    public enum MarketplaceSecretValueFormat
     {
-        Default,
-        Resolver,
-        FromRequest,
+        Raw,
+        Bearer,
+        Basic,
+        Prefixed,
+    }
+
+    [DataContract]
+    public partial class MarketplaceTokenMappingDto
+    {
+        [DataMember]
+        public virtual string Token { get; set; }
+
+        [DataMember]
+        public virtual MarketplaceTokenResolverKind Resolver { get; set; }
+
+        [DataMember]
+        public virtual string? Value { get; set; }
+
+        [DataMember]
+        public virtual List<string>? SecretKeys { get; set; }
+
+        [DataMember]
+        public virtual MarketplaceSecretValueFormat Format { get; set; }
+    }
+
+    public enum MarketplaceTokenResolverKind
+    {
+        Static,
+        Request,
+        Project,
+        Initiator,
+        Custom,
+        IntegrationConfig,
+        IntegrationSecret,
     }
 
     public enum MarketplaceTransport
@@ -3538,6 +6107,96 @@ public partial class CronExpression
         Mcp,
         Rest,
         Code,
+        Internal,
+        Sdk,
+    }
+
+    public partial class AccountComplianceDto
+    {
+        public virtual string DsarMode { get; set; }
+        public virtual int DsarDelayDays { get; set; }
+        public virtual bool AutoForwardAdvisories { get; set; }
+        public virtual string? SecurityContact { get; set; }
+    }
+
+    public partial class ComplianceAuditEntryDto
+    {
+        public virtual string Id { get; set; }
+        public virtual DateTime Timestamp { get; set; }
+        public virtual string Action { get; set; }
+        public virtual string? SubjectKind { get; set; }
+        public virtual string? SubjectId { get; set; }
+        public virtual string? Reason { get; set; }
+        public virtual Dictionary<string, string>? Metadata { get; set; }
+    }
+
+    public partial class ConsentPurposeDto
+    {
+        public virtual string Key { get; set; }
+        public virtual string Name { get; set; }
+        public virtual string Channel { get; set; }
+        public virtual HashSet<string> MappedTags { get; set; } = [];
+        public virtual HashSet<string> RegulatoryBasis { get; set; } = [];
+        public virtual string? Description { get; set; }
+        public virtual bool IsDeprecated { get; set; }
+    }
+
+    public partial class DsarRequestDto
+    {
+        public virtual string Id { get; set; }
+        public virtual string SubjectKind { get; set; }
+        public virtual string SubjectId { get; set; }
+        public virtual string Status { get; set; }
+        public virtual DateTime ReceivedAt { get; set; }
+        public virtual DateTime SlaDeadline { get; set; }
+        public virtual DateTime? AutoApproveAt { get; set; }
+        public virtual DateTime? DecidedAt { get; set; }
+        public virtual string? DecidedBy { get; set; }
+        public virtual string? RejectionReason { get; set; }
+    }
+
+    public partial class LegalHoldDto
+    {
+        public virtual string Id { get; set; }
+        public virtual string SubjectKind { get; set; }
+        public virtual string SubjectId { get; set; }
+        public virtual string Reason { get; set; }
+        public virtual DateTime PlacedAt { get; set; }
+        public virtual string? PlacedBy { get; set; }
+        public virtual DateTime? ReleasedAt { get; set; }
+        public virtual string? ReleasedBy { get; set; }
+    }
+
+    public partial class ProjectComplianceDto
+    {
+        public virtual HashSet<string> Regimes { get; set; } = [];
+        public virtual List<ConsentPurposeDto> ConsentPurposes { get; set; } = [];
+        public virtual List<RetentionWindowDto> RetentionWindows { get; set; } = [];
+    }
+
+    public partial class RetentionWindowDto
+    {
+        public virtual string DataKind { get; set; }
+        public virtual int Days { get; set; }
+        public virtual string Action { get; set; }
+    }
+
+    public partial class CollectionIndexDto
+    {
+        [DataMember]
+        public virtual string Name { get; set; }
+
+        [DataMember]
+        public virtual List<CollectionIndexKeyDto> Keys { get; set; } = [];
+    }
+
+    public partial class CollectionIndexKeyDto
+    {
+        [DataMember]
+        public virtual string Field { get; set; }
+
+        [DataMember]
+        public virtual int Order { get; set; }
     }
 
     [DataContract]
@@ -3550,7 +6209,7 @@ public partial class CronExpression
         public virtual HashSet<SchemaTriggerDto>? Triggers { get; set; }
 
         [DataMember]
-        public virtual string? DefaultIntegrationViewId { get; set; }
+        public virtual Dictionary<string, string> DefaultIntegrationViewIds { get; set; } = new();
     }
 
     [DataContract]
@@ -3563,7 +6222,7 @@ public partial class CronExpression
         public virtual HashSet<FilesTriggerDto>? Triggers { get; set; }
 
         [DataMember]
-        public virtual string? DefaultIntegrationViewId { get; set; }
+        public virtual Dictionary<string, string> DefaultIntegrationViewIds { get; set; } = new();
     }
 
     [DataContract]
@@ -3577,6 +6236,7 @@ public partial class CronExpression
     }
 
     public partial class MongoDbAggregateDto
+        : IHasViewId
     {
         [DataMember]
         public virtual string ViewId { get; set; }
@@ -3595,6 +6255,7 @@ public partial class CronExpression
     }
 
     public partial class MongoDbAggregateListProjection
+        : IHasViewId
     {
         [DataMember]
         public virtual string ViewId { get; set; }
@@ -3606,33 +6267,187 @@ public partial class CronExpression
         public virtual string SchemaViewId { get; set; }
     }
 
+    public partial class CollectionImportDto
+    {
+        [DataMember]
+        public virtual string Id { get; set; }
+
+        [DataMember]
+        public virtual SchemaRefDto Schema { get; set; }
+
+        [DataMember]
+        public virtual FileResourceRefDto File { get; set; }
+
+        [DataMember]
+        public virtual FileResourceRefDto? ErrorFile { get; set; }
+
+        [DataMember]
+        public virtual string Delimiter { get; set; }
+
+        [DataMember]
+        public virtual bool HasHeader { get; set; }
+
+        [DataMember]
+        public virtual string Status { get; set; }
+
+        [DataMember]
+        public virtual long TotalRows { get; set; }
+
+        [DataMember]
+        public virtual long TotalImported { get; set; }
+
+        [DataMember]
+        public virtual long TotalErrors { get; set; }
+
+        [DataMember]
+        public virtual string? FailureReason { get; set; }
+
+        [DataMember]
+        public virtual List<ImportColumnMappingDto>? Mapping { get; set; }
+
+        [DataMember]
+        public virtual DateTime CreatedOn { get; set; }
+
+        [DataMember]
+        public virtual DateTime? StartedOn { get; set; }
+
+        [DataMember]
+        public virtual DateTime? CompletedOn { get; set; }
+    }
+
+    public partial class ImportColumnMappingDto
+    {
+        [DataMember]
+        public virtual int CsvColumnIndex { get; set; }
+
+        [DataMember]
+        public virtual string? CsvHeader { get; set; }
+
+        [DataMember]
+        public virtual string? PropertyName { get; set; }
+
+        [DataMember]
+        public virtual bool DontImportOnError { get; set; }
+    }
+
+    public partial class ImportFileAnalysisDto
+    {
+        [DataMember]
+        public virtual FileResourceRefDto File { get; set; }
+
+        [DataMember]
+        public virtual List<ImportFileColumnDto> Columns { get; set; } = [];
+
+        [DataMember]
+        public virtual int SampleRowCount { get; set; }
+    }
+
+    public partial class ImportFileColumnDto
+    {
+        [DataMember]
+        public virtual int Index { get; set; }
+
+        [DataMember]
+        public virtual string Header { get; set; }
+
+        [DataMember]
+        public virtual List<string> Samples { get; set; } = [];
+
+        [DataMember]
+        public virtual string DetectedType { get; set; }
+    }
+
+    public partial class ImportUploadTargetDto
+    {
+        [DataMember]
+        public virtual string Url { get; set; }
+
+        [DataMember]
+        public virtual string ContentType { get; set; }
+
+        [DataMember]
+        public virtual FileResourceRefDto File { get; set; }
+    }
+
     public partial class DatabaseIntegrationDto
+        : IntegrationDto
     {
         public virtual DatabaseProvider Provider { get; set; }
     }
 
     public partial class DatabaseIntegrationListProjection
+        : IntegrationListProjection
     {
         [DataMember]
         public virtual DatabaseProvider Provider { get; set; }
     }
 
-    public partial class MongoDbAtlasClusterIntegrationDto
-        : DatabaseIntegrationDto
+    [DataContract]
+    public partial class FlexTierDto
     {
-        public virtual string? DatabaseName { get; set; }
+        [DataMember]
+        public virtual string Code { get; set; }
+
+        [DataMember]
+        public virtual int Step { get; set; }
+
+        [DataMember]
+        public virtual string DisplayName { get; set; }
     }
 
-    public partial class MongoDbAtlasServerlessIntegrationDto
+    public partial class MongoDbAtlasFlexManagedIntegrationDto
         : DatabaseIntegrationDto
     {
         public virtual string? DatabaseName { get; set; }
+        public virtual string NorbixRegionCode { get; set; }
+        public virtual string FlexTierCode { get; set; }
+        public virtual IntegrationStatus Status { get; set; }
+        public virtual string? AtlasProjectId { get; set; }
+        public virtual string? AtlasClusterName { get; set; }
+        public virtual string? FailureReason { get; set; }
     }
 
     public partial class MongoDbConnectionStringIntegrationDto
         : DatabaseIntegrationDto
     {
         public virtual string? DatabaseName { get; set; }
+    }
+
+    [DataContract]
+    public partial class SeedCollectionRecordsResponse
+        : ResponseBase
+    {
+        [DataMember]
+        public virtual SeedCollectionRecordsResultDto? Result { get; set; }
+    }
+
+    [DataContract]
+    public partial class SeedCollectionRecordsResultDto
+    {
+        [DataMember]
+        public virtual List<string> InsertOrder { get; set; } = [];
+
+        [DataMember]
+        public virtual List<SeedCollectionReportItemDto> Report { get; set; } = [];
+    }
+
+    [DataContract]
+    public partial class SeedCollectionReportItemDto
+    {
+        [DataMember]
+        public virtual string CollectionName { get; set; }
+
+        [DataMember]
+        public virtual int Requested { get; set; }
+
+        [DataMember]
+        public virtual int Inserted { get; set; }
+
+        [DataMember]
+        public virtual List<string> Ids { get; set; } = [];
+
+        [DataMember]
+        public virtual List<string> Errors { get; set; } = [];
     }
 
     public partial class BooleanFieldDto
@@ -3773,6 +6588,7 @@ public partial class CronExpression
     }
 
     public partial class SchemaDto
+        : IHasViewId
     {
         [DataMember]
         public virtual string ViewId { get; set; }
@@ -3805,7 +6621,14 @@ public partial class CronExpression
         public virtual HashSet<TriggerDto>? Triggers { get; set; }
     }
 
+    public partial class SchemaListColumnDto
+    {
+        [DataMember]
+        public virtual string Field { get; set; }
+    }
+
     public partial class SchemaListProjection
+        : IHasViewId
     {
         [DataMember]
         public virtual string ViewId { get; set; }
@@ -3824,12 +6647,52 @@ public partial class CronExpression
 
         [DataMember]
         public virtual int MetaSchemaVersion { get; set; }
+
+        [DataMember]
+        public virtual string? Description { get; set; }
+    }
+
+    public partial class SchemaListSettingsDto
+    {
+        [DataMember]
+        public virtual List<SchemaListColumnDto> Columns { get; set; } = [];
+
+        [DataMember]
+        public virtual SchemaListSortDto? DefaultSort { get; set; }
+    }
+
+    public partial class SchemaListSortDto
+    {
+        [DataMember]
+        public virtual string Field { get; set; }
+
+        [DataMember]
+        public virtual int Order { get; set; }
+    }
+
+    [DataContract]
+    public partial class SchemaRefDto
+    {
+        [DataMember(Order=1)]
+        public virtual string SchemaId { get; set; }
+
+        [DataMember(Order=2)]
+        public virtual string SchemaName { get; set; }
+
+        [DataMember(Order=3)]
+        public virtual string DatabaseIntegrationId { get; set; }
     }
 
     public partial class SchemaSettingsDto
     {
         [DataMember]
         public virtual bool SoftDelete { get; set; }
+
+        [DataMember]
+        public virtual bool HasRecordOwner { get; set; }
+
+        [DataMember]
+        public virtual string? Description { get; set; }
     }
 
     public partial class SchemaVersionSummaryDto
@@ -3892,6 +6755,7 @@ public partial class CronExpression
     }
 
     public partial class TaxonomyDto
+        : IHasViewId
     {
         [DataMember]
         public virtual string ViewId { get; set; }
@@ -3919,6 +6783,7 @@ public partial class CronExpression
     }
 
     public partial class TaxonomyListProjection
+        : IHasViewId
     {
         [DataMember]
         public virtual string ViewId { get; set; }
@@ -3931,6 +6796,27 @@ public partial class CronExpression
 
         [DataMember]
         public virtual string? ParentId { get; set; }
+    }
+
+    public partial class TaxonomyTreeDto
+    {
+        [DataMember]
+        public virtual string ViewId { get; set; }
+
+        [DataMember]
+        public virtual string TaxonomyName { get; set; }
+
+        [DataMember]
+        public virtual string TaxonomySlug { get; set; }
+
+        [DataMember]
+        public virtual string? ParentId { get; set; }
+
+        [DataMember]
+        public virtual List<TaxonomyTreeDto>? Children { get; set; }
+
+        [DataMember]
+        public virtual List<TermTreeDto>? Terms { get; set; }
     }
 
     public partial class TermDto
@@ -3984,12 +6870,255 @@ public partial class CronExpression
         public virtual Dictionary<string, string>? Names { get; set; }
     }
 
+    public partial class TermTreeDto
+    {
+        [DataMember]
+        public virtual string Id { get; set; }
+
+        [DataMember]
+        public virtual string? TaxonomyId { get; set; }
+
+        [DataMember]
+        public virtual string? TaxonomyName { get; set; }
+
+        [DataMember]
+        public virtual string? ParentId { get; set; }
+
+        [DataMember]
+        public virtual int? Order { get; set; }
+
+        [DataMember]
+        public virtual string? Name { get; set; }
+
+        [DataMember]
+        public virtual Dictionary<string, string>? Names { get; set; }
+
+        [DataMember]
+        public virtual string? Description { get; set; }
+
+        [DataMember]
+        public virtual Dictionary<string, string>? Descriptions { get; set; }
+
+        [DataMember]
+        public virtual List<TermMultiParentDto>? MultiParents { get; set; }
+
+        [DataMember]
+        public virtual Object? Meta { get; set; }
+
+        [DataMember]
+        public virtual List<TermTreeDto>? Children { get; set; }
+    }
+
+    [DataContract]
+    public partial class DiagnosticEchoDto
+    {
+        [DataMember]
+        public virtual string? ContainerName { get; set; }
+
+        [DataMember]
+        public virtual bool IsManagedService { get; set; }
+
+        [DataMember]
+        public virtual string ApiVersion { get; set; }
+
+        [DataMember]
+        public virtual string HubVersion { get; set; }
+
+        [DataMember]
+        public virtual string Release { get; set; }
+
+        [DataMember]
+        public virtual string Runtime { get; set; }
+
+        [DataMember]
+        public virtual string HubUrl { get; set; }
+
+        [DataMember]
+        public virtual string ApiUrl { get; set; }
+
+        [DataMember]
+        public virtual bool LicensePresent { get; set; }
+
+        [DataMember]
+        public virtual List<DiagnosticEchoRegionDto>? Regions { get; set; }
+    }
+
+    [DataContract]
+    public partial class DiagnosticEchoRegionDto
+    {
+    }
+
+    [DataContract]
+    public partial class DiagnosticEventItemDto
+    {
+        [DataMember]
+        public virtual long Position { get; set; }
+
+        [DataMember]
+        public virtual string EventType { get; set; }
+
+        [DataMember]
+        public virtual Dictionary<string, string>? Payload { get; set; }
+    }
+
+    [DataContract]
+    public partial class DiagnosticEventsPageDto
+    {
+        [DataMember]
+        public virtual string Stream { get; set; }
+
+        [DataMember]
+        public virtual long From { get; set; }
+
+        [DataMember]
+        public virtual int Count { get; set; }
+
+        [DataMember]
+        public virtual bool HasMore { get; set; }
+
+        [DataMember]
+        public virtual long NextFrom { get; set; }
+
+        [DataMember]
+        public virtual List<DiagnosticEventItemDto> Items { get; set; } = [];
+    }
+
+    [DataContract]
+    public partial class DiagnosticHealthCheckDto
+    {
+        [DataMember]
+        public virtual string CheckId { get; set; }
+
+        [DataMember]
+        public virtual bool IsHealthy { get; set; }
+
+        [DataMember]
+        public virtual int StatusCode { get; set; }
+
+        [DataMember]
+        public virtual string? Detail { get; set; }
+    }
+
+    [DataContract]
+    public partial class DiagnosticLogsResponse
+    {
+        [DataMember]
+        public virtual PaginatedResponse<TenantLogEntryDto>? List { get; set; }
+    }
+
+    [DataContract]
+    public partial class DiagnosticPackDescriptorDto
+    {
+        [DataMember]
+        public virtual string Name { get; set; }
+
+        [DataMember]
+        public virtual int Version { get; set; }
+
+        [DataMember]
+        public virtual string Summary { get; set; }
+
+        [DataMember]
+        public virtual List<DiagnosticPackStepDescriptorDto> Steps { get; set; } = [];
+    }
+
+    [DataContract]
+    public partial class DiagnosticPackRunResultDto
+    {
+        [DataMember]
+        public virtual string PackName { get; set; }
+
+        [DataMember]
+        public virtual int PackVersion { get; set; }
+
+        [DataMember]
+        public virtual string? CaseId { get; set; }
+
+        [DataMember]
+        public virtual List<DiagnosticPackStepResultDto> Steps { get; set; } = [];
+    }
+
+    [DataContract]
+    public partial class DiagnosticPackStepDescriptorDto
+    {
+        [DataMember]
+        public virtual string StepId { get; set; }
+
+        [DataMember]
+        public virtual string Kind { get; set; }
+
+        [DataMember]
+        public virtual string Description { get; set; }
+
+        [DataMember]
+        public virtual Dictionary<string, string> Parameters { get; set; } = new();
+    }
+
+    [DataContract]
+    public partial class DiagnosticPackStepResultDto
+    {
+        [DataMember]
+        public virtual string StepId { get; set; }
+
+        [DataMember]
+        public virtual string Kind { get; set; }
+
+        [DataMember]
+        public virtual bool IsSuccess { get; set; }
+
+        [DataMember]
+        public virtual Object? Result { get; set; }
+
+        [DataMember]
+        public virtual string? ErrorMessage { get; set; }
+    }
+
+    [DataContract]
+    public partial class DiagnosticRedisInspectDto
+    {
+        [DataMember]
+        public virtual string KeyPattern { get; set; }
+
+        [DataMember]
+        public virtual string CacheKey { get; set; }
+
+        [DataMember]
+        public virtual bool IsList { get; set; }
+
+        [DataMember]
+        public virtual Dictionary<string, Object>? Item { get; set; }
+
+        [DataMember]
+        public virtual List<DiagnosticRedisListItemDto>? ListItems { get; set; }
+
+        [DataMember]
+        public virtual bool HasMore { get; set; }
+
+        [DataMember]
+        public virtual string? StartingAfter { get; set; }
+    }
+
+    [DataContract]
+    public partial class DiagnosticRedisListItemDto
+    {
+        [DataMember]
+        public virtual string ViewId { get; set; }
+
+        [DataMember]
+        public virtual string? Name { get; set; }
+
+        [DataMember]
+        public virtual string? Status { get; set; }
+    }
+
     public partial class FilesIntegrationDto
+        : IntegrationDto
     {
         public virtual FileProvider Provider { get; set; }
     }
 
     public partial class FilesIntegrationListProjection
+        : IntegrationListProjection
     {
         [DataMember]
         public virtual FileProvider Provider { get; set; }
@@ -4058,10 +7187,12 @@ public partial class CronExpression
     }
 
     public partial class IntegrationDto
+        : IHasViewId
     {
         public virtual string ViewId { get; set; }
         public virtual string IntegrationName { get; set; }
         public virtual bool IsEnabled { get; set; }
+        public virtual string? Env { get; set; }
         public virtual DateTime? LastIntegrationTestAtUtc { get; set; }
         public virtual bool? LastIntegrationTestSucceeded { get; set; }
         public virtual IReadOnlyList<string> LastIntegrationTestErrors { get; set; }
@@ -4074,14 +7205,56 @@ public partial class CronExpression
     {
         [DataMember]
         public virtual bool IsEnabled { get; set; }
+
+        [DataMember]
+        public virtual bool IsEstablished { get; set; }
+    }
+
+    [DataContract]
+    public partial class TenantLogEntryDto
+    {
+        [DataMember]
+        public virtual string Id { get; set; }
+
+        [DataMember]
+        public virtual DateTime Timestamp { get; set; }
+
+        [DataMember]
+        public virtual string Module { get; set; }
+
+        [DataMember]
+        public virtual string Level { get; set; }
+
+        [DataMember]
+        public virtual string EventCode { get; set; }
+
+        [DataMember]
+        public virtual string Title { get; set; }
+
+        [DataMember]
+        public virtual string Message { get; set; }
+
+        [DataMember]
+        public virtual string? CorrelationId { get; set; }
+
+        [DataMember]
+        public virtual string? TraceId { get; set; }
+
+        [DataMember]
+        public virtual string? SpanId { get; set; }
+
+        [DataMember]
+        public virtual IReadOnlyDictionary<string, string>? Meta { get; set; }
     }
 
     public partial class LoggingIntegrationDto
+        : IntegrationDto
     {
         public virtual LoggingProvider Provider { get; set; }
     }
 
     public partial class LoggingIntegrationListProjection
+        : IntegrationListProjection
     {
         [DataMember]
         public virtual LoggingProvider Provider { get; set; }
@@ -4171,12 +7344,6 @@ public partial class CronExpression
         public virtual string? RootPath { get; set; }
     }
 
-    public partial class MicrosoftTeamsLoggingIntegrationDto
-        : LoggingIntegrationDto
-    {
-        public virtual string? ChannelName { get; set; }
-    }
-
     public partial class MongoDbLoggingIntegrationDto
         : LoggingIntegrationDto
     {
@@ -4197,12 +7364,6 @@ public partial class CronExpression
         public virtual string? JobName { get; set; }
     }
 
-    public partial class SlackLoggingIntegrationDto
-        : LoggingIntegrationDto
-    {
-        public virtual string? ChannelName { get; set; }
-    }
-
     public partial class SplunkLoggingIntegrationDto
         : LoggingIntegrationDto
     {
@@ -4210,24 +7371,29 @@ public partial class CronExpression
         public virtual string Index { get; set; }
     }
 
-    public partial class TelegramLoggingIntegrationDto
-        : LoggingIntegrationDto
-    {
-        public virtual string ChatId { get; set; }
-    }
-
-    public partial class ZabbixLoggingIntegrationDto
-        : LoggingIntegrationDto
-    {
-        public virtual string ApiUrl { get; set; }
-        public virtual string HostName { get; set; }
-    }
-
     public partial class AccessInformationDto
     {
         public virtual string? Ip { get; set; }
         public virtual DateTime? Date { get; set; }
         public virtual string? TimeZone { get; set; }
+    }
+
+    public partial class AuthDto
+        : IBindableContract
+    {
+        public virtual string Id { get; set; }
+        public virtual AuthType Type { get; set; }
+        public virtual string? Email { get; set; }
+        public virtual string? UserName { get; set; }
+        public virtual RegistrationDto? Registration { get; set; }
+        public virtual LoginDto? Login { get; set; }
+        public virtual UserGeneralInfoDto? GeneralInfo { get; set; }
+        public virtual HashSet<string>? Roles { get; set; }
+        public virtual HashSet<string>? PushDevices { get; set; }
+        public virtual HashSet<string>? Tags { get; set; }
+        public virtual AuthStatus Status { get; set; }
+        public virtual DateTime CreatedOn { get; set; }
+        public virtual DateTime ModifiedOn { get; set; }
     }
 
     [DataContract]
@@ -4250,6 +7416,76 @@ public partial class CronExpression
     }
 
     [DataContract]
+    public partial class MembershipAuthenticationViewDto
+    {
+        [DataMember]
+        public virtual MembershipCredentialsSettingsDto? CredentialsSettings { get; set; }
+
+        [DataMember]
+        public virtual List<string> Flows { get; set; } = [];
+    }
+
+    [DataContract]
+    public partial class MembershipAuthorizationViewDto
+    {
+        [DataMember]
+        public virtual MembershipEmailPreferencesDto? EmailPreferences { get; set; }
+
+        [DataMember]
+        public virtual string? UserRegistersAsRole { get; set; }
+
+        [DataMember]
+        public virtual string? GuestRegistersAsRole { get; set; }
+
+        [DataMember]
+        public virtual List<string>? AllowedRegisterRoles { get; set; }
+
+        [DataMember]
+        public virtual List<string>? AllowedProviderRegisterRoles { get; set; }
+
+        [DataMember]
+        public virtual int? ResetPasswordTokenExpiration { get; set; }
+
+        [DataMember]
+        public virtual int? InvitationExpiration { get; set; }
+
+        [DataMember]
+        public virtual int? EmailVerificationExpiration { get; set; }
+
+        [DataMember]
+        public virtual int? DeactivationExpiration { get; set; }
+
+        [DataMember]
+        public virtual bool DefaultSubscribeToNews { get; set; }
+
+        [DataMember]
+        public virtual PasswordComplexityDto? PasswordComplexity { get; set; }
+    }
+
+    [DataContract]
+    public partial class MembershipCredentialsSettingsDto
+    {
+        [DataMember]
+        public virtual string? LogoutUrl { get; set; }
+
+        [DataMember]
+        public virtual bool AllowUsernames { get; set; }
+
+        [DataMember]
+        public virtual List<MembershipCredentialsSettingsModeDto>? Modes { get; set; }
+    }
+
+    [DataContract]
+    public partial class MembershipCredentialsSettingsModeDto
+    {
+        [DataMember]
+        public virtual string? Name { get; set; }
+
+        [DataMember]
+        public virtual string? LogoutUrl { get; set; }
+    }
+
+    [DataContract]
     public partial class MembershipDto
     {
         [DataMember]
@@ -4266,6 +7502,98 @@ public partial class CronExpression
 
         [DataMember]
         public virtual AuthorizationDto? Authorization { get; set; }
+
+        [DataMember]
+        public virtual bool RequireEmailValidation { get; set; }
+    }
+
+    [DataContract]
+    public partial class MembershipEmailActionSettingsDto
+    {
+        [DataMember]
+        public virtual bool SendEmail { get; set; }
+
+        [DataMember]
+        public virtual MembershipMessageTemplateDto? Template { get; set; }
+
+        [DataMember]
+        public virtual string? Callback { get; set; }
+    }
+
+    [DataContract]
+    public partial class MembershipEmailPreferencesDto
+    {
+        [DataMember]
+        public virtual MembershipEmailActionSettingsDto? RegistrationViaEmail { get; set; }
+
+        [DataMember]
+        public virtual MembershipEmailActionSettingsDto? VerificationViaEmail { get; set; }
+
+        [DataMember]
+        public virtual MembershipEmailActionSettingsDto? PasswordResetViaEmail { get; set; }
+
+        [DataMember]
+        public virtual MembershipEmailActionSettingsDto? InvitationViaEmail { get; set; }
+
+        [DataMember]
+        public virtual MembershipEmailActionSettingsDto? DeactivationViaEmail { get; set; }
+    }
+
+    [DataContract]
+    public partial class MembershipMessageTemplateDto
+    {
+        [DataMember]
+        public virtual string? Id { get; set; }
+    }
+
+    public partial class PasskeySettingsDto
+    {
+        public virtual bool Enabled { get; set; }
+        public virtual int CodeTtlMinutes { get; set; }
+        public virtual int MaxCredentialsPerUser { get; set; }
+        public virtual int RecoveryCodeCount { get; set; }
+        public virtual bool GenerateRecoveryCodesAtSignup { get; set; }
+        public virtual string AuthenticatorAttachment { get; set; }
+        public virtual bool AllowMagicLinkRecovery { get; set; }
+        public virtual int RefreshTokenTtlDays { get; set; }
+        public virtual string? RpId { get; set; }
+    }
+
+    [DataContract]
+    public partial class PasswordComplexityDto
+    {
+        [DataMember]
+        public virtual int MinLength { get; set; }
+
+        [DataMember]
+        public virtual int? MaxLength { get; set; }
+
+        [DataMember]
+        public virtual int? MinNumbers { get; set; }
+
+        [DataMember]
+        public virtual int? MaxNumbers { get; set; }
+
+        [DataMember]
+        public virtual int? MinUpper { get; set; }
+
+        [DataMember]
+        public virtual int? MaxUpper { get; set; }
+
+        [DataMember]
+        public virtual int? MinLower { get; set; }
+
+        [DataMember]
+        public virtual int? MaxLower { get; set; }
+
+        [DataMember]
+        public virtual int? MinSpecial { get; set; }
+
+        [DataMember]
+        public virtual int? MaxSpecial { get; set; }
+
+        [DataMember]
+        public virtual string? AllowedSpecial { get; set; }
     }
 
     public partial class PolicyItemDto
@@ -4274,7 +7602,7 @@ public partial class CronExpression
         public virtual string Name { get; set; }
         public virtual string? Description { get; set; }
         public virtual bool IsSystem { get; set; }
-        public virtual HashSet<PolicyStatementDto>? Statements { get; set; }
+        public virtual HashSet<PermissionDto>? Permissions { get; set; }
     }
 
     public partial class RegistrationDto
@@ -4301,23 +7629,6 @@ public partial class CronExpression
         public virtual int PolicyCount { get; set; }
     }
 
-    public partial class UserDto
-    {
-        public virtual string Id { get; set; }
-        public virtual UserType Type { get; set; }
-        public virtual string? Email { get; set; }
-        public virtual string? UserName { get; set; }
-        public virtual RegistrationDto? Registration { get; set; }
-        public virtual LoginDto? Login { get; set; }
-        public virtual UserGeneralInfoDto? GeneralInfo { get; set; }
-        public virtual IReadOnlySet<string>? Roles { get; set; }
-        public virtual IReadOnlySet<string>? PushDevices { get; set; }
-        public virtual IReadOnlySet<string>? Tags { get; set; }
-        public virtual UserStatus Status { get; set; }
-        public virtual DateTime CreatedOn { get; set; }
-        public virtual DateTime ModifiedOn { get; set; }
-    }
-
     public partial class UserGeneralInfoDto
     {
         public virtual string? Phone { get; set; }
@@ -4338,17 +7649,20 @@ public partial class CronExpression
         public virtual string? TimeZone { get; set; }
         public virtual string? Language { get; set; }
         public virtual bool BlockAllMarketingMessages { get; set; }
-        public virtual Dictionary<string, IReadOnlySet<String>>? BlockedTags { get; set; }
+        public virtual Dictionary<string, HashSet<String>>? BlockedTags { get; set; }
+        public virtual HashSet<MarketingBlockReason>? BlockReasons { get; set; }
         public virtual string? ExtraMetadata { get; set; }
         public virtual string? Notes { get; set; }
     }
 
     public partial class MembershipIntegrationDto
+        : IntegrationDto
     {
         public virtual MembershipProvider Provider { get; set; }
     }
 
     public partial class MembershipIntegrationListProjection
+        : IntegrationListProjection
     {
         [DataMember]
         public virtual MembershipProvider Provider { get; set; }
@@ -4400,12 +7714,47 @@ public partial class CronExpression
         public virtual string ApiKey { get; set; }
     }
 
-    public partial class PolicyStatementDto
+    public partial class PermissionDto
     {
         public virtual string? Sid { get; set; }
         public virtual PermissionEffect Effect { get; set; }
         public virtual HashSet<string> Actions { get; set; } = [];
         public virtual HashSet<string> Resources { get; set; } = [];
+    }
+
+    public partial class GetNotificationModuleDisableDependenciesResponse
+        : ResponseBase
+    {
+        public virtual NotificationModuleDisableDependenciesDto? Dependencies { get; set; }
+    }
+
+    [DataContract]
+    public partial class NotificationModuleDependencyItemDto
+    {
+        [DataMember]
+        public virtual string Name { get; set; }
+
+        [DataMember]
+        public virtual string? ViewId { get; set; }
+
+        [DataMember]
+        public virtual string? Category { get; set; }
+    }
+
+    [DataContract]
+    public partial class NotificationModuleDisableDependenciesDto
+    {
+        [DataMember]
+        public virtual List<NotificationModuleDependencyItemDto> Triggers { get; set; } = [];
+
+        [DataMember]
+        public virtual List<NotificationModuleDependencyItemDto> SchedulerTasks { get; set; } = [];
+
+        [DataMember]
+        public virtual List<NotificationModuleDependencyItemDto> InFlightCampaigns { get; set; } = [];
+
+        [DataMember]
+        public virtual List<NotificationModuleDependencyItemDto> MembershipSettings { get; set; } = [];
     }
 
     public partial class AnthropicLlmIntegrationDto
@@ -4439,6 +7788,7 @@ public partial class CronExpression
     }
 
     public partial class LlmIntegrationDto
+        : IntegrationDto
     {
         public virtual LlmProvider Provider { get; set; }
         public virtual string? BaseUrl { get; set; }
@@ -4448,6 +7798,7 @@ public partial class CronExpression
     }
 
     public partial class LlmIntegrationListProjection
+        : IntegrationListProjection
     {
         public virtual LlmProvider LlmProvider { get; set; }
         public virtual string? BaseUrl { get; set; }
@@ -4455,6 +7806,7 @@ public partial class CronExpression
     }
 
     public partial class McpIntegrationDto
+        : IntegrationDto
     {
         public virtual McpProvider Provider { get; set; }
         public virtual McpTransport Transport { get; set; }
@@ -4468,6 +7820,7 @@ public partial class CronExpression
     }
 
     public partial class McpIntegrationListProjection
+        : IntegrationListProjection
     {
         public virtual McpProvider McpProvider { get; set; }
         public virtual McpTransport Transport { get; set; }
@@ -4515,6 +7868,104 @@ public partial class CronExpression
     }
 
     [DataContract]
+    public partial class ChannelSubscriptionStateDto
+    {
+        [DataMember]
+        public virtual bool Unsubscribed { get; set; }
+
+        [DataMember]
+        public virtual Dictionary<string, string[]> BlockedTags { get; set; } = new();
+    }
+
+    [DataContract]
+    public partial class UserDto
+    {
+        [DataMember]
+        public virtual string Id { get; set; }
+
+        [DataMember]
+        public virtual string ProjectId { get; set; }
+
+        [DataMember]
+        public virtual string? PrimaryEmail { get; set; }
+
+        [DataMember]
+        public virtual string? PrimaryPhone { get; set; }
+
+        [DataMember]
+        public virtual string? DisplayName { get; set; }
+
+        [DataMember]
+        public virtual string? FirstName { get; set; }
+
+        [DataMember]
+        public virtual string? LastName { get; set; }
+
+        [DataMember]
+        public virtual string? FullName { get; set; }
+
+        [DataMember]
+        public virtual string? Company { get; set; }
+
+        [DataMember]
+        public virtual string? Locale { get; set; }
+
+        [DataMember]
+        public virtual string? TimeZone { get; set; }
+
+        [DataMember]
+        public virtual string? Gender { get; set; }
+
+        [DataMember]
+        public virtual long? BirthDate { get; set; }
+
+        [DataMember]
+        public virtual string? AddressLine1 { get; set; }
+
+        [DataMember]
+        public virtual string? AddressLine2 { get; set; }
+
+        [DataMember]
+        public virtual string? Country { get; set; }
+
+        [DataMember]
+        public virtual string? City { get; set; }
+
+        [DataMember]
+        public virtual string? State { get; set; }
+
+        [DataMember]
+        public virtual string? PostalCode { get; set; }
+
+        [DataMember]
+        public virtual string[]? Tags { get; set; }
+
+        [DataMember]
+        public virtual string[]? Roles { get; set; }
+
+        [DataMember]
+        public virtual string Lifecycle { get; set; }
+
+        [DataMember]
+        public virtual string SourceOfCreation { get; set; }
+
+        [DataMember]
+        public virtual string? MergedIntoContactId { get; set; }
+
+        [DataMember]
+        public virtual DateTime CreatedOn { get; set; }
+
+        [DataMember]
+        public virtual DateTime ModifiedOn { get; set; }
+
+        [DataMember]
+        public virtual AuthDto[]? Auths { get; set; }
+
+        [DataMember]
+        public virtual Dictionary<string, ChannelSubscriptionStateDto>? MarketingPreferences { get; set; }
+    }
+
+    [DataContract]
     public partial class EmailRecipientDto
     {
         [DataMember]
@@ -4527,10 +7978,11 @@ public partial class CronExpression
         public virtual string? TimeZoneId { get; set; }
 
         [DataMember]
-        public virtual IReadOnlySet<TokenMappingDto>? UserTokenMappings { get; set; }
+        public virtual HashSet<TokenMappingDto>? UserTokenMappings { get; set; }
     }
 
     public partial class EmailIntegrationListProjection
+        : IntegrationListProjection
     {
         public virtual EmailProvider EmailProvider { get; set; }
         public virtual string SenderEmailAddress { get; set; }
@@ -4538,6 +7990,7 @@ public partial class CronExpression
     }
 
     public partial class IntegrationListProjection
+        : IHasViewId
     {
         public virtual string ViewId { get; set; }
         public virtual string IntegrationName { get; set; }
@@ -4573,6 +8026,7 @@ public partial class CronExpression
         : EmailIntegrationDto
     {
         public virtual string Domain { get; set; }
+        public virtual MailGunRegion Region { get; set; }
     }
 
     public partial class SendGridEmailIntegrationDto
@@ -4589,6 +8043,7 @@ public partial class CronExpression
 
     [DataContract]
     public partial class EmailFooterDto
+        : IHasViewId
     {
         [DataMember]
         public virtual string ViewId { get; set; }
@@ -4601,13 +8056,15 @@ public partial class CronExpression
     }
 
     public partial class EmailSettings
+        : IBindableContract
     {
-        public virtual IList<ListItemWithTranslationsProjection>? Signatures { get; set; }
-        public virtual IList<ListItemWithTranslationsProjection>? Footers { get; set; }
+        public virtual IList<EmailSignatureDto>? Signatures { get; set; }
+        public virtual IList<EmailFooterDto>? Footers { get; set; }
     }
 
     [DataContract]
     public partial class EmailSignatureDto
+        : IHasViewId
     {
         [DataMember]
         public virtual string ViewId { get; set; }
@@ -4621,6 +8078,7 @@ public partial class CronExpression
 
     [DataContract]
     public partial class ListItemProjection
+        : IHasViewId
     {
         [DataMember]
         public virtual string ViewId { get; set; }
@@ -4685,11 +8143,13 @@ public partial class CronExpression
     }
 
     public partial class PushIntegrationDto
+        : IntegrationDto
     {
         public virtual PushProvider Provider { get; set; }
     }
 
     public partial class PushIntegrationListProjection
+        : IntegrationListProjection
     {
         [DataMember]
         public virtual PushProvider Provider { get; set; }
@@ -4744,6 +8204,12 @@ public partial class CronExpression
         public virtual string WebsitePushId { get; set; }
     }
 
+    public partial class PushSettings
+    {
+        public virtual HashSet<TagDefinitionDto>? MarketingTags { get; set; }
+        public virtual HashSet<TagDefinitionDto>? TransactionalTags { get; set; }
+    }
+
     [DataContract]
     public partial class SmsDto
     {
@@ -4751,11 +8217,19 @@ public partial class CronExpression
         public virtual bool IsEnabled { get; set; }
 
         [DataMember]
-        public virtual string? DefaultIntegrationViewId { get; set; }
+        public virtual Dictionary<string, string> DefaultIntegrationViewIds { get; set; } = new();
     }
 
     public partial class SmsIntegrationDto
+        : IntegrationDto
     {
+        public virtual SmsProvider Provider { get; set; }
+    }
+
+    public partial class SmsIntegrationListProjection
+        : IntegrationListProjection
+    {
+        [DataMember]
         public virtual SmsProvider Provider { get; set; }
     }
 
@@ -4808,12 +8282,19 @@ public partial class CronExpression
         public virtual string FromSender { get; set; }
     }
 
+    public partial class SmsSettings
+        : IBindableContract
+    {
+    }
+
     public partial class PaymentsIntegrationDto
+        : IntegrationDto
     {
         public virtual PaymentGatewayPlatform GatewayPlatform { get; set; }
     }
 
     public partial class PaymentsIntegrationListProjection
+        : IntegrationListProjection
     {
         [DataMember]
         public virtual PaymentGatewayPlatform GatewayPlatform { get; set; }
@@ -4934,10 +8415,91 @@ public partial class CronExpression
         public virtual string? WebhookSecret { get; set; }
     }
 
+    public partial class PaymentsWebhookLogEntry
+    {
+        public virtual string IntegrationId { get; set; }
+        public virtual string Source { get; set; }
+        public virtual string? EventName { get; set; }
+        public virtual string? ProviderEventId { get; set; }
+        public virtual int StatusCode { get; set; }
+        public virtual string Description { get; set; }
+        public virtual DateTime ReceivedOn { get; set; }
+    }
+
+    public enum ResolvedRefStatus
+    {
+        [EnumMember(Value="ok")]
+        Ok,
+        [EnumMember(Value="notFound")]
+        NotFound,
+        [EnumMember(Value="unauthorized")]
+        Unauthorized,
+        [EnumMember(Value="sourceError")]
+        SourceError,
+        [EnumMember(Value="erased")]
+        Erased,
+    }
+
+    public partial class ResolvedResourceEntry
+    {
+        public virtual ResourceRefDto Ref { get; set; }
+        public virtual ResolvedRefStatus Status { get; set; }
+        public virtual Object? Resolved { get; set; }
+        public virtual string? Diagnostic { get; set; }
+    }
+
+    public enum ResourceKindDto
+    {
+        [EnumMember(Value="contact")]
+        Contact,
+        [EnumMember(Value="document")]
+        Document,
+        [EnumMember(Value="file")]
+        File,
+        [EnumMember(Value="paymentCustomer")]
+        PaymentCustomer,
+        [EnumMember(Value="order")]
+        Order,
+        [EnumMember(Value="payment")]
+        Payment,
+        [EnumMember(Value="product")]
+        Product,
+        [EnumMember(Value="integration")]
+        Integration,
+    }
+
+    public partial class ResourceRefDto
+    {
+        public virtual string ProjectId { get; set; }
+        public virtual string? IntegrationId { get; set; }
+        public virtual ResourceKindDto Kind { get; set; }
+    }
+
+    [DataContract]
+    public partial class CheckEmailIntegrationDomainHealthResponse
+        : ResponseBase
+    {
+        [DataMember]
+        public virtual string? Domain { get; set; }
+
+        [DataMember]
+        public virtual IReadOnlyList<DomainHealthRecordItemDto>? Items { get; set; }
+    }
+
     public partial class CodeMashResponseStatus
     {
         public virtual bool IsSuccess { get; set; }
         public virtual IEnumerable<ErrorDto>? Errors { get; set; }
+    }
+
+    [DataContract]
+    public partial class DomainHealthRecordItemDto
+    {
+        [DataMember]
+        public virtual string Record { get; set; }
+
+        [DataMember]
+        public virtual string Value { get; set; }
     }
 
     public partial class EmptyResponse
@@ -4951,6 +8513,9 @@ public partial class CronExpression
     {
         [DataMember]
         public virtual string? Id { get; set; }
+
+        [DataMember]
+        public virtual string? Status { get; set; }
     }
 
     [DataContract]
@@ -4966,13 +8531,63 @@ public partial class CronExpression
         public virtual IReadOnlyList<string>? Errors { get; set; }
     }
 
+    [DataContract]
     public partial class ResponseBase
     {
+        [DataMember]
         public virtual CodeMashResponseStatus ResponseStatus { get; set; }
     }
 
     [DataContract]
+    public partial class TestCodeIntegrationResponse
+        : ResponseBase
+    {
+        [DataMember]
+        public virtual IReadOnlyList<IntegrationTestResultItemDto>? Items { get; set; }
+    }
+
+    [DataContract]
+    public partial class TestDatabaseIntegrationResponse
+        : ResponseBase
+    {
+        [DataMember]
+        public virtual IReadOnlyList<IntegrationTestResultItemDto>? Items { get; set; }
+    }
+
+    [DataContract]
     public partial class TestEmailIntegrationResponse
+        : ResponseBase
+    {
+        [DataMember]
+        public virtual IReadOnlyList<IntegrationTestResultItemDto>? Items { get; set; }
+    }
+
+    [DataContract]
+    public partial class TestEmailValidationIntegrationResponse
+        : ResponseBase
+    {
+        [DataMember]
+        public virtual List<TestEmailValidationItemDto> Items { get; set; } = [];
+    }
+
+    [DataContract]
+    public partial class TestEmailValidationItemDto
+    {
+        [DataMember]
+        public virtual string Address { get; set; }
+
+        [DataMember]
+        public virtual string Verdict { get; set; }
+
+        [DataMember]
+        public virtual string? Reason { get; set; }
+
+        [DataMember]
+        public virtual decimal? Score { get; set; }
+    }
+
+    [DataContract]
+    public partial class TestFilesIntegrationResponse
         : ResponseBase
     {
         [DataMember]
@@ -4996,7 +8611,23 @@ public partial class CronExpression
     }
 
     [DataContract]
+    public partial class TestMarketplaceIntegrationResponse
+        : ResponseBase
+    {
+        [DataMember]
+        public virtual IReadOnlyList<IntegrationTestResultItemDto>? Items { get; set; }
+    }
+
+    [DataContract]
     public partial class TestPaymentsIntegrationResponse
+        : ResponseBase
+    {
+        [DataMember]
+        public virtual IReadOnlyList<IntegrationTestResultItemDto>? Items { get; set; }
+    }
+
+    [DataContract]
+    public partial class TestSmsIntegrationResponse
         : ResponseBase
     {
         [DataMember]
@@ -5052,6 +8683,7 @@ public partial class CronExpression
 
     [DataContract]
     public partial class SchedulerTaskListProjection
+        : IHasViewId
     {
         [DataMember]
         public virtual string TaskId { get; set; }
@@ -5080,7 +8712,176 @@ public partial class CronExpression
     }
 
     [DataContract]
+    public partial class CaseResolutionDto
+    {
+        [DataMember]
+        public virtual string Problem { get; set; }
+
+        [DataMember]
+        public virtual List<string> Symptoms { get; set; } = [];
+
+        [DataMember]
+        public virtual string RootCause { get; set; }
+
+        [DataMember]
+        public virtual CaseResolutionFixKind Fix { get; set; }
+
+        [DataMember]
+        public virtual string? FixDetail { get; set; }
+
+        [DataMember]
+        public virtual List<string>? AffectedVersions { get; set; }
+    }
+
+    [DataContract]
+    public partial class SupportCaseDetailDto
+    {
+        [DataMember]
+        public virtual SupportCaseDto Case { get; set; }
+
+        [DataMember]
+        public virtual List<SupportCaseMessageDto> Messages { get; set; } = [];
+    }
+
+    [DataContract]
+    public partial class SupportCaseDto
+        : IHasViewId
+    {
+        [DataMember]
+        public virtual string ViewId { get; set; }
+
+        [DataMember]
+        public virtual string AccountId { get; set; }
+
+        [DataMember]
+        public virtual string? ProjectId { get; set; }
+
+        [DataMember]
+        public virtual string? ReporterId { get; set; }
+
+        [DataMember]
+        public virtual SupportCaseKind Kind { get; set; }
+
+        [DataMember]
+        public virtual SupportCaseSeverity Severity { get; set; }
+
+        [DataMember]
+        public virtual SupportCaseStatus Status { get; set; }
+
+        [DataMember]
+        public virtual SupportCustomerStatus CustomerStatus { get; set; }
+
+        [DataMember]
+        public virtual string Subject { get; set; }
+
+        [DataMember]
+        public virtual string? AffectedModule { get; set; }
+
+        [DataMember]
+        public virtual DeploymentMode DeploymentMode { get; set; }
+
+        [DataMember]
+        public virtual string? GatewayVersion { get; set; }
+
+        [DataMember]
+        public virtual string? Region { get; set; }
+
+        [DataMember]
+        public virtual string? PlanTier { get; set; }
+
+        [DataMember]
+        public virtual long OpenedOn { get; set; }
+
+        [DataMember]
+        public virtual long? FirstResponseOn { get; set; }
+
+        [DataMember]
+        public virtual long? ResolvedOn { get; set; }
+
+        [DataMember]
+        public virtual long? ClosedOn { get; set; }
+
+        [DataMember]
+        public virtual string? Resolution { get; set; }
+
+        [DataMember]
+        public virtual int MessageCount { get; set; }
+
+        [DataMember]
+        public virtual long? LastMessageOn { get; set; }
+    }
+
+    [DataContract]
+    public partial class SupportCaseListProjection
+        : IHasViewId
+    {
+        [DataMember]
+        public virtual string ViewId { get; set; }
+
+        [DataMember]
+        public virtual string? ProjectId { get; set; }
+
+        [DataMember]
+        public virtual SupportCaseKind Kind { get; set; }
+
+        [DataMember]
+        public virtual SupportCaseSeverity Severity { get; set; }
+
+        [DataMember]
+        public virtual SupportCaseStatus Status { get; set; }
+
+        [DataMember]
+        public virtual SupportCustomerStatus CustomerStatus { get; set; }
+
+        [DataMember]
+        public virtual string Subject { get; set; }
+
+        [DataMember]
+        public virtual long OpenedOn { get; set; }
+
+        [DataMember]
+        public virtual int MessageCount { get; set; }
+
+        [DataMember]
+        public virtual long? LastMessageOn { get; set; }
+    }
+
+    [DataContract]
+    public partial class SupportCaseMessageDto
+    {
+        [DataMember]
+        public virtual string Id { get; set; }
+
+        [DataMember]
+        public virtual string CaseId { get; set; }
+
+        [DataMember]
+        public virtual SupportMessageAuthorKind AuthorKind { get; set; }
+
+        [DataMember]
+        public virtual string? AuthorId { get; set; }
+
+        [DataMember]
+        public virtual string? AuthorDisplayName { get; set; }
+
+        [DataMember]
+        public virtual string Body { get; set; }
+
+        [DataMember]
+        public virtual long SentOn { get; set; }
+    }
+
+    public enum SupportCustomerStatus
+    {
+        Pending,
+        Open,
+        Solved,
+        Closed,
+    }
+
+    [DataContract]
     public partial class EmailBodyDto
+        : IHasRazorTemplateCode
     {
         [DataMember]
         public virtual string? Structure { get; set; }
@@ -5094,6 +8895,7 @@ public partial class CronExpression
 
     [DataContract]
     public partial class EmailMessageContentDto
+        : IHasRazorTemplateCode
     {
         [DataMember]
         public virtual string Subject { get; set; }
@@ -5102,11 +8904,12 @@ public partial class CronExpression
         public virtual EmailBodyDto Body { get; set; }
 
         [DataMember]
-        public virtual IReadOnlySet<FileResourceRefDto>? StaticAttachments { get; set; }
+        public virtual HashSet<FileResourceRefDto>? StaticAttachments { get; set; }
     }
 
     [DataContract]
     public partial class EmailMessageTranslationDto
+        : IHasRazorTemplateCode
     {
         [DataMember]
         public virtual string Language { get; set; }
@@ -5115,29 +8918,30 @@ public partial class CronExpression
         public virtual EmailMessageContentDto Content { get; set; }
 
         [DataMember]
-        public virtual IReadOnlySet<FileResourceRefDto>? StaticAttachments { get; set; }
+        public virtual HashSet<FileResourceRefDto>? StaticAttachments { get; set; }
     }
 
     [DataContract]
     public partial class EmailTemplateDto
-        : TemplateDto
+        : TemplateDto, IBindableContract
     {
         [DataMember]
-        public virtual IReadOnlySet<EmailMessageTranslationDto> Translations { get; set; }
+        public virtual HashSet<EmailMessageTranslationDto> Translations { get; set; } = [];
 
         [DataMember]
-        public virtual IReadOnlySet<FileResourceRefDto>? StaticAttachments { get; set; }
+        public virtual HashSet<FileResourceRefDto>? StaticAttachments { get; set; }
     }
 
     public partial class EmailTemplateListProjection
         : TemplateListProjection
     {
         public virtual bool HasAttachments { get; set; }
-        public virtual IReadOnlySet<string> Languages { get; set; }
+        public virtual IReadOnlyList<string> Languages { get; set; }
     }
 
     [DataContract]
     public partial class PushMessageContentDto
+        : IHasRazorTemplateCode
     {
         [DataMember]
         public virtual string Title { get; set; }
@@ -5148,6 +8952,7 @@ public partial class CronExpression
 
     [DataContract]
     public partial class PushMessageTranslationDto
+        : IHasRazorTemplateCode
     {
         [DataMember]
         public virtual string Language { get; set; }
@@ -5158,10 +8963,10 @@ public partial class CronExpression
 
     [DataContract]
     public partial class PushTemplateDto
-        : TemplateDto
+        : TemplateDto, IHasRazorTemplateCode, IBindableContract
     {
         [DataMember]
-        public virtual IReadOnlySet<PushMessageTranslationDto> Translations { get; set; }
+        public virtual HashSet<PushMessageTranslationDto> Translations { get; set; } = [];
     }
 
     [DataContract]
@@ -5172,6 +8977,7 @@ public partial class CronExpression
 
     [DataContract]
     public partial class SmsMessageContentDto
+        : IHasRazorTemplateCode
     {
         [DataMember]
         public virtual string Subject { get; set; }
@@ -5182,6 +8988,7 @@ public partial class CronExpression
 
     [DataContract]
     public partial class SmsMessageTranslationDto
+        : IHasRazorTemplateCode
     {
         [DataMember]
         public virtual string Language { get; set; }
@@ -5192,10 +8999,16 @@ public partial class CronExpression
 
     [DataContract]
     public partial class SmsTemplateDto
-        : TemplateDto
+        : TemplateDto, IHasRazorTemplateCode, IBindableContract
     {
         [DataMember]
-        public virtual IReadOnlySet<SmsMessageTranslationDto> Translations { get; set; }
+        public virtual HashSet<SmsMessageTranslationDto> Translations { get; set; } = [];
+    }
+
+    [DataContract]
+    public partial class SmsTemplateListProjection
+        : TemplateListProjection
+    {
     }
 
     [DataContract]
@@ -5219,9 +9032,6 @@ public partial class CronExpression
 
         [DataMember]
         public virtual bool HiddenSystemEmailTemplate { get; set; }
-
-        [DataMember]
-        public virtual string? Id { get; set; }
     }
 
     public partial class SystemEmailTemplateListProjection
@@ -5251,7 +9061,11 @@ public partial class CronExpression
 
     [DataContract]
     public partial class TemplateDto
+        : IHasViewId, IHasDatabaseId
     {
+        [DataMember]
+        public virtual string? Id { get; set; }
+
         [DataMember]
         public virtual string ViewId { get; set; }
 
@@ -5265,6 +9079,9 @@ public partial class CronExpression
         public virtual CommunicationChannel CommunicationChannel { get; set; }
 
         [DataMember]
+        public virtual NotificationMedium Medium { get; set; }
+
+        [DataMember]
         public virtual bool IsActive { get; set; }
 
         [DataMember]
@@ -5273,7 +9090,11 @@ public partial class CronExpression
 
     [DataContract]
     public partial class TemplateListProjection
+        : IHasViewId, IHasDatabaseId
     {
+        [DataMember]
+        public virtual string? Id { get; set; }
+
         [DataMember]
         public virtual string ViewId { get; set; }
 
@@ -5320,6 +9141,9 @@ public partial class CronExpression
     {
         [DataMember]
         public virtual MembershipTriggerType Type { get; set; }
+
+        [DataMember]
+        public virtual List<string>? DestinationIds { get; set; }
     }
 
     [DataContract]
@@ -5328,6 +9152,12 @@ public partial class CronExpression
     {
         [DataMember]
         public virtual PaymentTriggerType When { get; set; }
+
+        [DataMember]
+        public virtual List<string>? Integrations { get; set; }
+
+        [DataMember]
+        public virtual List<string>? Events { get; set; }
     }
 
     [DataContract]
@@ -5336,6 +9166,12 @@ public partial class CronExpression
     {
         [DataMember]
         public virtual PaymentTriggerType Type { get; set; }
+
+        [DataMember]
+        public virtual List<string>? Integrations { get; set; }
+
+        [DataMember]
+        public virtual List<string>? Events { get; set; }
     }
 
     [DataContract]
@@ -5358,6 +9194,31 @@ public partial class CronExpression
     {
         [DataMember]
         public virtual SchemaTriggerType Type { get; set; }
+    }
+
+    [DataContract]
+    public partial class SseDeliverySettingsDto
+    {
+        [DataMember]
+        public virtual string Audience { get; set; }
+
+        [DataMember]
+        public virtual HashSet<string>? UserAuthIds { get; set; }
+
+        [DataMember]
+        public virtual string? EventName { get; set; }
+
+        [DataMember]
+        public virtual string? PayloadType { get; set; }
+
+        [DataMember]
+        public virtual string? PayloadTemplate { get; set; }
+
+        [DataMember]
+        public virtual bool Persist { get; set; }
+
+        [DataMember]
+        public virtual HashSet<TokenMappingDto>? MappedTokens { get; set; }
     }
 
     [DataContract]
@@ -5393,6 +9254,17 @@ public partial class CronExpression
     }
 
     [DataContract]
+    public partial class TriggerActionMarketplaceDto
+        : TriggerActionDto
+    {
+        [DataMember]
+        public virtual string FunctionId { get; set; }
+
+        [DataMember]
+        public virtual Dictionary<string, string>? Payload { get; set; }
+    }
+
+    [DataContract]
     public partial class TriggerActionPushDto
         : TriggerActionDto
     {
@@ -5401,6 +9273,25 @@ public partial class CronExpression
 
         [DataMember]
         public virtual PushCampaignDeliverySettingsDto DeliverySettings { get; set; }
+    }
+
+    [DataContract]
+    public partial class TriggerActionSmsDto
+        : TriggerActionDto
+    {
+        [DataMember]
+        public virtual string TemplateId { get; set; }
+
+        [DataMember]
+        public virtual SmsCampaignDeliverySettingsDto DeliverySettings { get; set; }
+    }
+
+    [DataContract]
+    public partial class TriggerActionSseDto
+        : TriggerActionDto
+    {
+        [DataMember]
+        public virtual SseDeliverySettingsDto DeliverySettings { get; set; }
     }
 
     [DataContract]
@@ -5413,6 +9304,7 @@ public partial class CronExpression
 
     [DataContract]
     public partial class TriggerDto
+        : IHasViewId
     {
         [DataMember]
         public virtual TriggerType Type { get; set; }
@@ -5438,6 +9330,7 @@ public partial class CronExpression
 
     [DataContract]
     public partial class TriggerProjectionList
+        : IHasViewId
     {
         [DataMember]
         public virtual string ViewId { get; set; }
@@ -5459,6 +9352,9 @@ public partial class CronExpression
     public partial class WebhookDeliverySettingsDto
     {
         [DataMember]
+        public virtual List<string>? DestinationIds { get; set; }
+
+        [DataMember]
         public virtual string? EventName { get; set; }
 
         [DataMember]
@@ -5468,7 +9364,7 @@ public partial class CronExpression
         public virtual bool IncludeRawPayload { get; set; }
 
         [DataMember]
-        public virtual IReadOnlySet<TokenMappingDto>? MappedTokens { get; set; }
+        public virtual HashSet<TokenMappingDto>? MappedTokens { get; set; }
     }
 
     [DataContract]
@@ -5494,7 +9390,9 @@ public partial class CronExpression
     }
 
     public partial class WebhookIntegrationDto
+        : IntegrationDto
     {
+        public virtual bool IsConfigured { get; set; }
         public virtual IReadOnlyList<WebhookDestinationDto> Destinations { get; set; }
         public virtual IReadOnlyDictionary<string, string>? ExtraHeaders { get; set; }
     }
@@ -5522,6 +9420,7 @@ public partial class CronExpression
 
     [DataContract]
     public partial class CreateStripeCheckoutSessionResponse
+        : IdResponse
     {
     }
 
@@ -5547,6 +9446,7 @@ public partial class CronExpression
 
     [DataContract]
     public partial class CreateTeamMemberFromInvitationResponse
+        : IdResponse
     {
         [DataMember]
         public virtual string? Token { get; set; }
@@ -5579,20 +9479,42 @@ public partial class CronExpression
         public virtual AccountStatusDto? Item { get; set; }
     }
 
+    ///<summary>
+    ///Get Account Usage Billing.
+    ///</summary>
+    [NorbixRoute("/{version}/account/usage-billing", "GET")]
+    public partial class GetAccountUsageBilling
+        : RequestBase, INorbixRequest<GetAccountUsageBillingResponse>
+    {
+    }
+
+    public partial class GetAccountUsageBillingResponse
+        : ResponseBase
+    {
+        public virtual UsageBillingDto? Item { get; set; }
+    }
+
     [NorbixRoute("/{version}/account/stripe/get-portal-url", "POST")]
     [DataContract]
     public partial class GetStripeBillingPortalUrl
         : RequestBase, INorbixRequest<GetStripeBillingPortalUrlResponse>
     {
+        ///<summary>
+        ///Which subscription (e.g. main account plan) to open the billing portal for.
+        ///</summary>
         [DataMember]
         public virtual SubscriptionType SubscriptionType { get; set; }
 
+        ///<summary>
+        ///URL to return to after the customer leaves the billing portal.
+        ///</summary>
         [DataMember]
         public virtual string? ReturnUrl { get; set; }
     }
 
     [DataContract]
     public partial class GetStripeBillingPortalUrlResponse
+        : IdResponse
     {
     }
 
@@ -5607,22 +9529,34 @@ public partial class CronExpression
     public partial class UpdateAccountProfile
         : RequestBase, INorbixRequest<EmptyResponse>
     {
+        ///<summary>
+        ///Account owner's display name.
+        ///</summary>
         [DataMember]
         public virtual string DisplayName { get; set; }
 
+        ///<summary>
+        ///Email address used for billing communications.
+        ///</summary>
         [DataMember]
         public virtual string? BillingEmail { get; set; }
 
+        ///<summary>
+        ///Email address used for operations communications.
+        ///</summary>
         [DataMember]
         public virtual string? OperationsEmail { get; set; }
 
+        ///<summary>
+        ///Email address used for security-related communications.
+        ///</summary>
         [DataMember]
         public virtual string? SecurityEmail { get; set; }
     }
 
     [NorbixRoute("/{version}/account/verify", "GET")]
     public partial class VerifyAccount
-        : RequestBase, INorbixRequest<EmptyResponse>
+        : RequestBase, INorbixRequest<EmptyResponse>, IHasAccountId
     {
         public virtual string Token { get; set; }
         public virtual string AccountId { get; set; }
@@ -5653,9 +9587,48 @@ public partial class CronExpression
 
     [DataContract]
     public partial class CreateAccountResponse
+        : IdResponse
     {
         [DataMember]
         public virtual string? Token { get; set; }
+    }
+
+    [NorbixRoute("/{version}/account/licensing/status", "GET")]
+    public partial class GetInstallationLicenseStatus
+        : RequestBase, INorbixRequest<GetInstallationLicenseStatusResponse>
+    {
+    }
+
+    public partial class GetInstallationLicenseStatusResponse
+        : ResponseBase
+    {
+        public virtual InstallationLicenseStatusDto? Status { get; set; }
+    }
+
+    [NorbixRoute("/{version}/account/licensing/dns-status", "GET")]
+    public partial class GetLicenseDomainDnsStatus
+        : RequestBase, INorbixRequest<GetLicenseDomainDnsStatusResponse>
+    {
+        public virtual string? Domain { get; set; }
+    }
+
+    public partial class GetLicenseDomainDnsStatusResponse
+        : ResponseBase
+    {
+        public virtual LicenseDomainDnsStatusDto? Status { get; set; }
+    }
+
+    [NorbixRoute("/{version}/licensing/domain-verification/status", "GET")]
+    public partial class GetLicenseDomainVerificationStatus
+        : RequestBase, INorbixRequest<GetLicenseDomainVerificationStatusResponse>
+    {
+        public virtual string? Domain { get; set; }
+    }
+
+    public partial class GetLicenseDomainVerificationStatusResponse
+        : ResponseBase
+    {
+        public virtual LicenseDomainVerificationStatusDto? Status { get; set; }
     }
 
     [NorbixRoute("/{version}/account/licenses", "GET")]
@@ -5670,28 +9643,476 @@ public partial class CronExpression
         public virtual HashSet<LicenseDto>? List { get; set; }
     }
 
+    [NorbixRoute("/{version}/licensing/heartbeat", "POST")]
+    public partial class PostLicenseHeartbeat
+        : RequestBase, INorbixRequest<PostLicenseHeartbeatResponse>
+    {
+        public virtual string? License { get; set; }
+        public virtual string? LicenseAccountId { get; set; }
+        public virtual Guid? InstallationId { get; set; }
+        public virtual string? Domain { get; set; }
+        public virtual string? HostKind { get; set; }
+        public virtual string? Release { get; set; }
+        public virtual string? InstanceVersion { get; set; }
+    }
+
+    public partial class PostLicenseHeartbeatResponse
+        : ResponseBase
+    {
+        public virtual LicenseHeartbeatVerdictDto? Verdict { get; set; }
+    }
+
+    [NorbixRoute("/{version}/licensing/domain-verification/start", "POST")]
+    public partial class StartLicenseDomainVerificationRequest
+        : RequestBase, INorbixRequest<StartLicenseDomainVerificationResponse>
+    {
+        public virtual string? Domain { get; set; }
+    }
+
+    public partial class StartLicenseDomainVerificationResponse
+        : ResponseBase
+    {
+        public virtual LicenseDomainVerificationChallengeDto? Challenge { get; set; }
+    }
+
+    [NorbixRoute("/{version}/account/userauth/email/confirm-verification", "POST")]
+    [DataContract]
+    public partial class AccountConfirmEmailVerificationRequest
+        : RequestBase, INorbixRequest<AccountPasskeyVerificationTokenResponse>
+    {
+        [DataMember]
+        public virtual string Email { get; set; }
+
+        [DataMember]
+        public virtual string Code { get; set; }
+    }
+
+    [NorbixRoute("/{version}/account/userauth/has-passkey", "POST")]
+    [DataContract]
+    public partial class AccountHasPasskeyRequest
+        : RequestBase, INorbixRequest<AccountPasskeyOkResponse>
+    {
+        [DataMember]
+        public virtual string Email { get; set; }
+    }
+
+    [NorbixRoute("/{version}/account/userauth/passkey/authentication-options", "POST")]
+    [DataContract]
+    public partial class AccountPasskeyAuthenticationOptionsRequest
+        : RequestBase, INorbixRequest<AccountPasskeyCeremonyOptionsResponse>
+    {
+        [DataMember]
+        public virtual string Email { get; set; }
+    }
+
+    public partial class AccountPasskeyAuthTokensResponse
+        : ResponseBase
+    {
+        public virtual string AccessToken { get; set; }
+        public virtual string RefreshToken { get; set; }
+        public virtual int ExpiresInSeconds { get; set; }
+        public virtual List<string>? RecoveryCodes { get; set; }
+    }
+
+    public partial class AccountPasskeyCeremonyOptionsResponse
+        : ResponseBase
+    {
+        public virtual string CeremonyId { get; set; }
+        public virtual string OptionsJson { get; set; }
+    }
+
+    [NorbixRoute("/{version}/account/userauth/passkey/enrollment-options", "POST")]
+    [DataContract]
+    public partial class AccountPasskeyEnrollmentOptionsRequest
+        : RequestBase, INorbixRequest<AccountPasskeyCeremonyOptionsResponse>
+    {
+    }
+
+    public partial class AccountPasskeyEnrollmentResponse
+        : ResponseBase
+    {
+        public virtual List<string>? RecoveryCodes { get; set; }
+    }
+
+    public partial class AccountPasskeyListItemDto
+    {
+        public virtual string CredentialId { get; set; }
+        public virtual string FriendlyName { get; set; }
+        public virtual DateTime RegisteredOnUtc { get; set; }
+        public virtual DateTime LastUsedOnUtc { get; set; }
+        public virtual bool IsRevoked { get; set; }
+    }
+
+    public partial class AccountPasskeyListResponse
+        : ResponseBase
+    {
+        public virtual List<AccountPasskeyListItemDto> Passkeys { get; set; } = [];
+    }
+
+    public partial class AccountPasskeyOkResponse
+        : ResponseBase
+    {
+    }
+
+    [NorbixRoute("/{version}/account/userauth/passkey/registration-options", "POST")]
+    [DataContract]
+    public partial class AccountPasskeyRegistrationOptionsRequest
+        : RequestBase, INorbixRequest<AccountPasskeyCeremonyOptionsResponse>
+    {
+        [DataMember]
+        public virtual string VerificationToken { get; set; }
+    }
+
+    public partial class AccountPasskeyVerificationTokenResponse
+        : ResponseBase
+    {
+        public virtual string VerificationToken { get; set; }
+    }
+
+    [NorbixRoute("/{version}/account/userauth/email/start-verification", "POST")]
+    [DataContract]
+    public partial class AccountStartEmailVerificationRequest
+        : RequestBase, INorbixRequest<AccountPasskeyOkResponse>
+    {
+        [DataMember]
+        public virtual string Email { get; set; }
+    }
+
+    [NorbixRoute("/{version}/account/userauth/passkey/verify-authentication", "POST")]
+    [DataContract]
+    public partial class AccountVerifyPasskeyAuthenticationRequest
+        : RequestBase, INorbixRequest<AccountPasskeyAuthTokensResponse>
+    {
+        [DataMember]
+        public virtual string CeremonyId { get; set; }
+
+        [DataMember]
+        public virtual string AssertionResponse { get; set; }
+    }
+
+    [NorbixRoute("/{version}/account/userauth/passkey/verify-enrollment", "POST")]
+    [DataContract]
+    public partial class AccountVerifyPasskeyEnrollmentRequest
+        : RequestBase, INorbixRequest<AccountPasskeyEnrollmentResponse>
+    {
+        [DataMember]
+        public virtual string CeremonyId { get; set; }
+
+        [DataMember]
+        public virtual string AttestationResponse { get; set; }
+
+        [DataMember]
+        public virtual string? FriendlyName { get; set; }
+    }
+
+    [NorbixRoute("/{version}/account/userauth/passkey/verify-registration", "POST")]
+    [DataContract]
+    public partial class AccountVerifyPasskeyRegistrationRequest
+        : RequestBase, INorbixRequest<AccountPasskeyAuthTokensResponse>
+    {
+        [DataMember]
+        public virtual string VerificationToken { get; set; }
+
+        [DataMember]
+        public virtual string CeremonyId { get; set; }
+
+        [DataMember]
+        public virtual string AttestationResponse { get; set; }
+
+        [DataMember]
+        public virtual string? FriendlyName { get; set; }
+    }
+
+    [NorbixRoute("/{version}/account/userauth/passkeys", "GET")]
+    [DataContract]
+    public partial class ListAccountPasskeysRequest
+        : RequestBase, INorbixRequest<AccountPasskeyListResponse>
+    {
+    }
+
+    [NorbixRoute("/{version}/account/userauth/passkeys/{CredentialId}/rename", "POST")]
+    [DataContract]
+    public partial class RenameAccountPasskeyRequest
+        : RequestBase, INorbixRequest<AccountPasskeyOkResponse>
+    {
+        [DataMember]
+        public virtual string CredentialId { get; set; }
+
+        [DataMember]
+        public virtual string FriendlyName { get; set; }
+    }
+
+    [NorbixRoute("/{version}/account/userauth/passkeys/{CredentialId}/revoke", "POST")]
+    [DataContract]
+    public partial class RevokeAccountPasskeyRequest
+        : RequestBase, INorbixRequest<AccountPasskeyOkResponse>
+    {
+        [DataMember]
+        public virtual string CredentialId { get; set; }
+    }
+
+    public partial class AccountPasswordPolicyDto
+    {
+        public virtual int MinLength { get; set; }
+        public virtual int? MaxLength { get; set; }
+        public virtual int? MinNumbers { get; set; }
+        public virtual int? MaxNumbers { get; set; }
+        public virtual int? MinUpper { get; set; }
+        public virtual int? MaxUpper { get; set; }
+        public virtual int? MinLower { get; set; }
+        public virtual int? MaxLower { get; set; }
+        public virtual int? MinSpecial { get; set; }
+        public virtual int? MaxSpecial { get; set; }
+        public virtual string? AllowedSpecial { get; set; }
+    }
+
+    public partial class AccountTeamRoleDto
+    {
+        public virtual string Id { get; set; }
+        public virtual string Name { get; set; }
+        public virtual string Description { get; set; }
+        public virtual bool IsSystem { get; set; }
+        public virtual HashSet<string>? Policies { get; set; }
+    }
+
+    [NorbixRoute("/{version}/account/team/member/password", "POST")]
+    public partial class ChangeTeamMemberPassword
+        : RequestBase, INorbixRequest<IdResponse>
+    {
+        public virtual string Email { get; set; }
+        public virtual string CurrentPassword { get; set; }
+        public virtual string NewPassword { get; set; }
+    }
+
+    [NorbixRoute("/{version}/account/team/policies", "POST")]
+    public partial class CreateAccountPolicy
+        : RequestBase, INorbixRequest<IdResponse>
+    {
+        ///<summary>
+        ///Name for the new custom account policy.
+        ///</summary>
+        public virtual string PolicyName { get; set; }
+
+        ///<summary>
+        ///Optional human-readable description of the policy's purpose.
+        ///</summary>
+        public virtual string? Description { get; set; }
+
+        ///<summary>
+        ///Raw JSON policy document, AWS-IAM style (Statement array of Effect/Action/Resource entries), matching PolicyDocument.schema.json. This defines which permissions the policy grants.
+        ///</summary>
+        public virtual string? PolicyDocumentJson { get; set; }
+    }
+
+    [NorbixRoute("/{version}/account/team/roles", "POST")]
+    public partial class CreateAccountRole
+        : RequestBase, INorbixRequest<IdResponse>
+    {
+        ///<summary>
+        ///Name for the new custom account team role.
+        ///</summary>
+        public virtual string RoleName { get; set; }
+
+        ///<summary>
+        ///Optional human-readable description of the role's purpose.
+        ///</summary>
+        public virtual string? Description { get; set; }
+
+        ///<summary>
+        ///Public policy ids (from get_account_team_policies) to attach to this role.
+        ///</summary>
+        public virtual HashSet<string>? Policies { get; set; }
+    }
+
+    [NorbixRoute("/{version}/account/team/member/create", "POST")]
+    public partial class CreateTeamMember
+        : RequestBase, INorbixRequest<IdResponse>
+    {
+        public virtual string Email { get; set; }
+        public virtual string? DisplayName { get; set; }
+        public virtual string? Password { get; set; }
+        public virtual HashSet<string>? Roles { get; set; }
+        public virtual bool SendInvitation { get; set; }
+    }
+
+    [NorbixRoute("/{version}/account/team/policies/{Id}", "DELETE")]
+    public partial class DeleteAccountPolicy
+        : RequestBase, INorbixRequest<IdResponse>
+    {
+        ///<summary>
+        ///Public policy id (from get_account_team_policies) to delete.
+        ///</summary>
+        public virtual string Id { get; set; }
+    }
+
+    [NorbixRoute("/{version}/account/team/roles/{Id}", "DELETE")]
+    public partial class DeleteAccountRole
+        : RequestBase, INorbixRequest<IdResponse>
+    {
+        ///<summary>
+        ///Role template id (from get_account_team_roles) to delete.
+        ///</summary>
+        public virtual string Id { get; set; }
+    }
+
+    ///<summary>
+    ///Gets account team members (collaborators)
+    ///</summary>
     [NorbixRoute("/{version}/account/collaborators", "GET")]
     public partial class GetAccountCollaborators
         : RequestBase, INorbixRequest<GetAccountCollaboratorsResponse>
     {
+        ///<summary>
+        ///Set true to also include the account owner in the list.
+        ///</summary>
         public virtual bool IncludeAccountOwner { get; set; }
+
+        ///<summary>
+        ///Set true to only return members that have a registered push device.
+        ///</summary>
         public virtual bool UserShouldHavePushDevice { get; set; }
+
+        ///<summary>
+        ///Optional project id — only members with access to that project.
+        ///</summary>
         public virtual string? ProjectId { get; set; }
+
+        ///<summary>
+        ///Optional filter: only these user ids.
+        ///</summary>
         public virtual HashSet<string>? UserIds { get; set; }
+
+        ///<summary>
+        ///Optional filter: only members having one of these role names.
+        ///</summary>
+        public virtual HashSet<string>? RoleNames { get; set; }
+
         public virtual PagingArgs? PagingArgs { get; set; }
     }
 
     public partial class GetAccountCollaboratorsResponse
         : ResponseBase
     {
-        public virtual PaginatedResponse<UserDto>? List { get; set; }
+        public virtual PaginatedResponse<AuthDto>? List { get; set; }
     }
 
+    [NorbixRoute("/{version}/account/team/password-policy", "GET")]
+    public partial class GetAccountPasswordPolicy
+        : RequestBase, INorbixRequest<GetAccountPasswordPolicyResponse>
+    {
+    }
+
+    public partial class GetAccountPasswordPolicyResponse
+        : ResponseBase
+    {
+        public virtual AccountPasswordPolicyDto? Policy { get; set; }
+    }
+
+    [NorbixRoute("/{version}/account/team/policies", "GET")]
+    public partial class GetAccountTeamPolicies
+        : RequestBase, INorbixRequest<GetAccountTeamPoliciesResponse>
+    {
+    }
+
+    public partial class GetAccountTeamPoliciesResponse
+        : ResponseBase
+    {
+        public virtual List<PolicyItemDto>? Policies { get; set; }
+    }
+
+    [NorbixRoute("/{version}/account/team/roles", "GET")]
+    public partial class GetAccountTeamRoles
+        : RequestBase, INorbixRequest<GetAccountTeamRolesResponse>
+    {
+    }
+
+    public partial class GetAccountTeamRolesResponse
+        : ResponseBase
+    {
+        public virtual List<AccountTeamRoleDto>? Roles { get; set; }
+    }
+
+    ///<summary>
+    ///Send invite to team member
+    ///</summary>
     [NorbixRoute("/{version}/account/team/member/invite", "POST")]
     public partial class SendInviteToTeamMember
         : RequestBase, INorbixRequest<EmptyResponse>
     {
+        ///<summary>
+        ///Email address the invitation is sent to.
+        ///</summary>
         public virtual string Email { get; set; }
+
+        ///<summary>
+        ///Account role ids (GUIDs from get_account_team_roles) the member gets on accepting. Omit for the default member role.
+        ///</summary>
+        public virtual HashSet<string>? Roles { get; set; }
+    }
+
+    [NorbixRoute("/{version}/account/team/policies", "PUT")]
+    public partial class UpdateAccountPolicy
+        : RequestBase, INorbixRequest<IdResponse>
+    {
+        ///<summary>
+        ///Public policy id (from get_account_team_policies) to update.
+        ///</summary>
+        public virtual string Id { get; set; }
+
+        ///<summary>
+        ///New name for the policy.
+        ///</summary>
+        public virtual string PolicyName { get; set; }
+
+        ///<summary>
+        ///Optional human-readable description of the policy's purpose.
+        ///</summary>
+        public virtual string? Description { get; set; }
+
+        ///<summary>
+        ///Raw JSON policy document, AWS-IAM style (Statement array of Effect/Action/Resource entries) — replaces the policy's current statement set.
+        ///</summary>
+        public virtual string? PolicyDocumentJson { get; set; }
+    }
+
+    [NorbixRoute("/{version}/account/team/roles", "PUT")]
+    public partial class UpdateAccountRole
+        : RequestBase, INorbixRequest<IdResponse>
+    {
+        ///<summary>
+        ///Role template id (from get_account_team_roles) to update.
+        ///</summary>
+        public virtual string Id { get; set; }
+
+        ///<summary>
+        ///New name for the role.
+        ///</summary>
+        public virtual string RoleName { get; set; }
+
+        ///<summary>
+        ///Optional human-readable description of the role's purpose.
+        ///</summary>
+        public virtual string? Description { get; set; }
+
+        ///<summary>
+        ///Public policy ids (from get_account_team_policies) to attach — replaces the current set.
+        ///</summary>
+        public virtual HashSet<string>? Policies { get; set; }
+    }
+
+    [NorbixRoute("/{version}/account/projects/environments", "POST")]
+    [DataContract]
+    public partial class CreateProjectEnvironmentRequest
+        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
+    {
+        ///<summary>
+        ///Name for the new environment (e.g. 'TEST', 'STAGING'). A-Z/0-9/space, up to 15 chars, cannot be PROD.
+        ///</summary>
+        [DataMember]
+        public virtual string EnvironmentName { get; set; }
+
+        [DataMember(Name="integration")]
+        public virtual DatabaseIntegrationRequest Integration { get; set; }
     }
 
     ///<summary>
@@ -5705,25 +10126,44 @@ public partial class CronExpression
         [DataMember]
         public virtual DatabaseIntegrationRequest Integration { get; set; }
 
+        ///<summary>
+        ///Project name, unique per account.
+        ///</summary>
         [DataMember]
         public virtual string ProjectName { get; set; }
 
-        ///<summary>Norbix region code for the primary region (e.g. "nb-eu-germany") — where the main DB / control data live.</summary>
+        ///<summary>
+        ///Region code for the primary region, e.g. 'nb-eu-germany'. Use a code from get_account_regions.
+        ///</summary>
         [DataMember]
         public virtual string? PrimaryRegion { get; set; }
 
-        ///<summary>Additional Norbix region codes where app-data infrastructure may be placed. Requires a multi-region deployment.</summary>
         [DataMember]
-        public virtual string[]? AdditionalRegions { get; set; }
+        public virtual HashSet<string>? AdditionalRegions { get; set; }
 
         [DataMember]
         public virtual string? Description { get; set; }
     }
 
+    ///<summary>
+    ///Deletes project
+    ///</summary>
     [NorbixRoute("/{version}/account/projects/{projectId}", "DELETE")]
     public partial class DeleteProject
         : CodeMashRequestBase, INorbixRequest<EmptyResponse>
     {
+    }
+
+    [NorbixRoute("/{version}/account/projects/environments/{environmentName}", "DELETE")]
+    [DataContract]
+    public partial class DeleteProjectEnvironmentRequest
+        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
+    {
+        ///<summary>
+        ///Name of the environment to delete (from get_project_environments), e.g. 'TEST'. PROD is rejected.
+        ///</summary>
+        [DataMember]
+        public virtual string EnvironmentName { get; set; }
     }
 
     ///<summary>
@@ -5750,6 +10190,19 @@ public partial class CronExpression
     {
     }
 
+    [NorbixRoute("/{version}/account/projects/environments", "GET")]
+    [DataContract]
+    public partial class GetProjectEnvironments
+        : CodeMashRequestBase, INorbixRequest<GetProjectEnvironmentsResponse>
+    {
+    }
+
+    public partial class GetProjectEnvironmentsResponse
+        : ResponseBase
+    {
+        public virtual ProjectEnvironmentsDto? Item { get; set; }
+    }
+
     public partial class GetProjectResponse
         : ResponseBase
     {
@@ -5771,6 +10224,107 @@ public partial class CronExpression
         public virtual HashSet<ProjectListItemDto>? List { get; set; }
     }
 
+    [NorbixRoute("/{version}/account/projects/environments/promote", "POST")]
+    [DataContract]
+    public partial class PromoteEnvironmentRequest
+        : CodeMashRequestBase, INorbixRequest<PromoteEnvironmentResponse>
+    {
+        ///<summary>
+        ///Environment to promote FROM (source of truth for this promotion).
+        ///</summary>
+        [DataMember]
+        public virtual string SourceEnv { get; set; }
+
+        ///<summary>
+        ///Environment to promote INTO. Must be higher on the promotion ladder than SourceEnv.
+        ///</summary>
+        [DataMember]
+        public virtual string TargetEnv { get; set; }
+
+        ///<summary>
+        ///When true, only returns the promotion plan (including deletions) without applying it or copying secrets. Use this to preview before a real run.
+        ///</summary>
+        [DataMember]
+        public virtual bool DryRun { get; set; }
+    }
+
+    public partial class PromoteEnvironmentResponse
+        : ResponseBase
+    {
+        public virtual PromotionResultDto? Item { get; set; }
+    }
+
+    [NorbixRoute("/{version}/account/projects/environments/promote/rollback", "POST")]
+    [DataContract]
+    public partial class RollbackPromotionRequest
+        : CodeMashRequestBase, INorbixRequest<PromoteEnvironmentResponse>
+    {
+        ///<summary>
+        ///Environment whose content should be rolled back.
+        ///</summary>
+        [DataMember]
+        public virtual string TargetEnv { get; set; }
+
+        ///<summary>
+        ///The fromVersion anchor returned by the promote_environment call being rolled back.
+        ///</summary>
+        [DataMember]
+        public virtual long FromVersion { get; set; }
+    }
+
+    [NorbixRoute("/{version}/account/projects/environments/{environmentName}/rank", "PATCH")]
+    [DataContract]
+    public partial class SetEnvironmentRankRequest
+        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
+    {
+        ///<summary>
+        ///Name of the environment to re-rank (from get_project_environments).
+        ///</summary>
+        [DataMember]
+        public virtual string EnvironmentName { get; set; }
+
+        ///<summary>
+        ///New promotion-ladder rank. Out-of-range values are clamped and ranks re-normalized.
+        ///</summary>
+        [DataMember]
+        public virtual int Rank { get; set; }
+    }
+
+    ///<summary>
+    ///Waits (bounded, server-side) for a project to finish provisioning and become active.
+    ///</summary>
+    [NorbixRoute("/{version}/account/projects/{projectId}/wait-active", "GET")]
+    public partial class WaitForProjectActiveRequest
+        : CodeMashRequestBase, INorbixRequest<WaitForProjectActiveResponse>
+    {
+        ///<summary>
+        ///Max seconds to wait before returning 'not active yet' (default 30, capped at 90).
+        ///</summary>
+        public virtual int? TimeoutSeconds { get; set; }
+    }
+
+    public partial class WaitForProjectActiveResponse
+        : ResponseBase
+    {
+        public virtual string? Status { get; set; }
+        public virtual bool IsActive { get; set; }
+        public virtual int WaitedSeconds { get; set; }
+        public virtual string? Message { get; set; }
+    }
+
+    ///<summary>
+    ///Assigns the project's Admin Portal service user
+    ///</summary>
+    [NorbixRoute("/{version}/account/projects/{projectId}/settings/admin-portal/service-user", "PUT")]
+    public partial class AssignAdminPortalServiceUserRequest
+        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
+    {
+        ///<summary>
+        ///Id of the existing AuthType.Service user to assign as the project's Admin Portal service user.
+        ///</summary>
+        public virtual string ServiceUserId { get; set; }
+    }
+
     ///<summary>
     ///Disables project
     ///</summary>
@@ -5790,13 +10344,38 @@ public partial class CronExpression
     }
 
     ///<summary>
+    ///Reads the Admin Portal layout/structure (service user only)
+    ///</summary>
+    [NorbixRoute("/{version}/account/projects/{projectId}/admin-portal/structure", "GET")]
+    public partial class GetAdminPortalStructure
+        : CodeMashRequestBase, INorbixRequest<AdminPortalStructureDto>
+    {
+    }
+
+    ///<summary>
     ///Updates project accent color
     ///</summary>
     [NorbixRoute("/{version}/account/projects/{projectId}/settings/accent-color", "PATCH")]
     public partial class UpdateProjectAccentColor
         : CodeMashRequestBase, INorbixRequest<EmptyResponse>
     {
+        ///<summary>
+        ///Hex color code, e.g. '#FF6D00'.
+        ///</summary>
         public virtual string Color { get; set; }
+    }
+
+    ///<summary>
+    ///Updates the project's admin-portal URL override
+    ///</summary>
+    [NorbixRoute("/{version}/account/projects/{projectId}/settings/admin-url", "PATCH")]
+    public partial class UpdateProjectAdminUrl
+        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
+    {
+        ///<summary>
+        ///Custom admin-portal URL to use instead of the canonical address. Null/empty restores the canonical pr_{id}.admin.{host} address.
+        ///</summary>
+        public virtual string? Url { get; set; }
     }
 
     ///<summary>
@@ -5806,6 +10385,9 @@ public partial class CronExpression
     public partial class UpdateProjectAllowedOrigins
         : CodeMashRequestBase, INorbixRequest<EmptyResponse>
     {
+        ///<summary>
+        ///The complete new list of allowed origin URLs, e.g. ["https://app.example.com", "https://example.com"]. An entry with no scheme (e.g. "example.com") defaults to https. Whatever is not in this list stops being allowed.
+        ///</summary>
         public virtual HashSet<string>? Origins { get; set; }
     }
 
@@ -5816,6 +10398,9 @@ public partial class CronExpression
     public partial class UpdateProjectDefaultLanguage
         : CodeMashRequestBase, INorbixRequest<EmptyResponse>
     {
+        ///<summary>
+        ///Language code, e.g. 'en' or 'de'.
+        ///</summary>
         public virtual string DefaultLanguage { get; set; }
     }
 
@@ -5826,7 +10411,23 @@ public partial class CronExpression
     public partial class UpdateProjectDescription
         : CodeMashRequestBase, INorbixRequest<EmptyResponse>
     {
+        ///<summary>
+        ///The new description text. Omit (null) to clear the description.
+        ///</summary>
         public virtual string? Description { get; set; }
+    }
+
+    ///<summary>
+    ///Sets whether the project's legal documents are publicly readable via the Admin Portal
+    ///</summary>
+    [NorbixRoute("/{version}/account/projects/{projectId}/settings/legal/expose", "PATCH")]
+    public partial class UpdateProjectExposeLegal
+        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
+    {
+        ///<summary>
+        ///True to make the legal documents publicly readable via the Admin Portal, false to hide them.
+        ///</summary>
+        public virtual bool Exposed { get; set; }
     }
 
     ///<summary>
@@ -5836,7 +10437,7 @@ public partial class CronExpression
     public partial class UpdateProjectIcon
         : CodeMashRequestBase, INorbixRequest<EmptyResponse>
     {
-        public virtual FileResourceDto? FileResource { get; set; }
+        public virtual FileResourceRefDto? FileResource { get; set; }
     }
 
     ///<summary>
@@ -5846,7 +10447,28 @@ public partial class CronExpression
     public partial class UpdateProjectLanguages
         : CodeMashRequestBase, INorbixRequest<EmptyResponse>
     {
+        ///<summary>
+        ///The complete new list of language codes, e.g. ["en", "de", "lt"].
+        ///</summary>
         public virtual HashSet<string> Languages { get; set; } = [];
+    }
+
+    ///<summary>
+    ///Updates the project's public legal documents (Terms & Conditions, Privacy Policy)
+    ///</summary>
+    [NorbixRoute("/{version}/account/projects/{projectId}/settings/legal", "PATCH")]
+    public partial class UpdateProjectLegalDocuments
+        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
+    {
+        ///<summary>
+        ///Terms & Conditions document, Markdown. Null/empty clears it.
+        ///</summary>
+        public virtual string? TermsMarkdown { get; set; }
+
+        ///<summary>
+        ///Privacy Policy document, Markdown. Null/empty clears it.
+        ///</summary>
+        public virtual string? PrivacyMarkdown { get; set; }
     }
 
     ///<summary>
@@ -5856,7 +10478,7 @@ public partial class CronExpression
     public partial class UpdateProjectLogo
         : CodeMashRequestBase, INorbixRequest<EmptyResponse>
     {
-        public virtual FileResourceDto? FileResource { get; set; }
+        public virtual FileResourceRefDto? FileResource { get; set; }
     }
 
     ///<summary>
@@ -5866,6 +10488,9 @@ public partial class CronExpression
     public partial class UpdateProjectMainColor
         : CodeMashRequestBase, INorbixRequest<EmptyResponse>
     {
+        ///<summary>
+        ///Hex color code, e.g. '#1A73E8'.
+        ///</summary>
         public virtual string Color { get; set; }
     }
 
@@ -5876,6 +10501,9 @@ public partial class CronExpression
     public partial class UpdateProjectName
         : CodeMashRequestBase, INorbixRequest<EmptyResponse>
     {
+        ///<summary>
+        ///The new project name, unique per account.
+        ///</summary>
         public virtual string Name { get; set; }
     }
 
@@ -5886,11 +10514,15 @@ public partial class CronExpression
     public partial class UpdateProjectRegions
         : CodeMashRequestBase, INorbixRequest<EmptyResponse>
     {
-        ///<summary>Norbix region code for the primary region (e.g. "nb-eu-germany") — where the main DB / control data live.</summary>
+        ///<summary>
+        ///Primary region code, e.g. 'nb-eu-germany'. Immutable once set — omit to keep the current one; only set it on a project that has none.
+        ///</summary>
         public virtual string? PrimaryRegion { get; set; }
 
-        ///<summary>Additional Norbix region codes where app-data infrastructure may be placed. Requires a multi-region deployment.</summary>
-        public virtual string[]? AdditionalRegions { get; set; }
+        ///<summary>
+        ///The complete new list of additional region codes (full replacement). A region that still hosts a provisioned database cluster cannot be removed.
+        ///</summary>
+        public virtual HashSet<string>? AdditionalRegions { get; set; }
     }
 
     ///<summary>
@@ -5900,6 +10532,9 @@ public partial class CronExpression
     public partial class UpdateProjectUrl
         : CodeMashRequestBase, INorbixRequest<EmptyResponse>
     {
+        ///<summary>
+        ///The marketing site URL, e.g. 'https://example.com'. Omit (null) to clear.
+        ///</summary>
         public virtual string? Url { get; set; }
     }
 
@@ -5927,6 +10562,9 @@ public partial class CronExpression
     public partial class DeleteNotificationsGroup
         : CodeMashRequestBase, INorbixRequest<EmptyResponse>
     {
+        ///<summary>
+        ///Tag identifying the notification group to remove.
+        ///</summary>
         public virtual string GroupTag { get; set; }
     }
 
@@ -5934,6 +10572,9 @@ public partial class CronExpression
     public partial class DeleteNotificationsTag
         : CodeMashRequestBase, INorbixRequest<EmptyResponse>
     {
+        ///<summary>
+        ///Tag identifying the notification tag to delete.
+        ///</summary>
         public virtual string Tag { get; set; }
     }
 
@@ -5941,7 +10582,14 @@ public partial class CronExpression
     public partial class RemoveTagFromNotificationsGroup
         : CodeMashRequestBase, INorbixRequest<EmptyResponse>
     {
+        ///<summary>
+        ///Tag identifying the notification group.
+        ///</summary>
         public virtual string GroupTag { get; set; }
+
+        ///<summary>
+        ///Tag identifying the notification tag to remove from the group.
+        ///</summary>
         public virtual string Tag { get; set; }
     }
 
@@ -5949,8 +10597,19 @@ public partial class CronExpression
     public partial class SaveNotificationsGroup
         : CodeMashRequestBase, INorbixRequest<EmptyResponse>
     {
+        ///<summary>
+        ///The group's tag and translations to save. The tag identifies the group; translations provide its display name per locale.
+        ///</summary>
         public virtual GroupDefinitionDto GroupDefinition { get; set; }
+
+        ///<summary>
+        ///Communication channel (e.g. Email, Push) this group belongs to.
+        ///</summary>
         public virtual CommunicationChannel Channel { get; set; }
+
+        ///<summary>
+        ///If moving the group to a different channel, the channel it currently belongs to.
+        ///</summary>
         public virtual CommunicationChannel? OriginChannel { get; set; }
     }
 
@@ -5958,9 +10617,49 @@ public partial class CronExpression
     public partial class SaveNotificationsTag
         : CodeMashRequestBase, INorbixRequest<EmptyResponse>
     {
+        ///<summary>
+        ///The tag's identifier, translations, and default per-delivery-channel enabled/disabled settings.
+        ///</summary>
         public virtual TagDefinitionDto TagDefinition { get; set; }
+
+        ///<summary>
+        ///Communication channel (e.g. Email, Push) this tag belongs to.
+        ///</summary>
         public virtual CommunicationChannel? Channel { get; set; }
+
+        ///<summary>
+        ///Tag of the group this notification tag should be placed under, if any.
+        ///</summary>
         public virtual string? GroupTag { get; set; }
+    }
+
+    public partial class AiToolManifestItem
+    {
+        public virtual string Name { get; set; }
+        public virtual string Description { get; set; }
+        public virtual List<string> Toolsets { get; set; } = [];
+        public virtual bool RequiresConfirmation { get; set; }
+        public virtual List<AiToolManifestParameter> Parameters { get; set; } = [];
+    }
+
+    public partial class AiToolManifestParameter
+    {
+        public virtual string Name { get; set; }
+        public virtual string Type { get; set; }
+        public virtual bool Required { get; set; }
+        public virtual string? Description { get; set; }
+    }
+
+    ///<summary>
+    ///Answers one open AI chat question — or a prepared change's Apply / Skip — and continues the conversation.
+    ///</summary>
+    [NorbixRoute("/{version}/account/chat/sessions/{SessionId}/questions/{EntryId}/answer", "POST")]
+    public partial class AnswerChatQuestionRequest
+        : RequestBase, INorbixRequest<IdResponse>
+    {
+        public virtual string SessionId { get; set; }
+        public virtual string EntryId { get; set; }
+        public virtual Dictionary<string, string>? Answers { get; set; }
     }
 
     ///<summary>
@@ -5971,6 +10670,7 @@ public partial class CronExpression
         : RequestBase, INorbixRequest<AskChatResponse>
     {
         public virtual string Prompt { get; set; }
+        public virtual string? Profile { get; set; }
     }
 
     public partial class AskChatResponse
@@ -5979,15 +10679,403 @@ public partial class CronExpression
         public virtual string? Result { get; set; }
     }
 
-    public partial class AnthropicLlmIntegrationRequest
-        : LlmIntegrationRequest
+    ///<summary>
+    ///Reports AI chat availability and the model-picker menu.
+    ///</summary>
+    [NorbixRoute("/{version}/account/chat/availability", "GET")]
+    public partial class ChatAvailabilityRequest
+        : RequestBase, INorbixRequest<ChatAvailabilityResponse>
     {
+        public virtual string? ProjectId { get; set; }
+        public virtual string? Env { get; set; }
+    }
+
+    public partial class ChatAvailabilityResponse
+        : ResponseBase
+    {
+        public virtual bool Available { get; set; }
+        public virtual string? Reason { get; set; }
+        public virtual List<string>? Profiles { get; set; }
+        public virtual List<ChatModelOption>? Models { get; set; }
+    }
+
+    public partial class ChatMemoryNote
+    {
+        public virtual string Id { get; set; }
+        public virtual string Kind { get; set; }
+        public virtual string Text { get; set; }
+        public virtual string? ProjectId { get; set; }
+        public virtual DateTime CreatedAtUtc { get; set; }
+    }
+
+    public partial class ChatModelOption
+    {
+        public virtual string? LlmIntegrationId { get; set; }
+        public virtual string Kind { get; set; }
+        public virtual string Provider { get; set; }
+        public virtual string Model { get; set; }
+        public virtual string Label { get; set; }
+        public virtual bool IsDefault { get; set; }
+        public virtual bool IsAuto { get; set; }
+        public virtual int ContextWindow { get; set; }
+    }
+
+    public partial class ChatSessionListItem
+    {
+        public virtual string SessionId { get; set; }
+        public virtual string Profile { get; set; }
+        public virtual string? ProjectId { get; set; }
+        public virtual string? Env { get; set; }
+        public virtual string? Title { get; set; }
+        public virtual DateTime UpdatedAtUtc { get; set; }
+        public virtual bool IsArchived { get; set; }
+        public virtual bool IsPinned { get; set; }
+    }
+
+    ///<summary>
+    ///Runs one AI chat conversation turn.
+    ///</summary>
+    [NorbixRoute("/{version}/account/chat/turn", "POST")]
+    public partial class ChatTurnRequest
+        : RequestBase, INorbixRequest<ChatTurnResponse>
+    {
+        public virtual string? SessionId { get; set; }
+        public virtual string Message { get; set; }
+        public virtual string? Profile { get; set; }
+        public virtual string? Topic { get; set; }
+        public virtual string? LlmIntegrationId { get; set; }
+        public virtual string? Model { get; set; }
+        public virtual string? ProjectId { get; set; }
+        public virtual string? Env { get; set; }
+        public virtual ChatScreenContextDto? ScreenContext { get; set; }
+    }
+
+    public partial class ChatTurnResponse
+        : ResponseBase
+    {
+        public virtual string? SessionId { get; set; }
+        public virtual string? Reply { get; set; }
+        public virtual ChatScreenContextDto? ScreenPatch { get; set; }
+        public virtual List<string>? ToolTrace { get; set; }
+    }
+
+    ///<summary>
+    ///Approves or rejects a proposed AI chat plan.
+    ///</summary>
+    [NorbixRoute("/{version}/account/chat/sessions/{SessionId}/plans/{EntryId}/decision", "POST")]
+    public partial class DecideChatPlanRequest
+        : RequestBase, INorbixRequest<IdResponse>
+    {
+        public virtual string SessionId { get; set; }
+        public virtual string EntryId { get; set; }
+        public virtual string Decision { get; set; }
+        public virtual string? Comment { get; set; }
+    }
+
+    ///<summary>
+    ///Deletes an AI chat session (soft delete).
+    ///</summary>
+    [NorbixRoute("/{version}/account/chat/sessions/{SessionId}", "DELETE")]
+    public partial class DeleteChatSessionRequest
+        : RequestBase, INorbixRequest<IdResponse>
+    {
+        public virtual string SessionId { get; set; }
+    }
+
+    ///<summary>
+    ///Exports one AI work item as markdown in the long-task shape: Goal, Plan, Changes, Rejected / moved out, Needs you, Open questions.
+    ///</summary>
+    [NorbixRoute("/{version}/projects/{projectId}/ai/work-items/{WorkItemId}/export.md", "GET")]
+    public partial class ExportWorkItemRequest
+        : CodeMashRequestBase, INorbixRequest<ExportWorkItemResponse>
+    {
+        public virtual string WorkItemId { get; set; }
+    }
+
+    public partial class ExportWorkItemResponse
+        : ResponseBase
+    {
+        public virtual string? WorkItemId { get; set; }
+        public virtual string? Markdown { get; set; }
+    }
+
+    ///<summary>
+    ///Deletes one AI memory note ('forget this').
+    ///</summary>
+    [NorbixRoute("/{version}/account/chat/memory/{NoteId}", "DELETE")]
+    public partial class ForgetChatMemoryRequest
+        : RequestBase, INorbixRequest<EmptyResponse>
+    {
+        public virtual string NoteId { get; set; }
+    }
+
+    ///<summary>
+    ///Lists the AI tools this host exposes (external-agent bridge).
+    ///</summary>
+    [NorbixRoute("/{version}/account/ai/tools", "GET")]
+    public partial class GetAiToolsRequest
+        : RequestBase, INorbixRequest<GetAiToolsResponse>
+    {
+        public virtual string? Toolset { get; set; }
+    }
+
+    public partial class GetAiToolsResponse
+        : ResponseBase
+    {
+        public virtual List<AiToolManifestItem>? Tools { get; set; }
+    }
+
+    ///<summary>
+    ///Lists what the AI assistant remembers about this account.
+    ///</summary>
+    [NorbixRoute("/{version}/account/chat/memory", "GET")]
+    public partial class GetChatMemoryRequest
+        : RequestBase, INorbixRequest<GetChatMemoryResponse>
+    {
+        public virtual string? ProjectId { get; set; }
+    }
+
+    public partial class GetChatMemoryResponse
+        : ResponseBase
+    {
+        public virtual List<ChatMemoryNote>? Notes { get; set; }
+    }
+
+    ///<summary>
+    ///Returns one AI chat session's conversation entries — the transcript.
+    ///</summary>
+    [NorbixRoute("/{version}/account/chat/sessions/{SessionId}/entries", "GET")]
+    public partial class GetChatSessionEntriesRequest
+        : RequestBase, INorbixRequest<GetChatSessionEntriesResponse>
+    {
+        public virtual string SessionId { get; set; }
+        public virtual long? SinceSeq { get; set; }
+    }
+
+    public partial class GetChatSessionEntriesResponse
+        : ResponseBase
+    {
+        public virtual string? SessionId { get; set; }
+        public virtual string? Profile { get; set; }
+        public virtual string? ProjectId { get; set; }
+        public virtual string? Env { get; set; }
+        public virtual List<AiChatEntryWireDto>? Entries { get; set; }
+        public virtual long LastSeq { get; set; }
+        public virtual List<string>? ActiveWorkItemIds { get; set; }
+    }
+
+    ///<summary>
+    ///Lists the account's recent AI chat sessions.
+    ///</summary>
+    [NorbixRoute("/{version}/account/chat/sessions", "GET")]
+    public partial class GetChatSessionsRequest
+        : RequestBase, INorbixRequest<GetChatSessionsResponse>
+    {
+        public virtual int? Take { get; set; }
+        public virtual bool? IncludeArchived { get; set; }
+    }
+
+    public partial class GetChatSessionsResponse
+        : ResponseBase
+    {
+        public virtual List<ChatSessionListItem>? Sessions { get; set; }
+    }
+
+    ///<summary>
+    ///Reads a project's AI Brief: the requirements, decisions and assumptions the assistant recorded from conversations, each with the chat turn, user and time it came from.
+    ///</summary>
+    [NorbixRoute("/{version}/projects/{projectId}/ai/brief", "GET")]
+    public partial class GetProjectBriefRequest
+        : CodeMashRequestBase, INorbixRequest<GetProjectBriefResponse>
+    {
+        ///<summary>
+        ///Return the Brief events after this sequence number as well (0 = all). Omit for the snapshot only.
+        ///</summary>
+        public virtual long? SinceSeq { get; set; }
+    }
+
+    public partial class GetProjectBriefResponse
+        : ResponseBase
+    {
+        public virtual string? ProjectId { get; set; }
+        public virtual ProjectBriefSnapshotWireDto? Snapshot { get; set; }
+        public virtual List<ProjectBriefEventWireDto>? Events { get; set; }
+        public virtual long LastSeq { get; set; }
+    }
+
+    ///<summary>
+    ///Reads one AI work item: the six long-task sections and the definition-of-done verdict.
+    ///</summary>
+    [NorbixRoute("/{version}/projects/{projectId}/ai/work-items/{WorkItemId}", "GET")]
+    public partial class GetWorkItemRequest
+        : CodeMashRequestBase, INorbixRequest<GetWorkItemResponse>
+    {
+        public virtual string WorkItemId { get; set; }
+    }
+
+    public partial class GetWorkItemResponse
+        : ResponseBase
+    {
+        public virtual WorkItemWireDto? WorkItem { get; set; }
+        public virtual List<AiChatEntryWireDto>? Plans { get; set; }
+        public virtual List<AiChatEntryWireDto>? Steps { get; set; }
+    }
+
+    ///<summary>
+    ///Lists a project's AI work items: one serious ask each, with its goal, plans, changes, moved-out items, needs-you list and open questions.
+    ///</summary>
+    [NorbixRoute("/{version}/projects/{projectId}/ai/work-items", "GET")]
+    public partial class GetWorkItemsRequest
+        : CodeMashRequestBase, INorbixRequest<GetWorkItemsResponse>
+    {
+        ///<summary>
+        ///Filter by status: proposed, active, waiting, done, partly-done or dropped. Omit for all.
+        ///</summary>
+        public virtual string? Status { get; set; }
+    }
+
+    public partial class GetWorkItemsResponse
+        : ResponseBase
+    {
+        public virtual string? ProjectId { get; set; }
+        public virtual List<WorkItemWireDto>? WorkItems { get; set; }
+    }
+
+    ///<summary>
+    ///Invokes one AI tool directly (external-agent bridge).
+    ///</summary>
+    [NorbixRoute("/{version}/account/ai/tools/{ToolName}", "POST")]
+    public partial class InvokeAiToolRequest
+        : RequestBase, INorbixRequest<InvokeAiToolResponse>
+    {
+        public virtual string ToolName { get; set; }
+        public virtual string? ArgumentsJson { get; set; }
+    }
+
+    public partial class InvokeAiToolResponse
+        : ResponseBase
+    {
+        public virtual string? Result { get; set; }
+    }
+
+    ///<summary>
+    ///Ticks one manual line of a work item's "Needs you" checklist — the one write a human makes to a work item directly.
+    ///</summary>
+    [NorbixRoute("/{version}/projects/{projectId}/ai/work-items/{WorkItemId}/needs-you/{Index}/done", "POST")]
+    public partial class MarkNeedsYouDoneRequest
+        : CodeMashRequestBase, INorbixRequest<IdResponse>
+    {
+        public virtual string WorkItemId { get; set; }
+        public virtual int Index { get; set; }
+        ///<summary>
+        ///Set false to un-tick the line. Default true.
+        ///</summary>
+        public virtual bool? Done { get; set; }
+    }
+
+    ///<summary>
+    ///MCP server endpoint — JSON-RPC 2.0 over HTTP POST exposing the AI tool catalog.
+    ///</summary>
+    [NorbixRoute("/{version}/account/mcp", "POST")]
+    public partial class McpRequest
+        : INorbixRequest<string>
+    {
+        public virtual string? Version { get; set; }
+        public virtual Stream RequestStream { get; set; }
+    }
+
+    ///<summary>
+    ///Records like / dislike feedback on one AI chat entry, or clears it.
+    ///</summary>
+    [NorbixRoute("/{version}/account/chat/sessions/{SessionId}/entries/{EntryId}/feedback", "POST")]
+    public partial class SetChatEntryFeedbackRequest
+        : RequestBase, INorbixRequest<IdResponse>
+    {
+        public virtual string SessionId { get; set; }
+        public virtual string EntryId { get; set; }
+        public virtual string? Feedback { get; set; }
+    }
+
+    ///<summary>
+    ///Archives or unarchives an AI chat session.
+    ///</summary>
+    [NorbixRoute("/{version}/account/chat/sessions/{SessionId}/archive", "PATCH")]
+    public partial class SetChatSessionArchivedRequest
+        : RequestBase, INorbixRequest<IdResponse>
+    {
+        public virtual string SessionId { get; set; }
+        public virtual bool Archived { get; set; }
+    }
+
+    ///<summary>
+    ///Pins or unpins an AI chat session.
+    ///</summary>
+    [NorbixRoute("/{version}/account/chat/sessions/{SessionId}/pin", "PATCH")]
+    public partial class SetChatSessionPinnedRequest
+        : RequestBase, INorbixRequest<IdResponse>
+    {
+        public virtual string SessionId { get; set; }
+        public virtual bool Pinned { get; set; }
+    }
+
+    ///<summary>
+    ///Marks or unmarks an AI chat session as "do not share".
+    ///</summary>
+    [NorbixRoute("/{version}/account/chat/sessions/{SessionId}/sharing", "PATCH")]
+    public partial class SetChatSessionSharingRequest
+        : RequestBase, INorbixRequest<IdResponse>
+    {
+        public virtual string SessionId { get; set; }
+        public virtual bool DoNotShare { get; set; }
+    }
+
+    ///<summary>
+    ///Stops one running step of an AI chat plan run.
+    ///</summary>
+    [NorbixRoute("/{version}/account/chat/sessions/{SessionId}/steps/{EntryId}/stop", "POST")]
+    public partial class StopChatRunStepRequest
+        : RequestBase, INorbixRequest<IdResponse>
+    {
+        public virtual string SessionId { get; set; }
+        public virtual string EntryId { get; set; }
+    }
+
+    ///<summary>
+    ///Uploads a file into an AI chat session.
+    ///</summary>
+    [NorbixRoute("/{version}/account/chat/attachments", "POST")]
+    public partial class UploadChatAttachmentRequest
+        : RequestBase, INorbixRequest<UploadChatAttachmentResponse>
+    {
+        public virtual string? SessionId { get; set; }
+        public virtual string FileName { get; set; }
+        public virtual string ContentType { get; set; }
+        public virtual string Base64Content { get; set; }
+        public virtual string? Profile { get; set; }
+        public virtual string? Topic { get; set; }
+        public virtual string? ProjectId { get; set; }
+        public virtual string? Env { get; set; }
+    }
+
+    public partial class UploadChatAttachmentResponse
+        : ResponseBase
+    {
+        public virtual string? Id { get; set; }
+        public virtual string? SessionId { get; set; }
+    }
+
+    public partial class AnthropicLlmIntegrationRequest
+        : LlmIntegrationRequest, ILlmApiKeyRequest
+    {
+        public virtual LlmProvider Provider { get; set; }
         public virtual string ApiKey { get; set; }
     }
 
     public partial class BraveSearchMcpIntegrationRequest
         : McpIntegrationRequest
     {
+        public virtual McpProvider Provider { get; set; }
+        public virtual McpTransport Transport { get; set; }
         public virtual string ServerUrl { get; set; }
         public virtual string ApiKey { get; set; }
     }
@@ -5996,6 +11084,9 @@ public partial class CronExpression
     public partial class DeleteLlmIntegrationRequest
         : CodeMashRequestBase, INorbixRequest<EmptyResponse>
     {
+        ///<summary>
+        ///Id of the LLM integration to delete.
+        ///</summary>
         public virtual string Id { get; set; }
     }
 
@@ -6003,6 +11094,9 @@ public partial class CronExpression
     public partial class DeleteMcpIntegrationRequest
         : CodeMashRequestBase, INorbixRequest<EmptyResponse>
     {
+        ///<summary>
+        ///Id of the MCP integration to delete.
+        ///</summary>
         public virtual string Id { get; set; }
     }
 
@@ -6010,6 +11104,9 @@ public partial class CronExpression
     public partial class DisableLlmIntegrationRequest
         : CodeMashRequestBase, INorbixRequest<EmptyResponse>
     {
+        ///<summary>
+        ///Id of the LLM integration to disable.
+        ///</summary>
         public virtual string Id { get; set; }
     }
 
@@ -6017,6 +11114,9 @@ public partial class CronExpression
     public partial class DisableMcpIntegrationRequest
         : CodeMashRequestBase, INorbixRequest<EmptyResponse>
     {
+        ///<summary>
+        ///Id of the MCP integration to disable.
+        ///</summary>
         public virtual string Id { get; set; }
     }
 
@@ -6024,6 +11124,9 @@ public partial class CronExpression
     public partial class EnableLlmIntegrationRequest
         : CodeMashRequestBase, INorbixRequest<EmptyResponse>
     {
+        ///<summary>
+        ///Id of the LLM integration to enable.
+        ///</summary>
         public virtual string Id { get; set; }
     }
 
@@ -6031,6 +11134,9 @@ public partial class CronExpression
     public partial class EnableMcpIntegrationRequest
         : CodeMashRequestBase, INorbixRequest<EmptyResponse>
     {
+        ///<summary>
+        ///Id of the MCP integration to enable.
+        ///</summary>
         public virtual string Id { get; set; }
     }
 
@@ -6038,6 +11144,9 @@ public partial class CronExpression
     public partial class GetLlmIntegration
         : CodeMashRequestBase, INorbixRequest<GetLlmIntegrationResponse>
     {
+        ///<summary>
+        ///Id of the LLM integration to fetch.
+        ///</summary>
         public virtual string Id { get; set; }
     }
 
@@ -6064,6 +11173,9 @@ public partial class CronExpression
     public partial class GetMcpIntegration
         : CodeMashRequestBase, INorbixRequest<GetMcpIntegrationResponse>
     {
+        ///<summary>
+        ///Id of the MCP integration to fetch.
+        ///</summary>
         public virtual string Id { get; set; }
     }
 
@@ -6089,28 +11201,37 @@ public partial class CronExpression
     public partial class GitHubMcpIntegrationRequest
         : McpIntegrationRequest
     {
+        public virtual McpProvider Provider { get; set; }
+        public virtual McpTransport Transport { get; set; }
         public virtual string ServerUrl { get; set; }
         public virtual string AccessToken { get; set; }
     }
 
     public partial class GoogleLlmIntegrationRequest
-        : LlmIntegrationRequest
+        : LlmIntegrationRequest, ILlmApiKeyRequest
     {
+        public virtual LlmProvider Provider { get; set; }
         public virtual string ApiKey { get; set; }
     }
 
     public partial class GrokLlmIntegrationRequest
-        : LlmIntegrationRequest
+        : LlmIntegrationRequest, ILlmApiKeyRequest
     {
+        public virtual LlmProvider Provider { get; set; }
         public virtual string ApiKey { get; set; }
     }
 
     public partial class GroqLlmIntegrationRequest
-        : LlmIntegrationRequest
+        : LlmIntegrationRequest, ILlmApiKeyRequest
     {
+        public virtual LlmProvider Provider { get; set; }
         public virtual string ApiKey { get; set; }
     }
 
+    public partial interface ILlmApiKeyRequest
+    {
+        string ApiKey { get; set; }
+    }
 
     public partial class LlmIntegrationRequest
     {
@@ -6136,14 +11257,17 @@ public partial class CronExpression
     }
 
     public partial class MistralLlmIntegrationRequest
-        : LlmIntegrationRequest
+        : LlmIntegrationRequest, ILlmApiKeyRequest
     {
+        public virtual LlmProvider Provider { get; set; }
         public virtual string ApiKey { get; set; }
     }
 
     public partial class MongoDbMcpIntegrationRequest
         : McpIntegrationRequest
     {
+        public virtual McpProvider Provider { get; set; }
+        public virtual McpTransport Transport { get; set; }
         public virtual string? Command { get; set; }
         public virtual string[]? Args { get; set; }
         public virtual string ConnectionString { get; set; }
@@ -6152,6 +11276,8 @@ public partial class CronExpression
     public partial class ObsidianMcpIntegrationRequest
         : McpIntegrationRequest
     {
+        public virtual McpProvider Provider { get; set; }
+        public virtual McpTransport Transport { get; set; }
         public virtual string? Command { get; set; }
         public virtual string[]? Args { get; set; }
         public virtual Dictionary<string, string>? EnvironmentVariables { get; set; }
@@ -6160,23 +11286,28 @@ public partial class CronExpression
     public partial class OllamaLlmIntegrationRequest
         : LlmIntegrationRequest
     {
+        public virtual LlmProvider Provider { get; set; }
     }
 
     public partial class OpenAiLlmIntegrationRequest
-        : LlmIntegrationRequest
+        : LlmIntegrationRequest, ILlmApiKeyRequest
     {
+        public virtual LlmProvider Provider { get; set; }
         public virtual string ApiKey { get; set; }
     }
 
     public partial class OpenRouterLlmIntegrationRequest
-        : LlmIntegrationRequest
+        : LlmIntegrationRequest, ILlmApiKeyRequest
     {
+        public virtual LlmProvider Provider { get; set; }
         public virtual string ApiKey { get; set; }
     }
 
     public partial class PlaywrightMcpIntegrationRequest
         : McpIntegrationRequest
     {
+        public virtual McpProvider Provider { get; set; }
+        public virtual McpTransport Transport { get; set; }
         public virtual string? Command { get; set; }
         public virtual string[]? Args { get; set; }
         public virtual string Headless { get; set; }
@@ -6187,7 +11318,7 @@ public partial class CronExpression
     public partial class SaveLlmIntegration
         : CodeMashRequestBase, INorbixRequest<IdResponse>
     {
-        [DataMember]
+        [DataMember(Name="integration")]
         public virtual LlmIntegrationRequest Integration { get; set; }
     }
 
@@ -6196,13 +11327,15 @@ public partial class CronExpression
     public partial class SaveMcpIntegration
         : CodeMashRequestBase, INorbixRequest<IdResponse>
     {
-        [DataMember]
+        [DataMember(Name="integration")]
         public virtual McpIntegrationRequest Integration { get; set; }
     }
 
     public partial class StripeMcpIntegrationRequest
         : McpIntegrationRequest
     {
+        public virtual McpProvider Provider { get; set; }
+        public virtual McpTransport Transport { get; set; }
         public virtual string ServerUrl { get; set; }
         public virtual string ApiKey { get; set; }
     }
@@ -6211,6 +11344,9 @@ public partial class CronExpression
     public partial class TestLlmIntegration
         : CodeMashRequestBase, INorbixRequest<TestLlmIntegrationResponse>
     {
+        ///<summary>
+        ///Id of the LLM integration to test.
+        ///</summary>
         public virtual string IntegrationId { get; set; }
     }
 
@@ -6218,12 +11354,28 @@ public partial class CronExpression
     public partial class TestMcpIntegration
         : CodeMashRequestBase, INorbixRequest<TestLlmIntegrationResponse>
     {
+        ///<summary>
+        ///Id of the MCP integration to test.
+        ///</summary>
         public virtual string IntegrationId { get; set; }
+    }
+
+    [NorbixRoute("/{version}/code/disable", "GET")]
+    public partial class DisableCode
+        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
+    {
+    }
+
+    [NorbixRoute("/{version}/code/enable", "GET")]
+    public partial class EnableCode
+        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
+    {
     }
 
     public partial class AwsLambdaCodeIntegrationRequest
         : CodeIntegrationRequest
     {
+        public virtual CodeProvider Provider { get; set; }
         public virtual AwsLambdaIntegrationType IntegrationType { get; set; }
         public virtual string Region { get; set; }
         public virtual string? RoleArn { get; set; }
@@ -6235,6 +11387,7 @@ public partial class CronExpression
     public partial class AzureFunctionsCodeIntegrationRequest
         : CodeIntegrationRequest
     {
+        public virtual CodeProvider Provider { get; set; }
         public virtual string FunctionAppName { get; set; }
         public virtual string? ResourceGroup { get; set; }
         public virtual string ConnectionStringOrKey { get; set; }
@@ -6248,14 +11401,909 @@ public partial class CronExpression
         public virtual bool IsEnabled { get; set; }
     }
 
+    [NorbixRoute("/{version}/code/integrations/confirm-human-delivery", "POST")]
+    [DataContract]
+    public partial class ConfirmCodeIntegrationHumanDeliveryRequest
+        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
+    {
+        ///<summary>
+        ///Integration id, from get_code_integrations.
+        ///</summary>
+        [DataMember]
+        public virtual string IntegrationId { get; set; }
+    }
+
+    [NorbixRoute("/{version}/code/integrations/{Id}", "DELETE")]
+    public partial class DeleteCodeIntegrationRequest
+        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
+    {
+        ///<summary>
+        ///Integration id, from get_code_integrations.
+        ///</summary>
+        public virtual string Id { get; set; }
+    }
+
+    [NorbixRoute("/{version}/code/integrations/{Id}/disable", "PUT")]
+    public partial class DisableCodeIntegrationRequest
+        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
+    {
+        ///<summary>
+        ///Integration id, from get_code_integrations.
+        ///</summary>
+        public virtual string Id { get; set; }
+    }
+
+    [NorbixRoute("/{version}/code/integrations/{Id}/enable", "PUT")]
+    public partial class EnableCodeIntegrationRequest
+        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
+    {
+        ///<summary>
+        ///Integration id, from get_code_integrations.
+        ///</summary>
+        public virtual string Id { get; set; }
+    }
+
+    [NorbixRoute("/{version}/code/integrations/{id}", "GET")]
+    public partial class GetCodeIntegration
+        : CodeMashRequestBase, INorbixRequest<GetCodeIntegrationResponse>
+    {
+        ///<summary>
+        ///Integration id, from get_code_integrations.
+        ///</summary>
+        public virtual string Id { get; set; }
+    }
+
+    public partial class GetCodeIntegrationResponse
+        : ResponseBase
+    {
+        public virtual CodeIntegrationDto? Item { get; set; }
+    }
+
+    [NorbixRoute("/{version}/code/integrations", "GET")]
+    public partial class GetCodeIntegrations
+        : CodeMashListPaginationRequestBase, INorbixRequest<GetCodeIntegrationsResponse>
+    {
+    }
+
+    public partial class GetCodeIntegrationsResponse
+        : ResponseBase
+    {
+        public virtual PaginatedResponse<CodeIntegrationListProjection>? List { get; set; }
+    }
+
     public partial class GoogleCloudFunctionsCodeIntegrationRequest
         : CodeIntegrationRequest
     {
+        public virtual CodeProvider Provider { get; set; }
         public virtual string ProjectId { get; set; }
         public virtual string? Region { get; set; }
         public virtual string ServiceAccountJsonKey { get; set; }
     }
 
+    [NorbixRoute("/{version}/code/integrations", "POST")]
+    [DataContract]
+    public partial class SaveCodeIntegration
+        : CodeMashRequestBase, INorbixRequest<IdResponse>
+    {
+        [DataMember(Name="integration")]
+        public virtual CodeIntegrationRequest Integration { get; set; }
+    }
+
+    [NorbixRoute("/{version}/code/integrations/{Id}/default", "PUT")]
+    public partial class SetCodeIntegrationAsDefault
+        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
+    {
+        ///<summary>
+        ///Integration id, from get_code_integrations.
+        ///</summary>
+        public virtual string Id { get; set; }
+    }
+
+    [NorbixRoute("/{version}/code/integrations/test", "POST")]
+    public partial class TestCodeIntegration
+        : CodeMashRequestBase, INorbixRequest<TestCodeIntegrationResponse>
+    {
+        ///<summary>
+        ///Integration id, from get_code_integrations.
+        ///</summary>
+        public virtual string IntegrationId { get; set; }
+    }
+
+    [NorbixRoute("/{version}/code/marketplace/integrations/{IntegrationViewId}/functions/{FunctionViewId}", "DELETE")]
+    public partial class DeleteMarketplaceFunction
+        : CodeMashRequestBase, INorbixRequest<IdResponse>
+    {
+        ///<summary>
+        ///Integration view id, from get_marketplace_integrations.
+        ///</summary>
+        public virtual string IntegrationViewId { get; set; }
+
+        ///<summary>
+        ///Function view id, from get_marketplace_functions.
+        ///</summary>
+        public virtual string FunctionViewId { get; set; }
+    }
+
+    [NorbixRoute("/{version}/code/marketplace/integrations/{IntegrationViewId}/functions/{FunctionViewId}/disable", "POST")]
+    public partial class DisableMarketplaceFunction
+        : CodeMashRequestBase, INorbixRequest<IdResponse>
+    {
+        ///<summary>
+        ///Integration view id, from get_marketplace_integrations.
+        ///</summary>
+        public virtual string IntegrationViewId { get; set; }
+
+        ///<summary>
+        ///Function view id, from get_marketplace_functions.
+        ///</summary>
+        public virtual string FunctionViewId { get; set; }
+    }
+
+    [NorbixRoute("/{version}/code/marketplace/integrations/{IntegrationViewId}/functions/{FunctionViewId}/enable", "POST")]
+    public partial class EnableMarketplaceFunction
+        : CodeMashRequestBase, INorbixRequest<IdResponse>
+    {
+        ///<summary>
+        ///Integration view id, from get_marketplace_integrations.
+        ///</summary>
+        public virtual string IntegrationViewId { get; set; }
+
+        ///<summary>
+        ///Function view id, from get_marketplace_functions.
+        ///</summary>
+        public virtual string FunctionViewId { get; set; }
+    }
+
+    [NorbixRoute("/{version}/code/marketplace/integrations/{IntegrationViewId}/functions/{FunctionViewId}", "GET")]
+    public partial class GetMarketplaceFunction
+        : CodeMashRequestBase, INorbixRequest<GetMarketplaceFunctionResponse>
+    {
+        ///<summary>
+        ///Integration view id, from get_marketplace_integrations.
+        ///</summary>
+        public virtual string IntegrationViewId { get; set; }
+
+        ///<summary>
+        ///Function view id, from get_marketplace_functions.
+        ///</summary>
+        public virtual string FunctionViewId { get; set; }
+    }
+
+    [NorbixRoute("/{version}/code/marketplace/integrations/{IntegrationViewId}/catalog", "GET")]
+    public partial class GetMarketplaceFunctionCatalog
+        : CodeMashRequestBase, INorbixRequest<GetMarketplaceFunctionCatalogResponse>
+    {
+        ///<summary>
+        ///Integration view id, from get_marketplace_integrations.
+        ///</summary>
+        public virtual string IntegrationViewId { get; set; }
+    }
+
+    public partial class GetMarketplaceFunctionCatalogResponse
+        : ResponseBase
+    {
+        public virtual IReadOnlyList<MarketplaceFunctionDefinitionDto> Functions { get; set; }
+    }
+
+    public partial class GetMarketplaceFunctionResponse
+        : ResponseBase
+    {
+        public virtual MarketplaceFunctionDto? Function { get; set; }
+    }
+
+    [NorbixRoute("/{version}/code/marketplace/integrations/{IntegrationViewId}/functions", "GET")]
+    public partial class GetMarketplaceFunctions
+        : CodeMashListPaginationRequestBase, INorbixRequest<GetMarketplaceFunctionsResponse>
+    {
+        ///<summary>
+        ///Integration view id, from get_marketplace_integrations.
+        ///</summary>
+        public virtual string IntegrationViewId { get; set; }
+    }
+
+    public partial class GetMarketplaceFunctionsResponse
+        : ResponseBase
+    {
+        public virtual PaginatedResponse<MarketplaceFunctionProjection>? List { get; set; }
+    }
+
+    [NorbixRoute("/{version}/code/marketplace/integrations/{IntegrationViewId}/functions/{FunctionViewId}/tokens", "GET")]
+    public partial class GetMarketplaceFunctionTokens
+        : CodeMashRequestBase, INorbixRequest<GetMarketplaceTokensResponse>
+    {
+        ///<summary>
+        ///Integration view id, from get_marketplace_integrations.
+        ///</summary>
+        public virtual string IntegrationViewId { get; set; }
+
+        ///<summary>
+        ///Function view id, from get_marketplace_functions.
+        ///</summary>
+        public virtual string FunctionViewId { get; set; }
+    }
+
+    [NorbixRoute("/{version}/code/marketplace/functions/{FunctionViewId}/invoke", "POST")]
+    [DataContract]
+    public partial class InvokeMarketplaceFunction
+        : CodeMashRequestBase, INorbixRequest<InvokeMarketplaceFunctionResponse>
+    {
+        ///<summary>
+        ///Function view id (func_…), from get_marketplace_functions.
+        ///</summary>
+        [DataMember]
+        public virtual string FunctionViewId { get; set; }
+
+        [DataMember]
+        public virtual Dictionary<string, Object> Payload { get; set; } = new();
+    }
+
+    public partial class InvokeMarketplaceFunctionResponse
+        : ResponseBase
+    {
+        public virtual bool IsSuccess { get; set; }
+        public virtual Object? Output { get; set; }
+        public virtual string? VendorRequestId { get; set; }
+    }
+
+    [NorbixRoute("/{version}/code/marketplace/integrations/{IntegrationViewId}/functions", "POST")]
+    [DataContract]
+    public partial class SaveMarketplaceFunction
+        : CodeMashRequestBase, INorbixRequest<IdResponse>
+    {
+        ///<summary>
+        ///Integration view id, from get_marketplace_integrations.
+        ///</summary>
+        [DataMember]
+        public virtual string IntegrationViewId { get; set; }
+
+        ///<summary>
+        ///The function to create: functionKey, displayName, description, and one mapping per vendor function parameter.
+        ///</summary>
+        [DataMember]
+        public virtual MarketplaceFunctionDto Function { get; set; }
+    }
+
+    [NorbixRoute("/{version}/code/marketplace/integrations/{IntegrationViewId}", "DELETE")]
+    public partial class DeleteMarketplaceIntegration
+        : CodeMashRequestBase, INorbixRequest<IdResponse>
+    {
+        ///<summary>
+        ///Integration view id, from get_marketplace_integrations.
+        ///</summary>
+        public virtual string IntegrationViewId { get; set; }
+    }
+
+    [NorbixRoute("/{version}/code/marketplace/integrations/{IntegrationViewId}/disable", "POST")]
+    public partial class DisableMarketplaceIntegration
+        : CodeMashRequestBase, INorbixRequest<IdResponse>
+    {
+        ///<summary>
+        ///Integration view id, from get_marketplace_integrations.
+        ///</summary>
+        public virtual string IntegrationViewId { get; set; }
+    }
+
+    public partial class EmptyMarketplaceSecretsResponse
+        : ResponseBase
+    {
+    }
+
+    [NorbixRoute("/{version}/code/marketplace/integrations/{IntegrationViewId}/enable", "POST")]
+    public partial class EnableMarketplaceIntegration
+        : CodeMashRequestBase, INorbixRequest<IdResponse>
+    {
+        ///<summary>
+        ///Integration view id, from get_marketplace_integrations.
+        ///</summary>
+        public virtual string IntegrationViewId { get; set; }
+    }
+
+    [NorbixRoute("/{version}/code/marketplace/integrations/{IntegrationViewId}", "GET")]
+    public partial class GetMarketplaceIntegration
+        : CodeMashRequestBase, INorbixRequest<GetMarketplaceIntegrationResponse>
+    {
+        ///<summary>
+        ///Integration view id, from get_marketplace_integrations.
+        ///</summary>
+        public virtual string IntegrationViewId { get; set; }
+    }
+
+    public partial class GetMarketplaceIntegrationResponse
+        : ResponseBase
+    {
+        public virtual MarketplaceIntegrationDto? Integration { get; set; }
+    }
+
+    [NorbixRoute("/{version}/code/marketplace/integrations", "GET")]
+    public partial class GetMarketplaceIntegrations
+        : CodeMashListPaginationRequestBase, INorbixRequest<GetMarketplaceIntegrationsResponse>
+    {
+    }
+
+    public partial class GetMarketplaceIntegrationsResponse
+        : ResponseBase
+    {
+        public virtual PaginatedResponse<MarketplaceIntegrationListProjection>? List { get; set; }
+    }
+
+    [NorbixRoute("/{version}/code/marketplace/integrations/{IntegrationViewId}/secrets", "PUT")]
+    [DataContract]
+    public partial class ReplaceMarketplaceIntegrationSecretsRequest
+        : CodeMashRequestBase, INorbixRequest<EmptyMarketplaceSecretsResponse>
+    {
+        ///<summary>
+        ///Integration view id (int_…).
+        ///</summary>
+        [DataMember]
+        public virtual string IntegrationViewId { get; set; }
+
+        [DataMember]
+        public virtual Dictionary<string, string> Secrets { get; set; } = new();
+    }
+
+    [NorbixRoute("/{version}/code/marketplace/integrations/{IntegrationViewId}/secrets/reveal", "POST")]
+    [DataContract]
+    public partial class RevealMarketplaceIntegrationSecretsRequest
+        : CodeMashRequestBase, INorbixRequest<RevealMarketplaceIntegrationSecretsResponse>
+    {
+        ///<summary>
+        ///Integration view id (int_…).
+        ///</summary>
+        [DataMember]
+        public virtual string IntegrationViewId { get; set; }
+    }
+
+    public partial class RevealMarketplaceIntegrationSecretsResponse
+        : ResponseBase
+    {
+        public virtual IReadOnlyDictionary<string, string>? Secrets { get; set; }
+    }
+
+    [NorbixRoute("/{version}/code/marketplace/integrations", "POST")]
+    [DataContract]
+    public partial class SaveMarketplaceIntegration
+        : CodeMashRequestBase, INorbixRequest<IdResponse>
+    {
+        ///<summary>
+        ///The marketplace integration to install, from a get_marketplace_listings entry.
+        ///</summary>
+        [DataMember]
+        public virtual MarketplaceIntegrationDto Integration { get; set; }
+
+        [DataMember]
+        public virtual Dictionary<string, string> Secrets { get; set; } = new();
+    }
+
+    [NorbixRoute("/{version}/code/marketplace/integrations/{IntegrationViewId}/token-mappings", "PUT")]
+    [DataContract]
+    public partial class SetMarketplaceIntegrationTokenMappingsRequest
+        : CodeMashRequestBase, INorbixRequest<SetMarketplaceIntegrationTokenMappingsResponse>
+    {
+        ///<summary>
+        ///Integration view id (int_…).
+        ///</summary>
+        [DataMember]
+        public virtual string IntegrationViewId { get; set; }
+
+        [DataMember]
+        public virtual List<MarketplaceTokenMappingDto> TokenMappings { get; set; } = [];
+    }
+
+    public partial class SetMarketplaceIntegrationTokenMappingsResponse
+        : ResponseBase
+    {
+    }
+
+    [NorbixRoute("/{version}/code/marketplace/integrations/{IntegrationViewId}/test", "POST")]
+    public partial class TestMarketplaceIntegration
+        : CodeMashRequestBase, INorbixRequest<TestMarketplaceIntegrationResponse>
+    {
+        ///<summary>
+        ///Integration view id, from get_marketplace_integrations.
+        ///</summary>
+        public virtual string IntegrationViewId { get; set; }
+    }
+
+    [NorbixRoute("/{version}/code/marketplace/listings/{ListingViewId}", "GET")]
+    public partial class GetMarketplaceListing
+        : CodeMashRequestBase, INorbixRequest<GetMarketplaceListingResponse>
+    {
+        ///<summary>
+        ///Listing view id (ml_…), from get_marketplace_listings.
+        ///</summary>
+        public virtual string ListingViewId { get; set; }
+    }
+
+    [NorbixRoute("/{version}/code/marketplace/listings/{ListingViewId}/functions/{FunctionKey}/tokens", "GET")]
+    public partial class GetMarketplaceListingFunctionTokens
+        : CodeMashRequestBase, INorbixRequest<GetMarketplaceTokensResponse>
+    {
+        ///<summary>
+        ///Marketplace listing view id, from get_marketplace_listings.
+        ///</summary>
+        public virtual string ListingViewId { get; set; }
+
+        ///<summary>
+        ///Function key on the listing, from get_marketplace_listings.
+        ///</summary>
+        public virtual string FunctionKey { get; set; }
+    }
+
+    public partial class GetMarketplaceListingResponse
+        : ResponseBase
+    {
+        public virtual MarketplaceListingDto? Listing { get; set; }
+    }
+
+    [NorbixRoute("/{version}/code/marketplace/listings", "GET")]
+    public partial class GetMarketplaceListings
+        : CodeMashListPaginationRequestBase, INorbixRequest<GetMarketplaceListingsResponse>
+    {
+        ///<summary>
+        ///Filter by one or more categories (Crm, Erp, Communication, etc.).
+        ///</summary>
+        public virtual HashSet<MarketplaceCategory>? Categories { get; set; }
+
+        ///<summary>
+        ///Filter by transport (Mcp, Rest, Code).
+        ///</summary>
+        public virtual HashSet<MarketplaceTransport>? Transports { get; set; }
+
+        ///<summary>
+        ///Free-text search over the listing's display name, vendor, and description.
+        ///</summary>
+        public virtual string? Search { get; set; }
+
+        ///<summary>
+        ///If true, return only listings curated and verified by Norbix.
+        ///</summary>
+        public virtual bool? OfficialOnly { get; set; }
+
+        ///<summary>
+        ///Filter by curated tag slugs (e.g. ai-llm, messaging, crm). Matches listings carrying any of the given tags.
+        ///</summary>
+        public virtual HashSet<string>? Tags { get; set; }
+    }
+
+    public partial class GetMarketplaceListingsResponse
+        : ResponseBase
+    {
+        public virtual PaginatedResponse<MarketplaceListingProjection>? List { get; set; }
+    }
+
+    public partial class GetMarketplaceTokensResponse
+        : ResponseBase
+    {
+        public virtual List<string>? Tokens { get; set; }
+    }
+
+    [NorbixRoute("/{version}/compliance/account", "GET")]
+    public partial class GetAccountCompliance
+        : RequestBase, INorbixRequest<GetAccountComplianceResponse>
+    {
+    }
+
+    public partial class GetAccountComplianceResponse
+        : ResponseBase
+    {
+        public virtual AccountComplianceDto? Settings { get; set; }
+    }
+
+    [NorbixRoute("/{version}/compliance/account/dsar-policy", "POST")]
+    public partial class SaveDsarPolicyRequest
+        : RequestBase, INorbixRequest<EmptyResponse>
+    {
+        public virtual string Mode { get; set; }
+        public virtual int DelayDays { get; set; }
+    }
+
+    [NorbixRoute("/{version}/compliance/account/incident-routing", "POST")]
+    public partial class SaveIncidentRoutingRequest
+        : RequestBase, INorbixRequest<EmptyResponse>
+    {
+        public virtual bool AutoForwardAdvisories { get; set; }
+        public virtual string? SecurityContact { get; set; }
+    }
+
+    [NorbixRoute("/{version}/compliance/audit", "GET")]
+    public partial class GetComplianceAuditLog
+        : CodeMashRequestBase, INorbixRequest<GetComplianceAuditLogResponse>
+    {
+        public virtual DateTime? From { get; set; }
+        public virtual DateTime? To { get; set; }
+        public virtual string? SubjectKind { get; set; }
+        public virtual string? SubjectId { get; set; }
+        public virtual int Limit { get; set; }
+    }
+
+    public partial class GetComplianceAuditLogResponse
+        : ResponseBase
+    {
+        public virtual List<ComplianceAuditEntryDto> Entries { get; set; } = [];
+    }
+
+    [NorbixRoute("/{version}/compliance/dsar/approve", "POST")]
+    public partial class ApproveDsarRequestRequest
+        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
+    {
+        public virtual string RequestId { get; set; }
+    }
+
+    [NorbixRoute("/{version}/compliance/dsar", "GET")]
+    public partial class GetDsarRequests
+        : CodeMashRequestBase, INorbixRequest<GetDsarRequestsResponse>
+    {
+    }
+
+    public partial class GetDsarRequestsResponse
+        : ResponseBase
+    {
+        public virtual List<DsarRequestDto> Requests { get; set; } = [];
+    }
+
+    [NorbixRoute("/{version}/compliance/dsar", "POST")]
+    public partial class OpenDsarRequestRequest
+        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
+    {
+        public virtual string SubjectKind { get; set; }
+        public virtual string SubjectId { get; set; }
+    }
+
+    [NorbixRoute("/{version}/compliance/dsar/reject", "POST")]
+    public partial class RejectDsarRequestRequest
+        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
+    {
+        public virtual string RequestId { get; set; }
+        public virtual string Reason { get; set; }
+    }
+
+    [NorbixRoute("/{version}/compliance/holds", "GET")]
+    public partial class GetLegalHolds
+        : CodeMashRequestBase, INorbixRequest<GetLegalHoldsResponse>
+    {
+    }
+
+    public partial class GetLegalHoldsResponse
+        : ResponseBase
+    {
+        public virtual List<LegalHoldDto> Holds { get; set; } = [];
+    }
+
+    [NorbixRoute("/{version}/compliance/holds", "POST")]
+    public partial class PlaceLegalHoldRequest
+        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
+    {
+        public virtual string SubjectKind { get; set; }
+        public virtual string SubjectId { get; set; }
+        public virtual string Reason { get; set; }
+    }
+
+    [NorbixRoute("/{version}/compliance/holds/release", "POST")]
+    public partial class ReleaseLegalHoldRequest
+        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
+    {
+        public virtual string HoldId { get; set; }
+    }
+
+    [NorbixRoute("/{version}/compliance/purposes", "POST")]
+    public partial class DefineConsentPurposeRequest
+        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
+    {
+        public virtual string Key { get; set; }
+        public virtual string Name { get; set; }
+        public virtual string Channel { get; set; }
+        public virtual HashSet<string> MappedTags { get; set; } = [];
+        public virtual HashSet<string> RegulatoryBasis { get; set; } = [];
+        public virtual string? Description { get; set; }
+    }
+
+    [NorbixRoute("/{version}/compliance/purposes/deprecate", "POST")]
+    public partial class DeprecateConsentPurposeRequest
+        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
+    {
+        public virtual string Key { get; set; }
+    }
+
+    [NorbixRoute("/{version}/compliance/regimes", "POST")]
+    public partial class AssignRegimeRequest
+        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
+    {
+        public virtual string Regime { get; set; }
+    }
+
+    [NorbixRoute("/{version}/compliance/regimes", "DELETE")]
+    public partial class ClearRegimeRequest
+        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
+    {
+        public virtual string Regime { get; set; }
+    }
+
+    [NorbixRoute("/{version}/compliance/retention", "DELETE")]
+    public partial class RemoveRetentionWindowRequest
+        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
+    {
+        public virtual string DataKind { get; set; }
+    }
+
+    [NorbixRoute("/{version}/compliance/retention", "POST")]
+    public partial class SaveRetentionWindowRequest
+        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
+    {
+        public virtual string DataKind { get; set; }
+        public virtual int Days { get; set; }
+        public virtual string Action { get; set; }
+    }
+
+    [NorbixRoute("/{version}/compliance/settings", "GET")]
+    public partial class GetComplianceSettings
+        : CodeMashRequestBase, INorbixRequest<GetComplianceSettingsResponse>
+    {
+    }
+
+    public partial class GetComplianceSettingsResponse
+        : ResponseBase
+    {
+        public virtual ProjectComplianceDto? Settings { get; set; }
+    }
+
+    ///<summary>
+    ///Create a contact
+    ///</summary>
+    [NorbixRoute("/{version}/membership/users", "POST")]
+    public partial class CreateContactRequest
+        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
+    {
+        ///<summary>
+        ///Primary email address of the contact (optional if a phone is given).
+        ///</summary>
+        public virtual string? PrimaryEmail { get; set; }
+
+        ///<summary>
+        ///Primary phone number in international format, e.g. +14155550123 (optional if an email is given).
+        ///</summary>
+        public virtual string? PrimaryPhone { get; set; }
+
+        ///<summary>
+        ///Display name shown in the dashboard (optional).
+        ///</summary>
+        public virtual string? DisplayName { get; set; }
+
+        ///<summary>
+        ///Contact's first name (optional).
+        ///</summary>
+        public virtual string? FirstName { get; set; }
+
+        ///<summary>
+        ///Contact's last name (optional).
+        ///</summary>
+        public virtual string? LastName { get; set; }
+    }
+
+    ///<summary>
+    ///Archive a contact
+    ///</summary>
+    [NorbixRoute("/{version}/membership/users/{contactId}", "DELETE")]
+    public partial class DeleteContact
+        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
+    {
+        ///<summary>
+        ///The contact id (ct_…) to archive. Get it from get_all_contacts.
+        ///</summary>
+        public virtual string ContactId { get; set; }
+    }
+
+    ///<summary>
+    ///List contacts
+    ///</summary>
+    [NorbixRoute("/{version}/membership/users", "GET")]
+    public partial class GetAllContacts
+        : CodeMashRequestBase, INorbixRequest<GetAllContactsResponse>
+    {
+        ///<summary>
+        ///Cursor for the next page: pass the nextCursor from the previous call. Omit for the first page.
+        ///</summary>
+        public virtual string? StartingAfter { get; set; }
+
+        ///<summary>
+        ///How many contacts to return per page (default 50).
+        ///</summary>
+        public virtual int? PageSize { get; set; }
+    }
+
+    public partial class GetAllContactsResponse
+        : ResponseBase
+    {
+        public virtual IReadOnlyList<UserDto>? Items { get; set; }
+        public virtual string? NextCursor { get; set; }
+    }
+
+    ///<summary>
+    ///Get a contact
+    ///</summary>
+    [NorbixRoute("/{version}/membership/users/{contactId}", "GET")]
+    public partial class GetContact
+        : CodeMashRequestBase, INorbixRequest<GetContactResponse>
+    {
+        ///<summary>
+        ///The contact id (ct_…) to fetch. Get it from get_all_contacts.
+        ///</summary>
+        public virtual string ContactId { get; set; }
+    }
+
+    public partial class GetContactResponse
+        : ResponseBase
+    {
+        public virtual UserDto? Item { get; set; }
+    }
+
+    ///<summary>
+    ///Merge contacts
+    ///</summary>
+    [NorbixRoute("/{version}/membership/users/merge", "POST")]
+    public partial class MergeContactsRequest
+        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
+    {
+        ///<summary>
+        ///The contact id (ct_…) that will remain after the merge (the survivor).
+        ///</summary>
+        public virtual string SurvivorId { get; set; }
+
+        ///<summary>
+        ///The contact ids (ct_…) to merge into the survivor and archive. At least one.
+        ///</summary>
+        public virtual string[] MergedIds { get; set; } = [];
+    }
+
+    ///<summary>
+    ///Update a contact
+    ///</summary>
+    [NorbixRoute("/{version}/membership/users/{contactId}", "PATCH")]
+    public partial class UpdateContactRequest
+        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
+    {
+        ///<summary>
+        ///The contact id (ct_…) to update. Get it from get_all_contacts.
+        ///</summary>
+        public virtual string ContactId { get; set; }
+
+        ///<summary>
+        ///Display name shown in the dashboard.
+        ///</summary>
+        public virtual string? DisplayName { get; set; }
+
+        ///<summary>
+        ///First name.
+        ///</summary>
+        public virtual string? FirstName { get; set; }
+
+        ///<summary>
+        ///Last name.
+        ///</summary>
+        public virtual string? LastName { get; set; }
+
+        ///<summary>
+        ///Full name (overrides first/last when set).
+        ///</summary>
+        public virtual string? FullName { get; set; }
+
+        ///<summary>
+        ///Company or organisation name.
+        ///</summary>
+        public virtual string? Company { get; set; }
+
+        ///<summary>
+        ///Free-text internal notes about the contact.
+        ///</summary>
+        public virtual string? Notes { get; set; }
+
+        ///<summary>
+        ///Gender: Male, Female or Other.
+        ///</summary>
+        public virtual string? Gender { get; set; }
+
+        ///<summary>
+        ///Birth date as a unix timestamp in MILLISECONDS (UTC).
+        ///</summary>
+        public virtual long? BirthDate { get; set; }
+
+        ///<summary>
+        ///IANA time zone id, e.g. Europe/Vilnius.
+        ///</summary>
+        public virtual string? TimeZone { get; set; }
+
+        ///<summary>
+        ///Preferred language/locale code, e.g. en or en-US.
+        ///</summary>
+        public virtual string? Language { get; set; }
+
+        ///<summary>
+        ///Address line 1 (street).
+        ///</summary>
+        public virtual string? AddressLine1 { get; set; }
+
+        ///<summary>
+        ///Address line 2 (apartment, suite, etc.).
+        ///</summary>
+        public virtual string? AddressLine2 { get; set; }
+
+        ///<summary>
+        ///Country name or code.
+        ///</summary>
+        public virtual string? Country { get; set; }
+
+        ///<summary>
+        ///City.
+        ///</summary>
+        public virtual string? City { get; set; }
+
+        ///<summary>
+        ///State, region or province.
+        ///</summary>
+        public virtual string? State { get; set; }
+
+        ///<summary>
+        ///Postal or ZIP code.
+        ///</summary>
+        public virtual string? PostalCode { get; set; }
+    }
+
+    ///<summary>
+    ///Link a login to a contact
+    ///</summary>
+    [NorbixRoute("/{version}/membership/users/{contactId}/identities", "POST")]
+    public partial class AddContactIdentityRequest
+        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
+    {
+        ///<summary>
+        ///The contact id (ct_…) to link the login to.
+        ///</summary>
+        public virtual string ContactId { get; set; }
+
+        ///<summary>
+        ///The login (identity) id (usr_…) to link to the contact.
+        ///</summary>
+        public virtual string AuthId { get; set; }
+    }
+
+    ///<summary>
+    ///Make a login the contact's primary
+    ///</summary>
+    [NorbixRoute("/{version}/membership/users/{contactId}/identities/{authId}/promote", "POST")]
+    public partial class PromoteContactIdentityRequest
+        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
+    {
+        ///<summary>
+        ///The contact id (ct_…) whose login is being promoted.
+        ///</summary>
+        public virtual string ContactId { get; set; }
+
+        ///<summary>
+        ///The linked login (identity) id (usr_…) to make primary.
+        ///</summary>
+        public virtual string AuthId { get; set; }
+    }
+
+    ///<summary>
+    ///Unlink a login from a contact
+    ///</summary>
+    [NorbixRoute("/{version}/membership/users/{contactId}/identities/{authId}", "DELETE")]
+    public partial class RemoveContactIdentityRequest
+        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
+    {
+        ///<summary>
+        ///The contact id (ct_…) to unlink the login from.
+        ///</summary>
+        public virtual string ContactId { get; set; }
+
+        ///<summary>
+        ///The login (identity) id (usr_…) to unlink from the contact.
+        ///</summary>
+        public virtual string AuthId { get; set; }
+    }
+
+    ///<summary>
+    ///Disable database service
+    ///</summary>
     [NorbixRoute("/{version}/database/disable", "GET")]
     public partial class DisableDatabase
         : CodeMashRequestBase, INorbixRequest<EmptyResponse>
@@ -6268,23 +12316,42 @@ public partial class CronExpression
     {
     }
 
+    ///<summary>
+    ///Delete saved Mongo aggregation
+    ///</summary>
     [NorbixRoute("/{version}/database/aggregates/{Id}", "DELETE")]
     [DataContract]
     public partial class DeleteDatabaseAggregateRequest
         : CodeMashRequestBase, INorbixRequest<EmptyResponse>
     {
+        ///<summary>
+        ///Aggregate id to delete, from get_database_aggregates.
+        ///</summary>
         [DataMember]
         public virtual string Id { get; set; }
 
+        ///<summary>
+        ///Schema id that owns this aggregate, from get_database_schemas.
+        ///</summary>
         [DataMember]
         public virtual string SchemaId { get; set; }
     }
 
+    ///<summary>
+    ///Get saved Mongo aggregation by id
+    ///</summary>
     [NorbixRoute("/{version}/database/aggregates/{Id}", "GET")]
     public partial class GetDatabaseAggregate
         : CodeMashRequestBase, INorbixRequest<GetDatabaseAggregateResponse>
     {
+        ///<summary>
+        ///Aggregate id from get_database_aggregates.
+        ///</summary>
         public virtual string Id { get; set; }
+
+        ///<summary>
+        ///Schema id that owns this aggregate, from get_database_schemas.
+        ///</summary>
         public virtual string SchemaId { get; set; }
     }
 
@@ -6294,11 +12361,18 @@ public partial class CronExpression
         public virtual MongoDbAggregateDto? Item { get; set; }
     }
 
+    ///<summary>
+    ///Lists saved Mongo aggregations for a schema
+    ///</summary>
     [NorbixRoute("/{version}/database/aggregates", "GET")]
     public partial class GetDatabaseAggregates
         : CodeMashListPaginationRequestBase, INorbixRequest<GetDatabaseAggregatesResponse>
     {
+        ///<summary>
+        ///Schema id whose saved aggregates to list, from get_database_schemas.
+        ///</summary>
         public virtual string SchemaId { get; set; }
+
         public virtual PagingArgs? PagingArgs { get; set; }
     }
 
@@ -6308,41 +12382,74 @@ public partial class CronExpression
         public virtual PaginatedResponse<MongoDbAggregateListProjection>? List { get; set; }
     }
 
+    ///<summary>
+    ///Creates or updates a saved Mongo aggregation
+    ///</summary>
     [NorbixRoute("/{version}/database/aggregates", "POST")]
     [DataContract]
     public partial class SaveDatabaseAggregateRequest
         : CodeMashRequestBase, INorbixRequest<IdResponse>
     {
+        ///<summary>
+        ///Empty to create a new saved aggregate; set to an existing aggregate id (from get_database_aggregates) to update it.
+        ///</summary>
         [DataMember]
         public virtual string? ViewId { get; set; }
 
+        ///<summary>
+        ///Schema id that owns this aggregate, from get_database_schemas.
+        ///</summary>
         [DataMember]
         public virtual string SchemaId { get; set; }
 
+        ///<summary>
+        ///Human-readable display name for the saved aggregate.
+        ///</summary>
         [DataMember]
         public virtual string DisplayName { get; set; }
 
+        ///<summary>
+        ///Optional free-text description of what the aggregate does.
+        ///</summary>
         [DataMember]
         public virtual string? Description { get; set; }
 
+        ///<summary>
+        ///MongoDB aggregation pipeline JSON, optionally containing {TokenKey} placeholders substituted at execute time.
+        ///</summary>
         [DataMember]
         public virtual string Pipeline { get; set; }
     }
 
+    ///<summary>
+    ///Test-run an aggregation pipeline with caller-supplied tokens
+    ///</summary>
     [NorbixRoute("/{version}/database/aggregates/test", "POST")]
     [DataContract]
     public partial class TestDatabaseAggregateRequest
         : CodeMashRequestBase, INorbixRequest<TestDatabaseAggregateResponse>
     {
+        ///<summary>
+        ///Optional database integration id. When omitted, the project's default database integration is used.
+        ///</summary>
         [DataMember]
-        public virtual string DatabaseIntegrationId { get; set; }
+        public virtual string? DatabaseIntegrationId { get; set; }
 
+        ///<summary>
+        ///Name of the collection (schema) to run the aggregation against.
+        ///</summary>
         [DataMember]
         public virtual string CollectionName { get; set; }
 
+        ///<summary>
+        ///MongoDB aggregation pipeline JSON, optionally containing {TokenKey} placeholders to be substituted from tokens.
+        ///</summary>
         [DataMember]
         public virtual string Pipeline { get; set; }
 
+        ///<summary>
+        ///Optional key/value substitutions for {TokenKey} placeholders in the pipeline.
+        ///</summary>
         [DataMember]
         public virtual Dictionary<string, string>? Tokens { get; set; }
     }
@@ -6353,6 +12460,142 @@ public partial class CronExpression
         public virtual List<Object>? Result { get; set; }
     }
 
+    ///<summary>
+    ///Database
+    ///</summary>
+    [NorbixRoute("/{version}/database/imports/analyze", "POST")]
+    public partial class AnalyzeImportFileRequest
+        : CodeMashRequestBase, INorbixRequest<AnalyzeImportFileResponse>
+    {
+        ///<summary>
+        ///The uploaded CSV's file ref, from the upload-url call.
+        ///</summary>
+        public virtual FileResourceRefDto File { get; set; }
+
+        ///<summary>
+        ///The CSV delimiter, e.g. "," or ";".
+        ///</summary>
+        public virtual string Delimiter { get; set; }
+
+        ///<summary>
+        ///Whether the first row is a header row.
+        ///</summary>
+        public virtual bool HasHeader { get; set; }
+    }
+
+    public partial class AnalyzeImportFileResponse
+        : ResponseBase
+    {
+        public virtual ImportFileAnalysisDto? Result { get; set; }
+    }
+
+    ///<summary>
+    ///Database
+    ///</summary>
+    [NorbixRoute("/{version}/database/imports", "POST")]
+    public partial class CreateCollectionImport
+        : CodeMashRequestBase, INorbixRequest<IdResponse>
+    {
+        ///<summary>
+        ///The uploaded CSV's file ref, from the upload call.
+        ///</summary>
+        public virtual FileResourceRefDto File { get; set; }
+
+        ///<summary>
+        ///The target schema id.
+        ///</summary>
+        public virtual string SchemaId { get; set; }
+
+        ///<summary>
+        ///The target collection (schema) name.
+        ///</summary>
+        public virtual string CollectionName { get; set; }
+
+        public virtual string? DatabaseIntegrationId { get; set; }
+        ///<summary>
+        ///The CSV delimiter used at upload time.
+        ///</summary>
+        public virtual string Delimiter { get; set; }
+
+        public virtual bool HasHeader { get; set; }
+        ///<summary>
+        ///Column → property mapping, frozen for this import.
+        ///</summary>
+        public virtual List<ImportColumnMappingDto> Mapping { get; set; } = [];
+    }
+
+    ///<summary>
+    ///Database
+    ///</summary>
+    [NorbixRoute("/{version}/database/imports/{Id}", "DELETE")]
+    public partial class DeleteCollectionImportRequest
+        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
+    {
+        ///<summary>
+        ///The import id (imp_…).
+        ///</summary>
+        public virtual string Id { get; set; }
+
+        public virtual string? DatabaseIntegrationId { get; set; }
+    }
+
+    ///<summary>
+    ///Database
+    ///</summary>
+    [NorbixRoute("/{version}/database/imports/{Id}", "GET")]
+    public partial class GetCollectionImport
+        : CodeMashRequestBase, INorbixRequest<GetCollectionImportResponse>
+    {
+        ///<summary>
+        ///The import id (imp_…).
+        ///</summary>
+        public virtual string Id { get; set; }
+
+        public virtual string? DatabaseIntegrationId { get; set; }
+    }
+
+    public partial class GetCollectionImportResponse
+        : ResponseBase
+    {
+        public virtual CollectionImportDto? Result { get; set; }
+    }
+
+    ///<summary>
+    ///Database
+    ///</summary>
+    [NorbixRoute("/{version}/database/imports", "GET")]
+    public partial class GetCollectionImports
+        : CodeMashListPaginationRequestBase, INorbixRequest<GetCollectionImportsResponse>
+    {
+        public virtual string? DatabaseIntegrationId { get; set; }
+    }
+
+    public partial class GetCollectionImportsResponse
+        : ResponseBase
+    {
+        public virtual PaginatedResponse<CollectionImportDto>? Result { get; set; }
+    }
+
+    ///<summary>
+    ///Database
+    ///</summary>
+    [NorbixRoute("/{version}/database/imports/upload-url", "POST")]
+    public partial class RequestImportUploadUrlRequest
+        : CodeMashRequestBase, INorbixRequest<RequestImportUploadUrlResponse>
+    {
+        public virtual string? FileAccountId { get; set; }
+        ///<summary>
+        ///The original CSV file name, e.g. people.csv.
+        ///</summary>
+        public virtual string FileName { get; set; }
+    }
+
+    public partial class RequestImportUploadUrlResponse
+        : ResponseBase
+    {
+        public virtual ImportUploadTargetDto? Result { get; set; }
+    }
+
     public partial class DatabaseIntegrationRequest
     {
         public virtual string? IntegrationId { get; set; }
@@ -6361,31 +12604,70 @@ public partial class CronExpression
         public virtual bool IsEnabled { get; set; }
     }
 
+    ///<summary>
+    ///Delete integration for particular project
+    ///</summary>
     [NorbixRoute("/{version}/database/integrations/{Id}", "DELETE")]
     public partial class DeleteDatabaseIntegrationRequest
         : CodeMashRequestBase, INorbixRequest<EmptyResponse>
     {
+        ///<summary>
+        ///Database integration id to delete, from get_database_integrations.
+        ///</summary>
         public virtual string Id { get; set; }
     }
 
+    ///<summary>
+    ///Disable integration for particular project
+    ///</summary>
     [NorbixRoute("/{version}/database/integrations/{Id}/disable", "PUT")]
     public partial class DisableDatabaseIntegrationRequest
         : CodeMashRequestBase, INorbixRequest<EmptyResponse>
     {
+        ///<summary>
+        ///Database integration id to disable, from get_database_integrations.
+        ///</summary>
         public virtual string Id { get; set; }
     }
 
+    ///<summary>
+    ///Enable integration for particular project
+    ///</summary>
     [NorbixRoute("/{version}/database/integrations/{Id}/enable", "PUT")]
     public partial class EnableDatabaseIntegrationRequest
         : CodeMashRequestBase, INorbixRequest<EmptyResponse>
     {
+        ///<summary>
+        ///Database integration id to enable, from get_database_integrations.
+        ///</summary>
         public virtual string Id { get; set; }
     }
 
+    ///<summary>
+    ///Returns the Flex tiers this account is entitled to pick
+    ///</summary>
+    [NorbixRoute("/{version}/database/integrations/flex-tiers", "GET")]
+    public partial class GetAllowedFlexTiers
+        : CodeMashRequestBase, INorbixRequest<GetAllowedFlexTiersResponse>
+    {
+    }
+
+    public partial class GetAllowedFlexTiersResponse
+        : ResponseBase
+    {
+        public virtual List<FlexTierDto>? Tiers { get; set; }
+    }
+
+    ///<summary>
+    ///Gets integration by specified Id
+    ///</summary>
     [NorbixRoute("/{version}/database/integrations/{id}", "GET")]
     public partial class GetDatabaseIntegration
         : CodeMashRequestBase, INorbixRequest<GetDatabaseIntegrationResponse>
     {
+        ///<summary>
+        ///Database integration id from get_database_integrations.
+        ///</summary>
         public virtual string Id { get; set; }
     }
 
@@ -6395,6 +12677,9 @@ public partial class CronExpression
         public virtual DatabaseIntegrationDto? Item { get; set; }
     }
 
+    ///<summary>
+    ///Gets database integrations
+    ///</summary>
     [NorbixRoute("/{version}/database/integrations", "GET")]
     public partial class GetDatabaseIntegrations
         : CodeMashListPaginationRequestBase, INorbixRequest<GetDatabaseIntegrationsResponse>
@@ -6409,76 +12694,629 @@ public partial class CronExpression
         public virtual PaginatedResponse<DatabaseIntegrationListProjection>? List { get; set; }
     }
 
-    public partial class MongoDbAtlasClusterDatabaseIntegrationRequest
+    public partial class MongoDbAtlasFlexManagedDatabaseIntegrationRequest
         : DatabaseIntegrationRequest
     {
-        public virtual string? DatabaseName { get; set; }
-        public virtual string ConnectionString { get; set; }
-    }
-
-    public partial class MongoDbAtlasServerlessDatabaseIntegrationRequest
-        : DatabaseIntegrationRequest
-    {
-        public virtual string? DatabaseName { get; set; }
-        public virtual string ConnectionString { get; set; }
+        public virtual DatabaseProvider Provider { get; set; }
+        public virtual string NorbixRegionCode { get; set; }
     }
 
     public partial class MongoDbConnectionStringDatabaseIntegrationRequest
         : DatabaseIntegrationRequest
     {
+        public virtual DatabaseProvider Provider { get; set; }
         public virtual string? DatabaseName { get; set; }
         public virtual string ConnectionString { get; set; }
     }
 
+    [NorbixRoute("/{version}/database/integrations/{Id}/connection-string", "GET")]
+    public partial class RevealManagedFlexConnectionString
+        : CodeMashRequestBase, INorbixRequest<RevealManagedFlexConnectionStringResponse>
+    {
+        public virtual string Id { get; set; }
+    }
+
+    public partial class RevealManagedFlexConnectionStringResponse
+        : ResponseBase
+    {
+        public virtual string? ConnectionString { get; set; }
+    }
+
+    ///<summary>
+    ///Saves database integration
+    ///</summary>
     [NorbixRoute("/{version}/database/integrations", "POST")]
     [DataContract]
     public partial class SaveDatabaseIntegration
         : CodeMashRequestBase, INorbixRequest<IdResponse>
     {
-        [DataMember]
+        [DataMember(Name="integration")]
         public virtual DatabaseIntegrationRequest Integration { get; set; }
     }
 
+    ///<summary>
+    ///Sets integration as default
+    ///</summary>
     [NorbixRoute("/{version}/database/integrations/{Id}/default", "PUT")]
     public partial class SetDatabaseIntegrationAsDefaultRequest
         : CodeMashRequestBase, INorbixRequest<EmptyResponse>
     {
+        ///<summary>
+        ///Database integration id to set as default, from get_database_integrations.
+        ///</summary>
         public virtual string Id { get; set; }
     }
 
+    ///<summary>
+    ///Test database integration
+    ///</summary>
+    [NorbixRoute("/{version}/database/integrations/test", "POST")]
+    public partial class TestDatabaseIntegration
+        : CodeMashRequestBase, INorbixRequest<TestDatabaseIntegrationResponse>
+    {
+        ///<summary>
+        ///Database integration id to test, from get_database_integrations.
+        ///</summary>
+        public virtual string IntegrationId { get; set; }
+    }
+
+    ///<summary>
+    ///Database
+    ///</summary>
+    [NorbixRoute("/{version}/database/collections/{collectionName}/aggregate", "POST")]
+    public partial class AggregateRecords
+        : CodeMashRequestBase, INorbixRequest<AggregateRecordsResponse>
+    {
+        ///<summary>
+        ///The collection (schema) name to run the aggregation against.
+        ///</summary>
+        public virtual string CollectionName { get; set; }
+
+        public virtual string? DatabaseIntegrationId { get; set; }
+        ///<summary>
+        ///The aggregation pipeline as a MongoDB extended-JSON array of stages.
+        ///</summary>
+        public virtual string Pipeline { get; set; }
+    }
+
+    public partial class AggregateRecordsResponse
+        : ResponseBase
+    {
+        public virtual List<Object>? Result { get; set; }
+    }
+
+    ///<summary>
+    ///Database
+    ///</summary>
+    [NorbixRoute("/{version}/database/collections/{collectionName}/{id}/responsibility", "PUT")]
+    public partial class ChangeRecordResponsibility
+        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
+    {
+        ///<summary>
+        ///The collection (schema) name the record lives in.
+        ///</summary>
+        public virtual string CollectionName { get; set; }
+
+        ///<summary>
+        ///The id of the record whose responsibility changes.
+        ///</summary>
+        public virtual string Id { get; set; }
+
+        public virtual string? DatabaseIntegrationId { get; set; }
+        ///<summary>
+        ///The new responsible user (owner) id.
+        ///</summary>
+        public virtual string NewResponsibleUserId { get; set; }
+    }
+
+    ///<summary>
+    ///Database
+    ///</summary>
+    [NorbixRoute("/{version}/database/collections/{collectionName}/count", "GET")]
+    public partial class CountRecords
+        : CodeMashRequestBase, INorbixRequest<CountRecordsResponse>
+    {
+        ///<summary>
+        ///The collection (schema) name to count records in.
+        ///</summary>
+        public virtual string CollectionName { get; set; }
+
+        public virtual string? DatabaseIntegrationId { get; set; }
+        ///<summary>
+        ///Optional MongoDB extended-JSON filter. Empty means count all records.
+        ///</summary>
+        public virtual string? Filter { get; set; }
+
+        public virtual int? SchemaVersion { get; set; }
+    }
+
+    public partial class CountRecordsResponse
+        : ResponseBase
+    {
+        public virtual long Count { get; set; }
+    }
+
+    ///<summary>
+    ///Database
+    ///</summary>
+    [NorbixRoute("/{version}/database/collections/{collectionName}/many", "DELETE")]
+    public partial class DeleteManyRecords
+        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
+    {
+        ///<summary>
+        ///The collection (schema) name the records live in.
+        ///</summary>
+        public virtual string CollectionName { get; set; }
+
+        public virtual string? DatabaseIntegrationId { get; set; }
+        ///<summary>
+        ///The match filter as a MongoDB extended-JSON document. Required.
+        ///</summary>
+        public virtual string Filter { get; set; }
+    }
+
+    ///<summary>
+    ///Database
+    ///</summary>
+    [NorbixRoute("/{version}/database/collections/{collectionName}/{id}", "DELETE")]
+    public partial class DeleteRecord
+        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
+    {
+        ///<summary>
+        ///The collection (schema) name the record lives in.
+        ///</summary>
+        public virtual string CollectionName { get; set; }
+
+        ///<summary>
+        ///The id of the record to delete.
+        ///</summary>
+        public virtual string Id { get; set; }
+
+        public virtual string? DatabaseIntegrationId { get; set; }
+    }
+
+    ///<summary>
+    ///Database
+    ///</summary>
+    [NorbixRoute("/{version}/database/collections/{collectionName}/distinct", "GET")]
+    public partial class DistinctRecordValues
+        : CodeMashRequestBase, INorbixRequest<DistinctRecordValuesResponse>
+    {
+        ///<summary>
+        ///The collection (schema) name to read from.
+        ///</summary>
+        public virtual string CollectionName { get; set; }
+
+        public virtual string? DatabaseIntegrationId { get; set; }
+        ///<summary>
+        ///The document field (dotted path allowed) to get distinct values for, e.g. 'status'.
+        ///</summary>
+        public virtual string Field { get; set; }
+
+        ///<summary>
+        ///Optional MongoDB extended-JSON filter. Empty means consider all records.
+        ///</summary>
+        public virtual string? Filter { get; set; }
+
+        public virtual int? SchemaVersion { get; set; }
+    }
+
+    public partial class DistinctRecordValuesResponse
+        : ResponseBase
+    {
+        public virtual List<Object>? Values { get; set; }
+    }
+
+    ///<summary>
+    ///Database
+    ///</summary>
+    [NorbixRoute("/{version}/database/collections/{collectionName}/aggregates/{aggregateId}/execute", "POST")]
+    public partial class ExecuteRecordsAggregate
+        : CodeMashRequestBase, INorbixRequest<ExecuteRecordsAggregateResponse>
+    {
+        ///<summary>
+        ///The collection (schema) name to run the saved aggregation against.
+        ///</summary>
+        public virtual string CollectionName { get; set; }
+
+        ///<summary>
+        ///The saved aggregate id (maggr_…) to execute.
+        ///</summary>
+        public virtual string AggregateId { get; set; }
+
+        public virtual string? DatabaseIntegrationId { get; set; }
+        ///<summary>
+        ///Optional key/value substitutions for {TokenKey} placeholders in the saved pipeline.
+        ///</summary>
+        public virtual Dictionary<string, string>? Tokens { get; set; }
+    }
+
+    public partial class ExecuteRecordsAggregateResponse
+        : ResponseBase
+    {
+        public virtual List<Object>? Result { get; set; }
+    }
+
+    ///<summary>
+    ///Database
+    ///</summary>
+    [NorbixRoute("/{version}/database/collections/{collectionName}/{id}", "GET")]
+    public partial class FindOneRecord
+        : CodeMashRequestBase, INorbixRequest<FindOneRecordResponse>
+    {
+        ///<summary>
+        ///The collection (schema) name to read from.
+        ///</summary>
+        public virtual string CollectionName { get; set; }
+
+        ///<summary>
+        ///The id of the record to fetch.
+        ///</summary>
+        public virtual string Id { get; set; }
+
+        public virtual string? DatabaseIntegrationId { get; set; }
+    }
+
+    public partial class FindOneRecordResponse
+        : ResponseBase
+    {
+        public virtual Object? Result { get; set; }
+    }
+
+    ///<summary>
+    ///Database
+    ///</summary>
+    [NorbixRoute("/{version}/database/collections/{collectionName}", "GET")]
+    public partial class FindRecords
+        : CodeMashListPaginationRequestBase, INorbixRequest<FindRecordsResponse>
+    {
+        ///<summary>
+        ///The collection (schema) name to read from.
+        ///</summary>
+        public virtual string CollectionName { get; set; }
+
+        public virtual string? DatabaseIntegrationId { get; set; }
+        ///<summary>
+        ///Optional MongoDB extended-JSON filter. Empty means match all records.
+        ///</summary>
+        public virtual string? Filter { get; set; }
+
+        ///<summary>
+        ///Optional contact id (ct_…) — only that contact's records are returned.
+        ///</summary>
+        public virtual string? ContactId { get; set; }
+
+        public virtual int? SchemaVersion { get; set; }
+        public virtual PagingArgs? PagingArgs { get; set; }
+        public virtual string? SortBy { get; set; }
+        public virtual int? SortOrder { get; set; }
+    }
+
+    public partial class FindRecordsResponse
+        : ResponseBase
+    {
+        public virtual PaginatedResponse<Object>? List { get; set; }
+    }
+
+    ///<summary>
+    ///Database
+    ///</summary>
+    [NorbixRoute("/{version}/database/collections/{collectionName}/indexes", "GET")]
+    [DataContract]
+    public partial class GetCollectionIndexes
+        : CodeMashRequestBase, INorbixRequest<GetCollectionIndexesResponse>
+    {
+        ///<summary>
+        ///The collection (schema) name to inspect.
+        ///</summary>
+        [DataMember]
+        public virtual string CollectionName { get; set; }
+
+        [DataMember]
+        public virtual string? DatabaseIntegrationId { get; set; }
+    }
+
+    public partial class GetCollectionIndexesResponse
+        : ResponseBase
+    {
+        public virtual List<CollectionIndexDto>? Indexes { get; set; }
+    }
+
+    ///<summary>
+    ///Database
+    ///</summary>
+    [NorbixRoute("/{version}/database/collections/{collectionName}/many", "POST")]
+    public partial class InsertManyRecords
+        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
+    {
+        ///<summary>
+        ///The collection (schema) name to insert into.
+        ///</summary>
+        public virtual string CollectionName { get; set; }
+
+        public virtual string? DatabaseIntegrationId { get; set; }
+        ///<summary>
+        ///The records to insert as a MongoDB extended-JSON array of documents.
+        ///</summary>
+        public virtual string Documents { get; set; }
+    }
+
+    ///<summary>
+    ///Database
+    ///</summary>
+    [NorbixRoute("/{version}/database/collections/{collectionName}", "POST")]
+    public partial class InsertRecord
+        : CodeMashRequestBase, INorbixRequest<IdResponse>
+    {
+        ///<summary>
+        ///The collection (schema) name to insert into.
+        ///</summary>
+        public virtual string CollectionName { get; set; }
+
+        public virtual string? DatabaseIntegrationId { get; set; }
+        ///<summary>
+        ///The record to insert, as a MongoDB extended-JSON document string.
+        ///</summary>
+        public virtual string Document { get; set; }
+    }
+
+    ///<summary>
+    ///Database
+    ///</summary>
+    [NorbixRoute("/{version}/database/collections/{collectionName}/{id}/replace", "PUT")]
+    public partial class ReplaceRecord
+        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
+    {
+        ///<summary>
+        ///The collection (schema) name the record lives in.
+        ///</summary>
+        public virtual string CollectionName { get; set; }
+
+        ///<summary>
+        ///The id of the record to replace.
+        ///</summary>
+        public virtual string Id { get; set; }
+
+        public virtual string? DatabaseIntegrationId { get; set; }
+        ///<summary>
+        ///The replacement document as MongoDB extended-JSON.
+        ///</summary>
+        public virtual string Replacement { get; set; }
+    }
+
+    ///<summary>
+    ///Database
+    ///</summary>
+    [NorbixRoute("/{version}/database/collections/seed", "POST")]
+    public partial class SeedCollectionRecords
+        : CodeMashRequestBase, INorbixRequest<SeedCollectionRecordsResponse>
+    {
+        ///<summary>
+        ///Seeding mode: 'dummy' (server-generated sample data, default) or 'realistic' (caller-supplied documents).
+        ///</summary>
+        public virtual string? Mode { get; set; }
+
+        public virtual string? DatabaseIntegrationId { get; set; }
+        ///<summary>
+        ///JSON array of {collectionName, count?, documents?}. count applies to dummy mode (max 100 per collection); documents (extended-JSON objects, may contain $seedRef placeholders) apply to realistic mode.
+        ///</summary>
+        public virtual string Collections { get; set; }
+    }
+
+    ///<summary>
+    ///Database
+    ///</summary>
+    [NorbixRoute("/{version}/database/collections/{collectionName}/many", "PUT")]
+    public partial class UpdateManyRecords
+        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
+    {
+        ///<summary>
+        ///The collection (schema) name the records live in.
+        ///</summary>
+        public virtual string CollectionName { get; set; }
+
+        public virtual string? DatabaseIntegrationId { get; set; }
+        ///<summary>
+        ///The match filter as a MongoDB extended-JSON document. Empty object means match all.
+        ///</summary>
+        public virtual string Filter { get; set; }
+
+        ///<summary>
+        ///The partial update document (applied with $set), as MongoDB extended-JSON.
+        ///</summary>
+        public virtual string Update { get; set; }
+    }
+
+    ///<summary>
+    ///Database
+    ///</summary>
+    [NorbixRoute("/{version}/database/collections/{collectionName}/{id}", "PUT")]
+    public partial class UpdateOneRecord
+        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
+    {
+        ///<summary>
+        ///The collection (schema) name the record lives in.
+        ///</summary>
+        public virtual string CollectionName { get; set; }
+
+        ///<summary>
+        ///The id of the record to update.
+        ///</summary>
+        public virtual string Id { get; set; }
+
+        public virtual string? DatabaseIntegrationId { get; set; }
+        ///<summary>
+        ///The partial update document (applied with $set), as MongoDB extended-JSON.
+        ///</summary>
+        public virtual string Update { get; set; }
+    }
+
+    [DataContract]
+    public partial class AppliedCollectionDto
+    {
+        [DataMember]
+        public virtual string Entity { get; set; }
+
+        [DataMember]
+        public virtual string? Id { get; set; }
+
+        [DataMember]
+        public virtual string Name { get; set; }
+
+        [DataMember]
+        public virtual string Title { get; set; }
+
+        [DataMember]
+        public virtual string Action { get; set; }
+
+        [DataMember]
+        public virtual bool Published { get; set; }
+
+        [DataMember]
+        public virtual List<string> LinkedFields { get; set; } = [];
+    }
+
+    [DataContract]
+    public partial class AppliedTaxonomyDto
+    {
+        [DataMember]
+        public virtual string CatalogId { get; set; }
+
+        [DataMember]
+        public virtual string? Id { get; set; }
+
+        [DataMember]
+        public virtual string Slug { get; set; }
+
+        [DataMember]
+        public virtual string Title { get; set; }
+
+        [DataMember]
+        public virtual string Action { get; set; }
+
+        [DataMember]
+        public virtual int TermsCreated { get; set; }
+    }
+
+    ///<summary>
+    ///Creates every collection and taxonomy of a compiled IF bundle, linked and published
+    ///</summary>
+    [NorbixRoute("/{version}/database/schemas/apply-bundle", "POST")]
+    [DataContract]
+    public partial class ApplyDatabaseSchemaBundleRequest
+        : CodeMashRequestBase, INorbixRequest<ApplyDatabaseSchemaBundleResponse>
+    {
+        ///<summary>
+        ///Comma-separated catalog entity ids to create from the reviewed catalog (e.g. "blog_posts,comments"). The usual input.
+        ///</summary>
+        [DataMember]
+        public virtual string? Entities { get; set; }
+
+        ///<summary>
+        ///Only for entities the catalog lacks: one IF entity object or an array of IF objects (JSON string). May also hold catalog refs with add_fields / remove_fields.
+        ///</summary>
+        [DataMember]
+        public virtual string? BundleJson { get; set; }
+
+        ///<summary>
+        ///Field tier to compile: minimal | standard (default) | extended.
+        ///</summary>
+        [DataMember]
+        public virtual string? Tier { get; set; }
+
+        ///<summary>
+        ///true = mark free-text fields (title, body, excerpt …) translatable for multilingual content. Default false.
+        ///</summary>
+        [DataMember]
+        public virtual bool Translatable { get; set; }
+
+        ///<summary>
+        ///false = leave every collection as a draft instead of publishing v1. Default true.
+        ///</summary>
+        [DataMember]
+        public virtual bool Publish { get; set; }
+    }
+
+    [DataContract]
+    public partial class ApplyDatabaseSchemaBundleResponse
+        : ResponseBase
+    {
+        [DataMember]
+        public virtual string? Tier { get; set; }
+
+        [DataMember]
+        public virtual List<AppliedTaxonomyDto> Taxonomies { get; set; } = [];
+
+        [DataMember]
+        public virtual List<AppliedCollectionDto> Collections { get; set; } = [];
+
+        [DataMember]
+        public virtual List<string> Decisions { get; set; } = [];
+
+        [DataMember]
+        public virtual List<string> Errors { get; set; } = [];
+    }
+
+    ///<summary>
+    ///Delete database schema (collection)
+    ///</summary>
     [NorbixRoute("/{version}/database/schemas/{Id}", "DELETE")]
     public partial class DeleteDatabaseSchemaRequest
         : CodeMashRequestBase, INorbixRequest<EmptyResponse>
     {
+        ///<summary>
+        ///Schema id to delete, from get_database_schemas.
+        ///</summary>
         public virtual string Id { get; set; }
     }
 
+    ///<summary>
+    ///Discards the working-copy draft of a database schema without publishing
+    ///</summary>
     [NorbixRoute("/{version}/database/schemas/{Id}/draft", "DELETE")]
     [DataContract]
     public partial class DiscardDatabaseSchemaDraftRequest
         : CodeMashRequestBase, INorbixRequest<EmptyResponse>
     {
+        ///<summary>
+        ///Schema id whose draft to discard, from get_database_schemas.
+        ///</summary>
         [DataMember]
         public virtual string Id { get; set; }
     }
 
+    ///<summary>
+    ///Gets database schema by id
+    ///</summary>
     [NorbixRoute("/{version}/database/schemas/{id}", "GET")]
     [DataContract]
     public partial class GetDatabaseSchema
         : CodeMashRequestBase, INorbixRequest<GetDatabaseSchemaResponse>
     {
+        ///<summary>
+        ///Schema id from get_database_schemas.
+        ///</summary>
         [DataMember]
         public virtual string Id { get; set; }
 
+        ///<summary>
+        ///Optional published version number to pin; omit for the latest published version.
+        ///</summary>
         [DataMember(Name="version")]
         public virtual int? SchemaVersion { get; set; }
     }
 
+    ///<summary>
+    ///Gets the current draft of a database schema
+    ///</summary>
     [NorbixRoute("/{version}/database/schemas/{Id}/draft", "GET")]
     [DataContract]
     public partial class GetDatabaseSchemaDraft
         : CodeMashRequestBase, INorbixRequest<GetDatabaseSchemaDraftResponse>
     {
+        ///<summary>
+        ///Schema id from get_database_schemas.
+        ///</summary>
         [DataMember]
         public virtual string Id { get; set; }
     }
@@ -6489,12 +13327,36 @@ public partial class CronExpression
         public virtual SchemaDraftDto? Item { get; set; }
     }
 
+    ///<summary>
+    ///Gets database schema records-list display settings
+    ///</summary>
+    [NorbixRoute("/{version}/database/schemas/{Id}/list-settings", "GET")]
+    [DataContract]
+    public partial class GetDatabaseSchemaListSettings
+        : CodeMashRequestBase, INorbixRequest<GetDatabaseSchemaListSettingsResponse>
+    {
+        ///<summary>
+        ///Schema id from get_database_schemas.
+        ///</summary>
+        [DataMember]
+        public virtual string Id { get; set; }
+    }
+
+    public partial class GetDatabaseSchemaListSettingsResponse
+        : ResponseBase
+    {
+        public virtual SchemaListSettingsDto? Settings { get; set; }
+    }
+
     public partial class GetDatabaseSchemaResponse
         : ResponseBase
     {
         public virtual SchemaDto? Item { get; set; }
     }
 
+    ///<summary>
+    ///Gets database schemas (collections)
+    ///</summary>
     [NorbixRoute("/{version}/database/schemas", "GET")]
     public partial class GetDatabaseSchemas
         : CodeMashListPaginationRequestBase, INorbixRequest<GetDatabaseSchemasResponse>
@@ -6508,17 +13370,29 @@ public partial class CronExpression
         public virtual PaginatedResponse<SchemaListProjection>? List { get; set; }
     }
 
+    ///<summary>
+    ///Structural diff between two published versions of a database schema
+    ///</summary>
     [NorbixRoute("/{version}/database/schemas/{Id}/versions/diff", "GET")]
     [DataContract]
     public partial class GetDatabaseSchemaVersionDiff
         : CodeMashRequestBase, INorbixRequest<GetDatabaseSchemaVersionDiffResponse>
     {
+        ///<summary>
+        ///Schema id from get_database_schemas.
+        ///</summary>
         [DataMember]
         public virtual string Id { get; set; }
 
+        ///<summary>
+        ///Earlier published version number to diff from. Get valid values from get_database_schema_versions.
+        ///</summary>
         [DataMember]
         public virtual int FromVersion { get; set; }
 
+        ///<summary>
+        ///Later published version number to diff to. Get valid values from get_database_schema_versions.
+        ///</summary>
         [DataMember]
         public virtual int ToVersion { get; set; }
     }
@@ -6529,11 +13403,17 @@ public partial class CronExpression
         public virtual SchemaDiffDto? Item { get; set; }
     }
 
+    ///<summary>
+    ///Lists published version summaries for a database schema
+    ///</summary>
     [NorbixRoute("/{version}/database/schemas/{Id}/versions", "GET")]
     [DataContract]
     public partial class GetDatabaseSchemaVersions
         : CodeMashRequestBase, INorbixRequest<GetDatabaseSchemaVersionsResponse>
     {
+        ///<summary>
+        ///Schema id from get_database_schemas.
+        ///</summary>
         [DataMember]
         public virtual string Id { get; set; }
     }
@@ -6551,19 +13431,34 @@ public partial class CronExpression
     {
         [DataMember]
         public virtual string Id { get; set; }
+
+        [DataMember]
+        public virtual bool Confirmed { get; set; }
     }
 
+    ///<summary>
+    ///Renames a database schema (collection)
+    ///</summary>
     [NorbixRoute("/{version}/database/schemas/{Id}/rename", "PUT")]
     [DataContract]
     public partial class RenameDatabaseSchemaRequest
         : CodeMashRequestBase, INorbixRequest<EmptyResponse>
     {
+        ///<summary>
+        ///Schema id to rename, from get_database_schemas.
+        ///</summary>
         [DataMember]
         public virtual string Id { get; set; }
 
+        ///<summary>
+        ///New human-entered title (e.g. "Company Employees"); the slug is derived server-side.
+        ///</summary>
         [DataMember]
         public virtual string Title { get; set; }
 
+        ///<summary>
+        ///When true (default), rejects the rename if another schema already owns the derived slug. Leave true unless explicitly asked to bypass the uniqueness check.
+        ///</summary>
         [DataMember]
         public virtual bool RenameUniqueName { get; set; }
     }
@@ -6573,55 +13468,122 @@ public partial class CronExpression
     public partial class SaveDatabaseSchemaRequest
         : CodeMashRequestBase, INorbixRequest<IdResponse>
     {
+        ///<summary>
+        ///Empty to create a new schema; set to an existing schema id (from get_database_schemas) to update its draft.
+        ///</summary>
         [DataMember]
         public virtual string? ViewId { get; set; }
 
+        ///<summary>
+        ///Human-entered schema title (e.g. "Company Employees"); a slug is derived server-side.
+        ///</summary>
         [DataMember]
         public virtual string SchemaName { get; set; }
 
+        ///<summary>
+        ///Raw JSON string matching the Norbix data meta-schema (https://norbix.ai/schemas/meta/v1.json). When unsure of the shape, read an existing schema with get_database_schema first.
+        ///</summary>
         [DataMember]
         public virtual string? DataSchema { get; set; }
 
+        ///<summary>
+        ///OPTIONAL raw JSON string matching the Norbix UI/visual meta-schema (https://norbix.ai/schemas/ui/v1.json), describing the record form layout. If omitted or invalid, the backend auto-generates a flat-list form from the data schema; provide it to control the layout.
+        ///</summary>
         [DataMember]
         public virtual string? VisualSchema { get; set; }
 
+        ///<summary>
+        ///Optional schema-level settings (e.g. record validation behavior).
+        ///</summary>
         [DataMember]
         public virtual SchemaSettingsDto? Settings { get; set; }
     }
 
+    ///<summary>
+    ///Saves the working-copy draft of a database schema
+    ///</summary>
     [NorbixRoute("/{version}/database/schemas/{Id}/draft", "PUT")]
     [DataContract]
     public partial class UpdateDatabaseSchemaDraftRequest
         : CodeMashRequestBase, INorbixRequest<EmptyResponse>
     {
+        ///<summary>
+        ///Schema id whose draft to replace, from get_database_schemas.
+        ///</summary>
         [DataMember]
         public virtual string Id { get; set; }
 
+        ///<summary>
+        ///Raw JSON string matching the Norbix data meta-schema (https://norbix.ai/schemas/meta/v1.json) for the draft's data schema.
+        ///</summary>
         [DataMember]
         public virtual string? DataSchema { get; set; }
 
+        ///<summary>
+        ///Raw JSON string matching the Norbix UI/visual meta-schema (https://norbix.ai/schemas/ui/v1.json) for the draft's record form.
+        ///</summary>
         [DataMember]
         public virtual string? VisualSchema { get; set; }
     }
 
+    ///<summary>
+    ///Updates database schema records-list display settings
+    ///</summary>
+    [NorbixRoute("/{version}/database/schemas/{Id}/list-settings", "PUT")]
+    [DataContract]
+    public partial class UpdateDatabaseSchemaListSettingsRequest
+        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
+    {
+        ///<summary>
+        ///Schema id whose list settings to update, from get_database_schemas.
+        ///</summary>
+        [DataMember]
+        public virtual string Id { get; set; }
+
+        ///<summary>
+        ///The complete new list settings object (full replace).
+        ///</summary>
+        [DataMember]
+        public virtual SchemaListSettingsDto Settings { get; set; }
+    }
+
+    ///<summary>
+    ///Updates database schema settings
+    ///</summary>
     [NorbixRoute("/{version}/database/schemas/{Id}/settings", "PUT")]
     [DataContract]
     public partial class UpdateDatabaseSchemaSettingsRequest
         : CodeMashRequestBase, INorbixRequest<EmptyResponse>
     {
+        ///<summary>
+        ///Schema id whose settings to update, from get_database_schemas.
+        ///</summary>
+        [DataMember]
         public virtual string Id { get; set; }
 
+        ///<summary>
+        ///The new schema settings object.
+        ///</summary>
         [DataMember]
         public virtual SchemaSettingsDto Settings { get; set; }
     }
 
+    ///<summary>
+    ///Delete database taxonomy
+    ///</summary>
     [NorbixRoute("/{version}/database/taxonomies/{Id}", "DELETE")]
     public partial class DeleteDatabaseTaxonomyRequest
         : CodeMashRequestBase, INorbixRequest<EmptyResponse>
     {
+        ///<summary>
+        ///Taxonomy id to delete, from get_database_taxonomies.
+        ///</summary>
         public virtual string Id { get; set; }
     }
 
+    ///<summary>
+    ///Gets database taxonomies
+    ///</summary>
     [NorbixRoute("/{version}/database/taxonomies", "GET")]
     public partial class GetDatabaseTaxonomies
         : CodeMashListPaginationRequestBase, INorbixRequest<GetDatabaseTaxonomiesResponse>
@@ -6635,10 +13597,16 @@ public partial class CronExpression
         public virtual PaginatedResponse<TaxonomyListProjection>? List { get; set; }
     }
 
+    ///<summary>
+    ///Gets database taxonomy by id
+    ///</summary>
     [NorbixRoute("/{version}/database/taxonomies/{id}", "GET")]
     public partial class GetDatabaseTaxonomy
         : CodeMashRequestBase, INorbixRequest<GetDatabaseTaxonomyResponse>
     {
+        ///<summary>
+        ///Taxonomy id from get_database_taxonomies.
+        ///</summary>
         public virtual string Id { get; set; }
     }
 
@@ -6648,76 +13616,190 @@ public partial class CronExpression
         public virtual TaxonomyDto? Item { get; set; }
     }
 
+    ///<summary>
+    ///Returns the single-parent taxonomy structure tree
+    ///</summary>
+    [NorbixRoute("/{version}/database/taxonomies/tree", "GET")]
+    [DataContract]
+    public partial class GetDatabaseTaxonomyTreeRequest
+        : CodeMashRequestBase, INorbixRequest<GetDatabaseTaxonomyTreeResponse>
+    {
+        ///<summary>
+        ///When true, each taxonomy node also carries its own term tree (heavier response).
+        ///</summary>
+        [DataMember]
+        public virtual bool IncludeTerms { get; set; }
+
+        ///<summary>
+        ///Optional database integration id. When omitted, the project's default database integration is used.
+        ///</summary>
+        [DataMember]
+        public virtual string? DatabaseIntegrationId { get; set; }
+    }
+
+    public partial class GetDatabaseTaxonomyTreeResponse
+        : ResponseBase
+    {
+        public virtual List<TaxonomyTreeDto>? Tree { get; set; }
+    }
+
+    ///<summary>
+    ///Creates or updates a database taxonomy
+    ///</summary>
     [NorbixRoute("/{version}/database/taxonomies", "POST")]
     [DataContract]
     public partial class SaveDatabaseTaxonomyRequest
         : CodeMashRequestBase, INorbixRequest<IdResponse>
     {
+        ///<summary>
+        ///Empty to create a new taxonomy; set to an existing taxonomy id (from get_database_taxonomies) to update it.
+        ///</summary>
         [DataMember]
         public virtual string? ViewId { get; set; }
 
+        ///<summary>
+        ///Human-entered taxonomy title (e.g. "Countries"); a slug is derived server-side.
+        ///</summary>
         [DataMember]
         public virtual string TaxonomyName { get; set; }
 
+        ///<summary>
+        ///Optional free-text description of the taxonomy.
+        ///</summary>
         [DataMember]
         public virtual string? Description { get; set; }
 
+        ///<summary>
+        ///Optional raw JSON string (Norbix data meta-schema) describing custom meta fields for terms in this taxonomy. Omit to leave the taxonomy structural-only.
+        ///</summary>
         [DataMember]
         public virtual string? TermsMetaDataSchema { get; set; }
 
+        ///<summary>
+        ///Optional raw JSON string (Norbix UI/visual meta-schema) describing the term meta edit form.
+        ///</summary>
         [DataMember]
         public virtual string? TermsMetaVisualSchema { get; set; }
 
+        ///<summary>
+        ///Optional parent taxonomy id. The child taxonomy points to its parent — e.g. set the Countries taxonomy's parentId to the Regions taxonomy id so each country term can be parented by a region term. Omit for a root taxonomy.
+        ///</summary>
         [DataMember]
         public virtual string? ParentId { get; set; }
 
+        ///<summary>
+        ///Optional list of other taxonomy ids this taxonomy depends on for multi-parent terms. Omit for a self-contained taxonomy.
+        ///</summary>
         [DataMember]
         public virtual List<string>? Dependencies { get; set; }
     }
 
+    ///<summary>
+    ///Delete a single term from a taxonomy by id
+    ///</summary>
     [NorbixRoute("/{version}/database/taxonomies/{TaxonomyId}/terms/{Id}", "DELETE")]
     [DataContract]
     public partial class DeleteDatabaseTaxonomyTermRequest
         : CodeMashRequestBase, INorbixRequest<EmptyResponse>
     {
+        ///<summary>
+        ///Taxonomy id that owns the term, from get_database_taxonomies.
+        ///</summary>
         [DataMember]
         public virtual string TaxonomyId { get; set; }
 
+        ///<summary>
+        ///Term id to delete, from get_database_taxonomy_term_tree.
+        ///</summary>
         [DataMember]
         public virtual string Id { get; set; }
 
+        ///<summary>
+        ///Optional database integration id. When omitted, the project's default database integration is used.
+        ///</summary>
         [DataMember]
-        public virtual string DatabaseIntegrationId { get; set; }
+        public virtual string? DatabaseIntegrationId { get; set; }
     }
 
+    ///<summary>
+    ///Delete many terms in a taxonomy matching the given filter
+    ///</summary>
     [NorbixRoute("/{version}/database/taxonomies/{TaxonomyId}/terms/many", "DELETE")]
     [DataContract]
     public partial class DeleteManyDatabaseTaxonomyTermsRequest
         : CodeMashRequestBase, INorbixRequest<EmptyResponse>
     {
+        ///<summary>
+        ///Taxonomy id whose terms to delete, from get_database_taxonomies.
+        ///</summary>
         [DataMember]
         public virtual string TaxonomyId { get; set; }
 
+        ///<summary>
+        ///Optional database integration id. When omitted, the project's default database integration is used.
+        ///</summary>
         [DataMember]
-        public virtual string DatabaseIntegrationId { get; set; }
+        public virtual string? DatabaseIntegrationId { get; set; }
 
+        ///<summary>
+        ///MongoDB extended-JSON match filter (a raw JSON object, e.g. {"active":false}) selecting which terms to delete. Automatically ANDed server-side with the taxonomyId, so it cannot affect other taxonomies.
+        ///</summary>
         [DataMember]
         public virtual string Filter { get; set; }
     }
 
+    ///<summary>
+    ///Returns a merged term tree across a taxonomy and its child taxonomies
+    ///</summary>
+    [NorbixRoute("/{version}/database/taxonomies/{TaxonomyName}/merged-tree", "GET")]
+    [DataContract]
+    public partial class GetDatabaseMergedTermTreeRequest
+        : CodeMashRequestBase, INorbixRequest<GetDatabaseMergedTermTreeResponse>
+    {
+        ///<summary>
+        ///Root taxonomy slug/name (from get_database_taxonomies). Its terms are the roots; child-taxonomy terms nest under them.
+        ///</summary>
+        [DataMember]
+        public virtual string TaxonomyName { get; set; }
+
+        ///<summary>
+        ///Optional database integration id. When omitted, the project's default database integration is used.
+        ///</summary>
+        [DataMember]
+        public virtual string? DatabaseIntegrationId { get; set; }
+    }
+
+    public partial class GetDatabaseMergedTermTreeResponse
+        : ResponseBase
+    {
+        public virtual List<TermTreeDto>? Tree { get; set; }
+    }
+
+    ///<summary>
+    ///Get a single term from a taxonomy by id
+    ///</summary>
     [NorbixRoute("/{version}/database/taxonomies/{TaxonomyId}/terms/{Id}", "GET")]
     [DataContract]
     public partial class GetDatabaseTaxonomyTermRequest
         : CodeMashRequestBase, INorbixRequest<GetDatabaseTaxonomyTermResponse>
     {
+        ///<summary>
+        ///Taxonomy id from get_database_taxonomies.
+        ///</summary>
         [DataMember]
         public virtual string TaxonomyId { get; set; }
 
+        ///<summary>
+        ///Term id from get_database_taxonomy_term_tree.
+        ///</summary>
         [DataMember]
         public virtual string Id { get; set; }
 
+        ///<summary>
+        ///Optional database integration id. When omitted, the project's default database integration is used.
+        ///</summary>
         [DataMember]
-        public virtual string DatabaseIntegrationId { get; set; }
+        public virtual string? DatabaseIntegrationId { get; set; }
     }
 
     public partial class GetDatabaseTaxonomyTermResponse
@@ -6726,39 +13808,108 @@ public partial class CronExpression
         public virtual TermDto? Item { get; set; }
     }
 
+    ///<summary>
+    ///Returns the whole term tree of a taxonomy (or a sub-tree) in one call
+    ///</summary>
+    [NorbixRoute("/{version}/database/taxonomies/{TaxonomyName}/terms/tree", "GET")]
+    [DataContract]
+    public partial class GetDatabaseTaxonomyTermTreeRequest
+        : CodeMashRequestBase, INorbixRequest<GetDatabaseTaxonomyTermTreeResponse>
+    {
+        ///<summary>
+        ///Taxonomy slug/name to fetch the term tree for, from get_database_taxonomies.
+        ///</summary>
+        [DataMember]
+        public virtual string TaxonomyName { get; set; }
+
+        ///<summary>
+        ///Optional term id to root the returned tree at a sub-tree instead of the whole taxonomy.
+        ///</summary>
+        [DataMember]
+        public virtual string? RootTermId { get; set; }
+
+        ///<summary>
+        ///Optional maximum depth to return below the root.
+        ///</summary>
+        [DataMember]
+        public virtual int? Depth { get; set; }
+
+        ///<summary>
+        ///Optional database integration id. When omitted, the project's default database integration is used.
+        ///</summary>
+        [DataMember]
+        public virtual string? DatabaseIntegrationId { get; set; }
+    }
+
+    public partial class GetDatabaseTaxonomyTermTreeResponse
+        : ResponseBase
+    {
+        public virtual List<TermTreeDto>? Tree { get; set; }
+    }
+
+    ///<summary>
+    ///Insert a single term into a taxonomy
+    ///</summary>
     [NorbixRoute("/{version}/database/taxonomies/{TaxonomyId}/terms", "POST")]
     [DataContract]
     public partial class SaveDatabaseTaxonomyTermRequest
         : CodeMashRequestBase, INorbixRequest<IdResponse>
     {
+        ///<summary>
+        ///Taxonomy id to insert the term into, from get_database_taxonomies.
+        ///</summary>
         [DataMember]
         public virtual string TaxonomyId { get; set; }
 
+        ///<summary>
+        ///Optional database integration id. When omitted, the project's default database integration is used.
+        ///</summary>
         [DataMember]
-        public virtual string DatabaseIntegrationId { get; set; }
+        public virtual string? DatabaseIntegrationId { get; set; }
 
+        ///<summary>
+        ///The term to insert, as a MongoDB extended-JSON document string (a raw JSON object). Supported term fields: name (string, or a {lang:value} map — required); description; order (integer sort position, lower shows first — omit for unordered); parentId (id of the single parent term); multiParents ("additional categories": array of {taxonomyId, parentId}). The server stamps taxonomyId/taxonomyName automatically — do not include them. Example: {"name":"France","order":1}.
+        ///</summary>
         [DataMember]
         public virtual string Document { get; set; }
     }
 
+    ///<summary>
+    ///Update a single term in a taxonomy by id
+    ///</summary>
     [NorbixRoute("/{version}/database/taxonomies/{TaxonomyId}/terms/{Id}", "PUT")]
     [DataContract]
     public partial class UpdateDatabaseTaxonomyTermRequest
         : CodeMashRequestBase, INorbixRequest<EmptyResponse>
     {
+        ///<summary>
+        ///Taxonomy id that owns the term, from get_database_taxonomies.
+        ///</summary>
         [DataMember]
         public virtual string TaxonomyId { get; set; }
 
+        ///<summary>
+        ///Term id to update, from get_database_taxonomy_term_tree.
+        ///</summary>
         [DataMember]
         public virtual string Id { get; set; }
 
+        ///<summary>
+        ///Optional database integration id. When omitted, the project's default database integration is used.
+        ///</summary>
         [DataMember]
-        public virtual string DatabaseIntegrationId { get; set; }
+        public virtual string? DatabaseIntegrationId { get; set; }
 
+        ///<summary>
+        ///Partial update document as MongoDB extended-JSON (a raw JSON object of fields to change), applied with $set — only the given fields change. Updatable term fields: name (string or {lang:value} map); description; order (integer sort position, lower shows first — use this to numerate/rank terms; set null to clear); parentId (single parent term id — a term from THIS taxonomy's parent taxonomy; e.g. link a country to its region by setting the country term's parentId to the region term id); multiParents ("additional categories": array of {taxonomyId, parentId}). Example to rank a term: {"order":1}.
+        ///</summary>
         [DataMember]
         public virtual string Update { get; set; }
     }
 
+    ///<summary>
+    ///Delete database trigger
+    ///</summary>
     [NorbixRoute("/{version}/database/schemas/triggers/{triggerId}", "DELETE")]
     [DataContract]
     public partial class DeleteSchemaTrigger
@@ -6766,6 +13917,9 @@ public partial class CronExpression
     {
     }
 
+    ///<summary>
+    ///Disable database trigger
+    ///</summary>
     [NorbixRoute("/{version}/database/schemas/triggers/{triggerId}/disable", "PATCH")]
     [DataContract]
     public partial class DisableSchemaTrigger
@@ -6773,6 +13927,9 @@ public partial class CronExpression
     {
     }
 
+    ///<summary>
+    ///Enable database trigger
+    ///</summary>
     [NorbixRoute("/{version}/database/schemas/triggers/{triggerId}/enable", "PATCH")]
     [DataContract]
     public partial class EnableSchemaTrigger
@@ -6796,7 +13953,6 @@ public partial class CronExpression
     public partial class GetSchemaTriggers
         : GetTriggers, INorbixRequest<GetSchemaTriggersResponse>
     {
-        public virtual string SchemaId { get; set; }
     }
 
     [NorbixRoute("/{version}/database/schemas/triggers", "POST")]
@@ -6806,15 +13962,134 @@ public partial class CronExpression
     {
     }
 
+    [NorbixRoute("/{version}/diagnostics/echo", "GET")]
+    public partial class GetDiagnosticEcho
+        : CodeMashRequestBase, INorbixRequest<GetDiagnosticEchoResponse>
+    {
+        public virtual string? CaseId { get; set; }
+    }
+
+    public partial class GetDiagnosticEchoResponse
+        : ResponseBase
+    {
+        public virtual DiagnosticEchoDto? Result { get; set; }
+    }
+
+    [NorbixRoute("/{version}/diagnostics/packs", "GET")]
+    public partial class GetDiagnosticPacks
+        : CodeMashRequestBase, INorbixRequest<GetDiagnosticPacksResponse>
+    {
+    }
+
+    public partial class GetDiagnosticPacksResponse
+        : ResponseBase
+    {
+        public virtual List<DiagnosticPackDescriptorDto>? Packs { get; set; }
+    }
+
+    [NorbixRoute("/{version}/diagnostics/redis", "GET")]
+    public partial class InspectDiagnosticRedisRequest
+        : CodeMashRequestBase, INorbixRequest<InspectDiagnosticRedisResponse>
+    {
+        public virtual string KeyPattern { get; set; }
+        public virtual string? CaseId { get; set; }
+    }
+
+    public partial class InspectDiagnosticRedisResponse
+        : ResponseBase
+    {
+        public virtual DiagnosticRedisInspectDto? Result { get; set; }
+    }
+
+    [NorbixRoute("/{version}/diagnostics/logs", "GET")]
+    public partial class QueryDiagnosticLogsRequest
+        : CodeMashListPaginationRequestBase, INorbixRequest<QueryDiagnosticLogsResponse>
+    {
+        public virtual string? Level { get; set; }
+        public virtual string? Module { get; set; }
+        public virtual string? LogCorrelationId { get; set; }
+        public virtual string? EventCode { get; set; }
+        public virtual string? Search { get; set; }
+        public virtual DateTime? FromUtc { get; set; }
+        public virtual DateTime? ToUtc { get; set; }
+        public virtual string? CaseId { get; set; }
+    }
+
+    public partial class QueryDiagnosticLogsResponse
+        : ResponseBase
+    {
+        public virtual DiagnosticLogsResponse? Result { get; set; }
+    }
+
+    [NorbixRoute("/{version}/diagnostics/events", "GET")]
+    public partial class ReadDiagnosticEventsRequest
+        : CodeMashRequestBase, INorbixRequest<ReadDiagnosticEventsResponse>
+    {
+        public virtual string Stream { get; set; }
+        public virtual long From { get; set; }
+        public virtual int Count { get; set; }
+        public virtual string? CaseId { get; set; }
+    }
+
+    public partial class ReadDiagnosticEventsResponse
+        : ResponseBase
+    {
+        public virtual DiagnosticEventsPageDto? Result { get; set; }
+    }
+
+    [NorbixRoute("/{version}/diagnostics/health/{CheckId}", "POST")]
+    public partial class RunDiagnosticHealthCheckRequest
+        : CodeMashRequestBase, INorbixRequest<RunDiagnosticHealthCheckResponse>
+    {
+        public virtual string CheckId { get; set; }
+        public virtual string? CaseId { get; set; }
+    }
+
+    public partial class RunDiagnosticHealthCheckResponse
+        : ResponseBase
+    {
+        public virtual DiagnosticHealthCheckDto? Result { get; set; }
+    }
+
+    [NorbixRoute("/{version}/diagnostics/packs/{PackName}/run", "POST")]
+    public partial class RunDiagnosticPackRequest
+        : CodeMashRequestBase, INorbixRequest<RunDiagnosticPackResponse>
+    {
+        public virtual string PackName { get; set; }
+        public virtual int? PackVersion { get; set; }
+        public virtual string? CaseId { get; set; }
+    }
+
+    public partial class RunDiagnosticPackResponse
+        : ResponseBase
+    {
+        public virtual DiagnosticPackRunResultDto? Result { get; set; }
+    }
+
+    ///<summary>
+    ///Disable email service
+    ///</summary>
     [NorbixRoute("/{version}/notifications/email/disable", "GET")]
     public partial class DisableEmail
         : CodeMashRequestBase, INorbixRequest<EmptyResponse>
     {
     }
 
+    ///<summary>
+    ///Enable email service
+    ///</summary>
     [NorbixRoute("/{version}/notifications/email/enable", "GET")]
     public partial class EnableEmail
         : CodeMashRequestBase, INorbixRequest<EmptyResponse>
+    {
+    }
+
+    ///<summary>
+    ///Get email disable dependencies
+    ///</summary>
+    [NorbixRoute("/{version}/notifications/email/disable-dependencies", "GET")]
+    public partial class GetEmailDisableDependencies
+        : CodeMashRequestBase, INorbixRequest<GetNotificationModuleDisableDependenciesResponse>
     {
     }
 
@@ -6830,7 +14105,7 @@ public partial class CronExpression
         public virtual EmailCampaignRequest Campaign { get; set; }
 
         [DataMember]
-        public virtual string DatabaseIntegrationId { get; set; }
+        public virtual string? DatabaseIntegrationId { get; set; }
     }
 
     ///<summary>
@@ -6841,8 +14116,6 @@ public partial class CronExpression
     public partial class DeleteEmailCampaignRequest
         : CodeMashRequestBase, INorbixRequest<EmptyResponse>
     {
-        public virtual string Id { get; set; }
-        public virtual string DatabaseIntegrationId { get; set; }
     }
 
     public partial class EmailCampaignRequest
@@ -6850,6 +14123,7 @@ public partial class CronExpression
         public virtual EmailCampaignRecipientsSourceTypes Source { get; set; }
         public virtual string TemplateId { get; set; }
         public virtual string? IntegrationId { get; set; }
+        public virtual string? ValidationIntegrationId { get; set; }
         public virtual string? Language { get; set; }
         public virtual string? InitiatorId { get; set; }
         public virtual string? Notes { get; set; }
@@ -6863,6 +14137,7 @@ public partial class CronExpression
     public partial class EmailToAccountUsersDeliverySettingsRequest
         : EmailCampaignRequest
     {
+        public virtual EmailCampaignRecipientsSourceTypes Source { get; set; }
         public virtual HashSet<string> UserRecipients { get; set; } = [];
         public virtual HashSet<string>? UserCc { get; set; }
         public virtual HashSet<string>? UserBcc { get; set; }
@@ -6872,6 +14147,7 @@ public partial class CronExpression
     public partial class EmailToAllUsersDeliverySettingsRequest
         : EmailCampaignRequest
     {
+        public virtual EmailCampaignRecipientsSourceTypes Source { get; set; }
         public virtual HashSet<string>? RolesNames { get; set; }
         public virtual HashSet<string>? UserTags { get; set; }
     }
@@ -6879,6 +14155,7 @@ public partial class CronExpression
     public partial class EmailToCollectionRecordsDeliverySettingsRequest
         : EmailCampaignRequest
     {
+        public virtual EmailCampaignRecipientsSourceTypes Source { get; set; }
         public virtual HashSet<string> Fields { get; set; } = [];
         public virtual string SchemaName { get; set; }
         public virtual CollectionEmailCampaignRecipientField FieldType { get; set; }
@@ -6889,6 +14166,7 @@ public partial class CronExpression
     public partial class EmailToEmailsDeliverySettingsRequest
         : EmailCampaignRequest
     {
+        public virtual EmailCampaignRecipientsSourceTypes Source { get; set; }
         public virtual HashSet<string> Recipients { get; set; } = [];
         public virtual HashSet<string>? RecipientsCc { get; set; }
         public virtual HashSet<string>? RecipientsBcc { get; set; }
@@ -6898,27 +14176,56 @@ public partial class CronExpression
     public partial class EmailToUsersDeliverySettingsRequest
         : EmailCampaignRequest
     {
+        public virtual EmailCampaignRecipientsSourceTypes Source { get; set; }
         public virtual HashSet<string> UserRecipients { get; set; } = [];
         public virtual HashSet<string>? UserCc { get; set; }
         public virtual HashSet<string>? UserBcc { get; set; }
         public virtual bool SingleEmailStrategy { get; set; }
     }
 
+    ///<summary>
+    ///Gets email campaign by id
+    ///</summary>
     [NorbixRoute("/{version}/notifications/email/campaigns/{id}", "GET")]
     public partial class GetEmailCampaign
         : CodeMashRequestBase, INorbixRequest<GetEmailCampaignResponse>
     {
+        ///<summary>
+        ///The campaign id.
+        ///</summary>
         public virtual string Id { get; set; }
-        public virtual string DatabaseIntegrationId { get; set; }
+
+        ///<summary>
+        ///Optional. Omit to use the project default database integration (resolved per environment).
+        ///</summary>
+        public virtual string? DatabaseIntegrationId { get; set; }
     }
 
+    ///<summary>
+    ///Get email campaign batches
+    ///</summary>
     [NorbixRoute("/{version}/notifications/email/campaigns/{id}/batches", "GET")]
     public partial class GetEmailCampaignBatches
         : CodeMashListPaginationRequestBase, INorbixRequest<GetEmailCampaignBatchesResponse>
     {
+        ///<summary>
+        ///The email campaign id to list batches for. Get it from get_all_email_campaigns.
+        ///</summary>
         public virtual string Id { get; set; }
-        public virtual string DatabaseIntegrationId { get; set; }
+
+        ///<summary>
+        ///Optional. Omit to use the project default database integration (resolved per environment).
+        ///</summary>
+        public virtual string? DatabaseIntegrationId { get; set; }
+
+        ///<summary>
+        ///Optional batch id to filter to a single batch. Get it from a prior call to this tool.
+        ///</summary>
         public virtual string? BatchId { get; set; }
+
+        ///<summary>
+        ///Optional recipient email address to filter batches by.
+        ///</summary>
         public virtual string? EmailAddress { get; set; }
     }
 
@@ -6928,14 +14235,32 @@ public partial class CronExpression
         public virtual PaginatedResponse<EmailCampaignBatchDto>? List { get; set; }
     }
 
+    ///<summary>
+    ///Get an email campaign batch notification
+    ///</summary>
     [NorbixRoute("/{version}/notifications/email/campaigns/{id}/batches/{batchId}/{notificationId}", "GET")]
     public partial class GetEmailCampaignBatchNotification
         : CodeMashListPaginationRequestBase, INorbixRequest<GetEmailCampaignBatchNotificationResponse>
     {
+        ///<summary>
+        ///The email campaign id. Get it from get_all_email_campaigns.
+        ///</summary>
         public virtual string Id { get; set; }
+
+        ///<summary>
+        ///The campaign batch id. Get it from get_email_campaign_batches.
+        ///</summary>
         public virtual string BatchId { get; set; }
+
+        ///<summary>
+        ///The notification id within the batch. Get it from get_email_campaign_batch_notifications.
+        ///</summary>
         public virtual string NotificationId { get; set; }
-        public virtual string DatabaseIntegrationId { get; set; }
+
+        ///<summary>
+        ///Optional. Omit to use the project default database integration (resolved per environment).
+        ///</summary>
+        public virtual string? DatabaseIntegrationId { get; set; }
     }
 
     public partial class GetEmailCampaignBatchNotificationResponse
@@ -6944,13 +14269,27 @@ public partial class CronExpression
         public virtual EmailCampaignBatchNotificationDto? CampaignNotification { get; set; }
     }
 
+    ///<summary>
+    ///Get email campaign batch notifications
+    ///</summary>
     [NorbixRoute("/{version}/notifications/email/campaigns/{id}/batches/{batchId}", "GET")]
     public partial class GetEmailCampaignBatchNotifications
         : CodeMashListPaginationRequestBase, INorbixRequest<GetEmailCampaignBatchNotificationsResponse>
     {
+        ///<summary>
+        ///The email campaign id. Get it from get_all_email_campaigns.
+        ///</summary>
         public virtual string Id { get; set; }
+
+        ///<summary>
+        ///The campaign batch id to list notifications for. Get it from get_email_campaign_batches.
+        ///</summary>
         public virtual string BatchId { get; set; }
-        public virtual string DatabaseIntegrationId { get; set; }
+
+        ///<summary>
+        ///Optional. Omit to use the project default database integration (resolved per environment).
+        ///</summary>
+        public virtual string? DatabaseIntegrationId { get; set; }
     }
 
     public partial class GetEmailCampaignBatchNotificationsResponse
@@ -6966,15 +14305,41 @@ public partial class CronExpression
         public virtual EmailCampaignDto? Item { get; set; }
     }
 
+    ///<summary>
+    ///Gets email campaigns
+    ///</summary>
     [NorbixRoute("/{version}/notifications/email/campaigns", "GET")]
     public partial class GetEmailCampaigns
         : CodeMashListPaginationRequestBase, INorbixRequest<GetEmailCampaignsResponse>
     {
-        public virtual string DatabaseIntegrationId { get; set; }
+        ///<summary>
+        ///Optional. When omitted, the project's default database integration is used (resolved server-side from the project state).
+        ///</summary>
+        public virtual string? DatabaseIntegrationId { get; set; }
+
+        ///<summary>
+        ///Optional: return only the campaign with this id.
+        ///</summary>
         public virtual string? CampaignId { get; set; }
+
+        ///<summary>
+        ///Optional: only campaigns that targeted this email address.
+        ///</summary>
         public virtual string? EmailAddress { get; set; }
+
+        ///<summary>
+        ///Optional: only campaigns built on this email template id.
+        ///</summary>
         public virtual string? TemplateId { get; set; }
+
+        ///<summary>
+        ///Optional lower bound for the campaign time, unix timestamp in seconds (UTC).
+        ///</summary>
         public virtual long? From { get; set; }
+
+        ///<summary>
+        ///Optional upper bound for the campaign time, unix timestamp in seconds (UTC).
+        ///</summary>
         public virtual long? To { get; set; }
     }
 
@@ -6984,12 +14349,22 @@ public partial class CronExpression
         public virtual PaginatedResponse<EmailCampaignListProjection>? List { get; set; }
     }
 
+    ///<summary>
+    ///Get email campaign statistics
+    ///</summary>
     [NorbixRoute("/{version}/notifications/email/campaigns/{id}/stats", "GET")]
     public partial class GetEmailCampaignStatistics
         : CodeMashRequestBase, INorbixRequest<GetEmailCampaignStatisticsResponse>
     {
+        ///<summary>
+        ///The email campaign id to get statistics for. Get it from get_all_email_campaigns.
+        ///</summary>
         public virtual string Id { get; set; }
-        public virtual string DatabaseIntegrationId { get; set; }
+
+        ///<summary>
+        ///Optional. Omit to use the project default database integration (resolved per environment).
+        ///</summary>
+        public virtual string? DatabaseIntegrationId { get; set; }
     }
 
     public partial class GetEmailCampaignStatisticsResponse
@@ -6998,10 +14373,16 @@ public partial class CronExpression
         public virtual CampaignStatsDto? Stats { get; set; }
     }
 
+    ///<summary>
+    ///Preview an email notification
+    ///</summary>
     [NorbixRoute("/{version}/notifications/email/preview", "GET")]
     public partial class PreviewEmailNotification
         : RequestBase, INorbixRequest<PreviewEmailNotificationResponse>
     {
+        ///<summary>
+        ///The opaque, pre-signed preview hash identifying the project and notification to preview.
+        ///</summary>
         public virtual string Hash { get; set; }
     }
 
@@ -7012,14 +14393,53 @@ public partial class CronExpression
         public virtual string? Body { get; set; }
     }
 
+    ///<summary>
+    ///Stops a running email campaign
+    ///</summary>
+    [NorbixRoute("/{version}/notifications/email/campaigns/{Id}/stop", "POST")]
+    [DataContract]
+    public partial class StopEmailCampaignRequest
+        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
+    {
+        ///<summary>
+        ///The campaign id to stop.
+        ///</summary>
+        [DataMember]
+        public virtual string Id { get; set; }
+
+        ///<summary>
+        ///Optional. Omit to use the project default database integration (resolved per environment).
+        ///</summary>
+        [DataMember]
+        public virtual string? DatabaseIntegrationId { get; set; }
+    }
+
+    ///<summary>
+    ///Get an email campaign message
+    ///</summary>
     [NorbixRoute("/{version}/notifications/emails/campaigns/{campaignId}/messages/{id}", "GET")]
     public partial class GetEmailCampaignMessage
         : CodeMashRequestBase, INorbixRequest<GetEmailCampaignMessageResponse>
     {
+        ///<summary>
+        ///The email campaign id. Get it from get_all_email_campaigns.
+        ///</summary>
         public virtual string CampaignId { get; set; }
+
+        ///<summary>
+        ///The campaign batch id. Get it from get_email_campaign_batches.
+        ///</summary>
         public virtual string CampaignBatchId { get; set; }
+
+        ///<summary>
+        ///The notification (message) id to fetch. Get it from get_email_campaign_messages.
+        ///</summary>
         public virtual string NotificationId { get; set; }
-        public virtual string DatabaseIntegrationId { get; set; }
+
+        ///<summary>
+        ///Optional. Omit to use the project default database integration (resolved per environment).
+        ///</summary>
+        public virtual string? DatabaseIntegrationId { get; set; }
     }
 
     public partial class GetEmailCampaignMessageResponse
@@ -7028,13 +14448,27 @@ public partial class CronExpression
         public virtual EmailCampaignBatchNotificationDto? EmailMessageEntity { get; set; }
     }
 
+    ///<summary>
+    ///Get email campaign messages
+    ///</summary>
     [NorbixRoute("/{version}/notifications/emails/campaigns/{campaignId}/messages", "GET")]
     public partial class GetEmailCampaignMessagesRequest
         : CodeMashListPaginationRequestBase, INorbixRequest<GetEmailCampaignMessagesResponse>
     {
+        ///<summary>
+        ///The email campaign id. Get it from get_all_email_campaigns.
+        ///</summary>
         public virtual string CampaignId { get; set; }
+
+        ///<summary>
+        ///The campaign batch id to list messages for. Get it from get_email_campaign_batches.
+        ///</summary>
         public virtual string CampaignBatchId { get; set; }
-        public virtual string DatabaseIntegrationId { get; set; }
+
+        ///<summary>
+        ///Optional. Omit to use the project default database integration (resolved per environment).
+        ///</summary>
+        public virtual string? DatabaseIntegrationId { get; set; }
     }
 
     public partial class GetEmailCampaignMessagesResponse
@@ -7043,16 +14477,23 @@ public partial class CronExpression
         public virtual PaginatedResponse<EmailCampaignBatchNotificationDto>? List { get; set; }
     }
 
+    ///<summary>
+    ///Archive an email template
+    ///</summary>
     [NorbixRoute("/{version}/notifications/email/templates/{Id}/archive", "PUT")]
     public partial class ArchiveEmailTemplateRequest
         : CodeMashRequestBase, INorbixRequest<EmptyResponse>
     {
+        ///<summary>
+        ///The email template id to archive. Get it from get_email_templates.
+        ///</summary>
         public virtual string Id { get; set; }
     }
 
     public partial class AwsSesEmailIntegrationRequest
         : EmailIntegrationRequest
     {
+        public virtual EmailProvider Provider { get; set; }
         public virtual AwsIntegrationType IntegrationType { get; set; }
         public virtual string AwsRegion { get; set; }
         public virtual string EmailIdentityArn { get; set; }
@@ -7063,33 +14504,72 @@ public partial class CronExpression
         public virtual string? SecretKey { get; set; }
     }
 
+    ///<summary>
+    ///Check email integration domain health
+    ///</summary>
+    [NorbixRoute("/{version}/notifications/email/integrations/domain-health", "POST")]
+    [DataContract]
+    public partial class CheckEmailIntegrationDomainHealthRequest
+        : CodeMashRequestBase, INorbixRequest<CheckEmailIntegrationDomainHealthResponse>
+    {
+        ///<summary>
+        ///The email integration id to check DNS health for. Get it from get_email_integrations.
+        ///</summary>
+        [DataMember]
+        public virtual string IntegrationId { get; set; }
+    }
+
+    ///<summary>
+    ///Clone an email template
+    ///</summary>
     [NorbixRoute("/{version}/notifications/email/templates/{Id}/clone", "POST")]
     public partial class CloneEmailTemplateRequest
         : CodeMashRequestBase, INorbixRequest<EmptyResponse>
     {
+        ///<summary>
+        ///The email template id to clone. Get it from get_email_templates.
+        ///</summary>
         public virtual string Id { get; set; }
     }
 
+    ///<summary>
+    ///Confirm human delivery of a test email
+    ///</summary>
     [NorbixRoute("/{version}/notifications/email/integrations/confirm-human-delivery", "POST")]
     [DataContract]
     public partial class ConfirmEmailIntegrationHumanDeliveryRequest
         : CodeMashRequestBase, INorbixRequest<EmptyResponse>
     {
+        ///<summary>
+        ///The email integration id the test delivery was confirmed for. Get it from get_email_integrations.
+        ///</summary>
         [DataMember]
         public virtual string IntegrationId { get; set; }
     }
 
+    ///<summary>
+    ///Delete an email integration
+    ///</summary>
     [NorbixRoute("/{version}/notifications/email/integrations/{Id}", "DELETE")]
     public partial class DeleteEmailIntegration
         : CodeMashRequestBase, INorbixRequest<EmptyResponse>
     {
+        ///<summary>
+        ///The email integration id to delete. Get it from get_email_integrations.
+        ///</summary>
         public virtual string Id { get; set; }
     }
 
+    ///<summary>
+    ///Disable an email integration
+    ///</summary>
     [NorbixRoute("/{version}/notifications/email/integrations/{Id}/disable", "PUT")]
     public partial class DisableEmailIntegration
         : CodeMashRequestBase, INorbixRequest<EmptyResponse>
     {
+        ///<summary>
+        ///The email integration id to disable. Get it from get_email_integrations.
+        ///</summary>
         public virtual string Id { get; set; }
     }
 
@@ -7103,17 +14583,29 @@ public partial class CronExpression
         public virtual string? EmailSenderName { get; set; }
     }
 
+    ///<summary>
+    ///Enable an email integration
+    ///</summary>
     [NorbixRoute("/{version}/notifications/email/integrations/{Id}/enable", "PUT")]
     public partial class EnableEmailIntegration
         : CodeMashRequestBase, INorbixRequest<EmptyResponse>
     {
+        ///<summary>
+        ///The email integration id to enable. Get it from get_email_integrations.
+        ///</summary>
         public virtual string Id { get; set; }
     }
 
+    ///<summary>
+    ///Get an email integration
+    ///</summary>
     [NorbixRoute("/{version}/notifications/email/integrations/{id}", "GET")]
     public partial class GetEmailIntegration
         : CodeMashRequestBase, INorbixRequest<GetEmailIntegrationResponse>
     {
+        ///<summary>
+        ///The email integration id to fetch. Get it from get_email_integrations.
+        ///</summary>
         public virtual string Id { get; set; }
     }
 
@@ -7123,6 +14615,9 @@ public partial class CronExpression
         public virtual EmailIntegrationDto? Item { get; set; }
     }
 
+    ///<summary>
+    ///Gets email integrations
+    ///</summary>
     [NorbixRoute("/{version}/notifications/email/integrations", "GET")]
     public partial class GetEmailIntegrations
         : CodeMashListPaginationRequestBase, INorbixRequest<GetEmailIntegrationsResponse>
@@ -7139,9 +14634,11 @@ public partial class CronExpression
     public partial class MailGunEmailIntegrationRequest
         : EmailIntegrationRequest
     {
+        public virtual EmailProvider Provider { get; set; }
         public virtual string Domain { get; set; }
         public virtual string ApiKey { get; set; }
         public virtual string WebhookSigningKey { get; set; }
+        public virtual MailGunRegion Region { get; set; }
     }
 
     [NorbixRoute("/{version}/notifications/email/integrations", "POST")]
@@ -7149,51 +14646,81 @@ public partial class CronExpression
     public partial class SaveEmailIntegration
         : CodeMashRequestBase, INorbixRequest<IdResponse>
     {
-        [DataMember]
+        [DataMember(Name="integration")]
         public virtual EmailIntegrationRequest Integration { get; set; }
     }
 
     public partial class SendGridEmailIntegrationRequest
         : EmailIntegrationRequest
     {
+        public virtual EmailProvider Provider { get; set; }
         public virtual string ApiKey { get; set; }
     }
 
+    ///<summary>
+    ///Set an email integration as default
+    ///</summary>
     [NorbixRoute("/{version}/notifications/email/integrations/{Id}/default", "PUT")]
     public partial class SetEmailsIntegrationAsDefault
         : CodeMashRequestBase, INorbixRequest<EmptyResponse>
     {
+        ///<summary>
+        ///The email integration id to set as default. Get it from get_email_integrations.
+        ///</summary>
         public virtual string Id { get; set; }
     }
 
     public partial class SmtpEmailIntegrationRequest
         : EmailIntegrationRequest
     {
+        public virtual EmailProvider Provider { get; set; }
         public virtual string Domain { get; set; }
         public virtual SmtpPorts Port { get; set; }
         public virtual string UserName { get; set; }
         public virtual string Password { get; set; }
     }
 
+    ///<summary>
+    ///Test an email integration
+    ///</summary>
     [NorbixRoute("/{version}/notifications/email/integrations/test", "POST")]
     public partial class TestEmailIntegration
         : CodeMashRequestBase, INorbixRequest<TestEmailIntegrationResponse>
     {
+        ///<summary>
+        ///The email integration id to test. Get it from get_email_integrations.
+        ///</summary>
         public virtual string IntegrationId { get; set; }
-        public virtual string? To { get; set; }
+
+        ///<summary>
+        ///The recipient email address to send the test email to.
+        ///</summary>
+        public virtual string To { get; set; }
     }
 
+    ///<summary>
+    ///Un-archive an email template
+    ///</summary>
     [NorbixRoute("/{version}/notifications/email/templates/{Id}/unarchive", "PUT")]
     public partial class UnArchiveEmailTemplateRequest
         : CodeMashRequestBase, INorbixRequest<EmptyResponse>
     {
+        ///<summary>
+        ///The email template id to unarchive. Get it from get_email_templates.
+        ///</summary>
         public virtual string Id { get; set; }
     }
 
+    ///<summary>
+    ///Get email settings
+    ///</summary>
     [NorbixRoute("/{version}/notifications/email/settings", "GET")]
     public partial class GetEmailSettings
         : CodeMashRequestBase, INorbixRequest<GetEmailSettingsResponse>
     {
+        ///<summary>
+        ///Unused legacy field; leave empty.
+        ///</summary>
         public virtual string Id { get; set; }
     }
 
@@ -7204,17 +14731,29 @@ public partial class CronExpression
         public virtual HashSet<GroupDefinitionDto>? SystemTags { get; set; }
     }
 
+    ///<summary>
+    ///Delete an email signature
+    ///</summary>
     [NorbixRoute("/{version}/notifications/email/signatures/{id}", "DELETE")]
     public partial class DeleteEmailSignature
         : CodeMashRequestBase, INorbixRequest<EmptyResponse>
     {
+        ///<summary>
+        ///The email signature id to delete. Get it from get_email_signatures.
+        ///</summary>
         public virtual string Id { get; set; }
     }
 
+    ///<summary>
+    ///Get an email signature
+    ///</summary>
     [NorbixRoute("/{version}/notifications/email/signatures/{id}", "GET")]
     public partial class GetEmailSignature
         : CodeMashRequestBase, INorbixRequest<GetEmailSignatureResponse>
     {
+        ///<summary>
+        ///The email signature id to fetch. Get it from get_email_signatures.
+        ///</summary>
         public virtual string Id { get; set; }
     }
 
@@ -7224,6 +14763,9 @@ public partial class CronExpression
         public virtual EmailSignatureDto? Item { get; set; }
     }
 
+    ///<summary>
+    ///Get email signatures
+    ///</summary>
     [NorbixRoute("/{version}/notifications/email/signatures", "GET")]
     public partial class GetEmailSignatures
         : CodeMashListPaginationRequestBase, INorbixRequest<GetEmailSignaturesResponse>
@@ -7236,48 +14778,97 @@ public partial class CronExpression
         public virtual PaginatedResponse<ListItemWithTranslationsProjection>? List { get; set; }
     }
 
+    ///<summary>
+    ///Save an email signature
+    ///</summary>
     [NorbixRoute("/{version}/notifications/email/signatures", "POST")]
     public partial class SaveEmailSignatureRequest
         : CodeMashRequestBase, INorbixRequest<IdResponse>
     {
+        ///<summary>
+        ///The signature id to update. Omit to create a new signature. Get it from get_email_signatures.
+        ///</summary>
         public virtual string? ViewId { get; set; }
+
+        ///<summary>
+        ///The display name of the signature.
+        ///</summary>
         public virtual string DisplayName { get; set; }
+
+        ///<summary>
+        ///The per-language content translations for this signature.
+        ///</summary>
         public virtual HashSet<TranslationDto> Translations { get; set; } = [];
     }
 
+    ///<summary>
+    ///Attach a file to an email template
+    ///</summary>
     [NorbixRoute("/{version}/notifications/email/templates/attachments", "POST")]
     public partial class AttachFileToTemplateRequest
         : CodeMashRequestBase, INorbixRequest<EmptyResponse>
     {
+        ///<summary>
+        ///Optional language code to scope the attachment to a single translation. Omit to attach at the template level.
+        ///</summary>
         public virtual string? Language { get; set; }
+
+        ///<summary>
+        ///The email template id to attach the file to. Get it from get_email_templates.
+        ///</summary>
         public virtual string TemplateId { get; set; }
+
+        ///<summary>
+        ///The file resource reference to attach (from a prior file upload).
+        ///</summary>
         public virtual FileResourceRefDto FileRef { get; set; }
     }
 
+    ///<summary>
+    ///Create an email template
+    ///</summary>
     [NorbixRoute("/{version}/notifications/email/templates", "POST")]
     public partial class CreateEmailTemplateRequest
         : SaveEmailTemplate, INorbixRequest<IdResponse>
     {
     }
 
+    ///<summary>
+    ///Delete an email template
+    ///</summary>
     [NorbixRoute("/{version}/notifications/email/templates/{Id}", "DELETE")]
     public partial class DeleteEmailTemplateRequest
         : CodeMashRequestBase, INorbixRequest<EmptyResponse>
     {
+        ///<summary>
+        ///The email template id to delete. Get it from get_email_templates.
+        ///</summary>
         public virtual string Id { get; set; }
     }
 
+    ///<summary>
+    ///Get an email template
+    ///</summary>
     [NorbixRoute("/{version}/notifications/email/templates/{id}", "GET")]
     public partial class GetEmailTemplate
         : CodeMashRequestBase, INorbixRequest<GetEmailTemplateResponse>
     {
+        ///<summary>
+        ///The email template id to fetch. Get it from get_email_templates.
+        ///</summary>
         public virtual string Id { get; set; }
     }
 
+    ///<summary>
+    ///Gets the tokens used by an email template
+    ///</summary>
     [NorbixRoute("/{version}/notifications/email/templates/{id}/tokens", "GET")]
     public partial class GetEmailTemplateAvailableTokens
         : CodeMashRequestBase, INorbixRequest<GetEmailTemplateAvailableTokensResponse>
     {
+        ///<summary>
+        ///Template id from get_email_templates.
+        ///</summary>
         public virtual string Id { get; set; }
     }
 
@@ -7293,11 +14884,21 @@ public partial class CronExpression
         public virtual EmailTemplateDto? Item { get; set; }
     }
 
+    ///<summary>
+    ///Gets email templates
+    ///</summary>
     [NorbixRoute("/{version}/notifications/email/templates", "GET")]
     public partial class GetEmailTemplates
         : CodeMashListPaginationRequestBase, INorbixRequest<GetEmailTemplatesResponse>
     {
+        ///<summary>
+        ///Set true to include archived templates.
+        ///</summary>
         public virtual bool? ShowArchived { get; set; }
+
+        ///<summary>
+        ///Optional: return only the template with this id.
+        ///</summary>
         public virtual string? TemplateId { get; set; }
     }
 
@@ -7307,19 +14908,39 @@ public partial class CronExpression
         public virtual PaginatedResponse<EmailTemplateListProjection>? List { get; set; }
     }
 
+    ///<summary>
+    ///Render MJML email template
+    ///</summary>
     [NorbixRoute("/{version}/notifications/email/templates/mjml", "POST")]
     public partial class GetMjml
         : CodeMashRequestBase, INorbixRequest<GetHtmlFromMjmlResponse>
     {
+        ///<summary>
+        ///The MJML/Razor template source code to render.
+        ///</summary>
         public virtual string Code { get; set; }
+
+        ///<summary>
+        ///Optional token values to bind into the template while rendering.
+        ///</summary>
         public virtual HashSet<TokenMappingDto>? Tokens { get; set; }
+
+        ///<summary>
+        ///Set true when rendering for a preview (vs. a final save), to affect how missing tokens are handled.
+        ///</summary>
         public virtual bool IsForPreview { get; set; }
     }
 
+    ///<summary>
+    ///Get a system email template
+    ///</summary>
     [NorbixRoute("/{version}/notifications/email/system-templates/{id}", "GET")]
     public partial class GetSystemEmailTemplate
         : CodeMashRequestBase, INorbixRequest<GetSystemEmailTemplateResponse>
     {
+        ///<summary>
+        ///The system email template id to fetch. Get it from get_system_email_templates.
+        ///</summary>
         public virtual string Id { get; set; }
     }
 
@@ -7329,13 +14950,31 @@ public partial class CronExpression
         public virtual SystemEmailTemplateDto? Item { get; set; }
     }
 
+    ///<summary>
+    ///Get system email templates
+    ///</summary>
     [NorbixRoute("/{version}/notifications/email/system-templates", "GET")]
     public partial class GetSystemEmailTemplates
         : CodeMashListPaginationRequestBase, INorbixRequest<GetSystemEmailTemplatesResponse>
     {
+        ///<summary>
+        ///Optional group tags to filter templates by (e.g. newsletter, onboarding).
+        ///</summary>
         public virtual HashSet<string>? GroupTags { get; set; }
+
+        ///<summary>
+        ///Optional visual themes to filter templates by.
+        ///</summary>
         public virtual HashSet<string>? Themes { get; set; }
+
+        ///<summary>
+        ///Optional communication channel to filter templates by (e.g. Transactional, Marketing).
+        ///</summary>
         public virtual CommunicationChannel? CommunicationChannel { get; set; }
+
+        ///<summary>
+        ///Optional trigger type to filter templates that are designed for a specific automated trigger.
+        ///</summary>
         public virtual TriggerType? ForTrigger { get; set; }
     }
 
@@ -7348,34 +14987,74 @@ public partial class CronExpression
     public partial class SaveEmailTemplate
         : CodeMashRequestBase
     {
+        ///<summary>
+        ///The display name of the email template.
+        ///</summary>
         public virtual string TemplateName { get; set; }
+
+        ///<summary>
+        ///Optional free-text description of what the template is used for.
+        ///</summary>
         public virtual string? Description { get; set; }
+
+        ///<summary>
+        ///The communication channel the template is intended for (e.g. Transactional, Marketing).
+        ///</summary>
         public virtual CommunicationChannel CommunicationChannel { get; set; }
+
+        ///<summary>
+        ///Optional tags to organize/filter the template by.
+        ///</summary>
         public virtual HashSet<string>? Tags { get; set; }
+
+        ///<summary>
+        ///Optional static file attachments to send with every email using this template.
+        ///</summary>
         [DataMember]
         public virtual HashSet<FileResourceRefDto>? StaticAttachments { get; set; }
 
+        ///<summary>
+        ///The per-language content translations (subject/body) for this template.
+        ///</summary>
         public virtual HashSet<EmailMessageTranslationDto> Translations { get; set; } = [];
     }
 
+    ///<summary>
+    ///Update an email template
+    ///</summary>
     [NorbixRoute("/{version}/notifications/email/templates", "PUT")]
     public partial class UpdateEmailTemplateRequest
         : SaveEmailTemplate, INorbixRequest<EmptyResponse>
     {
+        ///<summary>
+        ///The email template id to update. Get it from get_email_templates.
+        ///</summary>
         public virtual string ViewId { get; set; }
     }
 
+    ///<summary>
+    ///Delete an email footer
+    ///</summary>
     [NorbixRoute("/{version}/notifications/email/footers/{id}", "DELETE")]
     public partial class DeleteEmailFooter
         : CodeMashRequestBase, INorbixRequest<EmptyResponse>
     {
+        ///<summary>
+        ///The email footer id to delete. Get it from get_email_footers.
+        ///</summary>
         public virtual string Id { get; set; }
     }
 
+    ///<summary>
+    ///Get an email footer
+    ///</summary>
     [NorbixRoute("/{version}/notifications/email/footers/{id}", "GET")]
     public partial class GetEmailFooter
         : CodeMashRequestBase, INorbixRequest<GetEmailFooterResponse>
     {
+        ///<summary>
+        ///The email footer id to fetch. Get it from get_email_footers.
+        ///</summary>
         public virtual string Id { get; set; }
     }
 
@@ -7385,6 +15064,9 @@ public partial class CronExpression
         public virtual EmailFooterDto? Item { get; set; }
     }
 
+    ///<summary>
+    ///Get email footers
+    ///</summary>
     [NorbixRoute("/{version}/notifications/email/footers", "GET")]
     public partial class GetEmailFooters
         : CodeMashListPaginationRequestBase, INorbixRequest<GetEmailFootersResponse>
@@ -7412,13 +15094,51 @@ public partial class CronExpression
         public virtual string Token { get; set; }
     }
 
+    ///<summary>
+    ///Save an email footer
+    ///</summary>
     [NorbixRoute("/{version}/notifications/email/footers", "POST")]
     public partial class SaveEmailFooterRequest
         : CodeMashRequestBase, INorbixRequest<IdResponse>
     {
+        ///<summary>
+        ///The footer id to update. Omit to create a new footer. Get it from get_email_footers.
+        ///</summary>
         public virtual string? ViewId { get; set; }
+
+        ///<summary>
+        ///The display name of the footer.
+        ///</summary>
         public virtual string DisplayName { get; set; }
+
+        ///<summary>
+        ///The per-language content translations for this footer.
+        ///</summary>
         public virtual HashSet<TranslationDto> Translations { get; set; } = [];
+    }
+
+    public partial class EmailValidationIntegrationRequest
+    {
+        public virtual string? IntegrationId { get; set; }
+        public virtual EmailValidationProvider Provider { get; set; }
+        public virtual string IntegrationName { get; set; }
+        public virtual bool IsEnabled { get; set; }
+    }
+
+    [NorbixRoute("/{version}/notifications/email/validation/integrations", "POST")]
+    [DataContract]
+    public partial class SaveEmailValidationIntegration
+        : CodeMashRequestBase, INorbixRequest<IdResponse>
+    {
+        [DataMember(Name="integration")]
+        public virtual EmailValidationIntegrationRequest Integration { get; set; }
+    }
+
+    [NorbixRoute("/{version}/notifications/email/validation/integrations/test", "POST")]
+    public partial class TestEmailValidationIntegration
+        : CodeMashRequestBase, INorbixRequest<TestEmailValidationIntegrationResponse>
+    {
+        public virtual string IntegrationId { get; set; }
     }
 
     [NorbixRoute("/{version}/files/disable", "GET")]
@@ -7433,9 +15153,55 @@ public partial class CronExpression
     {
     }
 
+    [NorbixRoute("/{version}/files/item", "GET")]
+    public partial class GetFile
+        : CodeMashRequestBase, INorbixRequest<GetFileResponse>
+    {
+        ///<summary>
+        ///The files integration id to read from, from get_files_integrations.
+        ///</summary>
+        public virtual string FilesIntegrationId { get; set; }
+
+        ///<summary>
+        ///The path of the file to fetch metadata for.
+        ///</summary>
+        public virtual string Path { get; set; }
+    }
+
+    public partial class GetFileResponse
+        : ResponseBase
+    {
+        public virtual FileResourceRefDto? File { get; set; }
+        public virtual bool? IsPublic { get; set; }
+        public virtual string? PublicUrl { get; set; }
+    }
+
+    [NorbixRoute("/{version}/files/folder", "GET")]
+    public partial class GetFolderFiles
+        : CodeMashListPaginationRequestBase, INorbixRequest<GetFolderFilesResponse>
+    {
+        ///<summary>
+        ///The files integration id to list from, from get_files_integrations.
+        ///</summary>
+        public virtual string FilesIntegrationId { get; set; }
+
+        ///<summary>
+        ///Path prefix to list. Empty / null lists the root.
+        ///</summary>
+        public virtual string? Path { get; set; }
+    }
+
+    public partial class GetFolderFilesResponse
+        : ResponseBase
+    {
+        public virtual PaginatedResponse<FileResourceRefDto>? List { get; set; }
+        public virtual IList<string>? Folders { get; set; }
+    }
+
     public partial class AppleICloudFilesIntegrationRequest
         : FilesIntegrationRequest
     {
+        public virtual FileProvider Provider { get; set; }
         public virtual string ContainerIdentifier { get; set; }
         public virtual string? RelativePath { get; set; }
         public virtual string KeyId { get; set; }
@@ -7447,6 +15213,7 @@ public partial class CronExpression
     public partial class AwsS3FilesIntegrationRequest
         : FilesIntegrationRequest
     {
+        public virtual FileProvider Provider { get; set; }
         public virtual AwsS3IntegrationType IntegrationType { get; set; }
         public virtual string BucketName { get; set; }
         public virtual string Region { get; set; }
@@ -7459,6 +15226,7 @@ public partial class CronExpression
     public partial class AzureBlobFilesIntegrationRequest
         : FilesIntegrationRequest
     {
+        public virtual FileProvider Provider { get; set; }
         public virtual string BlobName { get; set; }
         public virtual string ConnectionString { get; set; }
     }
@@ -7467,6 +15235,9 @@ public partial class CronExpression
     public partial class DeleteFilesIntegrationRequest
         : CodeMashRequestBase, INorbixRequest<EmptyResponse>
     {
+        ///<summary>
+        ///Files integration id to delete, from get_files_integrations.
+        ///</summary>
         public virtual string Id { get; set; }
     }
 
@@ -7474,12 +15245,16 @@ public partial class CronExpression
     public partial class DisableFilesIntegrationRequest
         : CodeMashRequestBase, INorbixRequest<EmptyResponse>
     {
+        ///<summary>
+        ///Files integration id to disable, from get_files_integrations.
+        ///</summary>
         public virtual string Id { get; set; }
     }
 
     public partial class DropBoxFilesIntegrationRequest
         : FilesIntegrationRequest
     {
+        public virtual FileProvider Provider { get; set; }
         public virtual string? RootPath { get; set; }
         public virtual string AccessToken { get; set; }
     }
@@ -7488,6 +15263,9 @@ public partial class CronExpression
     public partial class EnableFilesIntegrationRequest
         : CodeMashRequestBase, INorbixRequest<EmptyResponse>
     {
+        ///<summary>
+        ///Files integration id to enable, from get_files_integrations.
+        ///</summary>
         public virtual string Id { get; set; }
     }
 
@@ -7502,6 +15280,7 @@ public partial class CronExpression
     public partial class FtpFilesIntegrationRequest
         : FilesIntegrationRequest
     {
+        public virtual FileProvider Provider { get; set; }
         public virtual string Host { get; set; }
         public virtual int Port { get; set; }
         public virtual string? RootPath { get; set; }
@@ -7510,10 +15289,16 @@ public partial class CronExpression
         public virtual string Password { get; set; }
     }
 
+    ///<summary>
+    ///Gets integration by specified Id
+    ///</summary>
     [NorbixRoute("/{version}/files/integrations/{id}", "GET")]
     public partial class GetFilesIntegration
         : CodeMashRequestBase, INorbixRequest<GetFilesIntegrationResponse>
     {
+        ///<summary>
+        ///Files integration id to fetch, from get_files_integrations.
+        ///</summary>
         public virtual string Id { get; set; }
     }
 
@@ -7523,6 +15308,9 @@ public partial class CronExpression
         public virtual FilesIntegrationDto? Item { get; set; }
     }
 
+    ///<summary>
+    ///Gets integrations
+    ///</summary>
     [NorbixRoute("/{version}/files/integrations", "GET")]
     public partial class GetFilesIntegrations
         : CodeMashListPaginationRequestBase, INorbixRequest<GetFilesIntegrationsResponse>
@@ -7539,6 +15327,7 @@ public partial class CronExpression
     public partial class GoogleCloudFilesIntegrationRequest
         : FilesIntegrationRequest
     {
+        public virtual FileProvider Provider { get; set; }
         public virtual string BucketName { get; set; }
         public virtual string ServiceAccountJsonKey { get; set; }
     }
@@ -7546,6 +15335,7 @@ public partial class CronExpression
     public partial class GoogleDriveFilesIntegrationRequest
         : FilesIntegrationRequest
     {
+        public virtual FileProvider Provider { get; set; }
         public virtual string? RootFolderId { get; set; }
         public virtual string ServiceAccountJsonKey { get; set; }
     }
@@ -7553,6 +15343,7 @@ public partial class CronExpression
     public partial class LocalFilesIntegrationRequest
         : FilesIntegrationRequest
     {
+        public virtual FileProvider Provider { get; set; }
         public virtual string? RootPath { get; set; }
     }
 
@@ -7561,7 +15352,7 @@ public partial class CronExpression
     public partial class SaveFilesIntegration
         : CodeMashRequestBase, INorbixRequest<IdResponse>
     {
-        [DataMember]
+        [DataMember(Name="integration")]
         public virtual FilesIntegrationRequest Integration { get; set; }
     }
 
@@ -7569,7 +15360,20 @@ public partial class CronExpression
     public partial class SetFilesIntegrationAsDefaultRequest
         : CodeMashRequestBase, INorbixRequest<EmptyResponse>
     {
+        ///<summary>
+        ///Files integration id to set as default, from get_files_integrations.
+        ///</summary>
         public virtual string Id { get; set; }
+    }
+
+    [NorbixRoute("/{version}/files/integrations/test", "POST")]
+    public partial class TestFilesIntegration
+        : CodeMashRequestBase, INorbixRequest<TestFilesIntegrationResponse>
+    {
+        ///<summary>
+        ///Integration id, from get_files_integrations.
+        ///</summary>
+        public virtual string IntegrationId { get; set; }
     }
 
     [NorbixRoute("/{version}/files/triggers/{triggerId}", "DELETE")]
@@ -7618,6 +15422,9 @@ public partial class CronExpression
     {
     }
 
+    ///<summary>
+    ///Disable logging service
+    ///</summary>
     [NorbixRoute("/{version}/logs/disable", "GET")]
     public partial class DisableLogging
         : CodeMashRequestBase, INorbixRequest<EmptyResponse>
@@ -7628,11 +15435,144 @@ public partial class CronExpression
     public partial class EnableLogging
         : CodeMashRequestBase, INorbixRequest<EmptyResponse>
     {
+        ///<summary>
+        ///When true, also create a Norbix Logging integration backed by the project's default database.
+        ///</summary>
+        public virtual bool CreateNorbixLogging { get; set; }
+    }
+
+    ///<summary>
+    ///Delete every log entry stored in the project's Norbix Logging integration
+    ///</summary>
+    [NorbixRoute("/{version}/logs/clean", "POST")]
+    public partial class CleanLogs
+        : CodeMashRequestBase, INorbixRequest<CleanLogsResponse>
+    {
+    }
+
+    public partial class CleanLogsResponse
+        : ResponseBase
+    {
+    }
+
+    ///<summary>
+    ///Fetch a filtered, cursor-paged list of tenant log entries
+    ///</summary>
+    [NorbixRoute("/{version}/logs", "GET")]
+    public partial class GetLogs
+        : CodeMashListPaginationRequestBase, INorbixRequest<GetLogsResponse>
+    {
+        ///<summary>
+        ///Severity filter: Information, Warning or Error.
+        ///</summary>
+        public virtual string? Level { get; set; }
+
+        ///<summary>
+        ///Module filter: Database, Email, Membership, etc.
+        ///</summary>
+        public virtual string? Module { get; set; }
+
+        ///<summary>
+        ///Correlation id filter. Empty = no filter (show all).
+        ///</summary>
+        public virtual string? LogCorrelationId { get; set; }
+
+        ///<summary>
+        ///Exact event code filter (e.g. db:record:insert).
+        ///</summary>
+        public virtual string? EventCode { get; set; }
+
+        ///<summary>
+        ///Free-text search over title and message.
+        ///</summary>
+        public virtual string? Search { get; set; }
+
+        ///<summary>
+        ///Start of the timestamp range (inclusive, UTC). Optional.
+        ///</summary>
+        public virtual DateTime? FromUtc { get; set; }
+
+        ///<summary>
+        ///End of the timestamp range (inclusive, UTC). Optional.
+        ///</summary>
+        public virtual DateTime? ToUtc { get; set; }
+    }
+
+    ///<summary>
+    ///Fetch the audit trail for a correlation id
+    ///</summary>
+    [NorbixRoute("/{version}/logs/audit", "GET")]
+    public partial class GetLogsByCorrelationId
+        : CodeMashRequestBase, INorbixRequest<GetLogsByCorrelationIdResponse>
+    {
+        ///<summary>
+        ///The correlation id whose full request trail you want.
+        ///</summary>
+        public virtual string TargetCorrelationId { get; set; }
+    }
+
+    public partial class GetLogsByCorrelationIdResponse
+        : ResponseBase
+    {
+        public virtual IReadOnlyList<TenantLogEntryDto>? Items { get; set; }
+    }
+
+    ///<summary>
+    ///Fetch the per-project log settings (flags)
+    ///</summary>
+    [NorbixRoute("/{version}/logs/settings", "GET")]
+    public partial class GetLogSettings
+        : CodeMashRequestBase, INorbixRequest<GetLogSettingsResponse>
+    {
+    }
+
+    public partial class GetLogSettingsResponse
+        : ResponseBase
+    {
+        public virtual bool SkipCloudDashboardLogs { get; set; }
+        public virtual bool SkipHttpBodyMeta { get; set; }
+        public virtual bool AiChatLoggingEnabled { get; set; }
+        public virtual bool HasNorbixLogging { get; set; }
+    }
+
+    public partial class GetLogsResponse
+        : ResponseBase
+    {
+        public virtual PaginatedResponse<TenantLogEntryDto>? List { get; set; }
+    }
+
+    ///<summary>
+    ///Update the per-project log settings (flags)
+    ///</summary>
+    [NorbixRoute("/{version}/logs/settings", "POST")]
+    public partial class SaveLogSettings
+        : CodeMashRequestBase, INorbixRequest<SaveLogSettingsResponse>
+    {
+        ///<summary>
+        ///Drop log entries from requests originating from the Norbix studio (cloud dashboard).
+        ///</summary>
+        public virtual bool SkipCloudDashboardLogs { get; set; }
+
+        ///<summary>
+        ///Strip request/response body meta off http:request / http:response log entries.
+        ///</summary>
+        public virtual bool SkipHttpBodyMeta { get; set; }
+
+        ///<summary>
+        ///Turn on tenant-visible log entries for AI chat turns. Default false.
+        ///</summary>
+        public virtual bool AiChatLoggingEnabled { get; set; }
+    }
+
+    public partial class SaveLogSettingsResponse
+        : ResponseBase
+    {
     }
 
     public partial class AmqpLoggingIntegrationRequest
         : LoggingIntegrationRequest
     {
+        public virtual LoggingProvider Provider { get; set; }
         public virtual string Host { get; set; }
         public virtual int Port { get; set; }
         public virtual string VirtualHost { get; set; }
@@ -7645,6 +15585,7 @@ public partial class CronExpression
     public partial class AwsKinesisLoggingIntegrationRequest
         : LoggingIntegrationRequest
     {
+        public virtual LoggingProvider Provider { get; set; }
         public virtual string StreamName { get; set; }
         public virtual string Region { get; set; }
         public virtual string AccessKey { get; set; }
@@ -7654,6 +15595,7 @@ public partial class CronExpression
     public partial class AwsS3LoggingIntegrationRequest
         : LoggingIntegrationRequest
     {
+        public virtual LoggingProvider Provider { get; set; }
         public virtual AwsS3LoggingIntegrationType IntegrationType { get; set; }
         public virtual string BucketName { get; set; }
         public virtual string Region { get; set; }
@@ -7666,6 +15608,7 @@ public partial class CronExpression
     public partial class AzureOtelLoggingIntegrationRequest
         : LoggingIntegrationRequest
     {
+        public virtual LoggingProvider Provider { get; set; }
         public virtual string EndpointUrl { get; set; }
         public virtual string ResourceName { get; set; }
         public virtual string ConnectionString { get; set; }
@@ -7674,46 +15617,77 @@ public partial class CronExpression
     public partial class DataDogLoggingIntegrationRequest
         : LoggingIntegrationRequest
     {
+        public virtual LoggingProvider Provider { get; set; }
         public virtual string Site { get; set; }
         public virtual string ServiceName { get; set; }
         public virtual string Environment { get; set; }
         public virtual string ApiKey { get; set; }
     }
 
+    ///<summary>
+    ///Delete integration for particular project
+    ///</summary>
     [NorbixRoute("/{version}/logs/integrations/{Id}", "DELETE")]
     public partial class DeleteLoggingIntegrationRequest
         : CodeMashRequestBase, INorbixRequest<EmptyResponse>
     {
+        ///<summary>
+        ///Logging integration id to delete, from get_logging_integrations.
+        ///</summary>
         public virtual string Id { get; set; }
+
+        ///<summary>
+        ///When true and this is a Norbix Logging integration, also permanently wipes the stored log entries in its backing database. Ignored for other providers.
+        ///</summary>
+        public virtual bool WipeLogs { get; set; }
     }
 
+    ///<summary>
+    ///Disable integration for particular project
+    ///</summary>
     [NorbixRoute("/{version}/logs/integrations/{Id}/disable", "PUT")]
     public partial class DisableLoggingIntegrationRequest
         : CodeMashRequestBase, INorbixRequest<EmptyResponse>
     {
+        ///<summary>
+        ///Logging integration id to disable, from get_logging_integrations.
+        ///</summary>
         public virtual string Id { get; set; }
     }
 
     public partial class ElasticSearchLoggingIntegrationRequest
         : LoggingIntegrationRequest
     {
+        public virtual LoggingProvider Provider { get; set; }
         public virtual string Uri { get; set; }
         public virtual string Index { get; set; }
         public virtual string? Username { get; set; }
         public virtual string? Password { get; set; }
     }
 
+    ///<summary>
+    ///Enable integration for particular project
+    ///</summary>
     [NorbixRoute("/{version}/logs/integrations/{Id}/enable", "PUT")]
     public partial class EnableLoggingIntegrationRequest
         : CodeMashRequestBase, INorbixRequest<EmptyResponse>
     {
+        ///<summary>
+        ///Logging integration id to enable, from get_logging_integrations.
+        ///</summary>
         public virtual string Id { get; set; }
     }
 
+    ///<summary>
+    ///Gets integration by specified Id
+    ///</summary>
     [NorbixRoute("/{version}/logs/integrations/{id}", "GET")]
     public partial class GetLoggingIntegration
         : CodeMashRequestBase, INorbixRequest<GetLoggingIntegrationResponse>
     {
+        ///<summary>
+        ///Logging integration id to fetch, from get_logging_integrations.
+        ///</summary>
         public virtual string Id { get; set; }
     }
 
@@ -7723,6 +15697,9 @@ public partial class CronExpression
         public virtual LoggingIntegrationDto? Item { get; set; }
     }
 
+    ///<summary>
+    ///Gets integrations
+    ///</summary>
     [NorbixRoute("/{version}/logs/integrations", "GET")]
     public partial class GetLoggingIntegrations
         : CodeMashListPaginationRequestBase, INorbixRequest<GetLoggingIntegrationsResponse>
@@ -7738,6 +15715,7 @@ public partial class CronExpression
     public partial class InternalKafkaLoggingIntegrationRequest
         : LoggingIntegrationRequest
     {
+        public virtual LoggingProvider Provider { get; set; }
         public virtual string BootstrapServers { get; set; }
         public virtual string Topic { get; set; }
         public virtual string? SecurityProtocol { get; set; }
@@ -7748,6 +15726,7 @@ public partial class CronExpression
     public partial class KafkaLoggingIntegrationRequest
         : LoggingIntegrationRequest
     {
+        public virtual LoggingProvider Provider { get; set; }
         public virtual string BootstrapServers { get; set; }
         public virtual string Topic { get; set; }
         public virtual string? SecurityProtocol { get; set; }
@@ -7758,6 +15737,7 @@ public partial class CronExpression
     public partial class KibanaLoggingIntegrationRequest
         : LoggingIntegrationRequest
     {
+        public virtual LoggingProvider Provider { get; set; }
         public virtual string Uri { get; set; }
         public virtual string? SpaceId { get; set; }
         public virtual string ApiKey { get; set; }
@@ -7766,6 +15746,7 @@ public partial class CronExpression
     public partial class LocalFileLoggingIntegrationRequest
         : LoggingIntegrationRequest
     {
+        public virtual LoggingProvider Provider { get; set; }
         public virtual string? RootPath { get; set; }
     }
 
@@ -7777,16 +15758,10 @@ public partial class CronExpression
         public virtual bool IsEnabled { get; set; }
     }
 
-    public partial class MicrosoftTeamsLoggingIntegrationRequest
-        : LoggingIntegrationRequest
-    {
-        public virtual string? ChannelName { get; set; }
-        public virtual string WebhookUrl { get; set; }
-    }
-
     public partial class MongoDbLoggingIntegrationRequest
         : LoggingIntegrationRequest
     {
+        public virtual LoggingProvider Provider { get; set; }
         public virtual string? DatabaseName { get; set; }
         public virtual string ConnectionString { get; set; }
     }
@@ -7794,6 +15769,7 @@ public partial class CronExpression
     public partial class NewRelicLoggingIntegrationRequest
         : LoggingIntegrationRequest
     {
+        public virtual LoggingProvider Provider { get; set; }
         public virtual string Region { get; set; }
         public virtual string ServiceName { get; set; }
         public virtual string ApiKey { get; set; }
@@ -7802,48 +15778,44 @@ public partial class CronExpression
     public partial class PrometheusLoggingIntegrationRequest
         : LoggingIntegrationRequest
     {
+        public virtual LoggingProvider Provider { get; set; }
         public virtual string EndpointUrl { get; set; }
         public virtual string? JobName { get; set; }
         public virtual string? BearerToken { get; set; }
     }
 
+    ///<summary>
+    ///Saves logging integration
+    ///</summary>
     [NorbixRoute("/{version}/logs/integrations", "POST")]
     [DataContract]
     public partial class SaveLoggingIntegration
         : CodeMashRequestBase, INorbixRequest<IdResponse>
     {
-        [DataMember]
+        [DataMember(Name="integration")]
         public virtual LoggingIntegrationRequest Integration { get; set; }
     }
 
     public partial class SplunkLoggingIntegrationRequest
         : LoggingIntegrationRequest
     {
+        public virtual LoggingProvider Provider { get; set; }
         public virtual string HecEndpointUrl { get; set; }
         public virtual string Index { get; set; }
         public virtual string HecToken { get; set; }
     }
 
-    public partial class TelegramLoggingIntegrationRequest
-        : LoggingIntegrationRequest
-    {
-        public virtual string ChatId { get; set; }
-        public virtual string BotToken { get; set; }
-    }
-
+    ///<summary>
+    ///Test logging integration
+    ///</summary>
     [NorbixRoute("/{version}/logs/integrations/test", "POST")]
     public partial class TestLoggingIntegration
         : CodeMashRequestBase, INorbixRequest<TestLoggingIntegrationResponse>
     {
+        ///<summary>
+        ///Logging integration id to test, from get_logging_integrations.
+        ///</summary>
         public virtual string IntegrationId { get; set; }
-    }
-
-    public partial class ZabbixLoggingIntegrationRequest
-        : LoggingIntegrationRequest
-    {
-        public virtual string ApiUrl { get; set; }
-        public virtual string HostName { get; set; }
-        public virtual string ApiToken { get; set; }
     }
 
     [NorbixRoute("/{version}/membership/disable", "GET")]
@@ -7858,9 +15830,176 @@ public partial class CronExpression
     {
     }
 
+    public partial class CredentialsSettingsModeDto
+    {
+        public virtual string? Name { get; set; }
+        public virtual string? LogoutUrl { get; set; }
+    }
+
+    ///<summary>
+    ///Gets the project's configured membership authentication sign-in flows.
+    ///</summary>
+    [NorbixRoute("/{version}/membership/authentication", "GET")]
+    public partial class GetAuthenticationSettings
+        : CodeMashRequestBase, INorbixRequest<GetAuthenticationSettingsResponse>
+    {
+    }
+
+    public partial class GetAuthenticationSettingsResponse
+        : ResponseBase
+    {
+        public virtual MembershipAuthenticationViewDto? Result { get; set; }
+    }
+
+    ///<summary>
+    ///Updates the project's membership authentication preferences.
+    ///</summary>
+    [NorbixRoute("/{version}/membership/authentication", "PUT")]
+    public partial class UpdateAuthenticationSettings
+        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
+    {
+        ///<summary>
+        ///Default URL to redirect end users to after logout.
+        ///</summary>
+        public virtual string? LogoutUrl { get; set; }
+
+        ///<summary>
+        ///Whether end users may sign in with a username in addition to email.
+        ///</summary>
+        public virtual bool AllowUsernames { get; set; }
+
+        ///<summary>
+        ///Per-authentication-mode logout URL overrides.
+        ///</summary>
+        public virtual List<CredentialsSettingsModeDto>? Modes { get; set; }
+    }
+
+    ///<summary>
+    ///Gets the project's membership authorization (role-assignment) settings.
+    ///</summary>
+    [NorbixRoute("/{version}/membership/authorization", "GET")]
+    public partial class GetAuthorizationSettings
+        : CodeMashRequestBase, INorbixRequest<GetAuthorizationSettingsResponse>
+    {
+    }
+
+    public partial class GetAuthorizationSettingsResponse
+        : ResponseBase
+    {
+        public virtual MembershipAuthorizationViewDto? Result { get; set; }
+    }
+
+    ///<summary>
+    ///Updates the project's membership authorization settings.
+    ///</summary>
+    [NorbixRoute("/{version}/membership/authorization", "PUT")]
+    public partial class UpdateAuthorizationSettings
+        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
+    {
+        public virtual string? Setting { get; set; }
+        public virtual List<string>? DefaultRoles { get; set; }
+        public virtual List<string>? AllowedRegistrationRoles { get; set; }
+        public virtual bool AllowGuestUsers { get; set; }
+        public virtual int? GuestCleanupPeriodDays { get; set; }
+        public virtual string? UserRegistersAsRole { get; set; }
+        public virtual string? GuestRegistersAsRole { get; set; }
+        public virtual List<string>? AllowedRegisterRoles { get; set; }
+        public virtual bool NeedVerification { get; set; }
+        public virtual string? VerificationEmailTemplate { get; set; }
+        public virtual string? DeactivationEmailTemplate { get; set; }
+        public virtual bool AllowInviteUsers { get; set; }
+        public virtual bool AllowDeactivateUsers { get; set; }
+        public virtual string? InviteUserEmailTemplate { get; set; }
+        public virtual int? InvitationExpiration { get; set; }
+        public virtual int? EmailVerificationExpiration { get; set; }
+        public virtual int? DeactivationExpiration { get; set; }
+        public virtual bool DefaultSubscribeToNews { get; set; }
+        public virtual int MinLength { get; set; }
+        public virtual int? MaxLength { get; set; }
+        public virtual int? MinNumbers { get; set; }
+        public virtual int? MaxNumbers { get; set; }
+        public virtual int? MinUpper { get; set; }
+        public virtual int? MaxUpper { get; set; }
+        public virtual int? MinLower { get; set; }
+        public virtual int? MaxLower { get; set; }
+        public virtual int? MinSpecial { get; set; }
+        public virtual int? MaxSpecial { get; set; }
+        public virtual string? AllowedSpecial { get; set; }
+    }
+
+    ///<summary>
+    ///Updates the project's membership password complexity policy.
+    ///</summary>
+    [NorbixRoute("/{version}/membership/authorization/password-complexity", "PUT")]
+    public partial class UpdatePasswordComplexity
+        : CodeMashRequestBase, INorbixRequest<UpdatePasswordComplexityResponse>
+    {
+        ///<summary>
+        ///Minimum password length.
+        ///</summary>
+        public virtual int MinLength { get; set; }
+
+        ///<summary>
+        ///Maximum password length, if capped.
+        ///</summary>
+        public virtual int? MaxLength { get; set; }
+
+        ///<summary>
+        ///Minimum number of numeric characters required.
+        ///</summary>
+        public virtual int? MinNumbers { get; set; }
+
+        ///<summary>
+        ///Maximum number of numeric characters allowed.
+        ///</summary>
+        public virtual int? MaxNumbers { get; set; }
+
+        ///<summary>
+        ///Minimum number of uppercase characters required.
+        ///</summary>
+        public virtual int? MinUpper { get; set; }
+
+        ///<summary>
+        ///Maximum number of uppercase characters allowed.
+        ///</summary>
+        public virtual int? MaxUpper { get; set; }
+
+        ///<summary>
+        ///Minimum number of lowercase characters required.
+        ///</summary>
+        public virtual int? MinLower { get; set; }
+
+        ///<summary>
+        ///Maximum number of lowercase characters allowed.
+        ///</summary>
+        public virtual int? MaxLower { get; set; }
+
+        ///<summary>
+        ///Minimum number of special characters required.
+        ///</summary>
+        public virtual int? MinSpecial { get; set; }
+
+        ///<summary>
+        ///Maximum number of special characters allowed.
+        ///</summary>
+        public virtual int? MaxSpecial { get; set; }
+
+        ///<summary>
+        ///The set of characters counted as 'special', if restricted.
+        ///</summary>
+        public virtual string? AllowedSpecial { get; set; }
+    }
+
+    public partial class UpdatePasswordComplexityResponse
+        : ResponseBase
+    {
+        public virtual bool Result { get; set; }
+    }
+
     public partial class AppleMembershipIntegrationRequest
         : MembershipIntegrationRequest
     {
+        public virtual MembershipProvider Provider { get; set; }
         public virtual string TeamId { get; set; }
         public virtual string AppBundleId { get; set; }
         public virtual string ServiceId { get; set; }
@@ -7874,6 +16013,9 @@ public partial class CronExpression
     public partial class DeleteMembershipIntegrationRequest
         : CodeMashRequestBase, INorbixRequest<EmptyResponse>
     {
+        ///<summary>
+        ///Integration id, from get_membership_integrations.
+        ///</summary>
         public virtual string Id { get; set; }
     }
 
@@ -7881,6 +16023,9 @@ public partial class CronExpression
     public partial class DisableMembershipIntegrationRequest
         : CodeMashRequestBase, INorbixRequest<EmptyResponse>
     {
+        ///<summary>
+        ///Integration id, from get_membership_integrations.
+        ///</summary>
         public virtual string Id { get; set; }
     }
 
@@ -7888,6 +16033,9 @@ public partial class CronExpression
     public partial class EnableMembershipIntegrationRequest
         : CodeMashRequestBase, INorbixRequest<EmptyResponse>
     {
+        ///<summary>
+        ///Integration id, from get_membership_integrations.
+        ///</summary>
         public virtual string Id { get; set; }
     }
 
@@ -7895,6 +16043,9 @@ public partial class CronExpression
     public partial class GetMembershipIntegration
         : CodeMashRequestBase, INorbixRequest<GetMembershipIntegrationResponse>
     {
+        ///<summary>
+        ///Integration id, from get_membership_integrations.
+        ///</summary>
         public virtual string Id { get; set; }
     }
 
@@ -7919,6 +16070,7 @@ public partial class CronExpression
     public partial class GitHubMembershipIntegrationRequest
         : MembershipIntegrationRequest
     {
+        public virtual MembershipProvider Provider { get; set; }
         public virtual string ClientId { get; set; }
         public virtual string ClientSecret { get; set; }
         public virtual HashSet<OAuthModeConfig>? OAuthModes { get; set; }
@@ -7927,6 +16079,7 @@ public partial class CronExpression
     public partial class GoogleMembershipIntegrationRequest
         : MembershipIntegrationRequest
     {
+        public virtual MembershipProvider Provider { get; set; }
         public virtual string ClientId { get; set; }
         public virtual string ClientSecret { get; set; }
         public virtual HashSet<OAuthModeConfig>? OAuthModes { get; set; }
@@ -7943,6 +16096,7 @@ public partial class CronExpression
     public partial class MetaMembershipIntegrationRequest
         : MembershipIntegrationRequest
     {
+        public virtual MembershipProvider Provider { get; set; }
         public virtual string AppId { get; set; }
         public virtual string AppSecret { get; set; }
         public virtual HashSet<OAuthModeConfig>? OAuthModes { get; set; }
@@ -7951,6 +16105,7 @@ public partial class CronExpression
     public partial class MicrosoftMembershipIntegrationRequest
         : MembershipIntegrationRequest
     {
+        public virtual MembershipProvider Provider { get; set; }
         public virtual string TenantId { get; set; }
         public virtual string ClientId { get; set; }
         public virtual string ClientSecret { get; set; }
@@ -7960,6 +16115,7 @@ public partial class CronExpression
     public partial class OktaMembershipIntegrationRequest
         : MembershipIntegrationRequest
     {
+        public virtual MembershipProvider Provider { get; set; }
         public virtual string Domain { get; set; }
         public virtual string ClientId { get; set; }
         public virtual string ClientSecret { get; set; }
@@ -7971,7 +16127,7 @@ public partial class CronExpression
     public partial class SaveMembershipIntegration
         : CodeMashRequestBase, INorbixRequest<IdResponse>
     {
-        [DataMember]
+        [DataMember(Name="integration")]
         public virtual MembershipIntegrationRequest Integration { get; set; }
     }
 
@@ -7979,15 +16135,87 @@ public partial class CronExpression
     public partial class SetMembershipIntegrationAsDefaultRequest
         : CodeMashRequestBase, INorbixRequest<EmptyResponse>
     {
+        ///<summary>
+        ///Integration id, from get_membership_integrations.
+        ///</summary>
         public virtual string Id { get; set; }
     }
 
     public partial class XMembershipIntegrationRequest
         : MembershipIntegrationRequest
     {
+        public virtual MembershipProvider Provider { get; set; }
         public virtual string ApiKey { get; set; }
         public virtual string ApiSecretKey { get; set; }
         public virtual HashSet<OAuthModeConfig>? OAuthModes { get; set; }
+    }
+
+    ///<summary>
+    ///Gets the project's passkey authentication settings.
+    ///</summary>
+    [NorbixRoute("/{version}/membership/passkey/settings", "GET")]
+    public partial class GetPasskeySettings
+        : CodeMashRequestBase, INorbixRequest<GetPasskeySettingsResponse>
+    {
+    }
+
+    public partial class GetPasskeySettingsResponse
+        : ResponseBase
+    {
+        public virtual PasskeySettingsDto? Result { get; set; }
+    }
+
+    ///<summary>
+    ///Saves the project's passkey authentication settings.
+    ///</summary>
+    [NorbixRoute("/{version}/membership/passkey/settings", "POST")]
+    public partial class SavePasskeySettings
+        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
+    {
+        ///<summary>
+        ///Whether the email + passkey sign-in flow is enabled for the project.
+        ///</summary>
+        public virtual bool Enabled { get; set; }
+
+        ///<summary>
+        ///Email verification code lifetime, in minutes. Allowed range: 3-15.
+        ///</summary>
+        public virtual int CodeTtlMinutes { get; set; }
+
+        ///<summary>
+        ///Maximum passkeys a single user may register. Allowed range: 1-20.
+        ///</summary>
+        public virtual int MaxCredentialsPerUser { get; set; }
+
+        ///<summary>
+        ///Number of recovery codes generated at signup. Allowed range: 5-20.
+        ///</summary>
+        public virtual int RecoveryCodeCount { get; set; }
+
+        ///<summary>
+        ///Whether recovery codes are generated automatically at signup.
+        ///</summary>
+        public virtual bool GenerateRecoveryCodesAtSignup { get; set; }
+
+        ///<summary>
+        ///Accepted authenticator types: 'Any', 'Platform', or 'CrossPlatform'.
+        ///</summary>
+        public virtual string AuthenticatorAttachment { get; set; }
+
+        ///<summary>
+        ///Per-project opt-in for magic-link account recovery (off by default).
+        ///</summary>
+        public virtual bool AllowMagicLinkRecovery { get; set; }
+
+        ///<summary>
+        ///Absolute refresh-token lifetime, in days. Allowed range: 7-90.
+        ///</summary>
+        public virtual int RefreshTokenTtlDays { get; set; }
+
+        ///<summary>
+        ///Optional explicit WebAuthn RP-ID — a bare DNS host (e.g. 'app.example.com', no scheme/port/path). Leave null/empty to derive it from the project's CORS origins. WARNING: changing this value invalidates every existing passkey on the project — set it once before going live and avoid changing it afterward.
+        ///</summary>
+        public virtual string? RpId { get; set; }
     }
 
     ///<summary>
@@ -7997,8 +16225,19 @@ public partial class CronExpression
     public partial class CreatePolicy
         : CodeMashRequestBase, INorbixRequest<IdResponse>
     {
+        ///<summary>
+        ///Display name of the new policy, unique within the project.
+        ///</summary>
         public virtual string PolicyName { get; set; }
+
+        ///<summary>
+        ///Optional human-readable description of what the policy grants.
+        ///</summary>
         public virtual string? Description { get; set; }
+
+        ///<summary>
+        ///AWS-IAM-style policy document as a raw JSON string (an object with a permission statement list) matching PolicyDocument.schema.json. Malformed or invalid documents are rejected before any change is made.
+        ///</summary>
         public virtual string? PolicyDocumentJson { get; set; }
     }
 
@@ -8009,6 +16248,9 @@ public partial class CronExpression
     public partial class DeletePolicy
         : CodeMashRequestBase, INorbixRequest<EmptyResponse>
     {
+        ///<summary>
+        ///Public policy id, e.g. 'pol_database-read', from get_policies.
+        ///</summary>
         public virtual string Id { get; set; }
     }
 
@@ -8034,6 +16276,9 @@ public partial class CronExpression
     public partial class GetPolicy
         : CodeMashRequestBase, INorbixRequest<GetPolicyResponse>
     {
+        ///<summary>
+        ///Public policy id, e.g. 'pol_database-read', from get_policies.
+        ///</summary>
         public virtual string Id { get; set; }
     }
 
@@ -8050,9 +16295,24 @@ public partial class CronExpression
     public partial class UpdatePolicy
         : CodeMashRequestBase, INorbixRequest<IdResponse>
     {
+        ///<summary>
+        ///Public policy id, e.g. 'pol_database-read', from get_policies.
+        ///</summary>
         public virtual string Id { get; set; }
+
+        ///<summary>
+        ///The policy's name — required; resend the current name to keep it.
+        ///</summary>
         public virtual string PolicyName { get; set; }
+
+        ///<summary>
+        ///Optional human-readable description of what the policy grants.
+        ///</summary>
         public virtual string? Description { get; set; }
+
+        ///<summary>
+        ///AWS-IAM-style policy document as a raw JSON string (an object with a permission statement list) matching PolicyDocument.schema.json — this is a FULL replacement of the policy's current permissions.
+        ///</summary>
         public virtual string? PolicyDocumentJson { get; set; }
     }
 
@@ -8063,8 +16323,15 @@ public partial class CronExpression
     public partial class CreateRole
         : CodeMashRequestBase, INorbixRequest<IdResponse>
     {
+        ///<summary>
+        ///Display name of the new role, unique within the project.
+        ///</summary>
         public virtual string RoleName { get; set; }
+
         public virtual string? Description { get; set; }
+        ///<summary>
+        ///Policy ids to attach. These are OPAQUE ids from get_policies (e.g. 'pol_3kJ9xJ2mQ0aBcDeFgHiJk') — NEVER invent them or guess from a policy name. Omit this to create a role with no policies and attach them later.
+        ///</summary>
         public virtual HashSet<string>? Policies { get; set; }
     }
 
@@ -8075,6 +16342,9 @@ public partial class CronExpression
     public partial class DeleteRole
         : CodeMashRequestBase, INorbixRequest<EmptyResponse>
     {
+        ///<summary>
+        ///Id of the role to delete, from get_roles.
+        ///</summary>
         public virtual string Id { get; set; }
     }
 
@@ -8085,6 +16355,9 @@ public partial class CronExpression
     public partial class GetRole
         : CodeMashRequestBase, INorbixRequest<GetRoleResponse>
     {
+        ///<summary>
+        ///Role id from get_roles.
+        ///</summary>
         public virtual string Id { get; set; }
     }
 
@@ -8116,9 +16389,20 @@ public partial class CronExpression
     public partial class UpdateRolePolicies
         : CodeMashRequestBase, INorbixRequest<EmptyResponse>
     {
+        ///<summary>
+        ///Id of the role to update, from get_roles.
+        ///</summary>
         public virtual string Id { get; set; }
+
+        ///<summary>
+        ///The role's name — required; resend the current name to keep it.
+        ///</summary>
         public virtual string RoleName { get; set; }
+
         public virtual string? Description { get; set; }
+        ///<summary>
+        ///The complete new list of attached policy ids (full replacement), opaque ids from get_policies (e.g. 'pol_3kJ9xJ2mQ0aBcDeFgHiJk') — never invent or guess them.
+        ///</summary>
         public virtual HashSet<string>? Policies { get; set; }
     }
 
@@ -8168,37 +16452,81 @@ public partial class CronExpression
     {
     }
 
-    public partial class GetUserEmailPreferencesResponse
-        : ResponseBase
-    {
-        public virtual string DefaultLanguage { get; set; }
-        public virtual HashSet<string> ProjectLanguages { get; set; } = [];
-        public virtual bool BlockAllMarketingMessages { get; set; }
-        public virtual Dictionary<DeliveryChannel, HashSet<String>>? SubscribedTags { get; set; }
-    }
-
-    [NorbixRoute("/{version}/notifications/user/preferences", "GET")]
-    public partial class GetUserNotificationPreferences
-        : CodeMashRequestBase, INorbixRequest<GetUserEmailPreferencesResponse>
-    {
-        public virtual string UserId { get; set; }
-    }
-
-    [NorbixRoute("/{version}/notifications/user/preferences", "PUT")]
-    public partial class UpdateUserNotificationsPreferences
+    ///<summary>
+    ///Membership
+    ///</summary>
+    [NorbixRoute("/{version}/membership/users/{Id}/api-keys/{KeyId}", "DELETE")]
+    [DataContract]
+    public partial class DeleteServiceUserApiKeyRequest
         : CodeMashRequestBase, INorbixRequest<EmptyResponse>
     {
-        public virtual string UserId { get; set; }
-        public virtual bool BlockAllMarketingMessages { get; set; }
-        public virtual Dictionary<DeliveryChannel, HashSet<String>>? SubscribedToTags { get; set; }
+        ///<summary>
+        ///The service user's auth id.
+        ///</summary>
+        [DataMember]
+        public virtual string Id { get; set; }
+
+        ///<summary>
+        ///The key id to delete, from list_service_user_api_keys.
+        ///</summary>
+        [DataMember]
+        public virtual int KeyId { get; set; }
     }
 
+    ///<summary>
+    ///Membership
+    ///</summary>
+    [NorbixRoute("/{version}/membership/users/{Id}/api-keys", "POST")]
+    [DataContract]
+    public partial class IssueServiceUserApiKeyRequest
+        : CodeMashRequestBase, INorbixRequest<IssueServiceUserApiKeyResponse>
+    {
+        [DataMember]
+        public virtual string Id { get; set; }
+
+        [DataMember]
+        public virtual string? DatabaseIntegrationId { get; set; }
+
+        [DataMember]
+        public virtual string Name { get; set; }
+
+        [DataMember]
+        public virtual List<string>? Scopes { get; set; }
+
+        [DataMember]
+        public virtual int? ExpiresInDays { get; set; }
+
+        [DataMember]
+        public virtual string? Notes { get; set; }
+    }
+
+    ///<summary>
+    ///Membership
+    ///</summary>
+    [NorbixRoute("/{version}/membership/users/{Id}/api-keys", "GET")]
+    [DataContract]
+    public partial class ListServiceUserApiKeysRequest
+        : CodeMashRequestBase, INorbixRequest<ListServiceUserApiKeysResponse>
+    {
+        ///<summary>
+        ///The service user's auth id.
+        ///</summary>
+        [DataMember]
+        public virtual string Id { get; set; }
+    }
+
+    ///<summary>
+    ///Disable payments service
+    ///</summary>
     [NorbixRoute("/{version}/payments/disable", "GET")]
     public partial class DisablePayments
         : CodeMashRequestBase, INorbixRequest<EmptyResponse>
     {
     }
 
+    ///<summary>
+    ///Enable payments service
+    ///</summary>
     [NorbixRoute("/{version}/payments/enable", "GET")]
     public partial class EnablePayments
         : CodeMashRequestBase, INorbixRequest<EmptyResponse>
@@ -8208,6 +16536,7 @@ public partial class CronExpression
     public partial class AdyenPaymentIntegrationRequest
         : PaymentIntegrationRequest
     {
+        public virtual PaymentGatewayPlatform Provider { get; set; }
         public virtual string MerchantAccount { get; set; }
         public virtual string ApiKey { get; set; }
         public virtual string Environment { get; set; }
@@ -8218,6 +16547,7 @@ public partial class CronExpression
     public partial class AppleInAppPaymentIntegrationRequest
         : PaymentIntegrationRequest
     {
+        public virtual PaymentGatewayPlatform Provider { get; set; }
         public virtual string MerchantIdentifier { get; set; }
         public virtual string MerchantDomain { get; set; }
         public virtual string DisplayName { get; set; }
@@ -8225,42 +16555,73 @@ public partial class CronExpression
         public virtual string MerchantIdentityCertificatePassword { get; set; }
         public virtual string PaymentProcessingCertificateP12Base64 { get; set; }
         public virtual string PaymentProcessingCertificatePassword { get; set; }
+        public virtual string? WebhookBundleId { get; set; }
     }
 
+    ///<summary>
+    ///Confirm that you received or verified the test payment integration outcome.
+    ///</summary>
     [NorbixRoute("/{version}/payments/integrations/confirm-human-delivery", "POST")]
     [DataContract]
     public partial class ConfirmPaymentsIntegrationHumanDeliveryRequest
         : CodeMashRequestBase, INorbixRequest<EmptyResponse>
     {
+        ///<summary>
+        ///The id of the payments integration whose test outcome is being confirmed.
+        ///</summary>
         [DataMember]
         public virtual string IntegrationId { get; set; }
     }
 
+    ///<summary>
+    ///Delete integration for particular project
+    ///</summary>
     [NorbixRoute("/{version}/payments/integrations/{Id}", "DELETE")]
     public partial class DeletePaymentsIntegrationRequest
         : CodeMashRequestBase, INorbixRequest<EmptyResponse>
     {
+        ///<summary>
+        ///Payments integration id to delete, from get_payments_integrations.
+        ///</summary>
         public virtual string Id { get; set; }
     }
 
+    ///<summary>
+    ///Disable integration for particular project
+    ///</summary>
     [NorbixRoute("/{version}/payments/integrations/{Id}/disable", "PUT")]
     public partial class DisablePaymentsIntegrationRequest
         : CodeMashRequestBase, INorbixRequest<EmptyResponse>
     {
+        ///<summary>
+        ///Payments integration id to disable, from get_payments_integrations.
+        ///</summary>
         public virtual string Id { get; set; }
     }
 
+    ///<summary>
+    ///Enable integration for particular project
+    ///</summary>
     [NorbixRoute("/{version}/payments/integrations/{Id}/enable", "PUT")]
     public partial class EnablePaymentsIntegrationRequest
         : CodeMashRequestBase, INorbixRequest<EmptyResponse>
     {
+        ///<summary>
+        ///Payments integration id to enable, from get_payments_integrations.
+        ///</summary>
         public virtual string Id { get; set; }
     }
 
+    ///<summary>
+    ///Gets integration by specified Id
+    ///</summary>
     [NorbixRoute("/{version}/payments/integrations/{id}", "GET")]
     public partial class GetPaymentsIntegration
         : CodeMashRequestBase, INorbixRequest<GetPaymentsIntegrationResponse>
     {
+        ///<summary>
+        ///Payments integration id to fetch, from get_payments_integrations.
+        ///</summary>
         public virtual string Id { get; set; }
     }
 
@@ -8270,6 +16631,9 @@ public partial class CronExpression
         public virtual PaymentsIntegrationDto? Item { get; set; }
     }
 
+    ///<summary>
+    ///Gets integrations
+    ///</summary>
     [NorbixRoute("/{version}/payments/integrations", "GET")]
     public partial class GetPaymentsIntegrations
         : CodeMashListPaginationRequestBase, INorbixRequest<GetPaymentsIntegrationsResponse>
@@ -8285,16 +16649,19 @@ public partial class CronExpression
     public partial class GoogleInAppPaymentIntegrationRequest
         : PaymentIntegrationRequest
     {
+        public virtual PaymentGatewayPlatform Provider { get; set; }
         public virtual string MerchantId { get; set; }
         public virtual string MerchantName { get; set; }
         public virtual string Gateway { get; set; }
         public virtual string PrivateKeyOrToken { get; set; }
         public virtual string? GatewayMerchantId { get; set; }
+        public virtual string? WebhookPackageName { get; set; }
     }
 
     public partial class LemonSqueezyPaymentIntegrationRequest
         : PaymentIntegrationRequest
     {
+        public virtual PaymentGatewayPlatform Provider { get; set; }
         public virtual string StoreId { get; set; }
         public virtual string ApiKey { get; set; }
         public virtual string WebhookSigningSecret { get; set; }
@@ -8304,14 +16671,17 @@ public partial class CronExpression
     public partial class MolliePaymentIntegrationRequest
         : PaymentIntegrationRequest
     {
+        public virtual PaymentGatewayPlatform Provider { get; set; }
         public virtual string ProfileId { get; set; }
         public virtual string ApiKey { get; set; }
         public virtual bool IsTestMode { get; set; }
+        public virtual string? WebhookSigningSecret { get; set; }
     }
 
     public partial class PaddlePaymentIntegrationRequest
         : PaymentIntegrationRequest
     {
+        public virtual PaymentGatewayPlatform Provider { get; set; }
         public virtual string ApiKey { get; set; }
         public virtual string WebhookEndpointSecretKey { get; set; }
         public virtual string Environment { get; set; }
@@ -8321,7 +16691,7 @@ public partial class CronExpression
     public partial class PaymentIntegrationRequest
     {
         public virtual string? IntegrationId { get; set; }
-        public virtual PaymentGatewayPlatform GatewayPlatform { get; set; }
+        public virtual PaymentGatewayPlatform Provider { get; set; }
         public virtual string IntegrationName { get; set; }
         public virtual bool IsEnabled { get; set; }
     }
@@ -8329,24 +16699,30 @@ public partial class CronExpression
     public partial class PayPalPaymentIntegrationRequest
         : PaymentIntegrationRequest
     {
+        public virtual PaymentGatewayPlatform Provider { get; set; }
         public virtual string ClientId { get; set; }
         public virtual string ClientSecret { get; set; }
         public virtual string Environment { get; set; }
         public virtual string? BrandName { get; set; }
+        public virtual string? WebhookId { get; set; }
     }
 
+    ///<summary>
+    ///Saves payments integration
+    ///</summary>
     [NorbixRoute("/{version}/payments/integrations", "POST")]
     [DataContract]
     public partial class SavePaymentsIntegration
         : CodeMashRequestBase, INorbixRequest<IdResponse>
     {
-        [DataMember]
+        [DataMember(Name="integration")]
         public virtual PaymentIntegrationRequest Integration { get; set; }
     }
 
     public partial class StripePaymentIntegrationRequest
         : PaymentIntegrationRequest
     {
+        public virtual PaymentGatewayPlatform Provider { get; set; }
         public virtual string PublishableKey { get; set; }
         public virtual string SecretKey { get; set; }
         public virtual string WebhookSigningSecret { get; set; }
@@ -8354,13 +16730,22 @@ public partial class CronExpression
         public virtual string? DefaultCurrency { get; set; }
     }
 
+    ///<summary>
+    ///Test payments integration
+    ///</summary>
     [NorbixRoute("/{version}/payments/integrations/test", "POST")]
     public partial class TestPaymentsIntegration
         : CodeMashRequestBase, INorbixRequest<TestPaymentsIntegrationResponse>
     {
+        ///<summary>
+        ///The id of the payments integration to test.
+        ///</summary>
         public virtual string IntegrationId { get; set; }
     }
 
+    ///<summary>
+    ///Delete payments trigger
+    ///</summary>
     [NorbixRoute("/{version}/payments/triggers/{triggerId}", "DELETE")]
     [DataContract]
     public partial class DeletePaymentsTrigger
@@ -8368,6 +16753,9 @@ public partial class CronExpression
     {
     }
 
+    ///<summary>
+    ///Disable payments trigger
+    ///</summary>
     [NorbixRoute("/{version}/payments/triggers/{triggerId}/disable", "PATCH")]
     [DataContract]
     public partial class DisablePaymentsTrigger
@@ -8375,6 +16763,9 @@ public partial class CronExpression
     {
     }
 
+    ///<summary>
+    ///Enable payments trigger
+    ///</summary>
     [NorbixRoute("/{version}/payments/triggers/{triggerId}/enable", "PATCH")]
     [DataContract]
     public partial class EnablePaymentsTrigger
@@ -8407,39 +16798,406 @@ public partial class CronExpression
     {
     }
 
+    ///<summary>
+    ///Gets the received payment webhooks log
+    ///</summary>
+    [NorbixRoute("/{version}/payments/webhooks/log", "GET")]
+    public partial class GetPaymentsWebhookLog
+        : CodeMashRequestBase, INorbixRequest<GetPaymentsWebhookLogResponse>
+    {
+        ///<summary>
+        ///Only rows for this payments integration (view id). Omit for the whole project.
+        ///</summary>
+        public virtual string? IntegrationId { get; set; }
+
+        ///<summary>
+        ///Max rows to return, newest first. Default 50, ceiling 200.
+        ///</summary>
+        public virtual int? Limit { get; set; }
+    }
+
+    public partial class GetPaymentsWebhookLogResponse
+        : ResponseBase
+    {
+        public virtual IReadOnlyList<PaymentsWebhookLogEntry>? List { get; set; }
+    }
+
+    ///<summary>
+    ///Disable push service
+    ///</summary>
     [NorbixRoute("/{version}/notifications/push/disable", "GET")]
     public partial class DisablePush
         : CodeMashRequestBase, INorbixRequest<EmptyResponse>
     {
     }
 
+    ///<summary>
+    ///Enable push service
+    ///</summary>
     [NorbixRoute("/{version}/notifications/push/enable", "GET")]
     public partial class EnablePush
         : CodeMashRequestBase, INorbixRequest<EmptyResponse>
     {
     }
 
+    ///<summary>
+    ///Lists push disable dependencies
+    ///</summary>
+    [NorbixRoute("/{version}/notifications/push/disable-dependencies", "GET")]
+    public partial class GetPushDisableDependencies
+        : CodeMashRequestBase, INorbixRequest<GetNotificationModuleDisableDependenciesResponse>
+    {
+    }
+
+    ///<summary>
+    ///Create push campaign
+    ///</summary>
+    [NorbixRoute("/{version}/notifications/push/campaigns", "POST")]
+    [DataContract]
+    public partial class CreatePushCampaignRequest
+        : CodeMashRequestBase, INorbixRequest<IdResponse>
+    {
+        [DataMember]
+        public virtual PushCampaignRequest Campaign { get; set; }
+
+        [DataMember]
+        public virtual string? DatabaseIntegrationId { get; set; }
+    }
+
+    ///<summary>
+    ///Deletes push campaign from queue
+    ///</summary>
+    [NorbixRoute("/{version}/notifications/push/campaigns/{Id}", "DELETE")]
+    [DataContract]
+    public partial class DeletePushCampaignRequest
+        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
+    {
+    }
+
+    ///<summary>
+    ///Gets push campaign by id
+    ///</summary>
+    [NorbixRoute("/{version}/notifications/push/campaigns/{id}", "GET")]
+    public partial class GetPushCampaign
+        : CodeMashRequestBase, INorbixRequest<GetPushCampaignResponse>
+    {
+        ///<summary>
+        ///The campaign id.
+        ///</summary>
+        public virtual string Id { get; set; }
+
+        ///<summary>
+        ///Optional database integration id; omit to use the project's default.
+        ///</summary>
+        public virtual string? DatabaseIntegrationId { get; set; }
+    }
+
+    ///<summary>
+    ///Gets push campaign batches
+    ///</summary>
+    [NorbixRoute("/{version}/notifications/push/campaigns/{id}/batches", "GET")]
+    public partial class GetPushCampaignBatches
+        : CodeMashListPaginationRequestBase, INorbixRequest<GetPushCampaignBatchesResponse>
+    {
+        ///<summary>
+        ///The push campaign id to list batches for. Get it from get_push_campaigns.
+        ///</summary>
+        public virtual string Id { get; set; }
+
+        ///<summary>
+        ///Optional database integration id; omit to use the project's default.
+        ///</summary>
+        public virtual string? DatabaseIntegrationId { get; set; }
+
+        ///<summary>
+        ///Optional: only return the batch with this id.
+        ///</summary>
+        public virtual string? BatchId { get; set; }
+    }
+
+    public partial class GetPushCampaignBatchesResponse
+        : ResponseBase
+    {
+        public virtual PaginatedResponse<PushCampaignBatchDto>? List { get; set; }
+    }
+
+    ///<summary>
+    ///Gets a push campaign batch notification
+    ///</summary>
+    [NorbixRoute("/{version}/notifications/push/campaigns/{id}/batches/{batchId}/{notificationId}", "GET")]
+    public partial class GetPushCampaignBatchNotification
+        : CodeMashListPaginationRequestBase, INorbixRequest<GetPushCampaignBatchNotificationResponse>
+    {
+        ///<summary>
+        ///The push campaign id. Get it from get_push_campaigns.
+        ///</summary>
+        public virtual string Id { get; set; }
+
+        ///<summary>
+        ///The batch id. Get it from get_push_campaign_batches.
+        ///</summary>
+        public virtual string BatchId { get; set; }
+
+        ///<summary>
+        ///The notification id within the batch.
+        ///</summary>
+        public virtual string NotificationId { get; set; }
+
+        ///<summary>
+        ///Optional database integration id; omit to use the project's default.
+        ///</summary>
+        public virtual string? DatabaseIntegrationId { get; set; }
+    }
+
+    public partial class GetPushCampaignBatchNotificationResponse
+        : ResponseBase
+    {
+        public virtual PushCampaignBatchNotificationDto? CampaignNotification { get; set; }
+    }
+
+    ///<summary>
+    ///Gets push campaign batch notifications
+    ///</summary>
+    [NorbixRoute("/{version}/notifications/push/campaigns/{id}/batches/{batchId}", "GET")]
+    public partial class GetPushCampaignBatchNotifications
+        : CodeMashListPaginationRequestBase, INorbixRequest<GetPushCampaignBatchNotificationsResponse>
+    {
+        ///<summary>
+        ///The push campaign id. Get it from get_push_campaigns.
+        ///</summary>
+        public virtual string Id { get; set; }
+
+        ///<summary>
+        ///The batch id to list notifications for. Get it from get_push_campaign_batches.
+        ///</summary>
+        public virtual string BatchId { get; set; }
+
+        ///<summary>
+        ///Optional database integration id; omit to use the project's default.
+        ///</summary>
+        public virtual string? DatabaseIntegrationId { get; set; }
+    }
+
+    public partial class GetPushCampaignBatchNotificationsResponse
+        : ResponseBase
+    {
+        public virtual List<BatchStatusChangeEntryDto>? BatchStatusHistory { get; set; }
+        public virtual PaginatedResponse<PushCampaignBatchNotificationDto>? List { get; set; }
+    }
+
+    public partial class GetPushCampaignResponse
+        : ResponseBase
+    {
+        public virtual PushCampaignDto? Item { get; set; }
+    }
+
+    ///<summary>
+    ///Gets push campaigns
+    ///</summary>
+    [NorbixRoute("/{version}/notifications/push/campaigns", "GET")]
+    public partial class GetPushCampaigns
+        : CodeMashListPaginationRequestBase, INorbixRequest<GetPushCampaignsResponse>
+    {
+        ///<summary>
+        ///Optional database integration id; omit to use the project's default.
+        ///</summary>
+        public virtual string? DatabaseIntegrationId { get; set; }
+
+        ///<summary>
+        ///Optional: only campaigns built on this push template id.
+        ///</summary>
+        public virtual string? TemplateId { get; set; }
+
+        ///<summary>
+        ///Optional lower bound for the campaign time, unix timestamp in seconds (UTC).
+        ///</summary>
+        public virtual long? From { get; set; }
+
+        ///<summary>
+        ///Optional upper bound for the campaign time, unix timestamp in seconds (UTC).
+        ///</summary>
+        public virtual long? To { get; set; }
+    }
+
+    public partial class GetPushCampaignsResponse
+        : ResponseBase
+    {
+        public virtual PaginatedResponse<PushCampaignDto>? List { get; set; }
+    }
+
+    ///<summary>
+    ///Get push campaign statistics
+    ///</summary>
+    [NorbixRoute("/{version}/notifications/push/campaigns/{id}/stats", "GET")]
+    public partial class GetPushCampaignStatistics
+        : CodeMashRequestBase, INorbixRequest<GetPushCampaignStatisticsResponse>
+    {
+        ///<summary>
+        ///The push campaign id to get statistics for. Get it from get_push_campaigns.
+        ///</summary>
+        public virtual string Id { get; set; }
+
+        ///<summary>
+        ///Optional database integration id; omit to use the project's default.
+        ///</summary>
+        public virtual string? DatabaseIntegrationId { get; set; }
+    }
+
+    public partial class GetPushCampaignStatisticsResponse
+        : ResponseBase
+    {
+        public virtual CampaignStatsDto? Stats { get; set; }
+    }
+
+    ///<summary>
+    ///Returns push preview notification
+    ///</summary>
+    [NorbixRoute("/{version}/notifications/push/preview", "GET")]
+    public partial class PreviewPushNotification
+        : RequestBase, INorbixRequest<PreviewPushNotificationResponse>
+    {
+        ///<summary>
+        ///The encrypted preview hash identifying the project and notification.
+        ///</summary>
+        public virtual string Hash { get; set; }
+    }
+
+    public partial class PreviewPushNotificationResponse
+        : ResponseBase
+    {
+        public virtual string? Title { get; set; }
+        public virtual string? Body { get; set; }
+        public virtual string? Subtitle { get; set; }
+    }
+
+    public partial class PushCampaignRequest
+    {
+        public virtual PushCampaignRecipientsSourceTypes Source { get; set; }
+        public virtual string TemplateId { get; set; }
+        public virtual string? IntegrationId { get; set; }
+        public virtual string? Language { get; set; }
+        public virtual string? InitiatorId { get; set; }
+        public virtual string? Notes { get; set; }
+        [DataMember]
+        public virtual HashSet<TokenMappingDto>? MappedTokens { get; set; }
+
+        [DataMember]
+        public virtual long? CampaignTime { get; set; }
+    }
+
+    ///<summary>
+    ///Stops a running push campaign
+    ///</summary>
+    [NorbixRoute("/{version}/notifications/push/campaigns/{Id}/stop", "POST")]
+    [DataContract]
+    public partial class StopPushCampaignRequest
+        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
+    {
+    }
+
+    ///<summary>
+    ///Gets campaign push notification details
+    ///</summary>
+    [NorbixRoute("/{version}/notifications/push/campaigns/{campaignId}/messages/{id}", "GET")]
+    public partial class GetPushCampaignMessage
+        : CodeMashRequestBase, INorbixRequest<GetPushCampaignMessageResponse>
+    {
+        ///<summary>
+        ///The push campaign id. Get it from get_push_campaigns.
+        ///</summary>
+        public virtual string CampaignId { get; set; }
+
+        ///<summary>
+        ///The batch id. Get it from get_push_campaign_batches.
+        ///</summary>
+        public virtual string CampaignBatchId { get; set; }
+
+        ///<summary>
+        ///The notification id within the batch.
+        ///</summary>
+        public virtual string NotificationId { get; set; }
+
+        ///<summary>
+        ///Optional database integration id; omit to use the project's default.
+        ///</summary>
+        public virtual string? DatabaseIntegrationId { get; set; }
+    }
+
+    public partial class GetPushCampaignMessageResponse
+        : ResponseBase
+    {
+        public virtual PushCampaignBatchNotificationDto? PushMessageEntity { get; set; }
+    }
+
+    ///<summary>
+    ///Gets push campaign messages
+    ///</summary>
+    [NorbixRoute("/{version}/notifications/push/campaigns/{campaignId}/messages", "GET")]
+    public partial class GetPushCampaignMessagesRequest
+        : CodeMashListPaginationRequestBase, INorbixRequest<GetPushCampaignMessagesResponse>
+    {
+        ///<summary>
+        ///The push campaign id. Get it from get_push_campaigns.
+        ///</summary>
+        public virtual string CampaignId { get; set; }
+
+        ///<summary>
+        ///Optional: restrict results to this batch id. Get it from get_push_campaign_batches.
+        ///</summary>
+        public virtual string CampaignBatchId { get; set; }
+
+        ///<summary>
+        ///Optional database integration id; omit to use the project's default.
+        ///</summary>
+        public virtual string? DatabaseIntegrationId { get; set; }
+    }
+
+    public partial class GetPushCampaignMessagesResponse
+        : ResponseBase
+    {
+        public virtual PaginatedResponse<PushCampaignBatchNotificationDto>? List { get; set; }
+    }
+
+    ///<summary>
+    ///Registers a device for push notifications
+    ///</summary>
     [NorbixRoute("/{version}/notifications/push/devices", "POST")]
     [DataContract]
     public partial class RegisterDevice
-        : RequestBase, INorbixRequest<IdResponse>
+        : RequestBase, INorbixRequest<IdResponse>, IHasProjectId
     {
+        ///<summary>
+        ///The device details: OS, token, model, and delivery family.
+        ///</summary>
         [DataMember]
         public virtual PushDeviceDto PushDeviceDto { get; set; }
 
+        ///<summary>
+        ///The id of the user this device belongs to.
+        ///</summary>
         [DataMember]
         public virtual string UserId { get; set; }
 
         [DataMember]
         public virtual string ProjectId { get; set; }
 
+        ///<summary>
+        ///Optional account id to associate with the device.
+        ///</summary>
         [DataMember]
         public virtual string? AccountId { get; set; }
+
+        ///<summary>
+        ///Optional database integration id; omit to use the project's default.
+        ///</summary>
+        [DataMember]
+        public virtual string? DatabaseIntegrationId { get; set; }
     }
 
     public partial class AndroidFirebasePushIntegrationRequest
         : PushIntegrationRequest
     {
+        public virtual PushProvider Provider { get; set; }
         public virtual string ProjectId { get; set; }
         public virtual string ClientEmail { get; set; }
         public virtual string ServiceAccountJson { get; set; }
@@ -8448,6 +17206,7 @@ public partial class CronExpression
     public partial class AppleApnsPushIntegrationRequest
         : PushIntegrationRequest
     {
+        public virtual PushProvider Provider { get; set; }
         public virtual string TeamId { get; set; }
         public virtual string AppBundleId { get; set; }
         public virtual string KeyId { get; set; }
@@ -8458,6 +17217,7 @@ public partial class CronExpression
     public partial class ChromePluginPushIntegrationRequest
         : PushIntegrationRequest
     {
+        public virtual PushProvider Provider { get; set; }
         public virtual string ExtensionId { get; set; }
         public virtual string VapidPublicKey { get; set; }
         public virtual string VapidPrivateKey { get; set; }
@@ -8467,61 +17227,94 @@ public partial class CronExpression
     public partial class ChromeWebPushIntegrationRequest
         : PushIntegrationRequest
     {
+        public virtual PushProvider Provider { get; set; }
         public virtual string VapidPublicKey { get; set; }
         public virtual string VapidPrivateKey { get; set; }
         public virtual string? Subject { get; set; }
     }
 
+    ///<summary>
+    ///Confirm human delivery of a test push
+    ///</summary>
     [NorbixRoute("/{version}/notifications/push/integrations/confirm-human-delivery", "POST")]
     [DataContract]
     public partial class ConfirmPushIntegrationHumanDeliveryRequest
         : CodeMashRequestBase, INorbixRequest<EmptyResponse>
     {
+        ///<summary>
+        ///The push integration id being verified. Get it from get_push_integrations.
+        ///</summary>
         [DataMember]
         public virtual string IntegrationId { get; set; }
     }
 
+    ///<summary>
+    ///Delete push integration
+    ///</summary>
     [NorbixRoute("/{version}/notifications/push/integrations/{Id}", "DELETE")]
     public partial class DeletePushIntegrationRequest
         : CodeMashRequestBase, INorbixRequest<EmptyResponse>
     {
+        ///<summary>
+        ///The push integration id to delete. Get it from get_push_integrations.
+        ///</summary>
         public virtual string Id { get; set; }
     }
 
+    ///<summary>
+    ///Disable push integration
+    ///</summary>
     [NorbixRoute("/{version}/notifications/push/integrations/{Id}/disable", "PUT")]
     public partial class DisablePushIntegrationRequest
         : CodeMashRequestBase, INorbixRequest<EmptyResponse>
     {
+        ///<summary>
+        ///The push integration id to disable. Get it from get_push_integrations.
+        ///</summary>
         public virtual string Id { get; set; }
     }
 
     public partial class EdgeWebPushIntegrationRequest
         : PushIntegrationRequest
     {
+        public virtual PushProvider Provider { get; set; }
         public virtual string VapidPublicKey { get; set; }
         public virtual string VapidPrivateKey { get; set; }
         public virtual string? Subject { get; set; }
     }
 
+    ///<summary>
+    ///Enable push integration
+    ///</summary>
     [NorbixRoute("/{version}/notifications/push/integrations/{Id}/enable", "PUT")]
     public partial class EnablePushIntegrationRequest
         : CodeMashRequestBase, INorbixRequest<EmptyResponse>
     {
+        ///<summary>
+        ///The push integration id to enable. Get it from get_push_integrations.
+        ///</summary>
         public virtual string Id { get; set; }
     }
 
     public partial class FirefoxWebPushIntegrationRequest
         : PushIntegrationRequest
     {
+        public virtual PushProvider Provider { get; set; }
         public virtual string VapidPublicKey { get; set; }
         public virtual string VapidPrivateKey { get; set; }
         public virtual string? Subject { get; set; }
     }
 
+    ///<summary>
+    ///Gets a push integration
+    ///</summary>
     [NorbixRoute("/{version}/notifications/push/integrations/{id}", "GET")]
     public partial class GetPushIntegration
         : CodeMashRequestBase, INorbixRequest<GetPushIntegrationResponse>
     {
+        ///<summary>
+        ///The push integration id to fetch. Get it from get_push_integrations.
+        ///</summary>
         public virtual string Id { get; set; }
     }
 
@@ -8531,6 +17324,9 @@ public partial class CronExpression
         public virtual PushIntegrationDto? Item { get; set; }
     }
 
+    ///<summary>
+    ///Gets push integrations
+    ///</summary>
     [NorbixRoute("/{version}/notifications/push/integrations", "GET")]
     public partial class GetPushIntegrations
         : CodeMashListPaginationRequestBase, INorbixRequest<GetPushIntegrationsResponse>
@@ -8555,6 +17351,7 @@ public partial class CronExpression
     public partial class SafariPushIntegrationRequest
         : PushIntegrationRequest
     {
+        public virtual PushProvider Provider { get; set; }
         public virtual string WebsitePushId { get; set; }
         public virtual string CertificateP12Base64 { get; set; }
         public virtual string CertificatePassword { get; set; }
@@ -8565,34 +17362,52 @@ public partial class CronExpression
     public partial class SavePushIntegration
         : CodeMashRequestBase, INorbixRequest<IdResponse>
     {
-        [DataMember]
+        [DataMember(Name="integration")]
         public virtual PushIntegrationRequest Integration { get; set; }
     }
 
+    ///<summary>
+    ///Sets push integration as default
+    ///</summary>
     [NorbixRoute("/{version}/notifications/push/integrations/{Id}/default", "PUT")]
     public partial class SetPushIntegrationAsDefaultRequest
         : CodeMashRequestBase, INorbixRequest<EmptyResponse>
     {
+        ///<summary>
+        ///The push integration id to set as default. Get it from get_push_integrations.
+        ///</summary>
         public virtual string Id { get; set; }
     }
 
+    ///<summary>
+    ///Test push integration
+    ///</summary>
     [NorbixRoute("/{version}/notifications/push/integrations/test", "POST")]
     public partial class TestPushIntegration
         : CodeMashRequestBase, INorbixRequest<TestEmailIntegrationResponse>
     {
+        ///<summary>
+        ///The push integration id to test. Get it from get_push_integrations.
+        ///</summary>
         [DataMember]
         public virtual string IntegrationId { get; set; }
 
+        ///<summary>
+        ///Optional device token to send the test notification to. Requires DeliveryFamily when set.
+        ///</summary>
         [DataMember]
         public virtual string? TestToken { get; set; }
 
+        ///<summary>
+        ///Optional delivery family for the test token (e.g. Ios, Android, Chrome, Safari, Expo). Requires TestToken when set.
+        ///</summary>
         [DataMember]
         public virtual string? DeliveryFamily { get; set; }
     }
 
     [NorbixRoute("/{version}/notifications/push/integrations/app/request", "POST")]
     public partial class RegisterCodeMashAppPushIntegration
-        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
+        : CodeMashRequestBase, INorbixRequest<EmptyResponse>, IHasAccountId
     {
         public virtual string AccountId { get; set; }
         public virtual string UserId { get; set; }
@@ -8602,37 +17417,83 @@ public partial class CronExpression
         public virtual string PublicKey { get; set; }
     }
 
+    ///<summary>
+    ///Gets push settings
+    ///</summary>
+    [NorbixRoute("/{version}/notifications/push/settings", "GET")]
+    public partial class GetPushSettings
+        : CodeMashRequestBase, INorbixRequest<GetPushSettingsResponse>
+    {
+        ///<summary>
+        ///The push settings id to fetch.
+        ///</summary>
+        public virtual string Id { get; set; }
+    }
+
+    public partial class GetPushSettingsResponse
+        : ResponseBase
+    {
+        public virtual PushSettings? Settings { get; set; }
+    }
+
+    ///<summary>
+    ///Archives push template
+    ///</summary>
     [NorbixRoute("/{version}/notifications/push/templates/{Id}/archive", "PUT")]
     public partial class ArchivePushTemplateRequest
         : CodeMashRequestBase, INorbixRequest<EmptyResponse>
     {
+        ///<summary>
+        ///The push template id to archive. Get it from get_push_templates.
+        ///</summary>
         public virtual string Id { get; set; }
     }
 
+    ///<summary>
+    ///Clones push template
+    ///</summary>
     [NorbixRoute("/{version}/notifications/push/templates/{Id}/clone", "POST")]
     public partial class ClonePushTemplateRequest
         : CodeMashRequestBase, INorbixRequest<EmptyResponse>
     {
+        ///<summary>
+        ///The push template id to clone. Get it from get_push_templates.
+        ///</summary>
         public virtual string Id { get; set; }
     }
 
+    ///<summary>
+    ///Create push template
+    ///</summary>
     [NorbixRoute("/{version}/notifications/push/templates", "POST")]
     public partial class CreatePushTemplateRequest
         : SavePushTemplate, INorbixRequest<IdResponse>
     {
     }
 
+    ///<summary>
+    ///Delete push template
+    ///</summary>
     [NorbixRoute("/{version}/notifications/push/templates/{Id}", "DELETE")]
     public partial class DeletePushTemplateRequest
         : CodeMashRequestBase, INorbixRequest<EmptyResponse>
     {
+        ///<summary>
+        ///The push template id to delete. Get it from get_push_templates.
+        ///</summary>
         public virtual string Id { get; set; }
     }
 
+    ///<summary>
+    ///Gets push template content tokens
+    ///</summary>
     [NorbixRoute("/{version}/notifications/push/templates/{id}/tokens", "GET")]
     public partial class GetPushMessageContentTokens
         : CodeMashRequestBase, INorbixRequest<GetPushMessageContentTokensResponse>
     {
+        ///<summary>
+        ///The push template id to scan for tokens. Get it from get_push_templates.
+        ///</summary>
         public virtual string Id { get; set; }
     }
 
@@ -8642,10 +17503,16 @@ public partial class CronExpression
         public virtual Dictionary<string, string[]>? Tokens { get; set; }
     }
 
+    ///<summary>
+    ///Gets a push template
+    ///</summary>
     [NorbixRoute("/{version}/notifications/push/templates/{id}", "GET")]
     public partial class GetPushTemplate
         : CodeMashRequestBase, INorbixRequest<GetPushTemplateResponse>
     {
+        ///<summary>
+        ///The push template id to fetch. Get it from get_push_templates.
+        ///</summary>
         public virtual string Id { get; set; }
     }
 
@@ -8655,11 +17522,21 @@ public partial class CronExpression
         public virtual PushTemplateDto? Item { get; set; }
     }
 
+    ///<summary>
+    ///Gets push templates
+    ///</summary>
     [NorbixRoute("/{version}/notifications/push/templates", "GET")]
     public partial class GetPushTemplates
         : CodeMashListPaginationRequestBase, INorbixRequest<GetPushTemplatesResponse>
     {
+        ///<summary>
+        ///Set true to include archived templates.
+        ///</summary>
         public virtual bool? ShowArchived { get; set; }
+
+        ///<summary>
+        ///Optional: return only the template with this id.
+        ///</summary>
         public virtual string? TemplateId { get; set; }
     }
 
@@ -8669,28 +17546,95 @@ public partial class CronExpression
         public virtual PaginatedResponse<PushTemplateListProjection>? List { get; set; }
     }
 
+    ///<summary>
+    ///Renders a push template field
+    ///</summary>
+    [NorbixRoute("/{version}/notifications/push/templates/render", "POST")]
+    public partial class RenderPush
+        : CodeMashRequestBase, INorbixRequest<RenderPushResponse>
+    {
+        ///<summary>
+        ///The Razor template source for the field being rendered (Title, Body, or Subtitle).
+        ///</summary>
+        public virtual string Code { get; set; }
+
+        ///<summary>
+        ///Optional token values already bound for this render pass.
+        ///</summary>
+        public virtual HashSet<TokenMappingDto>? Tokens { get; set; }
+
+        ///<summary>
+        ///Set true when rendering for a preview (relaxes strict validation).
+        ///</summary>
+        public virtual bool IsForPreview { get; set; }
+    }
+
     public partial class SavePushTemplate
         : CodeMashRequestBase
     {
+        ///<summary>
+        ///The template's display name.
+        ///</summary>
         public virtual string TemplateName { get; set; }
+
+        ///<summary>
+        ///Optional free-text description of the template's purpose.
+        ///</summary>
         public virtual string? Description { get; set; }
+
+        ///<summary>
+        ///Whether the template is Transactional or Marketing.
+        ///</summary>
         public virtual CommunicationChannel CommunicationChannel { get; set; }
+
+        ///<summary>
+        ///Optional tags for organizing/filtering templates.
+        ///</summary>
         public virtual HashSet<string>? Tags { get; set; }
+
+        ///<summary>
+        ///The per-locale translations (title/body/subtitle) that make up the template content.
+        ///</summary>
         public virtual HashSet<PushMessageTranslationDto> Translations { get; set; } = [];
     }
 
+    ///<summary>
+    ///Un-archives push template
+    ///</summary>
     [NorbixRoute("/{version}/notifications/push/templates/{Id}/unarchive", "PUT")]
     public partial class UnArchivePushTemplateRequest
         : CodeMashRequestBase, INorbixRequest<EmptyResponse>
     {
+        ///<summary>
+        ///The push template id to unarchive.
+        ///</summary>
         public virtual string Id { get; set; }
     }
 
+    ///<summary>
+    ///Edit push template
+    ///</summary>
     [NorbixRoute("/{version}/notifications/push/templates", "PUT")]
     public partial class UpdatePushTemplateRequest
         : SavePushTemplate, INorbixRequest<EmptyResponse>
     {
+        ///<summary>
+        ///The push template id to update. Get it from get_push_templates.
+        ///</summary>
         public virtual string ViewId { get; set; }
+    }
+
+    [NorbixRoute("/{version}/resources/resolve", "POST")]
+    public partial class ResolveResources
+        : CodeMashRequestBase, INorbixRequest<ResolveResourcesResponse>
+    {
+        public virtual IReadOnlyList<ResourceRefDto> Refs { get; set; }
+    }
+
+    public partial class ResolveResourcesResponse
+        : ResponseBase
+    {
+        public virtual IReadOnlyList<ResolvedResourceEntry> Resolved { get; set; }
     }
 
     [NorbixRoute("/{version}/scheduler/disable", "GET")]
@@ -8726,6 +17670,9 @@ public partial class CronExpression
         public virtual string Id { get; set; }
     }
 
+    ///<summary>
+    ///Gets a scheduled task by id
+    ///</summary>
     [NorbixRoute("/{version}/scheduler/tasks/{id}", "GET")]
     public partial class GetSchedulerTask
         : CodeMashRequestBase, INorbixRequest<GetSchedulerTaskResponse>
@@ -8739,11 +17686,21 @@ public partial class CronExpression
         public virtual SchedulerTaskDto? Item { get; set; }
     }
 
+    ///<summary>
+    ///Gets scheduled tasks
+    ///</summary>
     [NorbixRoute("/{version}/scheduler/tasks", "GET")]
     public partial class GetSchedulerTasks
         : CodeMashListPaginationRequestBase, INorbixRequest<GetSchedulerTasksResponse>
     {
+        ///<summary>
+        ///Optional filter — only return tasks of this type.
+        ///</summary>
         public virtual SchedulerTaskType? Type { get; set; }
+
+        ///<summary>
+        ///Optional filter — only return tasks whose enabled state matches this value.
+        ///</summary>
         public virtual bool? Enabled { get; set; }
     }
 
@@ -8791,6 +17748,790 @@ public partial class CronExpression
         public virtual SchedulerTaskType Type { get; set; }
     }
 
+    ///<summary>
+    ///Disable SMS service
+    ///</summary>
+    [NorbixRoute("/{version}/notifications/sms/disable", "GET")]
+    public partial class DisableSms
+        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
+    {
+    }
+
+    ///<summary>
+    ///Enable SMS service
+    ///</summary>
+    [NorbixRoute("/{version}/notifications/sms/enable", "GET")]
+    public partial class EnableSms
+        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
+    {
+    }
+
+    ///<summary>
+    ///Lists SMS-module dependencies shown before disable
+    ///</summary>
+    [NorbixRoute("/{version}/notifications/sms/disable-dependencies", "GET")]
+    public partial class GetSmsDisableDependencies
+        : CodeMashRequestBase, INorbixRequest<GetNotificationModuleDisableDependenciesResponse>
+    {
+    }
+
+    ///<summary>
+    ///Create SMS campaign
+    ///</summary>
+    [NorbixRoute("/{version}/notifications/sms/campaigns", "POST")]
+    [DataContract]
+    public partial class CreateSmsCampaignRequest
+        : CodeMashRequestBase, INorbixRequest<IdResponse>
+    {
+        ///<summary>
+        ///SMS template id to send — pick one with get_sms_templates. Never invent it.
+        ///</summary>
+        [DataMember]
+        public virtual string TemplateId { get; set; }
+
+        ///<summary>
+        ///Optional. Omit to use the project default database integration (resolved per environment).
+        ///</summary>
+        [DataMember]
+        public virtual string? DatabaseIntegrationId { get; set; }
+
+        ///<summary>
+        ///Optional language code forcing one template translation for every recipient.
+        ///</summary>
+        [DataMember]
+        public virtual string? Language { get; set; }
+
+        [DataMember]
+        public virtual string? InitiatorId { get; set; }
+
+        ///<summary>
+        ///Audience type: 'AllUsers' (every project member subscribed to the SMS channel — role-based delivery can address MILLIONS of contacts), 'SpecifiedUsers' (exact member ids), or 'PhoneNumbers' (raw phone numbers). Fill EXACTLY the settings object matching this value. 'Collection' delivery is not available from chat.
+        ///</summary>
+        [DataMember]
+        public virtual SmsCampaignRecipientsSourceTypes DeliveryType { get; set; }
+
+        ///<summary>
+        ///For deliveryType 'AllUsers'. JSON object: {"recipientsSourceType":"AllUsers","rolesNames":["authenticated"],"userTags":[],"campaignTime":<unix seconds UTC>}. rolesNames/userTags are optional narrowing filters — verify exact role names with get_roles.
+        ///</summary>
+        [DataMember]
+        public virtual SmsToAllUsersDeliverySettingsDto? AllUsers { get; set; }
+
+        ///<summary>
+        ///For deliveryType 'SpecifiedUsers'. JSON object: {"recipientsSourceType":"SpecifiedUsers","recipients":[<member ids>],"campaignTime":<unix seconds UTC>}.
+        ///</summary>
+        [DataMember]
+        public virtual SmsToUsersDeliverySettingsDto? SpecifiedUsers { get; set; }
+
+        [DataMember]
+        public virtual SmsToCollectionRecordsDeliverySettingsDto? Collection { get; set; }
+
+        ///<summary>
+        ///For deliveryType 'PhoneNumbers'. JSON object: {"recipientsSourceType":"PhoneNumbers","phoneNumbers":["+37060000000"],"campaignTime":<unix seconds UTC>}. Numbers in international format.
+        ///</summary>
+        [DataMember]
+        public virtual SmsToPhoneNumbersDeliverySettingsDto? PhoneNumbers { get; set; }
+    }
+
+    ///<summary>
+    ///Deletes sms campaign from queue
+    ///</summary>
+    [NorbixRoute("/{version}/notifications/sms/campaigns/{id}", "DELETE")]
+    public partial class DeleteSmsCampaign
+        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
+    {
+        ///<summary>
+        ///The campaign id to delete. Get it from get_sms_campaigns.
+        ///</summary>
+        public virtual string Id { get; set; }
+
+        ///<summary>
+        ///Optional. Omit to use the project default database integration (resolved per environment).
+        ///</summary>
+        public virtual string? DatabaseIntegrationId { get; set; }
+    }
+
+    ///<summary>
+    ///Get sms campaign by id
+    ///</summary>
+    [NorbixRoute("/{version}/notifications/sms/campaigns/{id}", "GET")]
+    public partial class GetSmsCampaign
+        : CodeMashRequestBase, INorbixRequest<GetSmsCampaignResponse>
+    {
+        ///<summary>
+        ///The campaign id.
+        ///</summary>
+        public virtual string Id { get; set; }
+
+        ///<summary>
+        ///Optional. Omit to use the project default database integration (resolved per environment).
+        ///</summary>
+        public virtual string? DatabaseIntegrationId { get; set; }
+    }
+
+    ///<summary>
+    ///Gets sms campaign batches
+    ///</summary>
+    [NorbixRoute("/{version}/notifications/sms/campaigns/{id}/batches", "GET")]
+    public partial class GetSmsCampaignBatches
+        : CodeMashListPaginationRequestBase, INorbixRequest<GetSmsCampaignBatchesResponse>
+    {
+        ///<summary>
+        ///The campaign id. Get it from get_sms_campaigns.
+        ///</summary>
+        public virtual string? Id { get; set; }
+
+        ///<summary>
+        ///Optional. Omit to use the project default database integration (resolved per environment).
+        ///</summary>
+        public virtual string? DatabaseIntegrationId { get; set; }
+    }
+
+    public partial class GetSmsCampaignBatchesResponse
+        : ResponseBase
+    {
+        public virtual PaginatedResponse<SmsCampaignBatchDto>? List { get; set; }
+    }
+
+    ///<summary>
+    ///Gets sms campaign batch notification
+    ///</summary>
+    [NorbixRoute("/{version}/notifications/sms/campaigns/{id}/batches/{batchId}/{notificationId}", "GET")]
+    public partial class GetSmsCampaignBatchNotification
+        : CodeMashListPaginationRequestBase, INorbixRequest<GetSmsCampaignBatchNotificationResponse>
+    {
+        ///<summary>
+        ///The campaign id. Get it from get_sms_campaigns.
+        ///</summary>
+        public virtual string Id { get; set; }
+
+        ///<summary>
+        ///The campaign batch id. Get it from get_sms_campaign_batches.
+        ///</summary>
+        public virtual string BatchId { get; set; }
+
+        ///<summary>
+        ///The notification id. Get it from get_sms_campaign_batch_notifications.
+        ///</summary>
+        public virtual string NotificationId { get; set; }
+
+        ///<summary>
+        ///Optional. Omit to use the project default database integration (resolved per environment).
+        ///</summary>
+        public virtual string? DatabaseIntegrationId { get; set; }
+    }
+
+    public partial class GetSmsCampaignBatchNotificationResponse
+        : ResponseBase
+    {
+        public virtual SmsCampaignBatchNotificationDto? CampaignNotification { get; set; }
+    }
+
+    ///<summary>
+    ///Gets sms campaign batch notifications
+    ///</summary>
+    [NorbixRoute("/{version}/notifications/sms/campaigns/{id}/batches/{batchId}", "GET")]
+    public partial class GetSmsCampaignBatchNotifications
+        : CodeMashListPaginationRequestBase, INorbixRequest<GetSmsCampaignBatchNotificationsResponse>
+    {
+        ///<summary>
+        ///The campaign id. Get it from get_sms_campaigns.
+        ///</summary>
+        public virtual string Id { get; set; }
+
+        ///<summary>
+        ///The campaign batch id. Get it from get_sms_campaign_batches.
+        ///</summary>
+        public virtual string BatchId { get; set; }
+
+        ///<summary>
+        ///Optional. Omit to use the project default database integration (resolved per environment).
+        ///</summary>
+        public virtual string? DatabaseIntegrationId { get; set; }
+    }
+
+    public partial class GetSmsCampaignBatchNotificationsResponse
+        : ResponseBase
+    {
+        public virtual List<BatchStatusChangeEntryDto>? BatchStatusHistory { get; set; }
+        public virtual PaginatedResponse<SmsCampaignBatchNotificationDto>? List { get; set; }
+    }
+
+    public partial class GetSmsCampaignResponse
+        : ResponseBase
+    {
+        public virtual SmsCampaignDto? SmsCampaign { get; set; }
+    }
+
+    ///<summary>
+    ///Gets sms campaigns
+    ///</summary>
+    [NorbixRoute("/{version}/notifications/sms/campaigns", "GET")]
+    public partial class GetSmsCampaigns
+        : CodeMashListPaginationRequestBase, INorbixRequest<GetSmsCampaignsResponse>
+    {
+        ///<summary>
+        ///Optional. Omit to use the project default database integration (resolved per environment).
+        ///</summary>
+        public virtual string? DatabaseIntegrationId { get; set; }
+
+        ///<summary>
+        ///Optional: only campaigns built on this SMS template id.
+        ///</summary>
+        public virtual string? TemplateId { get; set; }
+
+        ///<summary>
+        ///Optional lower bound for the campaign time, unix timestamp in seconds (UTC).
+        ///</summary>
+        public virtual long? From { get; set; }
+
+        ///<summary>
+        ///Optional upper bound for the campaign time, unix timestamp in seconds (UTC).
+        ///</summary>
+        public virtual long? To { get; set; }
+    }
+
+    public partial class GetSmsCampaignsResponse
+        : ResponseBase
+    {
+        public virtual PaginatedResponse<SmsCampaignDto>? List { get; set; }
+    }
+
+    ///<summary>
+    ///Get sms campaign statistics
+    ///</summary>
+    [NorbixRoute("/{version}/notifications/sms/campaigns/{id}/stats", "GET")]
+    public partial class GetSmsCampaignStatistics
+        : CodeMashRequestBase, INorbixRequest<GetSmsCampaignStatisticsResponse>
+    {
+        ///<summary>
+        ///The campaign id. Get it from get_sms_campaigns.
+        ///</summary>
+        public virtual string Id { get; set; }
+
+        ///<summary>
+        ///Optional. Omit to use the project default database integration (resolved per environment).
+        ///</summary>
+        public virtual string? DatabaseIntegrationId { get; set; }
+    }
+
+    public partial class GetSmsCampaignStatisticsResponse
+        : ResponseBase
+    {
+        public virtual CampaignStatsDto? Stats { get; set; }
+    }
+
+    ///<summary>
+    ///Returns SMS preview notification body
+    ///</summary>
+    [NorbixRoute("/{version}/notifications/sms/preview", "GET")]
+    public partial class PreviewSmsNotification
+        : RequestBase, INorbixRequest<PreviewSmsNotificationResponse>
+    {
+        ///<summary>
+        ///Signed preview hash identifying the notification to render.
+        ///</summary>
+        public virtual string Hash { get; set; }
+    }
+
+    public partial class PreviewSmsNotificationResponse
+        : ResponseBase
+    {
+        public virtual string? Body { get; set; }
+    }
+
+    ///<summary>
+    ///Stops a running SMS campaign
+    ///</summary>
+    [NorbixRoute("/{version}/notifications/sms/campaigns/{Id}/stop", "POST")]
+    public partial class StopSmsCampaignRequest
+        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
+    {
+        ///<summary>
+        ///The campaign id to stop.
+        ///</summary>
+        public virtual string Id { get; set; }
+
+        ///<summary>
+        ///Optional. Omit to use the project default database integration (resolved per environment).
+        ///</summary>
+        public virtual string? DatabaseIntegrationId { get; set; }
+    }
+
+    ///<summary>
+    ///Gets campaign sms message details
+    ///</summary>
+    [NorbixRoute("/{version}/notifications/sms/campaigns/{campaignId}/messages/{id}", "GET")]
+    public partial class GetSmsCampaignMessage
+        : CodeMashRequestBase, INorbixRequest<GetSmsCampaignMessageResponse>
+    {
+        ///<summary>
+        ///The campaign id. Get it from get_sms_campaigns.
+        ///</summary>
+        public virtual string CampaignId { get; set; }
+
+        ///<summary>
+        ///The campaign batch id. Get it from get_sms_campaign_batches.
+        ///</summary>
+        public virtual string CampaignBatchId { get; set; }
+
+        ///<summary>
+        ///The notification (message) id. Get it from get_sms_campaign_messages.
+        ///</summary>
+        public virtual string NotificationId { get; set; }
+
+        ///<summary>
+        ///Optional. Omit to use the project default database integration (resolved per environment).
+        ///</summary>
+        public virtual string? DatabaseIntegrationId { get; set; }
+    }
+
+    public partial class GetSmsCampaignMessageResponse
+        : ResponseBase
+    {
+        public virtual SmsCampaignBatchNotificationDto? SmsMessageEntity { get; set; }
+    }
+
+    ///<summary>
+    ///Gets the sms notifications
+    ///</summary>
+    [NorbixRoute("/{version}/notifications/sms/campaigns/{campaignId}/messages", "GET")]
+    public partial class GetSmsCampaignMessagesRequest
+        : CodeMashListPaginationRequestBase, INorbixRequest<GetSmsCampaignMessagesResponse>
+    {
+        ///<summary>
+        ///The campaign id. Get it from get_sms_campaigns.
+        ///</summary>
+        public virtual string CampaignId { get; set; }
+
+        ///<summary>
+        ///The campaign batch id. Get it from get_sms_campaign_batches.
+        ///</summary>
+        public virtual string CampaignBatchId { get; set; }
+
+        ///<summary>
+        ///Optional. Omit to use the project default database integration (resolved per environment).
+        ///</summary>
+        public virtual string? DatabaseIntegrationId { get; set; }
+    }
+
+    public partial class GetSmsCampaignMessagesResponse
+        : ResponseBase
+    {
+        public virtual PaginatedResponse<SmsCampaignBatchNotificationDto>? List { get; set; }
+    }
+
+    ///<summary>
+    ///Confirm that you received the test SMS delivery.
+    ///</summary>
+    [NorbixRoute("/{version}/notifications/sms/integrations/confirm-human-delivery", "POST")]
+    [DataContract]
+    public partial class ConfirmSmsIntegrationHumanDeliveryRequest
+        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
+    {
+        ///<summary>
+        ///The SMS integration id being verified. Get it from get_sms_integrations.
+        ///</summary>
+        [DataMember]
+        public virtual string IntegrationId { get; set; }
+    }
+
+    ///<summary>
+    ///Delete integration for particular project
+    ///</summary>
+    [NorbixRoute("/{version}/notifications/sms/integrations/{Id}", "DELETE")]
+    public partial class DeleteSmsIntegrationRequest
+        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
+    {
+        ///<summary>
+        ///The SMS integration id to delete. Get it from get_sms_integrations.
+        ///</summary>
+        public virtual string Id { get; set; }
+    }
+
+    ///<summary>
+    ///Disable integration for particular project
+    ///</summary>
+    [NorbixRoute("/{version}/notifications/sms/integrations/{Id}/disable", "PUT")]
+    public partial class DisableSmsIntegrationRequest
+        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
+    {
+        ///<summary>
+        ///The SMS integration id to disable. Get it from get_sms_integrations.
+        ///</summary>
+        public virtual string Id { get; set; }
+    }
+
+    ///<summary>
+    ///Enable integration for particular project
+    ///</summary>
+    [NorbixRoute("/{version}/notifications/sms/integrations/{Id}/enable", "PUT")]
+    public partial class EnableSmsIntegrationRequest
+        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
+    {
+        ///<summary>
+        ///The SMS integration id to enable. Get it from get_sms_integrations.
+        ///</summary>
+        public virtual string Id { get; set; }
+    }
+
+    ///<summary>
+    ///Gets integration by specified Id
+    ///</summary>
+    [NorbixRoute("/{version}/notifications/sms/integrations/{id}", "GET")]
+    public partial class GetSmsIntegration
+        : CodeMashRequestBase, INorbixRequest<GetSmsIntegrationResponse>
+    {
+        ///<summary>
+        ///The SMS integration id to fetch. Get it from get_sms_integrations.
+        ///</summary>
+        public virtual string Id { get; set; }
+    }
+
+    public partial class GetSmsIntegrationResponse
+        : ResponseBase
+    {
+        public virtual SmsIntegrationDto? Item { get; set; }
+    }
+
+    ///<summary>
+    ///Gets sms integrations
+    ///</summary>
+    [NorbixRoute("/{version}/notifications/sms/integrations", "GET")]
+    public partial class GetSmsIntegrations
+        : CodeMashListPaginationRequestBase, INorbixRequest<GetSmsIntegrationsResponse>
+    {
+    }
+
+    public partial class GetSmsIntegrationsResponse
+        : ResponseBase
+    {
+        public virtual string? DefaultIntegrationId { get; set; }
+        public virtual PaginatedResponse<SmsIntegrationListProjection>? List { get; set; }
+    }
+
+    [NorbixRoute("/{version}/notifications/sms/integrations", "POST")]
+    [DataContract]
+    public partial class SaveSmsIntegration
+        : CodeMashRequestBase, INorbixRequest<IdResponse>
+    {
+        [DataMember(Name="integration")]
+        public virtual SmsIntegrationRequest Integration { get; set; }
+    }
+
+    ///<summary>
+    ///Sets integration as default
+    ///</summary>
+    [NorbixRoute("/{version}/notifications/sms/integrations/{Id}/default", "PUT")]
+    public partial class SetSmsIntegrationAsDefaultRequest
+        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
+    {
+        ///<summary>
+        ///The SMS integration id to set as default. Get it from get_sms_integrations.
+        ///</summary>
+        public virtual string Id { get; set; }
+    }
+
+    public partial class SmsIntegrationRequest
+    {
+        public virtual string? IntegrationId { get; set; }
+        public virtual SmsProvider Provider { get; set; }
+        public virtual string IntegrationName { get; set; }
+        public virtual bool IsEnabled { get; set; }
+    }
+
+    ///<summary>
+    ///Test SMS integration
+    ///</summary>
+    [NorbixRoute("/{version}/notifications/sms/integrations/test", "POST")]
+    public partial class TestSmsIntegration
+        : CodeMashRequestBase, INorbixRequest<TestSmsIntegrationResponse>
+    {
+        ///<summary>
+        ///The SMS integration id to test. Get it from get_sms_integrations.
+        ///</summary>
+        public virtual string IntegrationId { get; set; }
+
+        ///<summary>
+        ///Optional phone number (international format) to send the test SMS to.
+        ///</summary>
+        public virtual string? To { get; set; }
+    }
+
+    ///<summary>
+    ///Gets SMS settings
+    ///</summary>
+    [NorbixRoute("/{version}/notifications/sms/settings", "GET")]
+    public partial class GetSmsSettings
+        : CodeMashRequestBase, INorbixRequest<GetSmsSettingsResponse>
+    {
+        ///<summary>
+        ///Unused legacy parameter; leave empty.
+        ///</summary>
+        public virtual string Id { get; set; }
+    }
+
+    public partial class GetSmsSettingsResponse
+        : ResponseBase
+    {
+        public virtual SmsSettings? Settings { get; set; }
+    }
+
+    ///<summary>
+    ///Archives sms template
+    ///</summary>
+    [NorbixRoute("/{version}/notifications/sms/templates/{Id}/archive", "PUT")]
+    public partial class ArchiveSmsTemplateRequest
+        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
+    {
+        ///<summary>
+        ///The SMS template id to archive. Get it from get_sms_templates.
+        ///</summary>
+        public virtual string Id { get; set; }
+    }
+
+    ///<summary>
+    ///Clones sms template
+    ///</summary>
+    [NorbixRoute("/{version}/notifications/sms/templates/{Id}/clone", "POST")]
+    public partial class CloneSmsTemplateRequest
+        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
+    {
+        ///<summary>
+        ///The SMS template id to clone. Get it from get_sms_templates.
+        ///</summary>
+        public virtual string Id { get; set; }
+    }
+
+    ///<summary>
+    ///Create SMS template
+    ///</summary>
+    [NorbixRoute("/{version}/notifications/sms/templates", "POST")]
+    public partial class CreateSmsTemplateRequest
+        : SaveSmsTemplate, INorbixRequest<IdResponse>
+    {
+    }
+
+    ///<summary>
+    ///Delete Sms Template for particular project
+    ///</summary>
+    [NorbixRoute("/{version}/notifications/sms/templates/{Id}", "DELETE")]
+    public partial class DeleteSmsTemplateRequest
+        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
+    {
+        ///<summary>
+        ///The SMS template id to delete. Get it from get_sms_templates.
+        ///</summary>
+        public virtual string Id { get; set; }
+    }
+
+    ///<summary>
+    ///Goes through the Sms template and returns all the tokens that are used in the template translations
+    ///</summary>
+    [NorbixRoute("/{version}/notifications/sms/templates/{id}/tokens", "GET")]
+    public partial class GetSmsMessageContentTokens
+        : CodeMashRequestBase, INorbixRequest<GetSmsMessageContentTokensResponse>
+    {
+        ///<summary>
+        ///The SMS template id. Get it from get_sms_templates.
+        ///</summary>
+        public virtual string Id { get; set; }
+    }
+
+    public partial class GetSmsMessageContentTokensResponse
+        : ResponseBase
+    {
+        public virtual Dictionary<string, string[]>? Tokens { get; set; }
+    }
+
+    ///<summary>
+    ///Gets sms template by id
+    ///</summary>
+    [NorbixRoute("/{version}/notifications/sms/templates/{id}", "GET")]
+    public partial class GetSmsTemplate
+        : CodeMashRequestBase, INorbixRequest<GetSmsTemplateResponse>
+    {
+        ///<summary>
+        ///The SMS template id to fetch. Get it from get_sms_templates.
+        ///</summary>
+        public virtual string Id { get; set; }
+    }
+
+    public partial class GetSmsTemplateResponse
+        : ResponseBase
+    {
+        public virtual SmsTemplateDto? Item { get; set; }
+    }
+
+    ///<summary>
+    ///Gets sms templates
+    ///</summary>
+    [NorbixRoute("/{version}/notifications/sms/templates", "GET")]
+    public partial class GetSmsTemplates
+        : CodeMashListPaginationRequestBase, INorbixRequest<GetSmsTemplatesResponse>
+    {
+        ///<summary>
+        ///Set true to include archived templates.
+        ///</summary>
+        public virtual bool? ShowArchived { get; set; }
+
+        ///<summary>
+        ///Optional: return only the template with this id.
+        ///</summary>
+        public virtual string? TemplateId { get; set; }
+    }
+
+    public partial class GetSmsTemplatesResponse
+        : ResponseBase
+    {
+        public virtual PaginatedResponse<SmsTemplateListProjection>? List { get; set; }
+    }
+
+    ///<summary>
+    ///Runs the SMS Razor template, returns the bound text or the list of unresolved tokens.
+    ///</summary>
+    [NorbixRoute("/{version}/notifications/sms/templates/render", "POST")]
+    public partial class RenderSms
+        : CodeMashRequestBase, INorbixRequest<RenderSmsTextResponse>
+    {
+        ///<summary>
+        ///The Razor SMS template code to render.
+        ///</summary>
+        public virtual string Code { get; set; }
+
+        ///<summary>
+        ///Token name/value pairs to bind into the template.
+        ///</summary>
+        public virtual HashSet<TokenMappingDto>? Tokens { get; set; }
+
+        ///<summary>
+        ///Set true when rendering for a preview (relaxes some validation).
+        ///</summary>
+        public virtual bool IsForPreview { get; set; }
+    }
+
+    public partial class SaveSmsTemplate
+        : CodeMashRequestBase
+    {
+        ///<summary>
+        ///Display name for the SMS template.
+        ///</summary>
+        public virtual string TemplateName { get; set; }
+
+        ///<summary>
+        ///Optional free-text description of the template's purpose.
+        ///</summary>
+        public virtual string? Description { get; set; }
+
+        ///<summary>
+        ///Whether this template is Transactional or Marketing SMS.
+        ///</summary>
+        public virtual CommunicationChannel CommunicationChannel { get; set; }
+
+        ///<summary>
+        ///Optional tags to organize/filter templates.
+        ///</summary>
+        public virtual HashSet<string>? Tags { get; set; }
+
+        ///<summary>
+        ///The template's per-language translations (each with its own SMS body).
+        ///</summary>
+        public virtual HashSet<SmsMessageTranslationDto> Translations { get; set; } = [];
+    }
+
+    ///<summary>
+    ///Un-archives sms template
+    ///</summary>
+    [NorbixRoute("/{version}/notifications/sms/templates/{Id}/unarchive", "PUT")]
+    public partial class UnArchiveSmsTemplateRequest
+        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
+    {
+        ///<summary>
+        ///The SMS template id to unarchive.
+        ///</summary>
+        public virtual string Id { get; set; }
+    }
+
+    ///<summary>
+    ///Edit sms template
+    ///</summary>
+    [NorbixRoute("/{version}/notifications/sms/templates", "PUT")]
+    public partial class UpdateSmsTemplateRequest
+        : SaveSmsTemplate, INorbixRequest<EmptyResponse>
+    {
+        ///<summary>
+        ///The SMS template id to update. Get it from get_sms_templates.
+        ///</summary>
+        public virtual string ViewId { get; set; }
+    }
+
+    [NorbixRoute("/{version}/support/cases/{CaseId}", "GET")]
+    public partial class GetSupportCase
+        : RequestBase, INorbixRequest<GetSupportCaseResponse>
+    {
+        public virtual string CaseId { get; set; }
+    }
+
+    public partial class GetSupportCaseResponse
+        : ResponseBase
+    {
+        public virtual SupportCaseDetailDto? Result { get; set; }
+    }
+
+    [NorbixRoute("/{version}/support/cases", "GET")]
+    public partial class GetSupportCases
+        : RequestBase, INorbixRequest<GetSupportCasesResponse>
+    {
+        public virtual PagingArgs? PagingArgs { get; set; }
+    }
+
+    public partial class GetSupportCasesResponse
+        : ResponseBase
+    {
+        public virtual PaginatedResponse<SupportCaseListProjection>? List { get; set; }
+    }
+
+    [NorbixRoute("/{version}/support/cases", "POST")]
+    public partial class OpenSupportCaseRequest
+        : RequestBase, INorbixRequest<IdResponse>
+    {
+        public virtual string Kind { get; set; }
+        public virtual string Severity { get; set; }
+        public virtual string Subject { get; set; }
+        public virtual string Message { get; set; }
+        public virtual string? ProjectId { get; set; }
+    }
+
+    [NorbixRoute("/{version}/support/cases/{CaseId}/messages", "POST")]
+    public partial class AppendSupportCaseMessageRequest
+        : RequestBase, INorbixRequest<IdResponse>
+    {
+        public virtual string CaseId { get; set; }
+        public virtual string Message { get; set; }
+    }
+
+    [NorbixRoute("/{version}/support/cases/{CaseId}/close", "POST")]
+    public partial class CloseSupportCaseRequest
+        : RequestBase, INorbixRequest<EmptyResponse>
+    {
+        public virtual string CaseId { get; set; }
+    }
+
+    [NorbixRoute("/{version}/support/cases/{CaseId}/reopen", "POST")]
+    public partial class ReopenSupportCaseRequest
+        : RequestBase, INorbixRequest<EmptyResponse>
+    {
+        public virtual string CaseId { get; set; }
+        public virtual string Reason { get; set; }
+    }
+
+    [NorbixRoute("/{version}/support/cases/{CaseId}/resolve", "POST")]
+    public partial class ResolveSupportCaseRequest
+        : RequestBase, INorbixRequest<EmptyResponse>
+    {
+        public virtual string CaseId { get; set; }
+        public virtual CaseResolutionDto? Resolution { get; set; }
+    }
+
     [DataContract]
     public partial class DeleteTrigger
         : CodeMashRequestBase
@@ -8836,6 +18577,7 @@ public partial class CronExpression
     public partial class FilesTriggerRequest
         : SaveTriggerRequest
     {
+        public virtual TriggerType Type { get; set; }
         public virtual FilesTriggerType When { get; set; }
         public virtual FileResourceRefDto FileRef { get; set; }
     }
@@ -8843,6 +18585,7 @@ public partial class CronExpression
     public partial class GetFilesTriggerResponse
         : GetTriggerResponse
     {
+        public virtual FilesTriggerDto? Trigger { get; set; }
     }
 
     public partial class GetFilesTriggersResponse
@@ -8854,6 +18597,7 @@ public partial class CronExpression
     public partial class GetMembershipTriggerResponse
         : GetTriggerResponse
     {
+        public virtual MembershipTriggerDto? Trigger { get; set; }
     }
 
     [DataContract]
@@ -8867,6 +18611,7 @@ public partial class CronExpression
     public partial class GetPaymentsTriggerResponse
         : GetTriggerResponse
     {
+        public virtual PaymentTriggerDto? Trigger { get; set; }
     }
 
     public partial class GetPaymentsTriggersResponse
@@ -8878,6 +18623,7 @@ public partial class CronExpression
     public partial class GetSchemaTriggerResponse
         : GetTriggerResponse
     {
+        public virtual SchemaTriggerDto? Trigger { get; set; }
     }
 
     public partial class GetSchemaTriggersResponse
@@ -8890,18 +18636,20 @@ public partial class CronExpression
         : CodeMashRequestBase
     {
         public virtual string Id { get; set; }
+        public virtual string? SchemaId { get; set; }
     }
 
     public partial class GetTriggerResponse
         : ResponseBase
     {
-        public virtual TriggerDto? Trigger { get; set; }
     }
 
     [DataContract]
     public partial class GetTriggers
         : CodeMashListPaginationRequestBase
     {
+        [DataMember]
+        public virtual string? SchemaId { get; set; }
     }
 
     [DataContract]
@@ -8913,13 +18661,17 @@ public partial class CronExpression
     public partial class MembershipTriggerRequest
         : SaveTriggerRequest
     {
+        public virtual TriggerType Type { get; set; }
         public virtual MembershipTriggerType When { get; set; }
     }
 
     public partial class PaymentTriggerRequest
         : SaveTriggerRequest
     {
+        public virtual TriggerType Type { get; set; }
         public virtual PaymentTriggerType When { get; set; }
+        public virtual List<string>? Integrations { get; set; }
+        public virtual List<string>? Events { get; set; }
     }
 
     [DataContract]
@@ -8944,6 +18696,7 @@ public partial class CronExpression
     public partial class SchemaTriggerRequest
         : SaveTriggerRequest
     {
+        public virtual TriggerType Type { get; set; }
         public virtual string SchemaId { get; set; }
         public virtual SchemaTriggerType When { get; set; }
         public virtual string? ConfigurationCode { get; set; }
@@ -8953,6 +18706,9 @@ public partial class CronExpression
     public partial class DisableWebhookDestinationRequest
         : CodeMashRequestBase, INorbixRequest<EmptyResponse>
     {
+        ///<summary>
+        ///The webhook destination id to disable, from get_webhook_integration.
+        ///</summary>
         public virtual string DestinationId { get; set; }
     }
 
@@ -8960,6 +18716,9 @@ public partial class CronExpression
     public partial class EnableWebhookDestinationRequest
         : CodeMashRequestBase, INorbixRequest<EmptyResponse>
     {
+        ///<summary>
+        ///The webhook destination id to enable, from get_webhook_integration.
+        ///</summary>
         public virtual string DestinationId { get; set; }
     }
 
@@ -8967,6 +18726,9 @@ public partial class CronExpression
     public partial class RemoveWebhookDestinationRequest
         : CodeMashRequestBase, INorbixRequest<EmptyResponse>
     {
+        ///<summary>
+        ///The webhook destination id to remove, from get_webhook_integration.
+        ///</summary>
         public virtual string DestinationId { get; set; }
     }
 
@@ -8974,11 +18736,34 @@ public partial class CronExpression
     public partial class SaveWebhookDestinationRequest
         : CodeMashRequestBase, INorbixRequest<SaveWebhookDestinationResponse>
     {
+        ///<summary>
+        ///Existing destination id to overwrite, from get_webhook_integration. Omit to create a new destination.
+        ///</summary>
         public virtual string? DestinationId { get; set; }
+
+        ///<summary>
+        ///Display name for the destination.
+        ///</summary>
         public virtual string DestinationName { get; set; }
+
+        ///<summary>
+        ///The HTTPS endpoint URL that will receive the webhook deliveries.
+        ///</summary>
         public virtual string EndpointUrl { get; set; }
+
+        ///<summary>
+        ///The event names this destination subscribes to. Empty subscribes to none.
+        ///</summary>
         public virtual List<string> SelectedEvents { get; set; } = [];
+
+        ///<summary>
+        ///Destination-specific static headers sent with every delivery to this destination. These win over the integration-wide extra headers on duplicate keys.
+        ///</summary>
         public virtual Dictionary<string, string>? ExtraHeaders { get; set; }
+
+        ///<summary>
+        ///Whether this destination is enabled for delivery. Defaults to true.
+        ///</summary>
         public virtual bool IsEnabled { get; set; }
     }
 
@@ -8988,6 +18773,18 @@ public partial class CronExpression
         public virtual string? DestinationId { get; set; }
     }
 
+    [NorbixRoute("/{version}/webhooks/{source}/{integrationInstanceId}", "POST")]
+    public partial class ReceiveWebhook
+        : INorbixRequest<object>
+    {
+        public virtual string Source { get; set; }
+        public virtual string IntegrationInstanceId { get; set; }
+        public virtual Stream RequestStream { get; set; }
+    }
+
+    ///<summary>
+    ///Gets the project's webhook integration
+    ///</summary>
     [NorbixRoute("/{version}/webhooks/integration", "GET")]
     public partial class GetWebhookIntegration
         : CodeMashRequestBase, INorbixRequest<GetWebhookIntegrationResponse>
@@ -9028,6 +18825,9 @@ public partial class CronExpression
     public partial class UpdateWebhookIntegrationExtraHeadersRequest
         : CodeMashRequestBase, INorbixRequest<EmptyResponse>
     {
+        ///<summary>
+        ///The integration-wide static headers to send with every delivery. Pass an empty dictionary to clear all extra headers.
+        ///</summary>
         public virtual Dictionary<string, string>? ExtraHeaders { get; set; }
     }
 
@@ -9035,6 +18835,14 @@ public partial class CronExpression
     public partial class Echo
         : RequestBase, INorbixRequest<EchoResponse>
     {
+    }
+
+    public partial class EchoRegionDto
+    {
+        public virtual string Code { get; set; }
+        public virtual string DisplayName { get; set; }
+        public virtual string ApiUrl { get; set; }
+        public virtual string HubUrl { get; set; }
     }
 
     public partial class EchoResponse
@@ -9050,53 +18858,110 @@ public partial class CronExpression
         public virtual string ApiVersion { get; set; }
         public virtual string HubVersion { get; set; }
         public virtual string MjmlUrl { get; set; }
-        public virtual CodeMashLicenseFromEndpointDto? License { get; set; }
+        public virtual string? AdminUrlTemplate { get; set; }
+        public virtual EchoLicenseDto? License { get; set; }
         public virtual string? AskForEnterpriseLicenseEmail { get; set; }
-
-        ///<summary>The regions this deployment knows about, with their composed API/Hub endpoints. Empty on SelfHosted deployments in practice.</summary>
-        public virtual EchoRegionDto[]? Regions { get; set; }
+        public virtual bool EmailServiceConfigured { get; set; }
+        public virtual string? RootBootstrapPasswordSource { get; set; }
+        public virtual List<EchoRegionDto>? Regions { get; set; }
+        public virtual bool IsProductionInstallation { get; set; }
+        public virtual string LicensingMode { get; set; }
+        public virtual int? GraceDaysLeft { get; set; }
+        public virtual string? InstallationDomain { get; set; }
+        public virtual string? LicensingDocsUrl { get; set; }
     }
 
-    ///<summary>A Norbix region with its composed per-region API/Hub endpoints.</summary>
-    public partial class EchoRegionDto
+    [NorbixRoute("/{version}/public/projects/{ProjectId}/config", "GET")]
+    public partial class GetPublicProjectConfig
+        : RequestBase, INorbixRequest<PublicProjectConfigDto>
     {
-        public virtual string Code { get; set; }
-        public virtual string DisplayName { get; set; }
-        public virtual string ApiUrl { get; set; }
-        public virtual string HubUrl { get; set; }
+        public virtual string? ProjectId { get; set; }
+    }
+
+    [NorbixRoute("/{version}/public/projects/{ProjectId}/legal/{Kind}", "GET")]
+    public partial class GetPublicProjectLegal
+        : RequestBase, INorbixRequest<PublicLegalDocumentDto>
+    {
+        public virtual string? ProjectId { get; set; }
+        public virtual string? Kind { get; set; }
     }
 
     public partial class CodeMashListPaginationRequestBase
-        : RequestBase
+        : RequestBase, IHasProjectId, IHasEnv
     {
         ///<summary>
         ///ID of your project. Can be passed in a header as norbix-project-id.
         ///</summary>
         [DataMember]
         public virtual string ProjectId { get; set; }
+
+        ///<summary>
+        ///Target environment for this request (e.g. TEST, STAGING). Optional — when omitted the request runs against PROD. Can be passed in a header as norbix-env.
+        ///</summary>
+        [DataMember]
+        public virtual string? Env { get; set; }
+
+        public virtual Env ResolvedEnv { get; set; }
+        ///<summary>
+        ///Cursor token — fetch the page AFTER this item.
+        ///</summary>
+        [DataMember]
+        public virtual string? StartingAfter { get; set; }
+
+        ///<summary>
+        ///Cursor token — fetch the page BEFORE this item.
+        ///</summary>
+        [DataMember]
+        public virtual string? EndingBefore { get; set; }
+
+        ///<summary>
+        ///Amount of records to return.
+        ///</summary>
+        [DataMember]
+        public virtual int? PageSize { get; set; }
 
         ///<summary>
         ///Paging
         ///</summary>
-        [DataMember]
-        public virtual PagingArgs Paging { get; set; }
+        public virtual PagingArgs? Paging { get; set; }
     }
 
+    [DataContract(Namespace="http://codemash.io/types/")]
     public partial class CodeMashRequestBase
-        : RequestBase
+        : RequestBase, IHasProjectId, IHasEnv
     {
         ///<summary>
         ///ID of your project. Can be passed in a header as norbix-project-id.
         ///</summary>
+        [DataMember]
         public virtual string ProjectId { get; set; }
+
+        ///<summary>
+        ///Target environment for this request (e.g. TEST, STAGING). Optional — when omitted the request runs against PROD. Can be passed in a header as norbix-env.
+        ///</summary>
+        [DataMember]
+        public virtual string? Env { get; set; }
+    }
+
+    public partial interface ICultureBasedRequest
+    {
+        string? CultureCode { get; set; }
     }
 
 
+    public partial interface IHasCorrelationIdRequest
+    {
+        Guid? CorrelationId { get; set; }
+    }
 
-
+    public partial interface IVersionBasedRequest
+    {
+        string Version { get; set; }
+    }
 
     [DataContract(Namespace="http://codemash.io/types/")]
     public partial class RequestBase
+        : ICultureBasedRequest, IVersionBasedRequest, IHasCorrelationIdRequest
     {
         ///<summary>
         ///Specify culture code when your response from the API should be localised. E.g.: en
@@ -9139,6 +19004,7 @@ public partial class CronExpression
         Failed,
         Viewed,
         Clicked,
+        BlockedByValidation,
     }
 
     public enum CampaignStatus
@@ -9153,6 +19019,12 @@ public partial class CronExpression
         Failed,
     }
 
+    public enum CampaignStopReason
+    {
+        UserRequested,
+        ModuleDisabled,
+    }
+
     public enum CollectionEmailCampaignRecipientField
     {
         User,
@@ -9165,12 +19037,98 @@ public partial class CronExpression
         SpecifiedUsers,
         Collection,
         Devices,
+        AccountUsers,
     }
 
     public enum AwsLambdaIntegrationType
     {
         Iam,
         CrossAccountRole,
+    }
+
+    public partial class ProcessCollectionImport
+    {
+        public virtual string ImportId { get; set; }
+        public virtual string ProjectId { get; set; }
+        public virtual string AccountId { get; set; }
+        public virtual string DatabaseIntegrationId { get; set; }
+        public virtual string? Env { get; set; }
+    }
+
+    public partial class RecordDeleted
+    {
+        public virtual ProjectId ProjectId { get; set; }
+        public virtual IntegrationId DatabaseIntegrationId { get; set; }
+        public virtual SchemaName SchemaName { get; set; }
+        public virtual string Id { get; set; }
+        public virtual Object Document { get; set; }
+    }
+
+    public partial class RecordInserted
+    {
+        public virtual ProjectId ProjectId { get; set; }
+        public virtual IntegrationId DatabaseIntegrationId { get; set; }
+        public virtual SchemaName SchemaName { get; set; }
+        public virtual string Id { get; set; }
+        public virtual Object Document { get; set; }
+    }
+
+    public partial class RecordReplaced
+    {
+        public virtual ProjectId ProjectId { get; set; }
+        public virtual IntegrationId DatabaseIntegrationId { get; set; }
+        public virtual SchemaName SchemaName { get; set; }
+        public virtual string Id { get; set; }
+        public virtual Object From { get; set; }
+        public virtual Object To { get; set; }
+    }
+
+    public partial class RecordResponsibilityChanged
+    {
+        public virtual ProjectId ProjectId { get; set; }
+        public virtual IntegrationId DatabaseIntegrationId { get; set; }
+        public virtual SchemaName SchemaName { get; set; }
+        public virtual string Id { get; set; }
+        public virtual AuthId FromOwner { get; set; }
+        public virtual AuthId ToOwner { get; set; }
+    }
+
+    public partial class RecordsDeleted
+    {
+        public virtual ProjectId ProjectId { get; set; }
+        public virtual IntegrationId DatabaseIntegrationId { get; set; }
+        public virtual SchemaName SchemaName { get; set; }
+        public virtual long DeletedCount { get; set; }
+        public virtual Object Filter { get; set; }
+    }
+
+    public partial class RecordsInserted
+    {
+        public virtual ProjectId ProjectId { get; set; }
+        public virtual IntegrationId DatabaseIntegrationId { get; set; }
+        public virtual SchemaName SchemaName { get; set; }
+        public virtual IReadOnlyList<string> Ids { get; set; }
+        public virtual IReadOnlyList<Object> Documents { get; set; }
+    }
+
+    public partial class RecordsUpdated
+    {
+        public virtual ProjectId ProjectId { get; set; }
+        public virtual IntegrationId DatabaseIntegrationId { get; set; }
+        public virtual SchemaName SchemaName { get; set; }
+        public virtual long MatchedCount { get; set; }
+        public virtual long ModifiedCount { get; set; }
+        public virtual Object Update { get; set; }
+    }
+
+    public partial class RecordUpdated
+    {
+        public virtual ProjectId ProjectId { get; set; }
+        public virtual IntegrationId DatabaseIntegrationId { get; set; }
+        public virtual SchemaName SchemaName { get; set; }
+        public virtual string Id { get; set; }
+        public virtual Object From { get; set; }
+        public virtual Object To { get; set; }
     }
 
     public enum SmtpPorts
@@ -9185,6 +19143,101 @@ public partial class CronExpression
     {
         Iam,
         CrossAccountRole,
+    }
+
+    public partial class EmailBatchRegistered
+    {
+        public virtual ProjectId ProjectId { get; set; }
+        public virtual CampaignId CampaignId { get; set; }
+        public virtual CampaignBatchId CampaignBatchId { get; set; }
+        public virtual string? StartingAfter { get; set; }
+    }
+
+    public partial class EmailCampaignCompleted
+    {
+        public virtual ProjectId ProjectId { get; set; }
+        public virtual CampaignId CampaignId { get; set; }
+        public virtual HashSet<ErrorDto>? Errors { get; set; }
+    }
+
+    public partial class EmailCampaignFailed
+    {
+        public virtual ProjectId ProjectId { get; set; }
+        public virtual CampaignId CampaignId { get; set; }
+        public virtual HashSet<ErrorDto> Errors { get; set; } = [];
+    }
+
+    public partial class EmailCampaignStarted
+    {
+        public virtual ProjectId ProjectId { get; set; }
+        public virtual CampaignId CampaignId { get; set; }
+    }
+
+    public partial class EmailCampaignStopped
+    {
+        public virtual ProjectId ProjectId { get; set; }
+        public virtual CampaignId CampaignId { get; set; }
+        public virtual CampaignStopReason? Reason { get; set; }
+    }
+
+    public partial class EmailNotificationClicked
+    {
+        public virtual ProjectId ProjectId { get; set; }
+        public virtual CampaignId CampaignId { get; set; }
+        public virtual CampaignBatchId CampaignBatchId { get; set; }
+        public virtual NotificationId NotificationId { get; set; }
+        public virtual string? SourceId { get; set; }
+    }
+
+    public partial class EmailNotificationRead
+    {
+        public virtual ProjectId ProjectId { get; set; }
+        public virtual CampaignId CampaignId { get; set; }
+        public virtual CampaignBatchId CampaignBatchId { get; set; }
+        public virtual NotificationId NotificationId { get; set; }
+    }
+
+    public partial class EmailDeliveryEventReceived
+    {
+        public virtual ProjectId ProjectId { get; set; }
+        public virtual IntegrationId IntegrationId { get; set; }
+        public virtual EmailAddress Recipient { get; set; }
+        public virtual EmailDeliveryEventType Type { get; set; }
+        public virtual DateTime OccurredAt { get; set; }
+        public virtual string? ProviderMessageId { get; set; }
+        public virtual string? Reason { get; set; }
+    }
+
+    public enum EmailDeliveryEventType
+    {
+        Unknown,
+        Delivered,
+        Open,
+        Click,
+        SoftBounce,
+        HardBounce,
+        Complaint,
+        Unsubscribed,
+    }
+
+    public enum MailGunRegion
+    {
+        Us,
+        Eu,
+    }
+
+    public partial class FileDeleted
+    {
+        public virtual ProjectId ProjectId { get; set; }
+        public virtual IntegrationId IntegrationId { get; set; }
+        public virtual string Path { get; set; }
+    }
+
+    public partial class FileUploaded
+    {
+        public virtual ProjectId ProjectId { get; set; }
+        public virtual IntegrationId IntegrationId { get; set; }
+        public virtual FileResourceRef FileRef { get; set; }
     }
 
     public enum AwsS3IntegrationType
@@ -9241,6 +19294,81 @@ public partial class CronExpression
         public virtual string? FormattedMessage { get; set; }
     }
 
+    public partial class EmailCampaignTriggered
+    {
+        public virtual ProjectId ProjectId { get; set; }
+        public virtual TriggerId TriggerId { get; set; }
+        public virtual TriggerType TriggerType { get; set; }
+        public virtual string SourceEvent { get; set; }
+        public virtual string? SchemaId { get; set; }
+        public virtual IReadOnlyDictionary<string, string>? TokenMappings { get; set; }
+    }
+
+    public partial class SmsCampaignTriggered
+    {
+        public virtual ProjectId ProjectId { get; set; }
+        public virtual TriggerId TriggerId { get; set; }
+        public virtual TriggerType TriggerType { get; set; }
+        public virtual string SourceEvent { get; set; }
+        public virtual string? SchemaId { get; set; }
+        public virtual IReadOnlyDictionary<string, string>? TokenMappings { get; set; }
+    }
+
+    public partial class SseCallTriggered
+    {
+        public virtual ProjectId ProjectId { get; set; }
+        public virtual AccountId AccountId { get; set; }
+        public virtual TriggerId TriggerId { get; set; }
+        public virtual TriggerType TriggerType { get; set; }
+        public virtual string SourceEvent { get; set; }
+        public virtual string? TargetUserAuthId { get; set; }
+        public virtual string? SchemaId { get; set; }
+        public virtual IReadOnlyDictionary<string, string>? TokenMappings { get; set; }
+        public virtual string? CorrelationId { get; set; }
+    }
+
+    public partial class EmailVerificationCodeRequested
+        : IPasskeyMessage
+    {
+        public virtual string Email { get; set; }
+        public virtual Guid ProjectId { get; set; }
+        public virtual string Code { get; set; }
+        public virtual DateTime ExpiresAtUtc { get; set; }
+    }
+
+    public partial interface IPasskeyMessage
+    {
+    }
+
+    public partial class MagicLinkRequested
+        : IPasskeyMessage
+    {
+        public virtual string Email { get; set; }
+        public virtual Guid ProjectId { get; set; }
+        public virtual string Token { get; set; }
+        public virtual DateTime ExpiresAtUtc { get; set; }
+    }
+
+    public partial class PasswordChanged
+        : IPasskeyMessage
+    {
+        public virtual string Email { get; set; }
+        public virtual Guid ProjectId { get; set; }
+    }
+
+    public partial class PasswordResetRequested
+        : IPasskeyMessage
+    {
+        public virtual string Email { get; set; }
+        public virtual Guid ProjectId { get; set; }
+        public virtual string Token { get; set; }
+        public virtual DateTime ExpiresAtUtc { get; set; }
+    }
+
+    public partial interface IHasViewId
+    {
+        string ViewId { get; set; }
+    }
 
     [DataContract]
     public enum CodeMashRelease
@@ -9255,17 +19383,82 @@ public partial class CronExpression
     {
         Development,
         CI,
+        Staging,
         Production,
     }
 
-    public enum Gender
+    public partial class SmsBatchRegistered
     {
-        Male,
-        Female,
-        Other,
+        public virtual CampaignId CampaignId { get; set; }
+        public virtual CampaignBatchId CampaignBatchId { get; set; }
+        public virtual string? StartingAfter { get; set; }
     }
 
-    public enum UserStatus
+    public partial class SmsCampaignCompleted
+    {
+        public virtual CampaignId CampaignId { get; set; }
+        public virtual HashSet<ErrorDto>? Errors { get; set; }
+    }
+
+    public partial class SmsCampaignFailed
+    {
+        public virtual CampaignId CampaignId { get; set; }
+        public virtual HashSet<ErrorDto> Errors { get; set; } = [];
+    }
+
+    public partial class SmsCampaignStarted
+    {
+        public virtual CampaignId CampaignId { get; set; }
+    }
+
+    public partial class SmsCampaignStopped
+    {
+        public virtual CampaignId CampaignId { get; set; }
+        public virtual CampaignStopReason? Reason { get; set; }
+    }
+
+    public partial class SmsNotificationClicked
+    {
+        public virtual CampaignId CampaignId { get; set; }
+        public virtual CampaignBatchId CampaignBatchId { get; set; }
+        public virtual NotificationId NotificationId { get; set; }
+        public virtual string? SourceId { get; set; }
+    }
+
+    public partial class SmsNotificationRead
+    {
+        public virtual CampaignId CampaignId { get; set; }
+        public virtual CampaignBatchId CampaignBatchId { get; set; }
+        public virtual NotificationId NotificationId { get; set; }
+    }
+
+    public partial class AccessInformation
+    {
+        public virtual IpAddress? Ip { get; set; }
+        public virtual UtcDateTime? Date { get; set; }
+        public virtual TimeZone? Zone { get; set; }
+    }
+
+    public partial class Auth
+        : IBindableContract
+    {
+        public virtual AuthId Id { get; set; }
+        public virtual HashSet<RoleName>? Roles { get; set; }
+        public virtual EmailAddress? Email { get; set; }
+        public virtual AuthUserName? UserName { get; set; }
+        public virtual AuthType Type { get; set; }
+        public virtual Registration Registration { get; set; }
+        public virtual Login? Login { get; set; }
+        public virtual UserGeneralInfo? GeneralInfo { get; set; }
+        public virtual AuthStatus Status { get; set; }
+        public virtual UtcDateTime CreatedOn { get; set; }
+        public virtual UtcDateTime ModifiedOn { get; set; }
+        public virtual PushDevices? PushDevices { get; set; }
+        public virtual HashSet<Tag>? Tags { get; set; }
+        public virtual UserRef? UserRef { get; set; }
+    }
+
+    public enum AuthStatus
     {
         Registered = 0,
         PendingValidation = 2,
@@ -9276,7 +19469,95 @@ public partial class CronExpression
         Blocked = 128,
     }
 
+    public enum Gender
+    {
+        Male,
+        Female,
+        Other,
+    }
+
+    public partial class Login
+    {
+        public virtual bool NeedChangePasswordOnNextLogin { get; set; }
+        public virtual AccessInformation? LastAccessInformation { get; set; }
+    }
+
+    public partial class Registration
+    {
+        public virtual AccessInformation RegistrationInformation { get; set; }
+    }
+
+    public partial class UserBlocked
+    {
+        public virtual UserGeneralInfo? User { get; set; }
+        public virtual AuthId AuthId { get; set; }
+    }
+
+    public partial class UserCreated
+    {
+        public virtual UserId UserId { get; set; }
+        public virtual ProjectId ProjectId { get; set; }
+        public virtual AuthId? AuthId { get; set; }
+    }
+
+    public partial class UserDeleted
+    {
+        public virtual UserGeneralInfo? User { get; set; }
+        public virtual AuthId AuthId { get; set; }
+    }
+
+    public partial class UserGeneralInfo
+        : IBindableContract
+    {
+        public virtual Phone? Phone { get; set; }
+        public virtual EmailAddress? PrimaryEmail { get; set; }
+        public virtual DisplayName? DisplayName { get; set; }
+        public virtual FirstName? FirstName { get; set; }
+        public virtual LastName? LastName { get; set; }
+        public virtual FullName? FullName { get; set; }
+        public virtual Address? Address { get; set; }
+        public virtual string? Company { get; set; }
+        public virtual Gender? Gender { get; set; }
+        public virtual UtcDateTime? BirthDate { get; set; }
+        public virtual TimeZone? TimeZone { get; set; }
+        public virtual Language? Language { get; set; }
+        public virtual UserMarketingPreferences? MarketingPreferences { get; set; }
+        public virtual string? Notes { get; set; }
+        public virtual string? ExtraMetadata { get; set; }
+    }
+
+    public partial class UserInvited
+    {
+        public virtual EmailAddress EmailAddress { get; set; }
+    }
+
+    public partial class UserRegistered
+    {
+        public virtual Auth Auth { get; set; }
+        public virtual UserId? LinkToUser { get; set; }
+    }
+
+    public partial class UserUnblocked
+    {
+        public virtual UserGeneralInfo? User { get; set; }
+        public virtual AuthId AuthId { get; set; }
+    }
+
+    public partial class UserUpdated
+    {
+        public virtual AuthId AuthId { get; set; }
+        public virtual UserGeneralInfo From { get; set; }
+        public virtual UserGeneralInfo To { get; set; }
+    }
+
+    public partial class UserVerified
+    {
+        public virtual AuthId AuthId { get; set; }
+        public virtual UserGeneralInfo? User { get; set; }
+    }
+
     public partial class CursorArgs
+        : ICursorArgs
     {
         public virtual string Field { get; set; }
         public virtual int Order { get; set; }
@@ -9287,9 +19568,14 @@ public partial class CronExpression
         public virtual string Message { get; set; }
         public virtual string? ErrorCode { get; set; }
         public virtual Dictionary<string, string>? Context { get; set; }
-        public virtual IReadOnlySet<ErrorDto>? StackTrace { get; set; }
+        public virtual List<ErrorDto>? StackTrace { get; set; }
     }
 
+    public partial interface ICursorArgs
+    {
+        string Field { get; set; }
+        int Order { get; set; }
+    }
 
     public partial class PaginatedResponse<TViewModelProjection>
     {
@@ -9306,1471 +19592,4 @@ public partial class CronExpression
         public virtual int? PageSize { get; set; }
         public virtual string? StartingAfter { get; set; }
         public virtual string? EndingBefore { get; set; }
-    }
-
-
-// ============================================================
-// Hub endpoints synced from gateway 2026-05-21 (96 new endpoints +
-// supporting DTOs/enums). Transpiled from gateway ServiceStack contracts.
-// ============================================================
-
-    [NorbixRoute("/{version}/notifications/contacts/{contactId}/identities", "POST")]
-    public partial class AddContactIdentityRequest
-        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
-    {
-        public virtual string ContactId { get; set; }
-        public virtual string Type { get; set; }
-        public virtual string Value { get; set; }
-        public virtual bool IsPrimary { get; set; }
-        public virtual bool IsVerified { get; set; }
-    }
-
-    [NorbixRoute("/{version}/notifications/sms/templates/{Id}/archive", "PUT")]
-    public partial class ArchiveSmsTemplateRequest
-        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
-    {
-        public virtual string Id { get; set; }
-    }
-
-    [NorbixRoute("/{version}/notifications/sms/templates/{Id}/clone", "POST")]
-    public partial class CloneSmsTemplateRequest
-        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
-    {
-        public virtual string Id { get; set; }
-    }
-
-    public partial class CodeIntegrationListProjection
-        : IntegrationListProjection
-    {
-        [DataMember]
-        public virtual CodeProvider Provider { get; set; }
-    }
-
-    [NorbixRoute("/{version}/code/integrations/confirm-human-delivery", "POST")]
-    public partial class ConfirmCodeIntegrationHumanDeliveryRequest
-        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
-    {
-        [DataMember]
-        public virtual string IntegrationId { get; set; }
-    }
-
-    [NorbixRoute("/{version}/notifications/sms/integrations/confirm-human-delivery", "POST")]
-    public partial class ConfirmSmsIntegrationHumanDeliveryRequest
-        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
-    {
-        [DataMember]
-        public virtual string IntegrationId { get; set; }
-    }
-
-    public partial class ContactDto
-    {
-    }
-
-    [NorbixRoute("/{version}/notifications/contacts", "POST")]
-    public partial class CreateContactRequest
-        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
-    {
-        public virtual string? PrimaryEmail { get; set; }
-        public virtual string? PrimaryPhone { get; set; }
-        public virtual string? DisplayName { get; set; }
-        public virtual string? FirstName { get; set; }
-        public virtual string? LastName { get; set; }
-    }
-
-    [NorbixRoute("/{version}/notifications/push/campaigns", "POST")]
-    public partial class CreatePushCampaignRequest
-        : CodeMashRequestBase, INorbixRequest<IdResponse>
-    {
-        [DataMember]
-        public virtual PushCampaignRequest Campaign { get; set; }
-        [DataMember]
-        public virtual string DatabaseIntegrationId { get; set; }
-    }
-
-    [NorbixRoute("/{version}/notifications/sms/campaigns", "POST")]
-    public partial class CreateSmsCampaignRequest
-        : CodeMashRequestBase, INorbixRequest<IdResponse>
-    {
-        [DataMember]
-        public virtual string TemplateId { get; set; }
-        [DataMember]
-        public virtual string DatabaseIntegrationId { get; set; }
-        [DataMember]
-        public virtual string? Language { get; set; }
-        [DataMember]
-        public virtual string? InitiatorId { get; set; }
-        [DataMember]
-        public virtual SmsCampaignRecipientsSourceTypes DeliveryType { get; set; }
-        [DataMember]
-        public virtual SmsToAllUsersDeliverySettingsDto? AllUsers { get; set; }
-        [DataMember]
-        public virtual SmsToUsersDeliverySettingsDto? SpecifiedUsers { get; set; }
-        [DataMember]
-        public virtual SmsToCollectionRecordsDeliverySettingsDto? Collection { get; set; }
-        [DataMember]
-        public virtual SmsToPhoneNumbersDeliverySettingsDto? PhoneNumbers { get; set; }
-    }
-
-    [NorbixRoute("/{version}/notifications/sms/templates", "POST")]
-    public partial class CreateSmsTemplateRequest
-        : SaveSmsTemplate, INorbixRequest<IdResponse>
-    {
-    }
-
-    [NorbixRoute("/{version}/code/integrations/{Id}", "DELETE")]
-    public partial class DeleteCodeIntegrationRequest
-        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
-    {
-        public virtual string Id { get; set; }
-    }
-
-    [NorbixRoute("/{version}/notifications/contacts/{contactId}", "DELETE")]
-    public partial class DeleteContact
-        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
-    {
-        public virtual string ContactId { get; set; }
-    }
-
-    [NorbixRoute("/{version}/code/marketplace/integrations/{IntegrationViewId}/bindings/{BindingViewId}", "DELETE")]
-    public partial class DeleteMarketplaceFunctionBinding
-        : CodeMashRequestBase, INorbixRequest<IdResponse>
-    {
-        public virtual string IntegrationViewId { get; set; }
-        public virtual string BindingViewId { get; set; }
-    }
-
-    [NorbixRoute("/{version}/code/marketplace/integrations/{IntegrationViewId}", "DELETE")]
-    public partial class DeleteMarketplaceIntegration
-        : CodeMashRequestBase, INorbixRequest<IdResponse>
-    {
-        public virtual string IntegrationViewId { get; set; }
-    }
-
-    [NorbixRoute("/{version}/notifications/push/campaigns/{Id}", "DELETE")]
-    public partial class DeletePushCampaignRequest
-        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
-    {
-        public virtual string Id { get; set; }
-        public virtual string DatabaseIntegrationId { get; set; }
-    }
-
-    [NorbixRoute("/{version}/notifications/sms/campaigns/{id}", "DELETE")]
-    public partial class DeleteSmsCampaign
-        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
-    {
-        public virtual string Id { get; set; }
-        public virtual string DatabaseIntegrationId { get; set; }
-    }
-
-    [NorbixRoute("/{version}/notifications/sms/integrations/{Id}", "DELETE")]
-    public partial class DeleteSmsIntegrationRequest
-        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
-    {
-        public virtual string Id { get; set; }
-    }
-
-    [NorbixRoute("/{version}/notifications/sms/templates/{Id}", "DELETE")]
-    public partial class DeleteSmsTemplateRequest
-        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
-    {
-        public virtual string Id { get; set; }
-    }
-
-    [NorbixRoute("/{version}/code/disable", "GET")]
-    public partial class DisableCode
-        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
-    {
-    }
-
-    [NorbixRoute("/{version}/code/integrations/{Id}/disable", "PUT")]
-    public partial class DisableCodeIntegrationRequest
-        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
-    {
-        public virtual string Id { get; set; }
-    }
-
-    [NorbixRoute("/{version}/code/marketplace/integrations/{IntegrationViewId}/bindings/{BindingViewId}/disable", "POST")]
-    public partial class DisableMarketplaceFunctionBinding
-        : CodeMashRequestBase, INorbixRequest<IdResponse>
-    {
-        public virtual string IntegrationViewId { get; set; }
-        public virtual string BindingViewId { get; set; }
-    }
-
-    [NorbixRoute("/{version}/code/marketplace/integrations/{IntegrationViewId}/disable", "POST")]
-    public partial class DisableMarketplaceIntegration
-        : CodeMashRequestBase, INorbixRequest<IdResponse>
-    {
-        public virtual string IntegrationViewId { get; set; }
-    }
-
-    [NorbixRoute("/{version}/notifications/sms/disable", "GET")]
-    public partial class DisableSms
-        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
-    {
-    }
-
-    [NorbixRoute("/{version}/notifications/sms/integrations/{Id}/disable", "PUT")]
-    public partial class DisableSmsIntegrationRequest
-        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
-    {
-        public virtual string Id { get; set; }
-    }
-
-    public partial class EmailValidationIntegration
-        : Integration
-    {
-        public virtual EmailValidationProvider Provider { get; set; }
-    }
-
-    public partial class EmailValidationIntegrationCreationResult
-    {
-        public virtual EmailValidationIntegration Integration { get; set; }
-        public virtual SecretPayload Secrets { get; set; }
-    }
-
-    public partial class EmailValidationIntegrationRequest
-    {
-        public virtual string? IntegrationId { get; set; }
-        public virtual EmailValidationProvider Provider { get; set; }
-        public virtual string IntegrationName { get; set; }
-        public virtual bool IsEnabled { get; set; }
-    }
-
-    public enum EmailValidationProvider
-    {
-        ZeroBounce = 1,
-        NeverBounce = 2,
-        Bouncer = 3,
-        MailgunValidate = 4,
-    }
-
-    [NorbixRoute("/{version}/code/enable", "GET")]
-    public partial class EnableCode
-        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
-    {
-    }
-
-    [NorbixRoute("/{version}/code/integrations/{Id}/enable", "PUT")]
-    public partial class EnableCodeIntegrationRequest
-        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
-    {
-        public virtual string Id { get; set; }
-    }
-
-    [NorbixRoute("/{version}/code/marketplace/integrations/{IntegrationViewId}/bindings/{BindingViewId}/enable", "POST")]
-    public partial class EnableMarketplaceFunctionBinding
-        : CodeMashRequestBase, INorbixRequest<IdResponse>
-    {
-        public virtual string IntegrationViewId { get; set; }
-        public virtual string BindingViewId { get; set; }
-    }
-
-    [NorbixRoute("/{version}/code/marketplace/integrations/{IntegrationViewId}/enable", "POST")]
-    public partial class EnableMarketplaceIntegration
-        : CodeMashRequestBase, INorbixRequest<IdResponse>
-    {
-        public virtual string IntegrationViewId { get; set; }
-    }
-
-    [NorbixRoute("/{version}/notifications/sms/enable", "GET")]
-    public partial class EnableSms
-        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
-    {
-    }
-
-    [NorbixRoute("/{version}/notifications/sms/integrations/{Id}/enable", "PUT")]
-    public partial class EnableSmsIntegrationRequest
-        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
-    {
-        public virtual string Id { get; set; }
-    }
-
-    public partial class FlexTierDto
-    {
-        [DataMember]
-        public virtual string Code { get; set; }
-        [DataMember]
-        public virtual int Step { get; set; }
-        [DataMember]
-        public virtual string DisplayName { get; set; }
-    }
-
-    [NorbixRoute("/{version}/notifications/contacts", "GET")]
-    public partial class GetAllContacts
-        : CodeMashRequestBase, INorbixRequest<GetAllContactsResponse>
-    {
-        public virtual string? StartingAfter { get; set; }
-        public virtual int? PageSize { get; set; }
-    }
-
-    public partial class GetAllContactsResponse
-        : ResponseBase
-    {
-        public virtual IReadOnlyList<ContactDto>? Items { get; set; }
-        public virtual string? NextCursor { get; set; }
-    }
-
-    [NorbixRoute("/{version}/database/integrations/flex-tiers", "GET")]
-    public partial class GetAllowedFlexTiers
-        : CodeMashRequestBase, INorbixRequest<GetAllowedFlexTiersResponse>
-    {
-    }
-
-    public partial class GetAllowedFlexTiersResponse
-        : ResponseBase
-    {
-        public virtual List<FlexTierDto>? Tiers { get; set; }
-    }
-
-    [NorbixRoute("/{version}/code/integrations/{id}", "GET")]
-    public partial class GetCodeIntegration
-        : CodeMashRequestBase, INorbixRequest<GetCodeIntegrationResponse>
-    {
-        public virtual string Id { get; set; }
-    }
-
-    public partial class GetCodeIntegrationResponse
-        : ResponseBase
-    {
-        public virtual CodeIntegrationDto? Item { get; set; }
-    }
-
-    [NorbixRoute("/{version}/code/integrations", "GET")]
-    public partial class GetCodeIntegrations
-        : CodeMashListPaginationRequestBase, INorbixRequest<GetCodeIntegrationsResponse>
-    {
-    }
-
-    public partial class GetCodeIntegrationsResponse
-        : ResponseBase
-    {
-        public virtual PaginatedResponse<CodeIntegrationListProjection>? List { get; set; }
-    }
-
-    [NorbixRoute("/{version}/notifications/contacts/{contactId}", "GET")]
-    public partial class GetContact
-        : CodeMashRequestBase, INorbixRequest<GetContactResponse>
-    {
-        public virtual string ContactId { get; set; }
-    }
-
-    public partial class GetContactResponse
-        : ResponseBase
-    {
-        public virtual ContactDto? Item { get; set; }
-    }
-
-    [NorbixRoute("/{version}/files/item", "GET")]
-    public partial class GetFile
-        : CodeMashRequestBase, INorbixRequest<GetFileResponse>
-    {
-        public virtual string FilesIntegrationId { get; set; }
-        public virtual string Path { get; set; }
-    }
-
-    public partial class GetFileResponse
-        : ResponseBase
-    {
-        public virtual FileResourceRefDto? File { get; set; }
-        public virtual bool? IsPublic { get; set; }
-        public virtual string? PublicUrl { get; set; }
-    }
-
-    [NorbixRoute("/{version}/files/folder", "GET")]
-    public partial class GetFolderFiles
-        : CodeMashListPaginationRequestBase, INorbixRequest<GetFolderFilesResponse>
-    {
-        public virtual string FilesIntegrationId { get; set; }
-        public virtual string? Path { get; set; }
-    }
-
-    public partial class GetFolderFilesResponse
-        : ResponseBase
-    {
-        public virtual PaginatedResponse<FileResourceRefDto>? List { get; set; }
-        public virtual IList<string>? Folders { get; set; }
-    }
-
-    [NorbixRoute("/{version}/logs/audit", "GET")]
-    public partial class GetLogsByCorrelationId
-        : CodeMashRequestBase, INorbixRequest<GetLogsByCorrelationIdResponse>
-    {
-        public virtual string TargetCorrelationId { get; set; }
-        public virtual int? Offset { get; set; }
-        public virtual int? Limit { get; set; }
-    }
-
-    public partial class GetLogsByCorrelationIdResponse
-        : ResponseBase
-    {
-        public virtual IReadOnlyList<TenantLogEntryDto>? Items { get; set; }
-        public virtual long TotalCount { get; set; }
-        public virtual int Offset { get; set; }
-        public virtual int Limit { get; set; }
-    }
-
-    [NorbixRoute("/{version}/code/marketplace/integrations/{IntegrationViewId}/bindings/{BindingViewId}", "GET")]
-    public partial class GetMarketplaceBinding
-        : CodeMashRequestBase, INorbixRequest<GetMarketplaceBindingResponse>
-    {
-        public virtual string IntegrationViewId { get; set; }
-        public virtual string BindingViewId { get; set; }
-    }
-
-    public partial class GetMarketplaceBindingResponse
-        : ResponseBase
-    {
-        public virtual MarketplaceFunctionBindingDto? Binding { get; set; }
-    }
-
-    [NorbixRoute("/{version}/code/marketplace/integrations/{IntegrationViewId}/bindings/{BindingViewId}/tokens", "GET")]
-    public partial class GetMarketplaceBindingTokens
-        : CodeMashRequestBase, INorbixRequest<GetMarketplaceTokensResponse>
-    {
-        public virtual string IntegrationViewId { get; set; }
-        public virtual string BindingViewId { get; set; }
-    }
-
-    [NorbixRoute("/{version}/code/marketplace/integrations/{IntegrationViewId}/bindings", "GET")]
-    public partial class GetMarketplaceBindings
-        : CodeMashListPaginationRequestBase, INorbixRequest<GetMarketplaceBindingsResponse>
-    {
-        public virtual string IntegrationViewId { get; set; }
-    }
-
-    public partial class GetMarketplaceBindingsResponse
-        : ResponseBase
-    {
-        public virtual PaginatedResponse<MarketplaceFunctionBindingProjection>? List { get; set; }
-    }
-
-    [NorbixRoute("/{version}/code/marketplace/integrations/{IntegrationViewId}/functions", "GET")]
-    public partial class GetMarketplaceFunctionCatalog
-        : CodeMashRequestBase, INorbixRequest<GetMarketplaceFunctionCatalogResponse>
-    {
-        public virtual string IntegrationViewId { get; set; }
-    }
-
-    public partial class GetMarketplaceFunctionCatalogResponse
-        : ResponseBase
-    {
-        public virtual IReadOnlyList<MarketplaceFunctionDefinitionDto> Functions { get; set; }
-    }
-
-    [NorbixRoute("/{version}/code/marketplace/integrations/{IntegrationViewId}", "GET")]
-    public partial class GetMarketplaceIntegration
-        : CodeMashRequestBase, INorbixRequest<GetMarketplaceIntegrationResponse>
-    {
-        public virtual string IntegrationViewId { get; set; }
-    }
-
-    public partial class GetMarketplaceIntegrationResponse
-        : ResponseBase
-    {
-        public virtual MarketplaceIntegrationDto? Integration { get; set; }
-    }
-
-    [NorbixRoute("/{version}/code/marketplace/integrations", "GET")]
-    public partial class GetMarketplaceIntegrations
-        : CodeMashListPaginationRequestBase, INorbixRequest<GetMarketplaceIntegrationsResponse>
-    {
-    }
-
-    public partial class GetMarketplaceIntegrationsResponse
-        : ResponseBase
-    {
-        public virtual PaginatedResponse<MarketplaceIntegrationListProjection>? List { get; set; }
-    }
-
-    [NorbixRoute("/{version}/code/marketplace/listings/{ListingViewId}/functions/{FunctionKey}/tokens", "GET")]
-    public partial class GetMarketplaceListingFunctionTokens
-        : CodeMashRequestBase, INorbixRequest<GetMarketplaceTokensResponse>
-    {
-        public virtual string ListingViewId { get; set; }
-        public virtual string FunctionKey { get; set; }
-    }
-
-    [NorbixRoute("/{version}/code/marketplace/listings", "GET")]
-    public partial class GetMarketplaceListings
-        : CodeMashListPaginationRequestBase, INorbixRequest<GetMarketplaceListingsResponse>
-    {
-        public virtual HashSet<MarketplaceCategory>? Categories { get; set; }
-        public virtual HashSet<MarketplaceTransport>? Transports { get; set; }
-        public virtual string? Search { get; set; }
-        public virtual bool? OfficialOnly { get; set; }
-    }
-
-    public partial class GetMarketplaceListingsResponse
-        : ResponseBase
-    {
-        public virtual PaginatedResponse<MarketplaceListingProjection>? List { get; set; }
-    }
-
-    public partial class GetMarketplaceTokensResponse
-        : ResponseBase
-    {
-        public virtual IReadOnlyList<string>? Tokens { get; set; }
-    }
-
-    [NorbixRoute("/{version}/membership/passkey/settings", "GET")]
-    public partial class GetPasskeySettings
-        : CodeMashRequestBase, INorbixRequest<GetPasskeySettingsResponse>
-    {
-    }
-
-    public partial class GetPasskeySettingsResponse
-        : ResponseBase
-    {
-        public virtual PasskeySettingsDto? Result { get; set; }
-    }
-
-    [NorbixRoute("/{version}/notifications/push/campaigns/{id}", "GET")]
-    public partial class GetPushCampaign
-        : CodeMashRequestBase, INorbixRequest<GetPushCampaignResponse>
-    {
-        public virtual string Id { get; set; }
-        public virtual string DatabaseIntegrationId { get; set; }
-    }
-
-    [NorbixRoute("/{version}/notifications/push/campaigns/{id}/batches/{batchId}/{notificationId}", "GET")]
-    public partial class GetPushCampaignBatchNotification
-        : CodeMashListPaginationRequestBase, INorbixRequest<GetPushCampaignBatchNotificationResponse>
-    {
-        public virtual string Id { get; set; }
-        public virtual string BatchId { get; set; }
-        public virtual string NotificationId { get; set; }
-        public virtual string DatabaseIntegrationId { get; set; }
-    }
-
-    public partial class GetPushCampaignBatchNotificationResponse
-        : ResponseBase
-    {
-        public virtual PushCampaignBatchNotificationDto? CampaignNotification { get; set; }
-    }
-
-    [NorbixRoute("/{version}/notifications/push/campaigns/{id}/batches/{batchId}", "GET")]
-    public partial class GetPushCampaignBatchNotifications
-        : CodeMashListPaginationRequestBase, INorbixRequest<GetPushCampaignBatchNotificationsResponse>
-    {
-        public virtual string Id { get; set; }
-        public virtual string BatchId { get; set; }
-        public virtual string DatabaseIntegrationId { get; set; }
-    }
-
-    public partial class GetPushCampaignBatchNotificationsResponse
-        : ResponseBase
-    {
-        public virtual List<BatchStatusChangeEntryDto>? BatchStatusHistory { get; set; }
-        public virtual PaginatedResponse<PushCampaignBatchNotificationDto>? List { get; set; }
-    }
-
-    [NorbixRoute("/{version}/notifications/push/campaigns/{id}/batches", "GET")]
-    public partial class GetPushCampaignBatches
-        : CodeMashListPaginationRequestBase, INorbixRequest<GetPushCampaignBatchesResponse>
-    {
-        public virtual string Id { get; set; }
-        public virtual string DatabaseIntegrationId { get; set; }
-        public virtual string? BatchId { get; set; }
-    }
-
-    public partial class GetPushCampaignBatchesResponse
-        : ResponseBase
-    {
-        public virtual PaginatedResponse<PushCampaignBatchDto>? List { get; set; }
-    }
-
-    [NorbixRoute("/{version}/notifications/push/campaigns/{campaignId}/messages/{id}", "GET")]
-    public partial class GetPushCampaignMessage
-        : CodeMashRequestBase, INorbixRequest<GetPushCampaignMessageResponse>
-    {
-        public virtual string CampaignId { get; set; }
-        public virtual string CampaignBatchId { get; set; }
-        public virtual string NotificationId { get; set; }
-        public virtual string DatabaseIntegrationId { get; set; }
-    }
-
-    public partial class GetPushCampaignMessageResponse
-        : ResponseBase
-    {
-        public virtual PushCampaignBatchNotificationDto? PushMessageEntity { get; set; }
-    }
-
-    [NorbixRoute("/{version}/notifications/push/campaigns/{campaignId}/messages", "GET")]
-    public partial class GetPushCampaignMessagesRequest
-        : CodeMashListPaginationRequestBase, INorbixRequest<GetPushCampaignMessagesResponse>
-    {
-        public virtual string CampaignId { get; set; }
-        public virtual string CampaignBatchId { get; set; }
-        public virtual string DatabaseIntegrationId { get; set; }
-    }
-
-    public partial class GetPushCampaignMessagesResponse
-        : ResponseBase
-    {
-        public virtual PaginatedResponse<PushCampaignBatchNotificationDto>? List { get; set; }
-    }
-
-    public partial class GetPushCampaignResponse
-        : ResponseBase
-    {
-        public virtual PushCampaignDto? Item { get; set; }
-    }
-
-    [NorbixRoute("/{version}/notifications/push/campaigns/{id}/stats", "GET")]
-    public partial class GetPushCampaignStatistics
-        : CodeMashRequestBase, INorbixRequest<GetPushCampaignStatisticsResponse>
-    {
-        public virtual string Id { get; set; }
-        public virtual string DatabaseIntegrationId { get; set; }
-    }
-
-    public partial class GetPushCampaignStatisticsResponse
-        : ResponseBase
-    {
-        public virtual CampaignStatsDto? Stats { get; set; }
-    }
-
-    [NorbixRoute("/{version}/notifications/push/campaigns", "GET")]
-    public partial class GetPushCampaigns
-        : CodeMashListPaginationRequestBase, INorbixRequest<GetPushCampaignsResponse>
-    {
-        public virtual string DatabaseIntegrationId { get; set; }
-        public virtual string? TemplateId { get; set; }
-        public virtual long? From { get; set; }
-        public virtual long? To { get; set; }
-    }
-
-    public partial class GetPushCampaignsResponse
-        : ResponseBase
-    {
-        public virtual PaginatedResponse<PushCampaignDto>? List { get; set; }
-    }
-
-    [NorbixRoute("/{version}/notifications/push/settings", "GET")]
-    public partial class GetPushSettings
-        : CodeMashRequestBase, INorbixRequest<GetPushSettingsResponse>
-    {
-        public virtual string Id { get; set; }
-    }
-
-    public partial class GetPushSettingsResponse
-        : ResponseBase
-    {
-        public virtual PushSettings? Settings { get; set; }
-    }
-
-    [NorbixRoute("/{version}/notifications/sms/campaigns/{id}", "GET")]
-    public partial class GetSmsCampaign
-        : CodeMashRequestBase, INorbixRequest<GetSmsCampaignResponse>
-    {
-        public virtual string Id { get; set; }
-        public virtual string DatabaseIntegrationId { get; set; }
-    }
-
-    [NorbixRoute("/{version}/notifications/sms/campaigns/{id}/batches/{batchId}/{notificationId}", "GET")]
-    public partial class GetSmsCampaignBatchNotification
-        : CodeMashListPaginationRequestBase, INorbixRequest<GetSmsCampaignBatchNotificationResponse>
-    {
-        public virtual string Id { get; set; }
-        public virtual string BatchId { get; set; }
-        public virtual string NotificationId { get; set; }
-        public virtual string DatabaseIntegrationId { get; set; }
-    }
-
-    public partial class GetSmsCampaignBatchNotificationResponse
-        : ResponseBase
-    {
-        public virtual SmsCampaignBatchNotificationDto? CampaignNotification { get; set; }
-    }
-
-    [NorbixRoute("/{version}/notifications/sms/campaigns/{id}/batches/{batchId}", "GET")]
-    public partial class GetSmsCampaignBatchNotifications
-        : CodeMashListPaginationRequestBase, INorbixRequest<GetSmsCampaignBatchNotificationsResponse>
-    {
-        public virtual string Id { get; set; }
-        public virtual string BatchId { get; set; }
-        public virtual string DatabaseIntegrationId { get; set; }
-    }
-
-    public partial class GetSmsCampaignBatchNotificationsResponse
-        : ResponseBase
-    {
-        public virtual List<BatchStatusChangeEntryDto>? BatchStatusHistory { get; set; }
-        public virtual PaginatedResponse<SmsCampaignBatchNotificationDto>? List { get; set; }
-    }
-
-    [NorbixRoute("/{version}/notifications/sms/campaigns/{id}/batches", "GET")]
-    public partial class GetSmsCampaignBatches
-        : CodeMashListPaginationRequestBase, INorbixRequest<GetSmsCampaignBatchesResponse>
-    {
-        public virtual string? Id { get; set; }
-        public virtual string DatabaseIntegrationId { get; set; }
-    }
-
-    public partial class GetSmsCampaignBatchesResponse
-        : ResponseBase
-    {
-        public virtual PaginatedResponse<SmsCampaignBatchDto>? List { get; set; }
-    }
-
-    [NorbixRoute("/{version}/notifications/sms/campaigns/{campaignId}/messages/{id}", "GET")]
-    public partial class GetSmsCampaignMessage
-        : CodeMashRequestBase, INorbixRequest<GetSmsCampaignMessageResponse>
-    {
-        public virtual string CampaignId { get; set; }
-        public virtual string CampaignBatchId { get; set; }
-        public virtual string NotificationId { get; set; }
-        public virtual string DatabaseIntegrationId { get; set; }
-    }
-
-    public partial class GetSmsCampaignMessageResponse
-        : ResponseBase
-    {
-        public virtual SmsCampaignBatchNotificationDto? SmsMessageEntity { get; set; }
-    }
-
-    [NorbixRoute("/{version}/notifications/sms/campaigns/{campaignId}/messages", "GET")]
-    public partial class GetSmsCampaignMessagesRequest
-        : CodeMashListPaginationRequestBase, INorbixRequest<GetSmsCampaignMessagesResponse>
-    {
-        public virtual string CampaignId { get; set; }
-        public virtual string CampaignBatchId { get; set; }
-        public virtual string DatabaseIntegrationId { get; set; }
-    }
-
-    public partial class GetSmsCampaignMessagesResponse
-        : ResponseBase
-    {
-        public virtual PaginatedResponse<SmsCampaignBatchNotificationDto>? List { get; set; }
-    }
-
-    public partial class GetSmsCampaignResponse
-        : ResponseBase
-    {
-        public virtual SmsCampaignDto? SmsCampaign { get; set; }
-    }
-
-    [NorbixRoute("/{version}/notifications/sms/campaigns/{id}/stats", "GET")]
-    public partial class GetSmsCampaignStatistics
-        : CodeMashRequestBase, INorbixRequest<GetSmsCampaignStatisticsResponse>
-    {
-        public virtual string Id { get; set; }
-        public virtual string DatabaseIntegrationId { get; set; }
-    }
-
-    public partial class GetSmsCampaignStatisticsResponse
-        : ResponseBase
-    {
-        public virtual CampaignStatsDto? Stats { get; set; }
-    }
-
-    [NorbixRoute("/{version}/notifications/sms/campaigns", "GET")]
-    public partial class GetSmsCampaigns
-        : CodeMashListPaginationRequestBase, INorbixRequest<GetSmsCampaignsResponse>
-    {
-        public virtual string DatabaseIntegrationId { get; set; }
-        public virtual string? TemplateId { get; set; }
-        public virtual long? From { get; set; }
-        public virtual long? To { get; set; }
-    }
-
-    public partial class GetSmsCampaignsResponse
-        : ResponseBase
-    {
-        public virtual PaginatedResponse<SmsCampaignDto>? List { get; set; }
-    }
-
-    [NorbixRoute("/{version}/notifications/sms/integrations/{id}", "GET")]
-    public partial class GetSmsIntegration
-        : CodeMashRequestBase, INorbixRequest<GetSmsIntegrationResponse>
-    {
-        public virtual string Id { get; set; }
-    }
-
-    public partial class GetSmsIntegrationResponse
-        : ResponseBase
-    {
-        public virtual SmsIntegrationDto? Item { get; set; }
-    }
-
-    [NorbixRoute("/{version}/notifications/sms/integrations", "GET")]
-    public partial class GetSmsIntegrations
-        : CodeMashListPaginationRequestBase, INorbixRequest<GetSmsIntegrationsResponse>
-    {
-    }
-
-    public partial class GetSmsIntegrationsResponse
-        : ResponseBase
-    {
-        public virtual string? DefaultIntegrationId { get; set; }
-        public virtual PaginatedResponse<SmsIntegrationListProjection>? List { get; set; }
-    }
-
-    [NorbixRoute("/{version}/notifications/sms/templates/{id}/tokens", "GET")]
-    public partial class GetSmsMessageContentTokens
-        : CodeMashRequestBase, INorbixRequest<GetSmsMessageContentTokensResponse>
-    {
-        public virtual string Id { get; set; }
-    }
-
-    public partial class GetSmsMessageContentTokensResponse
-        : ResponseBase
-    {
-        public virtual Dictionary<string, string[]>? Tokens { get; set; }
-    }
-
-    [NorbixRoute("/{version}/notifications/sms/settings", "GET")]
-    public partial class GetSmsSettings
-        : CodeMashRequestBase, INorbixRequest<GetSmsSettingsResponse>
-    {
-        public virtual string Id { get; set; }
-    }
-
-    public partial class GetSmsSettingsResponse
-        : ResponseBase
-    {
-        public virtual SmsSettings? Settings { get; set; }
-    }
-
-    [NorbixRoute("/{version}/notifications/sms/templates/{id}", "GET")]
-    public partial class GetSmsTemplate
-        : CodeMashRequestBase, INorbixRequest<GetSmsTemplateResponse>
-    {
-        public virtual string Id { get; set; }
-    }
-
-    public partial class GetSmsTemplateResponse
-        : ResponseBase
-    {
-        public virtual SmsTemplateDto? Item { get; set; }
-    }
-
-    [NorbixRoute("/{version}/notifications/sms/templates", "GET")]
-    public partial class GetSmsTemplates
-        : CodeMashListPaginationRequestBase, INorbixRequest<GetSmsTemplatesResponse>
-    {
-        public virtual bool? ShowArchived { get; set; }
-        public virtual string? TemplateId { get; set; }
-    }
-
-    public partial class GetSmsTemplatesResponse
-        : ResponseBase
-    {
-        public virtual PaginatedResponse<SmsTemplateListProjection>? List { get; set; }
-    }
-
-    [NorbixRoute("/{version}/notifications/contacts/{contactId}/marketing-state/{channel}/consent", "POST")]
-    public partial class GrantContactConsentRequest
-        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
-    {
-        public virtual string ContactId { get; set; }
-        public virtual string Channel { get; set; }
-        public virtual string LawfulBasis { get; set; }
-        public virtual string Source { get; set; }
-        public virtual string? EvidenceRef { get; set; }
-    }
-
-    [NorbixRoute("/up", "ANY")]
-    public partial class Health
-        : INorbixRequest
-    {
-    }
-
-    [NorbixRoute("/{version}/code/marketplace/integrations/{IntegrationViewId}/bindings/{BindingViewId}/invoke", "POST")]
-    public partial class InvokeMarketplaceFunctionBinding
-        : CodeMashRequestBase, INorbixRequest<InvokeMarketplaceFunctionBindingResponse>
-    {
-        [DataMember]
-        public virtual string IntegrationViewId { get; set; }
-        [DataMember]
-        public virtual string BindingViewId { get; set; }
-        [DataMember]
-        public virtual Dictionary<string, object?> Payload { get; set; }
-    }
-
-    public partial class InvokeMarketplaceFunctionBindingResponse
-        : ResponseBase
-    {
-        public virtual bool IsSuccess { get; set; }
-        public virtual object? Output { get; set; }
-        public virtual string? VendorRequestId { get; set; }
-    }
-
-    [NorbixRoute("/{version}/email/webhooks/mailgun/{projectId}/{integrationId}", "POST")]
-    public partial class MailgunWebhookRequest
-        : RequestBase, INorbixRequest<EmptyResponse>
-    {
-        public virtual string ProjectId { get; set; }
-        public virtual string IntegrationId { get; set; }
-        public virtual Stream RequestStream { get; set; }
-    }
-
-    public partial class MarketplaceFunctionBindingProjection
-    {
-        [DataMember]
-        public virtual string ViewId { get; set; }
-        [DataMember]
-        public virtual string IntegrationViewId { get; set; }
-        [DataMember]
-        public virtual string FunctionKey { get; set; }
-        [DataMember]
-        public virtual string DisplayName { get; set; }
-        [DataMember]
-        public virtual bool IsEnabled { get; set; }
-        [DataMember]
-        public virtual int MappingCount { get; set; }
-    }
-
-    public partial class MarketplaceIntegrationListProjection
-    {
-        [DataMember]
-        public virtual string ViewId { get; set; }
-        [DataMember]
-        public virtual string IntegrationName { get; set; }
-        [DataMember]
-        public virtual bool IsEnabled { get; set; }
-        [DataMember]
-        public virtual string ListingViewId { get; set; }
-        [DataMember]
-        public virtual string Vendor { get; set; }
-        [DataMember]
-        public virtual MarketplaceCategory Category { get; set; }
-        [DataMember]
-        public virtual MarketplaceTransport Transport { get; set; }
-        [DataMember]
-        public virtual DateTime? LastIntegrationTestAtUtc { get; set; }
-        [DataMember]
-        public virtual bool? LastIntegrationTestSucceeded { get; set; }
-        [DataMember]
-        public virtual IReadOnlyList<string> LastIntegrationTestErrors { get; set; }
-        [DataMember]
-        public virtual DateTime? HumanDeliveryConfirmedAtUtc { get; set; }
-        [DataMember]
-        public virtual bool RequiresHumanDeliveryConfirmation { get; set; }
-    }
-
-    public partial class MarketplaceListingProjection
-    {
-        [DataMember]
-        public virtual string ViewId { get; set; }
-        [DataMember]
-        public virtual string Slug { get; set; }
-        [DataMember]
-        public virtual string DisplayName { get; set; }
-        [DataMember]
-        public virtual string Vendor { get; set; }
-        [DataMember]
-        public virtual MarketplaceCategory Category { get; set; }
-        [DataMember]
-        public virtual MarketplaceTransport Transport { get; set; }
-        [DataMember]
-        public virtual string? IconUrl { get; set; }
-        [DataMember]
-        public virtual bool IsOfficial { get; set; }
-        [DataMember]
-        public virtual int FunctionCount { get; set; }
-    }
-
-    [NorbixRoute("/{version}/notifications/contacts/merge", "POST")]
-    public partial class MergeContactsRequest
-        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
-    {
-        public virtual string SurvivorId { get; set; }
-        public virtual string[] MergedIds { get; set; }
-    }
-
-    public partial class PasskeySettingsDto
-    {
-        public virtual bool Enabled { get; set; }
-        public virtual int CodeTtlMinutes { get; set; }
-        public virtual int MaxCredentialsPerUser { get; set; }
-        public virtual int RecoveryCodeCount { get; set; }
-        public virtual bool GenerateRecoveryCodesAtSignup { get; set; }
-        public virtual string AuthenticatorAttachment { get; set; }
-        public virtual bool AllowMagicLinkRecovery { get; set; }
-        public virtual int RefreshTokenTtlDays { get; set; }
-    }
-
-    [NorbixRoute("/{version}/notifications/sms/preview", "GET")]
-    public partial class PreviewSmsNotification
-        : RequestBase, INorbixRequest<PreviewSmsNotificationResponse>
-    {
-        public virtual string Hash { get; set; }
-    }
-
-    public partial class PreviewSmsNotificationResponse
-        : ResponseBase
-    {
-        public virtual string? Body { get; set; }
-    }
-
-    [NorbixRoute("/{version}/notifications/contacts/{contactId}/identities/{identityId}/promote", "POST")]
-    public partial class PromoteContactIdentityRequest
-        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
-    {
-        public virtual string ContactId { get; set; }
-        public virtual string IdentityId { get; set; }
-    }
-
-    public partial class PushCampaignBatchDto
-        : CampaignBatchDto
-    {
-        [DataMember]
-        public virtual PushRecipientsDto Recipients { get; set; }
-    }
-
-    public partial class PushCampaignBatchNotificationDto
-        : CampaignBatchNotificationDto
-    {
-        [DataMember]
-        public virtual PushRecipientsDto Recipients { get; set; }
-        [DataMember]
-        public virtual PushMessageContentDto? Content { get; set; }
-    }
-
-    public partial class PushCampaignDto
-        : CampaignDto
-    {
-        [DataMember]
-        public virtual PushCampaignDeliverySettingsDto Recipients { get; set; }
-        [DataMember]
-        public virtual PushTemplateDto Template { get; set; }
-    }
-
-    public partial class PushCampaignRequest
-    {
-        public virtual PushCampaignRecipientsSourceTypes Source { get; set; }
-        public virtual string TemplateId { get; set; }
-        public virtual string? IntegrationId { get; set; }
-        public virtual string? Language { get; set; }
-        public virtual string? InitiatorId { get; set; }
-        public virtual string? Notes { get; set; }
-        [DataMember]
-        public virtual HashSet<TokenMappingDto>? MappedTokens { get; set; }
-        [DataMember]
-        public virtual long? CampaignTime { get; set; }
-    }
-
-    public partial class PushRecipientDto
-    {
-        [DataMember]
-        public virtual HashSet<PushDeviceDeliveryTokenDto> DeviceTokens { get; set; }
-        [DataMember]
-        public virtual string UserId { get; set; }
-        [DataMember]
-        public virtual string? Language { get; set; }
-        [DataMember]
-        public virtual HashSet<TokenMappingDto>? UserTokenMappings { get; set; }
-        [DataMember]
-        public virtual string? TimeZoneId { get; set; }
-        [DataMember]
-        public virtual string? Record { get; set; }
-    }
-
-    public partial class PushRecipientsDto
-    {
-        [DataMember]
-        public virtual IReadOnlySet<PushRecipientDto>? To { get; set; }
-        [DataMember]
-        public virtual string? StartingAfter { get; set; }
-        [DataMember]
-        public virtual bool HasMore { get; set; }
-    }
-
-    public partial class PushSettings
-    {
-        public virtual HashSet<TagDefinitionDto>? MarketingTags { get; set; }
-        public virtual HashSet<TagDefinitionDto>? TransactionalTags { get; set; }
-    }
-
-    [NorbixRoute("/{version}/account/payments/stripe/webhook", "POST")]
-    public partial class ReceiveStripeWebHookRequest
-        : RequestBase, INorbixRequest<EmptyResponse>
-    {
-        public virtual Stream RequestStream { get; set; }
-    }
-
-    [NorbixRoute("/{version}/webhooks/{source}/{integrationInstanceId}", "POST")]
-    public partial class ReceiveWebhook
-        : INorbixRequest
-    {
-        public virtual string Source { get; set; }
-        public virtual string IntegrationInstanceId { get; set; }
-        public virtual Stream RequestStream { get; set; }
-    }
-
-    [NorbixRoute("/{version}/notifications/contacts/{contactId}/identities/{identityId}", "DELETE")]
-    public partial class RemoveContactIdentityRequest
-        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
-    {
-        public virtual string ContactId { get; set; }
-        public virtual string IdentityId { get; set; }
-    }
-
-    [NorbixRoute("/{version}/resources/resolve", "POST")]
-    public partial class ResolveResources
-        : CodeMashRequestBase, INorbixRequest<ResolveResourcesResponse>
-    {
-        public virtual IReadOnlyList<ResourceRefDto> Refs { get; set; }
-    }
-
-    public partial class ResolveResourcesResponse
-        : ResponseBase
-    {
-        public virtual IReadOnlyList<ResolvedResourceEntry> Resolved { get; set; }
-    }
-
-    public enum ResolvedRefStatus
-    {
-        [EnumMember(Value = "ok")] Ok,
-        [EnumMember(Value = "notFound")] NotFound,
-        [EnumMember(Value = "unauthorized")] Unauthorized,
-        [EnumMember(Value = "sourceError")] SourceError,
-        [EnumMember(Value = "erased")] Erased,
-    }
-
-    public partial class ResolvedResourceEntry
-    {
-        public virtual ResourceRefDto Ref { get; set; }
-        public virtual ResolvedRefStatus Status { get; set; }
-        public virtual object? Resolved { get; set; }
-        public virtual string? Diagnostic { get; set; }
-    }
-
-    public enum ResourceKindDto
-    {
-        [EnumMember(Value = "contact")] Contact,
-        [EnumMember(Value = "document")] Document,
-        [EnumMember(Value = "file")] File,
-        [EnumMember(Value = "paymentCustomer")] PaymentCustomer,
-        [EnumMember(Value = "order")] Order,
-        [EnumMember(Value = "payment")] Payment,
-        [EnumMember(Value = "product")] Product,
-        [EnumMember(Value = "integration")] Integration,
-    }
-
-    public partial class ResourceRefDto
-    {
-        public virtual string ProjectId { get; set; }
-        public virtual string? IntegrationId { get; set; }
-        public virtual ResourceKindDto Kind { get; set; }
-    }
-
-    [NorbixRoute("/{version}/database/integrations/{Id}/connection-string", "GET")]
-    public partial class RevealManagedFlexConnectionString
-        : CodeMashRequestBase, INorbixRequest<RevealManagedFlexConnectionStringResponse>
-    {
-        public virtual string Id { get; set; }
-    }
-
-    public partial class RevealManagedFlexConnectionStringResponse
-        : ResponseBase
-    {
-        public virtual string? ConnectionString { get; set; }
-    }
-
-    [NorbixRoute("/{version}/code/integrations", "POST")]
-    public partial class SaveCodeIntegration
-        : CodeMashRequestBase, INorbixRequest<IdResponse>
-    {
-        [DataMember(Name = "integration")]
-        public virtual CodeIntegrationRequest Integration { get; set; }
-    }
-
-    [NorbixRoute("/{version}/notifications/email/validation/integrations", "POST")]
-    public partial class SaveEmailValidationIntegration
-        : CodeMashRequestBase, INorbixRequest<IdResponse>
-    {
-        [DataMember(Name = "integration")]
-        public virtual EmailValidationIntegrationRequest Integration { get; set; }
-    }
-
-    [NorbixRoute("/{version}/code/marketplace/integrations/{IntegrationViewId}/bindings", "POST")]
-    public partial class SaveMarketplaceFunctionBinding
-        : CodeMashRequestBase, INorbixRequest<IdResponse>
-    {
-        [DataMember]
-        public virtual string IntegrationViewId { get; set; }
-        [DataMember]
-        public virtual MarketplaceFunctionBindingDto Binding { get; set; }
-    }
-
-    [NorbixRoute("/{version}/code/marketplace/integrations", "POST")]
-    public partial class SaveMarketplaceIntegration
-        : CodeMashRequestBase, INorbixRequest<IdResponse>
-    {
-        [DataMember]
-        public virtual MarketplaceIntegrationDto Integration { get; set; }
-        [DataMember]
-        public virtual Dictionary<string, string> Secrets { get; set; }
-    }
-
-    [NorbixRoute("/{version}/membership/passkey/settings", "POST")]
-    public partial class SavePasskeySettings
-        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
-    {
-        public virtual bool Enabled { get; set; }
-        public virtual int CodeTtlMinutes { get; set; }
-        public virtual int MaxCredentialsPerUser { get; set; }
-        public virtual int RecoveryCodeCount { get; set; }
-        public virtual bool GenerateRecoveryCodesAtSignup { get; set; }
-        public virtual string AuthenticatorAttachment { get; set; }
-        public virtual bool AllowMagicLinkRecovery { get; set; }
-        public virtual int RefreshTokenTtlDays { get; set; }
-    }
-
-    [NorbixRoute("/{version}/notifications/sms/integrations", "POST")]
-    public partial class SaveSmsIntegration
-        : CodeMashRequestBase, INorbixRequest<IdResponse>
-    {
-    }
-
-    public partial class SaveSmsTemplate
-        : CodeMashRequestBase
-    {
-        public virtual string TemplateName { get; set; }
-        public virtual string? Description { get; set; }
-        public virtual CommunicationChannel CommunicationChannel { get; set; }
-        public virtual HashSet<string>? Tags { get; set; }
-        public virtual HashSet<SmsMessageTranslationDto> Translations { get; set; }
-    }
-
-    public partial class SecretPayload
-    {
-        public virtual Dictionary<string, string> Values { get; set; }
-    }
-
-    [NorbixRoute("/{version}/code/integrations/{Id}/default", "PUT")]
-    public partial class SetCodeIntegrationAsDefault
-        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
-    {
-        public virtual string Id { get; set; }
-    }
-
-    [NorbixRoute("/{version}/notifications/sms/integrations/{Id}/default", "PUT")]
-    public partial class SetSmsIntegrationAsDefaultRequest
-        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
-    {
-        public virtual string Id { get; set; }
-    }
-
-    public partial class SmsCampaignBatchDto
-        : CampaignBatchDto
-    {
-        [DataMember]
-        public virtual SmsRecipientsDto Recipients { get; set; }
-    }
-
-    public partial class SmsCampaignBatchNotificationDto
-        : CampaignBatchNotificationDto
-    {
-        [DataMember]
-        public virtual SmsRecipientsDto Recipients { get; set; }
-        [DataMember]
-        public virtual SmsMessageContentDto? Content { get; set; }
-    }
-
-    public partial class SmsCampaignDto
-        : CampaignDto
-    {
-        [DataMember]
-        public virtual SmsCampaignDeliverySettingsDto Recipients { get; set; }
-        [DataMember]
-        public virtual SmsTemplateDto Template { get; set; }
-    }
-
-    public partial class SmsIntegrationListProjection
-        : IntegrationListProjection
-    {
-        [DataMember]
-        public virtual SmsProvider Provider { get; set; }
-    }
-
-    public partial class SmsIntegrationRequest
-    {
-        public virtual string? IntegrationId { get; set; }
-        public virtual SmsProvider Provider { get; set; }
-        public virtual string IntegrationName { get; set; }
-        public virtual bool IsEnabled { get; set; }
-    }
-
-    public partial class SmsRecipientDto
-    {
-        [DataMember]
-        public virtual string PhoneNumber { get; set; }
-        [DataMember]
-        public virtual string UserId { get; set; }
-        [DataMember]
-        public virtual string? Language { get; set; }
-        [DataMember]
-        public virtual HashSet<TokenMappingDto>? UserTokenMappings { get; set; }
-        [DataMember]
-        public virtual string? TimeZoneId { get; set; }
-        [DataMember]
-        public virtual string? Record { get; set; }
-    }
-
-    public partial class SmsRecipientsDto
-    {
-        [DataMember]
-        public virtual IReadOnlySet<SmsRecipientDto>? To { get; set; }
-        [DataMember]
-        public virtual string? StartingAfter { get; set; }
-        [DataMember]
-        public virtual bool HasMore { get; set; }
-    }
-
-    public partial class SmsSettings
-    {
-    }
-
-    public partial class SmsTemplateListProjection
-        : TemplateListProjection
-    {
-        public virtual IReadOnlySet<string> Languages { get; set; }
-    }
-
-    public partial class TenantLogEntryDto
-    {
-    }
-
-    [NorbixRoute("/{version}/code/integrations/test", "POST")]
-    public partial class TestCodeIntegration
-        : CodeMashRequestBase, INorbixRequest<TestCodeIntegrationResponse>
-    {
-        public virtual string IntegrationId { get; set; }
-    }
-
-    public partial class TestCodeIntegrationResponse
-        : ResponseBase
-    {
-        [DataMember]
-        public virtual IReadOnlyList<IntegrationTestResultItemDto>? Items { get; set; }
-    }
-
-    [NorbixRoute("/{version}/database/integrations/test", "POST")]
-    public partial class TestDatabaseIntegration
-        : CodeMashRequestBase, INorbixRequest<TestDatabaseIntegrationResponse>
-    {
-        public virtual string IntegrationId { get; set; }
-    }
-
-    public partial class TestDatabaseIntegrationResponse
-        : ResponseBase
-    {
-        [DataMember]
-        public virtual IReadOnlyList<IntegrationTestResultItemDto>? Items { get; set; }
-    }
-
-    [NorbixRoute("/{version}/notifications/email/validation/integrations/test", "POST")]
-    public partial class TestEmailValidationIntegration
-        : CodeMashRequestBase, INorbixRequest<TestEmailValidationIntegrationResponse>
-    {
-        public virtual string IntegrationId { get; set; }
-    }
-
-    public partial class TestEmailValidationIntegrationResponse
-        : ResponseBase
-    {
-        [DataMember]
-        public virtual List<TestEmailValidationItemDto> Items { get; set; }
-    }
-
-    public partial class TestEmailValidationItemDto
-    {
-    }
-
-    [NorbixRoute("/{version}/notifications/sms/integrations/test", "POST")]
-    public partial class TestSmsIntegration
-        : CodeMashRequestBase, INorbixRequest<TestSmsIntegrationResponse>
-    {
-        public virtual string IntegrationId { get; set; }
-        public virtual string? To { get; set; }
-    }
-
-    public partial class TestSmsIntegrationResponse
-        : ResponseBase
-    {
-        [DataMember]
-        public virtual IReadOnlyList<IntegrationTestResultItemDto>? Items { get; set; }
-    }
-
-    [NorbixRoute("/{version}/notifications/sms/templates/{Id}/unarchive", "PUT")]
-    public partial class UnArchiveSmsTemplateRequest
-        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
-    {
-        public virtual string Id { get; set; }
-    }
-
-    [NorbixRoute("/{version}/notifications/contacts/{contactId}/marketing-state/{channel}/unsubscribe", "POST")]
-    public partial class UnsubscribeContactRequest
-        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
-    {
-        public virtual string ContactId { get; set; }
-        public virtual string Channel { get; set; }
-        public virtual string? Reason { get; set; }
-    }
-
-    [NorbixRoute("/{version}/notifications/sms/templates", "PUT")]
-    public partial class UpdateSmsTemplateRequest
-        : SaveSmsTemplate, INorbixRequest<EmptyResponse>
-    {
-        public virtual string ViewId { get; set; }
-    }
-
-    // ─── Project Environments ────────────────────────────────────────────
-    // Hand-added to mirror the gateway contract in
-    // Gateway.Hub.Account/Project/Environments.cs +
-    // Gateway.Contracts/Account/ProjectEnvironmentsDto.cs. The source generator
-    // wires these onto client.Hub.Account.* from the route group ("account").
-    // Keep in sync when regenerating the DTOs.
-
-    ///<summary>The environments that exist on a project. Always includes "PROD".</summary>
-    [DataContract]
-    public partial class ProjectEnvironmentsDto
-    {
-        ///<summary>Canonical environment names (e.g. "PROD", "TEST"). PROD-first.</summary>
-        [DataMember]
-        public virtual List<string> Environments { get; set; } = [];
-    }
-
-    ///<summary>List a project's environments. Drives the studio environment switcher.</summary>
-    [NorbixRoute("/{version}/account/projects/environments", "GET")]
-    public partial class GetProjectEnvironments
-        : CodeMashRequestBase, INorbixRequest<GetProjectEnvironmentsResponse>
-    {
-    }
-
-    public partial class GetProjectEnvironmentsResponse
-        : ResponseBase
-    {
-        public virtual ProjectEnvironmentsDto? Item { get; set; }
-    }
-
-    ///<summary>
-    ///Create a project environment. Requires a new environment name plus a
-    ///database integration that seeds the env's Database slot (its default).
-    ///</summary>
-    [NorbixRoute("/{version}/account/projects/environments", "POST")]
-    [DataContract]
-    public partial class CreateProjectEnvironmentRequest
-        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
-    {
-        ///<summary>New environment name (e.g. "TEST"). A–Z/0–9/space, 1–15 chars, not "PROD".</summary>
-        [DataMember]
-        public virtual string EnvironmentName { get; set; } = string.Empty;
-
-        [DataMember(Name = "integration")]
-        public virtual DatabaseIntegrationRequest Integration { get; set; } = default!;
-    }
-
-    ///<summary>Delete a non-PROD project environment (cascades its integrations). PROD is rejected.</summary>
-    [NorbixRoute("/{version}/account/projects/environments/{environmentName}", "DELETE")]
-    [DataContract]
-    public partial class DeleteProjectEnvironmentRequest
-        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
-    {
-        [DataMember]
-        public virtual string EnvironmentName { get; set; } = string.Empty;
     }

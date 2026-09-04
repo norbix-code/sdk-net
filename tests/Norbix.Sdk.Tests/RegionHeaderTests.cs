@@ -140,7 +140,7 @@ public sealed class RegionHeaderTests
                 },
             });
         var response = await fixture.Client.Echo.EchoAsync(new Norbix.Sdk.Types.Api.Echo());
-        Assert.That(response!.Regions, Has.Length.EqualTo(1));
+        Assert.That(response!.Regions, Has.Count.EqualTo(1));
         Assert.That(response.Regions![0].Code, Is.EqualTo("nb-eu-germany"));
         Assert.That(response.Regions[0].DisplayName, Is.EqualTo("Germany (EU)"));
         Assert.That(response.Regions[0].ApiUrl, Is.EqualTo("https://nb-eu-germany.api.norbix.ai"));
