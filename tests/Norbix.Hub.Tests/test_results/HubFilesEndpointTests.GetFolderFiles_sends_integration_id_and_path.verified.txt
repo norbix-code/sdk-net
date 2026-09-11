@@ -1,0 +1,14 @@
+﻿{
+  Sent: {
+    Method: GET,
+    Path: /v2/files/folder,
+    Query: ?filesIntegrationId={guid}&path=invoices%2f,
+    Headers: {
+      Authorization: Bearer test-api-key,
+      X-CM-ProjectId: test-project
+    }
+  },
+  Folders: [
+    invoices/
+  ]
+}

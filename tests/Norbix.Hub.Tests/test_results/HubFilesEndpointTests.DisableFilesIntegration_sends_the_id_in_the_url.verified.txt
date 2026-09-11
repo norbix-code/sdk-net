@@ -1,0 +1,8 @@
+﻿{
+  Method: PUT,
+  Path: /v2/files/integrations/{guid}/disable,
+  Headers: {
+    Authorization: Bearer test-api-key,
+    X-CM-ProjectId: test-project
+  }
+}

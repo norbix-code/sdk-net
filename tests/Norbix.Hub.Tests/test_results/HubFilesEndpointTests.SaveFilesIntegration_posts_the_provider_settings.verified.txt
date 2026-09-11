@@ -1,0 +1,19 @@
+﻿{
+  Method: POST,
+  Path: /v2/files/integrations,
+  Headers: {
+    Authorization: Bearer test-api-key,
+    Content-Type: application/json; charset=utf-8,
+    X-CM-ProjectId: test-project
+  },
+  Body: {
+    integration: {
+      provider: 0.0,
+      integrationType: 0.0,
+      bucketName: norbix-invoices,
+      region: eu-central-1,
+      integrationName: Invoices bucket,
+      isEnabled: true
+    }
+  }
+}

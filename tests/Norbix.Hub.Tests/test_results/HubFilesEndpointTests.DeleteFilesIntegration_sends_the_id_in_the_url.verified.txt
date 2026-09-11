@@ -1,0 +1,8 @@
+﻿{
+  Method: DELETE,
+  Path: /v2/files/integrations/{guid},
+  Headers: {
+    Authorization: Bearer test-api-key,
+    X-CM-ProjectId: test-project
+  }
+}

@@ -1,0 +1,40 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
+    <RootNamespace>Norbix.Hub.Tests</RootNamespace>
+    <AssemblyName>Norbix.Hub.Tests</AssemblyName>
+    <NoWarn>$(NoWarn);CA1707</NoWarn>
+  </PropertyGroup>
+
+  <!--
+    Why a second test project.
+
+    Norbix.Api and Norbix.Hub are two packages that share the same runtime
+    sources, so both declare Norbix.Sdk.NorbixClient and NorbixEndpointCatalog.
+    One test project cannot reference both without the names clashing, which is
+    why Norbix.Sdk.Tests references the API package only and every Hub endpoint
+    used to have no test at all. This project is the Hub half.
+  -->
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="NUnit" />
+    <PackageReference Include="NUnit3TestAdapter" />
+    <PackageReference Include="NUnit.Analyzers" />
+    <PackageReference Include="Verify.NUnit" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Norbix.Hub\Norbix.Hub.csproj" />
+    <ProjectReference Include="..\..\src\Norbix.Hub.Types\Norbix.Hub.Types.csproj" />
+    <ProjectReference Include="..\..\src\Norbix.Contracts\Norbix.Contracts.csproj" />
+  </ItemGroup>
+
+  <!-- The fake HTTP handler and the Verify setup are identical for both
+       packages, so they are shared as source instead of copied. -->
+  <ItemGroup>
+    <Compile Include="..\Norbix.Sdk.Tests\Helpers\*.cs" LinkBase="Helpers" />
+  </ItemGroup>
+
+</Project>
