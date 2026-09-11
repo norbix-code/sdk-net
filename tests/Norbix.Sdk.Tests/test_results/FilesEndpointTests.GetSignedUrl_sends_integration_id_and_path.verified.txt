@@ -1,0 +1,12 @@
+﻿{
+  Sent: {
+    Method: GET,
+    Path: /v2/files/{guid}/sign,
+    Query: ?path=invoices%2finvoice.pdf,
+    Headers: {
+      Authorization: Bearer test-api-key,
+      X-CM-ProjectId: test-project
+    }
+  },
+  Url: https://storage.example/signed
+}

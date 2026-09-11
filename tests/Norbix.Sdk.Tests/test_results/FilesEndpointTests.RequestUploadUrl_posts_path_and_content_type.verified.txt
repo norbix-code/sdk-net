@@ -1,0 +1,16 @@
+﻿{
+  Sent: {
+    Method: POST,
+    Path: /v2/files/{guid}/upload-url,
+    Headers: {
+      Authorization: Bearer test-api-key,
+      Content-Type: application/json; charset=utf-8,
+      X-CM-ProjectId: test-project
+    },
+    Body: {
+      path: invoices/invoice.pdf,
+      contentType: application/pdf
+    }
+  },
+  Url: https://storage.example/put
+}

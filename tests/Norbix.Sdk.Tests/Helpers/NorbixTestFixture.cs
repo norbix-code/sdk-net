@@ -76,6 +76,20 @@ internal sealed class NorbixTestFixture : IDisposable
         return this;
     }
 
+    /// <summary>
+    /// Register a raw-bytes response for a route. File download streams the
+    /// file itself, so it needs bytes and not a JSON envelope.
+    /// </summary>
+    public NorbixTestFixture RespondBytes(
+        string pathSuffix,
+        byte[] payload,
+        string contentType = "application/octet-stream"
+    )
+    {
+        _handler.RespondBytes(pathSuffix, payload, contentType);
+        return this;
+    }
+
     /// <summary>All requests captured during the test, in the order they fired.</summary>
     public IReadOnlyList<RecordedRequest> RecordedRequests => _handler.Requests;
 
