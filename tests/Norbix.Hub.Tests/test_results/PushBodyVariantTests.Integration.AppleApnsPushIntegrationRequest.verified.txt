@@ -1,0 +1,22 @@
+﻿{
+  Method: POST,
+  Path: /v2/notifications/push/integrations,
+  Headers: {
+    Authorization: Bearer test-bearer,
+    Content-Type: application/json; charset=utf-8,
+    X-CM-AccountId: test-account,
+    X-CM-ProjectId: test-project
+  },
+  Body: {
+    integration: {
+      provider: 0.0,
+      teamId: team-1,
+      appBundleId: test.bundle,
+      keyId: key-1,
+      privateKey: private-key,
+      isProduction: false,
+      integrationName: apns,
+      isEnabled: false
+    }
+  }
+}

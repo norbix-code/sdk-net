@@ -1,0 +1,43 @@
+﻿{
+  Target: Hub,
+  Group: notifications,
+  MethodName: RegisterDeviceAsync,
+  RequestType: RegisterDevice,
+  HttpMethod: POST,
+  Path: /{version}/notifications/push/devices,
+  IsAccountScoped: true,
+  IsUnauthenticated: false,
+  Sent: {
+    Method: POST,
+    Path: /v2/notifications/push/devices,
+    Headers: {
+      Authorization: Bearer test-bearer,
+      Content-Type: application/json; charset=utf-8,
+      X-CM-AccountId: test-account,
+      X-CM-ProjectId: test-project
+    },
+    Body: {
+      pushDeviceDto: {
+        deviceId: Guid_1,
+        deviceOs: test-deviceOs,
+        token: test-token,
+        brand: test-brand,
+        manufacturer: test-manufacturer,
+        modelName: test-modelName,
+        deviceName: test-deviceName,
+        deviceType: 0.0
+      },
+      userId: Guid_1,
+      accountId: Guid_1,
+      databaseIntegrationId: Guid_1
+    }
+  },
+  ResponseType: IdResponse,
+  Response: {
+    Id: Guid_1,
+    Status: test-status,
+    ResponseStatus: {
+      IsSuccess: true
+    }
+  }
+}

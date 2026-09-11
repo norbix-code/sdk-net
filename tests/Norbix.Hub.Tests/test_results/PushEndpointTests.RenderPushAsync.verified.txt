@@ -1,0 +1,34 @@
+﻿{
+  Target: Hub,
+  Group: notifications,
+  MethodName: RenderPushAsync,
+  RequestType: RenderPush,
+  HttpMethod: POST,
+  Path: /{version}/notifications/push/templates/render,
+  IsAccountScoped: false,
+  IsUnauthenticated: false,
+  Sent: {
+    Method: POST,
+    Path: /v2/notifications/push/templates/render,
+    Headers: {
+      Authorization: Bearer test-bearer,
+      Content-Type: application/json; charset=utf-8,
+      X-CM-AccountId: test-account,
+      X-CM-ProjectId: test-project
+    },
+    Body: {
+      code: test-code,
+      isForPreview: true,
+      env: test-env
+    }
+  },
+  ResponseType: RenderPushResponse,
+  Response: {
+    Title: test-title,
+    Body: test-body,
+    Subtitle: test-subtitle,
+    ResponseStatus: {
+      IsSuccess: true
+    }
+  }
+}

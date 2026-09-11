@@ -1,0 +1,17 @@
+﻿{
+  Method: POST,
+  Path: /v2/notifications/push/integrations,
+  Headers: {
+    Authorization: Bearer test-bearer,
+    Content-Type: application/json; charset=utf-8,
+    X-CM-AccountId: test-account,
+    X-CM-ProjectId: test-project
+  },
+  Body: {
+    integration: {
+      provider: 15.0,
+      integrationName: fake,
+      isEnabled: true
+    }
+  }
+}

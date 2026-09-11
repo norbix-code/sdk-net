@@ -31,6 +31,56 @@ internal static class EndpointCoverageDriver
             );
     }
 
+    /// <summary>
+    /// One test case per endpoint matching <paramref name="predicate"/>, named
+    /// by its generated method. Used by suites that assert a single module's
+    /// routes one at a time instead of one snapshot per group.
+    /// </summary>
+    public static IEnumerable<TestCaseData> GetEndpointCases(
+        Func<NorbixEndpointInfo, bool> predicate
+    )
+    {
+        return Endpoints(predicate)
+            .Select(e => new TestCaseData(e.MethodName).SetName(e.MethodName));
+    }
+
+    /// <summary>Endpoints matching <paramref name="predicate"/>, in a stable order.</summary>
+    public static IEnumerable<NorbixEndpointInfo> Endpoints(
+        Func<NorbixEndpointInfo, bool> predicate
+    )
+    {
+        return NorbixEndpointCatalog
+            .All.Where(predicate)
+            .OrderBy(e => e.Path, StringComparer.Ordinal)
+            .ThenBy(e => e.HttpMethod, StringComparer.Ordinal);
+    }
+
+    /// <summary>
+    /// Call the single endpoint matching <paramref name="predicate"/> and
+    /// return the snapshot of what it sent.
+    /// </summary>
+    public static async Task<object> CoverEndpointAsync(Func<NorbixEndpointInfo, bool> predicate)
+    {
+        var endpoint =
+            Endpoints(predicate).SingleOrDefault()
+            ?? throw new InvalidOperationException("No single endpoint matched the predicate.");
+
+        var missingPathParameters = FindMissingPathParameters(new[] { endpoint });
+        if (missingPathParameters.Count > 0)
+        {
+            return new { MissingPathParameters = missingPathParameters };
+        }
+
+        using var fixture = NorbixTestFixture.Create(o =>
+        {
+            o.AccountId = "test-account";
+            o.BearerToken = "test-bearer";
+        });
+        fixture.RespondNoContentDefault();
+
+        return await InvokeEndpointAsync(fixture, endpoint);
+    }
+
     public static async Task<EndpointCoverageResult> CoverModuleAsync(string target, string group)
     {
         using var fixture = NorbixTestFixture.Create(o =>
@@ -174,13 +224,9 @@ internal static class EndpointCoverageDriver
 
     private static object ResolveModule(NorbixClient client, NorbixEndpointInfo endpoint)
     {
-        // This test suite targets the Norbix.Api package only.
-        if (endpoint.Target != "Api")
-        {
-            throw new InvalidOperationException(
-                $"Hub endpoint encountered in API-only coverage run: {endpoint.Group}.{endpoint.MethodName}"
-            );
-        }
+        // Shared by the Api suite (Norbix.Sdk.Tests) and the Hub suite
+        // (Norbix.Hub.Tests). Each assembly only ever sees its own catalog,
+        // so the module lookup below works for either target.
         var prop =
             client.GetType().GetProperty(endpoint.ModuleProperty) ?? throw new MissingMemberException(
                 client.GetType().FullName,

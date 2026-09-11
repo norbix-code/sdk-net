@@ -1,0 +1,40 @@
+﻿{
+  Target: Hub,
+  Group: notifications,
+  MethodName: GetPushDisableDependenciesAsync,
+  RequestType: GetPushDisableDependencies,
+  HttpMethod: GET,
+  Path: /{version}/notifications/push/disable-dependencies,
+  IsAccountScoped: false,
+  IsUnauthenticated: false,
+  Sent: {
+    Method: GET,
+    Path: /v2/notifications/push/disable-dependencies,
+    Query: ?env=test-env,
+    Headers: {
+      Authorization: Bearer test-bearer,
+      X-CM-AccountId: test-account,
+      X-CM-ProjectId: test-project
+    }
+  },
+  ResponseType: GetNotificationModuleDisableDependenciesResponse,
+  Response: {
+    Dependencies: {
+      Triggers: [
+        {}
+      ],
+      SchedulerTasks: [
+        {}
+      ],
+      InFlightCampaigns: [
+        {}
+      ],
+      MembershipSettings: [
+        {}
+      ]
+    },
+    ResponseStatus: {
+      IsSuccess: true
+    }
+  }
+}

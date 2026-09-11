@@ -1,0 +1,35 @@
+﻿{
+  Target: Hub,
+  Group: notifications,
+  MethodName: TestPushIntegrationAsync,
+  RequestType: TestPushIntegration,
+  HttpMethod: POST,
+  Path: /{version}/notifications/push/integrations/test,
+  IsAccountScoped: false,
+  IsUnauthenticated: false,
+  Sent: {
+    Method: POST,
+    Path: /v2/notifications/push/integrations/test,
+    Headers: {
+      Authorization: Bearer test-bearer,
+      Content-Type: application/json; charset=utf-8,
+      X-CM-AccountId: test-account,
+      X-CM-ProjectId: test-project
+    },
+    Body: {
+      integrationId: Guid_1,
+      testToken: test-testToken,
+      deliveryFamily: test-deliveryFamily,
+      env: test-env
+    }
+  },
+  ResponseType: TestEmailIntegrationResponse,
+  Response: {
+    Items: [
+      {}
+    ],
+    ResponseStatus: {
+      IsSuccess: true
+    }
+  }
+}

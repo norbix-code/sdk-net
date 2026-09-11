@@ -1,0 +1,35 @@
+﻿{
+  Target: Hub,
+  Group: notifications,
+  MethodName: RegisterCodeMashAppPushIntegrationAsync,
+  RequestType: RegisterCodeMashAppPushIntegration,
+  HttpMethod: POST,
+  Path: /{version}/notifications/push/integrations/app/request,
+  IsAccountScoped: true,
+  IsUnauthenticated: false,
+  Sent: {
+    Method: POST,
+    Path: /v2/notifications/push/integrations/app/request,
+    Headers: {
+      Authorization: Bearer test-bearer,
+      Content-Type: application/json; charset=utf-8,
+      X-CM-AccountId: test-account,
+      X-CM-ProjectId: test-project
+    },
+    Body: {
+      accountId: Guid_1,
+      userId: Guid_1,
+      requestId: Guid_1,
+      pin: 1.0,
+      validTill: DateTimeOffset_1,
+      publicKey: test-publicKey,
+      env: test-env
+    }
+  },
+  ResponseType: EmptyResponse,
+  Response: {
+    ResponseStatus: {
+      IsSuccess: true
+    }
+  }
+}

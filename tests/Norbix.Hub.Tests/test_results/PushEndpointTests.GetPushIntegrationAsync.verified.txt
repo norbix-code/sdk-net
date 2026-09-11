@@ -1,0 +1,41 @@
+﻿{
+  Target: Hub,
+  Group: notifications,
+  MethodName: GetPushIntegrationAsync,
+  RequestType: GetPushIntegration,
+  HttpMethod: GET,
+  Path: /{version}/notifications/push/integrations/{id},
+  PathParams: [
+    id
+  ],
+  IsAccountScoped: false,
+  IsUnauthenticated: false,
+  Sent: {
+    Method: GET,
+    Path: /v2/notifications/push/integrations/{guid},
+    Query: ?env=test-env,
+    Headers: {
+      Authorization: Bearer test-bearer,
+      X-CM-AccountId: test-account,
+      X-CM-ProjectId: test-project
+    }
+  },
+  ResponseType: GetPushIntegrationResponse,
+  Response: {
+    Item: {
+      ViewId: Guid_1,
+      IntegrationName: test-integrationName,
+      IsEnabled: true,
+      Env: test-env,
+      LastIntegrationTestAtUtc: DateTime_1,
+      LastIntegrationTestSucceeded: true,
+      LastIntegrationTestErrors: [
+        test-string
+      ],
+      RequiresHumanDeliveryConfirmation: false
+    },
+    ResponseStatus: {
+      IsSuccess: true
+    }
+  }
+}

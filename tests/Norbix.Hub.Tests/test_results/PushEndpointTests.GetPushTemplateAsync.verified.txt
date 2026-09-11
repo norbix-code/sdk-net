@@ -1,0 +1,36 @@
+﻿{
+  Target: Hub,
+  Group: notifications,
+  MethodName: GetPushTemplateAsync,
+  RequestType: GetPushTemplate,
+  HttpMethod: GET,
+  Path: /{version}/notifications/push/templates/{id},
+  PathParams: [
+    id
+  ],
+  IsAccountScoped: false,
+  IsUnauthenticated: false,
+  Sent: {
+    Method: GET,
+    Path: /v2/notifications/push/templates/{guid},
+    Query: ?env=test-env,
+    Headers: {
+      Authorization: Bearer test-bearer,
+      X-CM-AccountId: test-account,
+      X-CM-ProjectId: test-project
+    }
+  },
+  ResponseType: GetPushTemplateResponse,
+  Response: {
+    Item: {
+      Id: Guid_1,
+      ViewId: Guid_1,
+      TemplateName: test-templateName,
+      Description: test-description,
+      IsActive: true
+    },
+    ResponseStatus: {
+      IsSuccess: true
+    }
+  }
+}

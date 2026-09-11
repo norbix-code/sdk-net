@@ -1,0 +1,22 @@
+﻿{
+  Method: POST,
+  Path: /v2/notifications/push/campaigns,
+  Headers: {
+    Authorization: Bearer test-bearer,
+    Content-Type: application/json; charset=utf-8,
+    X-CM-AccountId: test-account,
+    X-CM-ProjectId: test-project
+  },
+  Body: {
+    campaign: {
+      rolesNames: [
+        admin
+      ],
+      userTags: [
+        beta
+      ],
+      source: 0.0,
+      templateId: tpl-1
+    }
+  }
+}

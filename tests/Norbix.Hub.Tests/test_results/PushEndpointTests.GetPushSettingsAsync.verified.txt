@@ -1,0 +1,27 @@
+﻿{
+  Target: Hub,
+  Group: notifications,
+  MethodName: GetPushSettingsAsync,
+  RequestType: GetPushSettings,
+  HttpMethod: GET,
+  Path: /{version}/notifications/push/settings,
+  IsAccountScoped: false,
+  IsUnauthenticated: false,
+  Sent: {
+    Method: GET,
+    Path: /v2/notifications/push/settings,
+    Query: ?id={guid}&env=test-env,
+    Headers: {
+      Authorization: Bearer test-bearer,
+      X-CM-AccountId: test-account,
+      X-CM-ProjectId: test-project
+    }
+  },
+  ResponseType: GetPushSettingsResponse,
+  Response: {
+    Settings: {},
+    ResponseStatus: {
+      IsSuccess: true
+    }
+  }
+}

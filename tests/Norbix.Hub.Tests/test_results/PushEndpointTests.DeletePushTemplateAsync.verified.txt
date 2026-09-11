@@ -1,0 +1,29 @@
+﻿{
+  Target: Hub,
+  Group: notifications,
+  MethodName: DeletePushTemplateAsync,
+  RequestType: DeletePushTemplateRequest,
+  HttpMethod: DELETE,
+  Path: /{version}/notifications/push/templates/{Id},
+  PathParams: [
+    Id
+  ],
+  IsAccountScoped: false,
+  IsUnauthenticated: false,
+  Sent: {
+    Method: DELETE,
+    Path: /v2/notifications/push/templates/{guid},
+    Query: ?env=test-env,
+    Headers: {
+      Authorization: Bearer test-bearer,
+      X-CM-AccountId: test-account,
+      X-CM-ProjectId: test-project
+    }
+  },
+  ResponseType: EmptyResponse,
+  Response: {
+    ResponseStatus: {
+      IsSuccess: true
+    }
+  }
+}

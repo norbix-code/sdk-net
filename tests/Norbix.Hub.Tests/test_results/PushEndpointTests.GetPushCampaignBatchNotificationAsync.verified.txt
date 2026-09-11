@@ -1,0 +1,43 @@
+﻿{
+  Target: Hub,
+  Group: notifications,
+  MethodName: GetPushCampaignBatchNotificationAsync,
+  RequestType: GetPushCampaignBatchNotification,
+  HttpMethod: GET,
+  Path: /{version}/notifications/push/campaigns/{id}/batches/{batchId}/{notificationId},
+  PathParams: [
+    id,
+    batchId,
+    notificationId
+  ],
+  IsAccountScoped: false,
+  IsUnauthenticated: false,
+  Sent: {
+    Method: GET,
+    Path: /v2/notifications/push/campaigns/{guid}/batches/{guid}/{guid},
+    Query: ?databaseIntegrationId={guid}&env=test-env&resolvedEnv=Norbix.Sdk.Types.Hub.Env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1&paging=Norbix.Sdk.Types.Hub.PagingArgs,
+    Headers: {
+      Authorization: Bearer test-bearer,
+      X-CM-AccountId: test-account,
+      X-CM-ProjectId: test-project
+    }
+  },
+  ResponseType: GetPushCampaignBatchNotificationResponse,
+  Response: {
+    CampaignNotification: {
+      Recipients: {
+        HasMore: false
+      },
+      Content: {},
+      CampaignId: Guid_1,
+      BatchId: Guid_1,
+      NotificationId: Guid_1,
+      RefNotificationId: Guid_1,
+      Subject: test-subject,
+      Body: test-body
+    },
+    ResponseStatus: {
+      IsSuccess: true
+    }
+  }
+}

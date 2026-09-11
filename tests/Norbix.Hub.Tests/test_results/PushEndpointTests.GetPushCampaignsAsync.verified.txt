@@ -1,0 +1,37 @@
+﻿{
+  Target: Hub,
+  Group: notifications,
+  MethodName: GetPushCampaignsAsync,
+  RequestType: GetPushCampaigns,
+  HttpMethod: GET,
+  Path: /{version}/notifications/push/campaigns,
+  IsAccountScoped: false,
+  IsUnauthenticated: false,
+  Sent: {
+    Method: GET,
+    Path: /v2/notifications/push/campaigns,
+    Query: ?databaseIntegrationId={guid}&templateId={guid}&from=1&to=1&env=test-env&resolvedEnv=Norbix.Sdk.Types.Hub.Env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1&paging=Norbix.Sdk.Types.Hub.PagingArgs,
+    Headers: {
+      Authorization: Bearer test-bearer,
+      X-CM-AccountId: test-account,
+      X-CM-ProjectId: test-project
+    }
+  },
+  ResponseType: GetPushCampaignsResponse,
+  Response: {
+    List: {
+      Items: [
+        {
+          ForceCampaignLanguage: false
+        }
+      ],
+      HasMore: false,
+      HasPrevious: false,
+      StartingAfter: cursor-start,
+      EndingBefore: cursor-end
+    },
+    ResponseStatus: {
+      IsSuccess: true
+    }
+  }
+}

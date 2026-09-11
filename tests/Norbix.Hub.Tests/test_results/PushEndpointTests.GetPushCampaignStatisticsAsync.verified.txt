@@ -1,0 +1,35 @@
+﻿{
+  Target: Hub,
+  Group: notifications,
+  MethodName: GetPushCampaignStatisticsAsync,
+  RequestType: GetPushCampaignStatistics,
+  HttpMethod: GET,
+  Path: /{version}/notifications/push/campaigns/{id}/stats,
+  PathParams: [
+    id
+  ],
+  IsAccountScoped: false,
+  IsUnauthenticated: false,
+  Sent: {
+    Method: GET,
+    Path: /v2/notifications/push/campaigns/{guid}/stats,
+    Query: ?databaseIntegrationId={guid}&env=test-env,
+    Headers: {
+      Authorization: Bearer test-bearer,
+      X-CM-AccountId: test-account,
+      X-CM-ProjectId: test-project
+    }
+  },
+  ResponseType: GetPushCampaignStatisticsResponse,
+  Response: {
+    Stats: {
+      Batches: 7,
+      Sent: 7,
+      Failed: 7,
+      SuccessRate: 3.14
+    },
+    ResponseStatus: {
+      IsSuccess: true
+    }
+  }
+}

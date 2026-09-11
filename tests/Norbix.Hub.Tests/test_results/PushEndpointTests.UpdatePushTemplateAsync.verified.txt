@@ -1,0 +1,33 @@
+﻿{
+  Target: Hub,
+  Group: notifications,
+  MethodName: UpdatePushTemplateAsync,
+  RequestType: UpdatePushTemplateRequest,
+  HttpMethod: PUT,
+  Path: /{version}/notifications/push/templates,
+  IsAccountScoped: false,
+  IsUnauthenticated: false,
+  Sent: {
+    Method: PUT,
+    Path: /v2/notifications/push/templates,
+    Headers: {
+      Authorization: Bearer test-bearer,
+      Content-Type: application/json; charset=utf-8,
+      X-CM-AccountId: test-account,
+      X-CM-ProjectId: test-project
+    },
+    Body: {
+      viewId: Guid_1,
+      templateName: test-templateName,
+      description: test-description,
+      communicationChannel: 0.0,
+      env: test-env
+    }
+  },
+  ResponseType: EmptyResponse,
+  Response: {
+    ResponseStatus: {
+      IsSuccess: true
+    }
+  }
+}

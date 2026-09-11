@@ -1,0 +1,36 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
+    <RootNamespace>Norbix.Hub.Tests</RootNamespace>
+    <AssemblyName>Norbix.Hub.Tests</AssemblyName>
+    <NoWarn>$(NoWarn);CA1707</NoWarn>
+  </PropertyGroup>
+
+  <!--
+    Norbix.Api and Norbix.Hub both define Norbix.Sdk.NorbixClient, so a single
+    test project cannot reference both (CS0433). The Hub surface therefore gets
+    its own project; Norbix.Sdk.Tests stays the Api one.
+  -->
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="NUnit" />
+    <PackageReference Include="NUnit3TestAdapter" />
+    <PackageReference Include="NUnit.Analyzers" />
+    <PackageReference Include="Verify.NUnit" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Norbix.Hub\Norbix.Hub.csproj" />
+    <ProjectReference Include="..\..\src\Norbix.Hub.Types\Norbix.Hub.Types.csproj" />
+    <ProjectReference Include="..\..\src\Norbix.Contracts\Norbix.Contracts.csproj" />
+  </ItemGroup>
+
+  <!-- Share the Api suite's fixture and endpoint driver instead of copying them. -->
+  <ItemGroup>
+    <Compile Include="..\Norbix.Sdk.Tests\Helpers\*.cs" LinkBase="Helpers" />
+    <Compile Include="..\Norbix.Sdk.Tests\EndpointCoverageDriver.cs" LinkBase="Shared" />
+  </ItemGroup>
+
+</Project>

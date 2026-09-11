@@ -1,0 +1,29 @@
+﻿{
+  Target: Hub,
+  Group: notifications,
+  MethodName: DeletePushCampaignAsync,
+  RequestType: DeletePushCampaignRequest,
+  HttpMethod: DELETE,
+  Path: /{version}/notifications/push/campaigns/{Id},
+  PathParams: [
+    Id
+  ],
+  IsAccountScoped: false,
+  IsUnauthenticated: false,
+  Sent: {
+    Method: DELETE,
+    Path: /v2/notifications/push/campaigns/{guid},
+    Query: ?databaseIntegrationId={guid}&env=test-env,
+    Headers: {
+      Authorization: Bearer test-bearer,
+      X-CM-AccountId: test-account,
+      X-CM-ProjectId: test-project
+    }
+  },
+  ResponseType: EmptyResponse,
+  Response: {
+    ResponseStatus: {
+      IsSuccess: true
+    }
+  }
+}

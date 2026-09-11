@@ -1,0 +1,34 @@
+﻿{
+  Target: Hub,
+  Group: notifications,
+  MethodName: GetPushMessageContentTokensAsync,
+  RequestType: GetPushMessageContentTokens,
+  HttpMethod: GET,
+  Path: /{version}/notifications/push/templates/{id}/tokens,
+  PathParams: [
+    id
+  ],
+  IsAccountScoped: false,
+  IsUnauthenticated: false,
+  Sent: {
+    Method: GET,
+    Path: /v2/notifications/push/templates/{guid}/tokens,
+    Query: ?env=test-env,
+    Headers: {
+      Authorization: Bearer test-bearer,
+      X-CM-AccountId: test-account,
+      X-CM-ProjectId: test-project
+    }
+  },
+  ResponseType: GetPushMessageContentTokensResponse,
+  Response: {
+    Tokens: {
+      sample-key: [
+        test-string
+      ]
+    },
+    ResponseStatus: {
+      IsSuccess: true
+    }
+  }
+}

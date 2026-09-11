@@ -1,0 +1,32 @@
+﻿{
+  Target: Hub,
+  Group: notifications,
+  MethodName: SetPushIntegrationAsDefaultAsync,
+  RequestType: SetPushIntegrationAsDefaultRequest,
+  HttpMethod: PUT,
+  Path: /{version}/notifications/push/integrations/{Id}/default,
+  PathParams: [
+    Id
+  ],
+  IsAccountScoped: false,
+  IsUnauthenticated: false,
+  Sent: {
+    Method: PUT,
+    Path: /v2/notifications/push/integrations/{guid}/default,
+    Headers: {
+      Authorization: Bearer test-bearer,
+      Content-Type: application/json; charset=utf-8,
+      X-CM-AccountId: test-account,
+      X-CM-ProjectId: test-project
+    },
+    Body: {
+      env: test-env
+    }
+  },
+  ResponseType: EmptyResponse,
+  Response: {
+    ResponseStatus: {
+      IsSuccess: true
+    }
+  }
+}
