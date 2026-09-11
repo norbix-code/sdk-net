@@ -1,0 +1,13 @@
+﻿{
+  Sent: {
+    Method: GET,
+    Path: /v2/files/item,
+    Query: ?filesIntegrationId={guid}&path=invoices%2finvoice.pdf,
+    Headers: {
+      Authorization: Bearer test-api-key,
+      X-CM-ProjectId: test-project
+    }
+  },
+  FilePath: invoices/invoice.pdf,
+  IsPublic: false
+}

@@ -1,0 +1,11 @@
+﻿{
+  Sent: {
+    Method: GET,
+    Path: /v2/files/integrations,
+    Headers: {
+      Authorization: Bearer test-api-key,
+      X-CM-ProjectId: test-project
+    }
+  },
+  DefaultIntegrationId: Guid_1
+}
