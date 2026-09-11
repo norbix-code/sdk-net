@@ -207,6 +207,15 @@ internal sealed class HttpTransport : INorbixTransport, IDisposable
             return default;
         }
 
+        // Binary endpoints (file download) stream raw bytes, not JSON. Reading
+        // them with the JSON reader fails, so take the bytes as they are.
+        if (typeof(TResponse) == typeof(byte[]))
+        {
+            using var binary = new MemoryStream();
+            await stream.CopyToAsync(binary, cancellationToken).ConfigureAwait(false);
+            return (TResponse)(object)binary.ToArray();
+        }
+
         if (response.Content.Headers.ContentLength == 0)
         {
             return default;

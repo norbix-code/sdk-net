@@ -1,0 +1,271 @@
+﻿{
+  Target: Api,
+  Group: files,
+  Count: 8,
+  Endpoints: [
+    {
+      Target: Api,
+      Group: files,
+      MethodName: CommitUploadAsync,
+      RequestType: CommitUploadRequest,
+      HttpMethod: POST,
+      Path: /{version}/files/{filesIntegrationId}/commit,
+      PathParams: [
+        filesIntegrationId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/files/{guid}/commit,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          path: test-path,
+          contentType: test-contentType,
+          sizeBytes: 1.0,
+          fileName: test-fileName,
+          env: test-env
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: files,
+      MethodName: DeleteFileApiAsync,
+      RequestType: DeleteFileApiRequest,
+      HttpMethod: DELETE,
+      Path: /{version}/files/{filesIntegrationId},
+      PathParams: [
+        filesIntegrationId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: DELETE,
+        Path: /v2/files/{guid},
+        Query: ?path=test-path&env=test-env,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: files,
+      MethodName: DeleteManyFilesApiAsync,
+      RequestType: DeleteManyFilesApiRequest,
+      HttpMethod: DELETE,
+      Path: /{version}/files/{filesIntegrationId}/bulk,
+      PathParams: [
+        filesIntegrationId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: DELETE,
+        Path: /v2/files/{guid}/bulk,
+        Query: ?paths=test-string&env=test-env,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: files,
+      MethodName: DownloadFileApiAsync,
+      RequestType: DownloadFileApiRequest,
+      HttpMethod: GET,
+      Path: /{version}/files/{filesIntegrationId}/download,
+      PathParams: [
+        filesIntegrationId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/files/{guid}/download,
+        Query: ?path=test-path&env=test-env,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: Byte[],
+      Response: {
+        BinaryLength: 49
+      }
+    },
+    {
+      Target: Api,
+      Group: files,
+      MethodName: GetFileInfoAsync,
+      RequestType: GetFileInfoRequest,
+      HttpMethod: GET,
+      Path: /{version}/files/{filesIntegrationId}/info,
+      PathParams: [
+        filesIntegrationId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/files/{guid}/info,
+        Query: ?path=test-path&env=test-env,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: GetFileInfoResponse,
+      Response: {
+        File: {
+          Resource: {},
+          IntegrationId: Guid_1,
+          Path: test-path
+        },
+        IsPublic: true,
+        PublicUrl: https://example.test/publicUrl,
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: files,
+      MethodName: GetSignedUrlAsync,
+      RequestType: GetSignedUrlRequest,
+      HttpMethod: GET,
+      Path: /{version}/files/{filesIntegrationId}/sign,
+      PathParams: [
+        filesIntegrationId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/files/{guid}/sign,
+        Query: ?path=test-path&expirationSeconds=1&env=test-env,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: GetSignedUrlResponse,
+      Response: {
+        Url: https://example.test/url,
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: files,
+      MethodName: ListFilesAsync,
+      RequestType: ListFilesRequest,
+      HttpMethod: GET,
+      Path: /{version}/files/{filesIntegrationId},
+      PathParams: [
+        filesIntegrationId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/files/{guid},
+        Query: ?path=test-path&env=test-env&resolvedEnv=Norbix.Sdk.Types.Api.Env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1&paging=Norbix.Sdk.Types.Api.PagingArgs,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: ListFilesResponse,
+      Response: {
+        List: {
+          Items: [
+            {}
+          ],
+          HasMore: false,
+          HasPrevious: false,
+          StartingAfter: cursor-start,
+          EndingBefore: cursor-end
+        },
+        Folders: [
+          test-string
+        ],
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: files,
+      MethodName: RequestUploadUrlAsync,
+      RequestType: RequestUploadUrlRequest,
+      HttpMethod: POST,
+      Path: /{version}/files/{filesIntegrationId}/upload-url,
+      PathParams: [
+        filesIntegrationId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/files/{guid}/upload-url,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          path: test-path,
+          contentType: test-contentType,
+          expirationSeconds: 1.0,
+          env: test-env
+        }
+      },
+      ResponseType: RequestUploadUrlResponse,
+      Response: {
+        Url: https://example.test/url,
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    }
+  ]
+}

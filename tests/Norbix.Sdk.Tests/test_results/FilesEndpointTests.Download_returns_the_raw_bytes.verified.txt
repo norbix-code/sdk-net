@@ -1,0 +1,13 @@
+﻿{
+  Sent: {
+    Method: GET,
+    Path: /v2/files/{guid}/download,
+    Query: ?path=invoices%2finvoice.pdf,
+    Headers: {
+      Authorization: Bearer test-api-key,
+      X-CM-ProjectId: test-project
+    }
+  },
+  Bytes: JVBERi0=,
+  RoundTripped: true
+}

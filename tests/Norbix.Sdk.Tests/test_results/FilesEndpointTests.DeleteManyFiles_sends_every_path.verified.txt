@@ -1,0 +1,9 @@
+﻿{
+  Method: DELETE,
+  Path: /v2/files/{guid}/bulk,
+  Query: ?paths=invoices%2fa.pdf&paths=invoices%2fb.pdf,
+  Headers: {
+    Authorization: Bearer test-api-key,
+    X-CM-ProjectId: test-project
+  }
+}

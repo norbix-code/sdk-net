@@ -75,6 +75,37 @@ internal sealed class MockHttpHandler : HttpMessageHandler
         return this;
     }
 
+    /// <summary>
+    /// Return raw bytes for any request whose path ends with
+    /// <paramref name="pathSuffix"/>. Used by file download, which streams the
+    /// file itself rather than a JSON envelope.
+    /// </summary>
+    public MockHttpHandler RespondBytes(
+        string pathSuffix,
+        byte[] payload,
+        string contentType = "application/octet-stream"
+    )
+    {
+        _responders.Insert(
+            0,
+            new RequestResponder
+            {
+                Match = req =>
+                    req.RequestUri?.AbsolutePath.EndsWith(pathSuffix, StringComparison.Ordinal)
+                    == true,
+                Build = () =>
+                {
+                    var content = new ByteArrayContent(payload);
+                    content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(
+                        contentType
+                    );
+                    return new HttpResponseMessage(HttpStatusCode.OK) { Content = content };
+                },
+            }
+        );
+        return this;
+    }
+
     protected override async Task<HttpResponseMessage> SendAsync(
         HttpRequestMessage request,
         CancellationToken cancellationToken

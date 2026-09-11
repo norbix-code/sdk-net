@@ -158,9 +158,16 @@ internal static class EndpointCoverageDriver
             endpoint.IsUnauthenticated,
             Sent = sent,
             ResponseType = responseType.Name,
-            Response = response,
+            Response = DescribeResponse(response),
         };
     }
+
+    /// <summary>
+    /// Binary endpoints (file download) return raw bytes. Printing the bytes in
+    /// the snapshot tells a reviewer nothing, so print the length instead.
+    /// </summary>
+    private static object? DescribeResponse(object? response) =>
+        response is byte[] bytes ? new { BinaryLength = bytes.Length } : response;
 
     private static async Task<object?> InvokeGeneratedMethodAsync(
         object module,
