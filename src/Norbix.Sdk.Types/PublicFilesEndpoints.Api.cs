@@ -34,6 +34,11 @@ namespace Norbix.Sdk.Types.Api;
 ///<summary>
 ///Reads a file somebody made public.
 ///<para>
+///The gateway serves it at <c>GET /{version}/files/public/{PublicId}/{Name*}</c>. The route is
+///written out here exactly as the gateway spells it, so the SDK coverage
+///matrix can see that the two agree (knowledge.md K23).
+///</para>
+///<para>
 ///<b>No sign-in and no project id.</b> The SDK sends no
 ///<c>Authorization</c> header for this call, even when the client is
 ///signed in — that is what <see cref="INorbixUnauthenticated"/> means
