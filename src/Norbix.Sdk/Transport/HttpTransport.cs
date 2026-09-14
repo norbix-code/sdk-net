@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Net;
 using System.Net.Http.Headers;
 using System.Reflection;
@@ -350,14 +351,27 @@ internal sealed class HttpTransport : INorbixTransport, IDisposable
             {
                 var token = match.Groups[1].Value;
                 if (token.Equals("version", StringComparison.OrdinalIgnoreCase)) return match.Value;
-                if (!props.TryGetValue(token, out var prop) || prop.GetValue(request) is null)
+
+                // A trailing '*' marks a wildcard segment (the gateway writes
+                // it as {Name*}): the value is a whole relative path and its
+                // slashes are real separators, so each segment is escaped on
+                // its own. Escaping the lot would send `a%2Fb.pdf` and the
+                // route would not match — which is how a public folder link
+                // reaches a file inside the folder (10b-files slice SDK-2).
+                var isWildcard = token.EndsWith('*');
+                var name = isWildcard ? token[..^1] : token;
+
+                if (!props.TryGetValue(name, out var prop) || prop.GetValue(request) is null)
                 {
                     throw new NorbixException(
-                        $"Missing path parameter \"{token}\" for {path}",
+                        $"Missing path parameter \"{name}\" for {path}",
                         code: NorbixErrorCodes.MissingPathParam);
                 }
                 consumed.Add(prop.Name);
-                return Uri.EscapeDataString(prop.GetValue(request)!.ToString()!);
+                var value = prop.GetValue(request)!.ToString()!;
+                return isWildcard
+                    ? string.Join('/', value.Split('/').Select(Uri.EscapeDataString))
+                    : Uri.EscapeDataString(value);
             });
     }
 

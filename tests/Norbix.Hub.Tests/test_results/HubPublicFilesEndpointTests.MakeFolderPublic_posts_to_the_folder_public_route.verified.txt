@@ -1,0 +1,16 @@
+﻿{
+  Sent: {
+    Method: POST,
+    Path: /v2/files/folder/public,
+    Headers: {
+      Authorization: Bearer test-api-key,
+      Content-Type: application/json; charset=utf-8,
+      X-CM-ProjectId: test-project
+    },
+    Body: {
+      filesIntegrationId: Guid_1,
+      path: invoices
+    }
+  },
+  PublicId: nbpf_folder1
+}

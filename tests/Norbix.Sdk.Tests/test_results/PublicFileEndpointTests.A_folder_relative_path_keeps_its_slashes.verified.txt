@@ -1,0 +1,7 @@
+﻿{
+  Method: GET,
+  Path: /v2/files/public/nbpf_folder1/2026/q1/report.pdf,
+  Headers: {
+    X-CM-ProjectId: test-project
+  }
+}

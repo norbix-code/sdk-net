@@ -1,7 +1,7 @@
 ﻿{
   Target: Api,
   Group: files,
-  Count: 8,
+  Count: 9,
   Endpoints: [
     {
       Target: Api,
@@ -151,7 +151,9 @@
         File: {
           Resource: {},
           IntegrationId: Guid_1,
-          Path: test-path
+          Path: test-path,
+          PublicUrl: https://example.test/publicUrl,
+          IsPublic: true
         },
         IsPublic: true,
         PublicUrl: https://example.test/publicUrl,
@@ -216,7 +218,9 @@
       Response: {
         List: {
           Items: [
-            {}
+            {
+              IsPublic: false
+            }
           ],
           HasMore: false,
           HasPrevious: false,
@@ -225,6 +229,11 @@
         },
         Folders: [
           test-string
+        ],
+        PublicFolders: [
+          {
+            Inherited: false
+          }
         ],
         ResponseStatus: {
           IsSuccess: true
@@ -265,6 +274,32 @@
         ResponseStatus: {
           IsSuccess: true
         }
+      }
+    },
+    {
+      Target: Api,
+      Group: files,
+      MethodName: GetPublicFileAsync,
+      RequestType: GetPublicFileRequest,
+      HttpMethod: GET,
+      Path: /{version}/files/public/{publicId}/{name*},
+      PathParams: [
+        publicId,
+        name
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: true,
+      Sent: {
+        Method: GET,
+        Path: /v2/files/public/{guid}/test-name,
+        Headers: {
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: Byte[],
+      Response: {
+        BinaryLength: 49
       }
     }
   ]

@@ -1,0 +1,15 @@
+﻿{
+  FirstFileIsPublic: true,
+  FirstFilePublicUrl: https://api.norbix.dev/v3/files/public/nbpf_7hK2abc/invoice.pdf,
+  PlainFolders: [
+    invoices,
+    drafts
+  ],
+  PublicFolders: [
+    {
+      Path: invoices,
+      PublicId: nbpf_folder1,
+      Inherited: false
+    }
+  ]
+}

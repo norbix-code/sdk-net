@@ -20,6 +20,7 @@ public sealed class EndpointSourceGenerator : IIncrementalGenerator
     private const string RouteAttributeFullName = "Norbix.Sdk.Types.NorbixRouteAttribute";
     private const string RequestInterfaceFullName = "Norbix.Sdk.Types.INorbixRequest`1";
     private const string AccountScopedInterfaceFullName = "Norbix.Sdk.Types.INorbixAccountScoped";
+    private const string UnauthenticatedInterfaceFullName = "Norbix.Sdk.Types.INorbixUnauthenticated";
 
     private static DiagnosticDescriptor BothTargetsNotSupportedDescriptor { get; } =
         new DiagnosticDescriptor(
@@ -123,7 +124,8 @@ public sealed class EndpointSourceGenerator : IIncrementalGenerator
             routes.ToImmutable(),
             responseType,
             isAccountScoped,
-            ns
+            ns,
+            ImplementsInterface(symbol, UnauthenticatedInterfaceFullName)
         );
     }
 
@@ -230,7 +232,8 @@ public sealed class EndpointSourceGenerator : IIncrementalGenerator
             ResolveResponseType(symbol),
             ImplementsInterface(symbol, AccountScopedInterfaceFullName)
                 || symbol.GetMembers("AccountId").Any(),
-            ResolveTargetNamespace(symbol)
+            ResolveTargetNamespace(symbol),
+            ImplementsInterface(symbol, UnauthenticatedInterfaceFullName)
         );
     }
 
@@ -591,7 +594,12 @@ public sealed partial class NorbixClient
 
     private static string EndpointScope(EndpointModel ep, RouteModel route)
     {
-        return route.Path == "/auth" || route.Path.StartsWith("/auth/", StringComparison.Ordinal)
+        // A DTO can say so itself (INorbixUnauthenticated) — that is how a
+        // public file link is declared. The /auth path check stays for the
+        // login routes, which pre-date the marker.
+        return ep.IsUnauthenticated
+                || route.Path == "/auth"
+                || route.Path.StartsWith("/auth/", StringComparison.Ordinal)
                 ? "Unauthenticated"
             : ep.IsAccountScoped ? "Account"
             : "Project";
@@ -651,6 +659,10 @@ public sealed partial class NorbixClient
                 if (end < 0)
                     break;
                 var token = path.Substring(i + 1, end - i - 1);
+                // A trailing '*' marks a wildcard segment ({Name*}); the
+                // property behind it is plain `Name`.
+                if (token.EndsWith("*", StringComparison.Ordinal))
+                    token = token.Substring(0, token.Length - 1);
                 if (token != "version")
                     list.Add(token);
                 i = end + 1;
@@ -691,7 +703,8 @@ public sealed partial class NorbixClient
             ImmutableArray<RouteModel> routes,
             string responseType,
             bool isAccountScoped,
-            EndpointTarget target
+            EndpointTarget target,
+            bool isUnauthenticated = false
         )
         {
             ClassName = className;
@@ -700,6 +713,7 @@ public sealed partial class NorbixClient
             ResponseType = responseType;
             IsAccountScoped = isAccountScoped;
             Target = target;
+            IsUnauthenticated = isUnauthenticated;
         }
 
         public string ClassName { get; }
@@ -708,5 +722,8 @@ public sealed partial class NorbixClient
         public string ResponseType { get; }
         public bool IsAccountScoped { get; }
         public EndpointTarget Target { get; }
+
+        /// <summary>The DTO carries INorbixUnauthenticated: send no Authorization header.</summary>
+        public bool IsUnauthenticated { get; }
     }
 }

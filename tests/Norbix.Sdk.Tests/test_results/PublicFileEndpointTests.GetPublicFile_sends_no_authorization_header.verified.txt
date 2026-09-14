@@ -1,0 +1,7 @@
+﻿{
+  Method: GET,
+  Path: /v2/files/public/nbpf_7hK2abc/invoice.pdf,
+  Headers: {
+    X-CM-ProjectId: test-project
+  }
+}

@@ -10,6 +10,7 @@
     <Compile Include="..\Norbix.Sdk.Types\INorbixRequest.cs" Link="INorbixRequest.cs" />
     <Compile Include="..\Norbix.Sdk.Types\ResponseStatus.cs" Link="ResponseStatus.cs" />
     <Compile Include="..\Norbix.Sdk.Types\NorbixRouteAttribute.cs" Link="NorbixRouteAttribute.cs" />
+    <Compile Include="..\Norbix.Sdk.Types\INorbixUnauthenticated.cs" Link="INorbixUnauthenticated.cs" />
   </ItemGroup>
 
 </Project>

@@ -284,7 +284,7 @@ The public endpoint surface is generated from gateway DTOs at compile time. The 
 | `database` | 41 | Schemas, integrations, saved aggregates, taxonomies, triggers, module settings. |
 | `echo` | 1 | Smoke-test echo endpoint. |
 | `email` | 1 | Email helper endpoint. |
-| `files` | 15 | File storage integrations, triggers, and module settings. |
+| `files` | 22 | File storage integrations, triggers, public links, and module settings. |
 | `internal` | 1 | Internal type-generation endpoint. |
 | `logs` | 9 | Logging integrations and module settings. |
 | `membership` | 25 | Roles, policies, users, preferences, integrations, triggers. |
@@ -596,8 +596,66 @@ Generated coverage tracks the API and Hub DTO contract files. Some flows are not
 
 | Area | Status |
 | --- | --- |
-| File upload/download bytes | Out of scope for the generated endpoint client; file metadata flows through normal DTOs. |
+| File upload/download bytes | Out of scope for the generated endpoint client; file metadata flows through normal DTOs. A file that arrives as raw bytes (download, public link) is returned as `byte[]`. |
 | Server Events / SSE | Requires a hand-written streaming module once the public stream contract is finalized. |
+
+## Public File Links
+
+A file, or a whole folder, can be made readable by anyone holding a link — no
+sign-in, no project id, no account. Norbix keeps a record and mints an
+unguessable id that looks like `nbpf_7hK2…`; the link is then
+`https://<your api host>/v3/files/public/nbpf_7hK2…/invoice.pdf`.
+
+```csharp
+// Publishing is a dashboard operation, on the Hub side.
+var published = await hub.Files.MakeFilePublicAsync(new MakeFilePublicRequest
+{
+    FilesIntegrationId = integrationId,
+    Path = "invoices/invoice.pdf",
+});
+string publicId = published!.Id!;          // "nbpf_7hK2abc"
+
+// Reading the link is on the API side — and carries no session at all.
+byte[]? pdf = await api.Files.GetPublicFileAsync(new GetPublicFileRequest
+{
+    PublicId = publicId,
+    Name = "invoice.pdf",
+});
+
+// Take it back:
+await hub.Files.MakeFilePrivateAsync(new MakeFilePrivateRequest
+{
+    FilesIntegrationId = integrationId,
+    Path = "invoices/invoice.pdf",
+});
+```
+
+`GetPublicFileAsync` is the SDK's first endpoint outside `/auth` that sends
+**no** `Authorization` header, whatever the client is holding — its request
+carries `INorbixUnauthenticated`. That is what public means: the link has to
+work in an e-mail or in a browser on a stranger's phone, and the unguessable id
+in the URL is the whole credential. It works on a client with no API key at
+all.
+
+Folders work the same way through `MakeFolderPublicAsync` /
+`MakeFolderPrivateAsync`. A published folder is **one** record however many
+files sit under it, and a file inside it is read with the path inside the
+folder as `Name` (`"2026/q1/report.pdf"` — the slashes stay slashes).
+
+Four rules worth knowing:
+
+- Asking twice gives the same id back — the first link is already in somebody's
+  hands.
+- A file cannot be made private on its own while a folder above it is public
+  (`CM-ERRORS-FILES-021`); switch the folder off instead.
+- The root cannot be published, and a folder link with nothing after it is a
+  `404` — publishing a prefix must not publish its listing.
+- Every miss is the same plain `404`: unknown id, wrong name, made private
+  again, gone from storage. A more precise answer would tell a stranger that
+  the file is there.
+
+After publishing, `ListFilesAsync` and `GetFileInfoAsync` report `IsPublic` and
+`PublicUrl` on each file, and a listing carries `PublicFolders`.
 
 ## Error Handling
 
