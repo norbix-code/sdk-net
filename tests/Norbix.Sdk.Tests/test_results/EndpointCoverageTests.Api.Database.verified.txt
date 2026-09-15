@@ -1,7 +1,7 @@
 ﻿{
   Target: Api,
   Group: database,
-  Count: 18,
+  Count: 22,
   Endpoints: [
     {
       Target: Api,
@@ -26,7 +26,8 @@
         },
         Body: {
           databaseIntegrationId: Guid_1,
-          pipeline: test-pipeline
+          pipeline: test-pipeline,
+          env: test-env
         }
       },
       ResponseType: AggregateResponse,
@@ -65,7 +66,8 @@
         },
         Body: {
           databaseIntegrationId: Guid_1,
-          newResponsibleUserId: Guid_1
+          newResponsibleUserId: Guid_1,
+          env: test-env
         }
       },
       ResponseType: EmptyResponse,
@@ -90,7 +92,7 @@
       Sent: {
         Method: GET,
         Path: /v2/database/collections/test-collectionName/count,
-        Query: ?databaseIntegrationId={guid}&filter=test-filter&schemaVersion=1,
+        Query: ?databaseIntegrationId={guid}&filter=test-filter&schemaVersion=1&env=test-env,
         Headers: {
           Authorization: Bearer test-bearer,
           X-CM-AccountId: test-account,
@@ -120,7 +122,7 @@
       Sent: {
         Method: DELETE,
         Path: /v2/database/collections/test-collectionName/many,
-        Query: ?databaseIntegrationId={guid}&filter=test-filter,
+        Query: ?databaseIntegrationId={guid}&filter=test-filter&env=test-env,
         Headers: {
           Authorization: Bearer test-bearer,
           X-CM-AccountId: test-account,
@@ -150,7 +152,7 @@
       Sent: {
         Method: DELETE,
         Path: /v2/database/collections/test-collectionName/{guid},
-        Query: ?databaseIntegrationId={guid},
+        Query: ?databaseIntegrationId={guid}&env=test-env,
         Headers: {
           Authorization: Bearer test-bearer,
           X-CM-AccountId: test-account,
@@ -179,7 +181,7 @@
       Sent: {
         Method: GET,
         Path: /v2/database/collections/test-collectionName/distinct,
-        Query: ?databaseIntegrationId={guid}&field=test-field&filter=test-filter&schemaVersion=1,
+        Query: ?databaseIntegrationId={guid}&field=test-field&filter=test-filter&schemaVersion=1&env=test-env,
         Headers: {
           Authorization: Bearer test-bearer,
           X-CM-AccountId: test-account,
@@ -224,7 +226,8 @@
           databaseIntegrationId: Guid_1,
           tokens: {
             test-key: test-string
-          }
+          },
+          env: test-env
         }
       },
       ResponseType: ExecuteAggregateResponse,
@@ -255,7 +258,7 @@
       Sent: {
         Method: GET,
         Path: /v2/database/collections/test-collectionName/{guid},
-        Query: ?databaseIntegrationId={guid},
+        Query: ?databaseIntegrationId={guid}&env=test-env,
         Headers: {
           Authorization: Bearer test-bearer,
           X-CM-AccountId: test-account,
@@ -266,6 +269,46 @@
       Response: {
         Result: {
           ValueKind: Object
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: database,
+      MethodName: FindOwnAsync,
+      RequestType: FindOwnRequest,
+      HttpMethod: GET,
+      Path: /{version}/database/collections/{collectionName}/own,
+      PathParams: [
+        collectionName
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/database/collections/test-collectionName/own,
+        Query: ?databaseIntegrationId={guid}&filter=test-filter&schemaVersion=1&pagingArgs=Norbix.Sdk.Types.Api.PagingArgs&env=test-env&resolvedEnv=Norbix.Sdk.Types.Api.Env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1&paging=Norbix.Sdk.Types.Api.PagingArgs,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: FindResponse,
+      Response: {
+        List: {
+          Items: [
+            {
+              ValueKind: Object
+            }
+          ],
+          HasMore: false,
+          HasPrevious: false,
+          StartingAfter: cursor-start,
+          EndingBefore: cursor-end
         },
         ResponseStatus: {
           IsSuccess: true
@@ -287,7 +330,7 @@
       Sent: {
         Method: GET,
         Path: /v2/database/collections/test-collectionName,
-        Query: ?databaseIntegrationId={guid}&filter=test-filter&schemaVersion=1&pagingArgs=Norbix.Sdk.Types.Api.PagingArgs&paging=Norbix.Sdk.Types.Api.PagingArgs,
+        Query: ?databaseIntegrationId={guid}&filter=test-filter&schemaVersion=1&pagingArgs=Norbix.Sdk.Types.Api.PagingArgs&sortBy=test-sortBy&sortOrder=1&env=test-env&resolvedEnv=Norbix.Sdk.Types.Api.Env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1&paging=Norbix.Sdk.Types.Api.PagingArgs,
         Headers: {
           Authorization: Bearer test-bearer,
           X-CM-AccountId: test-account,
@@ -335,7 +378,8 @@
         },
         Body: {
           databaseIntegrationId: Guid_1,
-          documents: test-documents
+          documents: test-documents,
+          env: test-env
         }
       },
       ResponseType: EmptyResponse,
@@ -368,12 +412,17 @@
         },
         Body: {
           databaseIntegrationId: Guid_1,
-          document: test-document
+          document: test-document,
+          env: test-env
         }
       },
       ResponseType: IdResponse,
       Response: {
-        Id: Guid_1
+        Id: Guid_1,
+        Status: test-status,
+        ResponseStatus: {
+          IsSuccess: true
+        }
       }
     },
     {
@@ -400,7 +449,8 @@
         },
         Body: {
           databaseIntegrationId: Guid_1,
-          replacement: test-replacement
+          replacement: test-replacement,
+          env: test-env
         }
       },
       ResponseType: EmptyResponse,
@@ -434,7 +484,8 @@
         Body: {
           databaseIntegrationId: Guid_1,
           filter: test-filter,
-          update: test-update
+          update: test-update,
+          env: test-env
         }
       },
       ResponseType: EmptyResponse,
@@ -468,7 +519,8 @@
         },
         Body: {
           databaseIntegrationId: Guid_1,
-          update: test-update
+          update: test-update,
+          env: test-env
         }
       },
       ResponseType: EmptyResponse,
@@ -493,6 +545,7 @@
       Sent: {
         Method: GET,
         Path: /v2/database/schemas/{guid},
+        Query: ?env=test-env,
         Headers: {
           Authorization: Bearer test-bearer,
           X-CM-AccountId: test-account,
@@ -528,7 +581,7 @@
       Sent: {
         Method: GET,
         Path: /v2/database/schemas,
-        Query: ?pagingArgs=Norbix.Sdk.Types.Api.PagingArgs&paging=Norbix.Sdk.Types.Api.PagingArgs,
+        Query: ?pagingArgs=Norbix.Sdk.Types.Api.PagingArgs&env=test-env&resolvedEnv=Norbix.Sdk.Types.Api.Env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1&paging=Norbix.Sdk.Types.Api.PagingArgs,
         Headers: {
           Authorization: Bearer test-bearer,
           X-CM-AccountId: test-account,
@@ -556,6 +609,67 @@
     {
       Target: Api,
       Group: database,
+      MethodName: FindMergedTermTreeAsync,
+      RequestType: FindMergedTermTreeRequest,
+      HttpMethod: GET,
+      Path: /{version}/database/taxonomies/{taxonomyName}/merged-tree,
+      PathParams: [
+        taxonomyName
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/database/taxonomies/test-taxonomyName/merged-tree,
+        Query: ?databaseIntegrationId={guid}&env=test-env,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: FindMergedTermTreeResponse,
+      Response: {
+        Tree: [
+          {}
+        ],
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: database,
+      MethodName: FindTaxonomyTreeAsync,
+      RequestType: FindTaxonomyTreeRequest,
+      HttpMethod: GET,
+      Path: /{version}/database/taxonomies/tree,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/database/taxonomies/tree,
+        Query: ?includeTerms=True&databaseIntegrationId={guid}&env=test-env,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: FindTaxonomyTreeResponse,
+      Response: {
+        Tree: [
+          {}
+        ],
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: database,
       MethodName: FindTermsChildrenAsync,
       RequestType: FindTermsChildrenRequest,
       HttpMethod: GET,
@@ -569,7 +683,7 @@
       Sent: {
         Method: GET,
         Path: /v2/database/taxonomies/test-taxonomyName/terms/{guid}/children,
-        Query: ?databaseIntegrationId={guid}&filter=test-filter&pagingArgs=Norbix.Sdk.Types.Api.PagingArgs&paging=Norbix.Sdk.Types.Api.PagingArgs,
+        Query: ?databaseIntegrationId={guid}&filter=test-filter&pagingArgs=Norbix.Sdk.Types.Api.PagingArgs&env=test-env&resolvedEnv=Norbix.Sdk.Types.Api.Env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1&paging=Norbix.Sdk.Types.Api.PagingArgs,
         Headers: {
           Authorization: Bearer test-bearer,
           X-CM-AccountId: test-account,
@@ -607,7 +721,7 @@
       Sent: {
         Method: GET,
         Path: /v2/database/taxonomies/test-taxonomyName/terms,
-        Query: ?databaseIntegrationId={guid}&filter=test-filter&pagingArgs=Norbix.Sdk.Types.Api.PagingArgs&paging=Norbix.Sdk.Types.Api.PagingArgs,
+        Query: ?databaseIntegrationId={guid}&filter=test-filter&sortDescending=True&pagingArgs=Norbix.Sdk.Types.Api.PagingArgs&env=test-env&resolvedEnv=Norbix.Sdk.Types.Api.Env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1&paging=Norbix.Sdk.Types.Api.PagingArgs,
         Headers: {
           Authorization: Bearer test-bearer,
           X-CM-AccountId: test-account,
@@ -625,6 +739,38 @@
           StartingAfter: cursor-start,
           EndingBefore: cursor-end
         },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: database,
+      MethodName: FindTermTreeAsync,
+      RequestType: FindTermTreeRequest,
+      HttpMethod: GET,
+      Path: /{version}/database/taxonomies/{taxonomyName}/terms/tree,
+      PathParams: [
+        taxonomyName
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/database/taxonomies/test-taxonomyName/terms/tree,
+        Query: ?rootTermId={guid}&depth=1&databaseIntegrationId={guid}&env=test-env,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: FindTermTreeResponse,
+      Response: {
+        Tree: [
+          {}
+        ],
         ResponseStatus: {
           IsSuccess: true
         }

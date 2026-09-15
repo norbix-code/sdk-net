@@ -1,20 +1,513 @@
 ﻿{
   Target: Api,
   Group: membership,
-  Count: 18,
+  Count: 42,
   Endpoints: [
+    {
+      Target: Api,
+      Group: membership,
+      MethodName: ConfirmEmailVerificationAsync,
+      RequestType: ConfirmEmailVerificationRequest,
+      HttpMethod: POST,
+      Path: /{version}/membership/userauth/email/confirm-verification,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/membership/userauth/email/confirm-verification,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          email: user@example.test,
+          code: test-code,
+          env: test-env
+        }
+      },
+      ResponseType: PasskeyVerificationTokenResponse,
+      Response: {
+        VerificationToken: test-verificationToken,
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: membership,
+      MethodName: ConsumeMagicLinkAsync,
+      RequestType: ConsumeMagicLinkRequest,
+      HttpMethod: POST,
+      Path: /{version}/membership/userauth/recovery/magic-link/consume,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/membership/userauth/recovery/magic-link/consume,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          token: test-token,
+          env: test-env
+        }
+      },
+      ResponseType: PasskeyRecoveryResponse,
+      Response: {
+        AccessToken: test-accessToken,
+        RefreshToken: test-refreshToken,
+        ExpiresInSeconds: 7,
+        RemainingCodes: 7,
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: membership,
+      MethodName: HasPasskeyAsync,
+      RequestType: HasPasskeyRequest,
+      HttpMethod: POST,
+      Path: /{version}/membership/userauth/has-passkey,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/membership/userauth/has-passkey,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          email: user@example.test,
+          env: test-env
+        }
+      },
+      ResponseType: PasskeyOkResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: membership,
+      MethodName: ListPasskeysAsync,
+      RequestType: ListPasskeysRequest,
+      HttpMethod: GET,
+      Path: /{version}/membership/userauth/passkeys,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/membership/userauth/passkeys,
+        Query: ?env=test-env,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: PasskeyListResponse,
+      Response: {
+        Passkeys: [
+          {
+            IsRevoked: false
+          }
+        ],
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: membership,
+      MethodName: PasskeyAuthenticationOptionsAsync,
+      RequestType: PasskeyAuthenticationOptionsRequest,
+      HttpMethod: POST,
+      Path: /{version}/membership/userauth/passkey/authentication-options,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/membership/userauth/passkey/authentication-options,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          email: user@example.test,
+          env: test-env
+        }
+      },
+      ResponseType: PasskeyCeremonyOptionsResponse,
+      Response: {
+        CeremonyId: Guid_1,
+        OptionsJson: test-optionsJson,
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: membership,
+      MethodName: PasskeyLogoutAsync,
+      RequestType: PasskeyLogoutRequest,
+      HttpMethod: POST,
+      Path: /{version}/membership/userauth/logout,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/membership/userauth/logout,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          refreshToken: test-refreshToken,
+          env: test-env
+        }
+      },
+      ResponseType: PasskeyOkResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: membership,
+      MethodName: PasskeyRegistrationOptionsAsync,
+      RequestType: PasskeyRegistrationOptionsRequest,
+      HttpMethod: POST,
+      Path: /{version}/membership/userauth/passkey/registration-options,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/membership/userauth/passkey/registration-options,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          verificationToken: test-verificationToken,
+          env: test-env
+        }
+      },
+      ResponseType: PasskeyCeremonyOptionsResponse,
+      Response: {
+        CeremonyId: Guid_1,
+        OptionsJson: test-optionsJson,
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: membership,
+      MethodName: RefreshPasskeyTokenAsync,
+      RequestType: RefreshPasskeyTokenRequest,
+      HttpMethod: POST,
+      Path: /{version}/membership/userauth/token/refresh,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/membership/userauth/token/refresh,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          refreshToken: test-refreshToken,
+          env: test-env
+        }
+      },
+      ResponseType: PasskeyAuthTokensResponse,
+      Response: {
+        AccessToken: test-accessToken,
+        RefreshToken: test-refreshToken,
+        ExpiresInSeconds: 7,
+        RecoveryCodes: [
+          test-string
+        ],
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: membership,
+      MethodName: RenamePasskeyAsync,
+      RequestType: RenamePasskeyRequest,
+      HttpMethod: POST,
+      Path: /{version}/membership/userauth/passkeys/{CredentialId}/rename,
+      PathParams: [
+        CredentialId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/membership/userauth/passkeys/{guid}/rename,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          friendlyName: test-friendlyName,
+          env: test-env
+        }
+      },
+      ResponseType: PasskeyOkResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: membership,
+      MethodName: RequestMagicLinkAsync,
+      RequestType: RequestMagicLinkRequest,
+      HttpMethod: POST,
+      Path: /{version}/membership/userauth/recovery/magic-link/request,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/membership/userauth/recovery/magic-link/request,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          email: user@example.test,
+          env: test-env
+        }
+      },
+      ResponseType: PasskeyOkResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: membership,
+      MethodName: RevokePasskeyAsync,
+      RequestType: RevokePasskeyRequest,
+      HttpMethod: POST,
+      Path: /{version}/membership/userauth/passkeys/{CredentialId}/revoke,
+      PathParams: [
+        CredentialId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/membership/userauth/passkeys/{guid}/revoke,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          env: test-env
+        }
+      },
+      ResponseType: PasskeyOkResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: membership,
+      MethodName: StartEmailVerificationAsync,
+      RequestType: StartEmailVerificationRequest,
+      HttpMethod: POST,
+      Path: /{version}/membership/userauth/email/start-verification,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/membership/userauth/email/start-verification,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          email: user@example.test,
+          env: test-env
+        }
+      },
+      ResponseType: PasskeyOkResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: membership,
+      MethodName: UseRecoveryCodeAsync,
+      RequestType: UseRecoveryCodeRequest,
+      HttpMethod: POST,
+      Path: /{version}/membership/userauth/recovery/use-code,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/membership/userauth/recovery/use-code,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          email: user@example.test,
+          recoveryCode: test-recoveryCode,
+          env: test-env
+        }
+      },
+      ResponseType: PasskeyRecoveryResponse,
+      Response: {
+        AccessToken: test-accessToken,
+        RefreshToken: test-refreshToken,
+        ExpiresInSeconds: 7,
+        RemainingCodes: 7,
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: membership,
+      MethodName: VerifyPasskeyAuthenticationAsync,
+      RequestType: VerifyPasskeyAuthenticationRequest,
+      HttpMethod: POST,
+      Path: /{version}/membership/userauth/passkey/verify-authentication,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/membership/userauth/passkey/verify-authentication,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          ceremonyId: Guid_1,
+          assertionResponse: test-assertionResponse,
+          env: test-env
+        }
+      },
+      ResponseType: PasskeyAuthTokensResponse,
+      Response: {
+        AccessToken: test-accessToken,
+        RefreshToken: test-refreshToken,
+        ExpiresInSeconds: 7,
+        RecoveryCodes: [
+          test-string
+        ],
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: membership,
+      MethodName: VerifyPasskeyRegistrationAsync,
+      RequestType: VerifyPasskeyRegistrationRequest,
+      HttpMethod: POST,
+      Path: /{version}/membership/userauth/passkey/verify-registration,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/membership/userauth/passkey/verify-registration,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          verificationToken: test-verificationToken,
+          ceremonyId: Guid_1,
+          attestationResponse: test-attestationResponse,
+          friendlyName: test-friendlyName,
+          env: test-env
+        }
+      },
+      ResponseType: PasskeyAuthTokensResponse,
+      Response: {
+        AccessToken: test-accessToken,
+        RefreshToken: test-refreshToken,
+        ExpiresInSeconds: 7,
+        RecoveryCodes: [
+          test-string
+        ],
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
     {
       Target: Api,
       Group: membership,
       MethodName: AssignRolePermissionsAsync,
       RequestType: AssignRolePermissionsRequest,
       HttpMethod: PUT,
-      Path: /{version}/membership/users/assign-roles,
+      Path: /{version}/membership/auth/assign-roles,
       IsAccountScoped: false,
       IsUnauthenticated: false,
       Sent: {
         Method: PUT,
-        Path: /v2/membership/users/assign-roles,
+        Path: /v2/membership/auth/assign-roles,
         Headers: {
           Authorization: Bearer test-bearer,
           Content-Type: application/json; charset=utf-8,
@@ -23,7 +516,11 @@
         },
         Body: {
           id: Guid_1,
-          databaseIntegrationId: Guid_1
+          databaseIntegrationId: Guid_1,
+          roles: [
+            test-string
+          ],
+          env: test-env
         }
       },
       ResponseType: EmptyResponse,
@@ -39,12 +536,12 @@
       MethodName: BlockUserAsync,
       RequestType: BlockUserRequest,
       HttpMethod: PATCH,
-      Path: /{version}/membership/users/block,
+      Path: /{version}/membership/auth/block,
       IsAccountScoped: false,
       IsUnauthenticated: false,
       Sent: {
         Method: PATCH,
-        Path: /v2/membership/users/block,
+        Path: /v2/membership/auth/block,
         Headers: {
           Authorization: Bearer test-bearer,
           Content-Type: application/json; charset=utf-8,
@@ -53,7 +550,8 @@
         },
         Body: {
           id: Guid_1,
-          databaseIntegrationId: Guid_1
+          databaseIntegrationId: Guid_1,
+          env: test-env
         }
       },
       ResponseType: EmptyResponse,
@@ -69,13 +567,13 @@
       MethodName: DeleteUserAsync,
       RequestType: DeleteUserRequest,
       HttpMethod: DELETE,
-      Path: /{version}/membership/users,
+      Path: /{version}/membership/auth,
       IsAccountScoped: false,
       IsUnauthenticated: false,
       Sent: {
         Method: DELETE,
-        Path: /v2/membership/users,
-        Query: ?id={guid}&databaseIntegrationId={guid},
+        Path: /v2/membership/auth,
+        Query: ?id={guid}&databaseIntegrationId={guid}&env=test-env,
         Headers: {
           Authorization: Bearer test-bearer,
           X-CM-AccountId: test-account,
@@ -95,7 +593,7 @@
       MethodName: GetUserPreferencesAsync,
       RequestType: GetUserPreferencesRequest,
       HttpMethod: GET,
-      Path: /{version}/membership/users/{id}/preferences,
+      Path: /{version}/membership/auth/{id}/preferences,
       PathParams: [
         id
       ],
@@ -103,8 +601,8 @@
       IsUnauthenticated: false,
       Sent: {
         Method: GET,
-        Path: /v2/membership/users/{guid}/preferences,
-        Query: ?databaseIntegrationId={guid},
+        Path: /v2/membership/auth/{guid}/preferences,
+        Query: ?databaseIntegrationId={guid}&env=test-env,
         Headers: {
           Authorization: Bearer test-bearer,
           X-CM-AccountId: test-account,
@@ -130,7 +628,7 @@
       MethodName: GetUserAsync,
       RequestType: GetUserRequest,
       HttpMethod: GET,
-      Path: /{version}/membership/users/{id},
+      Path: /{version}/membership/auth/{id},
       PathParams: [
         id
       ],
@@ -138,8 +636,8 @@
       IsUnauthenticated: false,
       Sent: {
         Method: GET,
-        Path: /v2/membership/users/{guid},
-        Query: ?databaseIntegrationId={guid},
+        Path: /v2/membership/auth/{guid},
+        Query: ?databaseIntegrationId={guid}&env=test-env,
         Headers: {
           Authorization: Bearer test-bearer,
           X-CM-AccountId: test-account,
@@ -171,13 +669,13 @@
       MethodName: GetUsersAsync,
       RequestType: GetUsersRequest,
       HttpMethod: GET,
-      Path: /{version}/membership/users,
+      Path: /{version}/membership/auth,
       IsAccountScoped: false,
       IsUnauthenticated: false,
       Sent: {
         Method: GET,
-        Path: /v2/membership/users,
-        Query: ?databaseIntegrationId={guid}&includePermissions=True&userShouldHavePushDevice=True&userShouldHaveEmail=True&includeMeta=True&paging=Norbix.Sdk.Types.Api.PagingArgs,
+        Path: /v2/membership/auth,
+        Query: ?databaseIntegrationId={guid}&includePermissions=True&userShouldHavePushDevice=True&userShouldHaveEmail=True&includeMeta=True&env=test-env&resolvedEnv=Norbix.Sdk.Types.Api.Env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1&paging=Norbix.Sdk.Types.Api.PagingArgs,
         Headers: {
           Authorization: Bearer test-bearer,
           X-CM-AccountId: test-account,
@@ -203,15 +701,51 @@
     {
       Target: Api,
       Group: membership,
-      MethodName: InviteUserAsync,
-      RequestType: InviteUserRequest,
+      MethodName: GrantContactConsentAsync,
+      RequestType: GrantContactConsentRequest,
       HttpMethod: POST,
-      Path: /{version}/membership/users/invite,
+      Path: /{version}/membership/users/{contactId}/marketing-state/{channel}/consent,
+      PathParams: [
+        contactId,
+        channel
+      ],
       IsAccountScoped: false,
       IsUnauthenticated: false,
       Sent: {
         Method: POST,
-        Path: /v2/membership/users/invite,
+        Path: /v2/membership/users/{guid}/marketing-state/test-channel/consent,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          lawfulBasis: test-lawfulBasis,
+          source: test-source,
+          evidenceRef: test-evidenceRef,
+          env: test-env
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: membership,
+      MethodName: InviteUserAsync,
+      RequestType: InviteUserRequest,
+      HttpMethod: POST,
+      Path: /{version}/membership/auth/invite,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/membership/auth/invite,
         Headers: {
           Authorization: Bearer test-bearer,
           Content-Type: application/json; charset=utf-8,
@@ -220,7 +754,78 @@
         },
         Body: {
           email: user@example.test,
-          databaseIntegrationId: Guid_1
+          databaseIntegrationId: Guid_1,
+          env: test-env
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: membership,
+      MethodName: LinkIdentityAsync,
+      RequestType: LinkIdentityRequest,
+      HttpMethod: POST,
+      Path: /{version}/membership/auth/{userId}/link-identity,
+      PathParams: [
+        userId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/membership/auth/{guid}/link-identity,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          provider: test-provider,
+          providerToken: test-providerToken,
+          emailToVerify: user@example.test,
+          databaseIntegrationId: Guid_1,
+          env: test-env
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: membership,
+      MethodName: MapAuthToUserAsync,
+      RequestType: MapAuthToUserRequest,
+      HttpMethod: POST,
+      Path: /{version}/membership/users/{userId}/map-auth,
+      PathParams: [
+        userId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/membership/users/{guid}/map-auth,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          authId: Guid_1,
+          databaseIntegrationId: Guid_1,
+          env: test-env
         }
       },
       ResponseType: EmptyResponse,
@@ -236,12 +841,12 @@
       MethodName: SaveEmailUserAsync,
       RequestType: SaveEmailUser,
       HttpMethod: POST,
-      Path: /{version}/membership/users/register/email,
+      Path: /{version}/membership/auth/register/email,
       IsAccountScoped: false,
       IsUnauthenticated: false,
       Sent: {
         Method: POST,
-        Path: /v2/membership/users/register/email,
+        Path: /v2/membership/auth/register/email,
         Headers: {
           Authorization: Bearer test-bearer,
           Content-Type: application/json; charset=utf-8,
@@ -263,12 +868,18 @@
             addressLine2: test-addressLine2,
             blockAllMarketingMessages: false
           },
-          ignoreUserRegistersAsRole: true
+          userId: Guid_1,
+          ignoreUserRegistersAsRole: true,
+          env: test-env
         }
       },
       ResponseType: IdResponse,
       Response: {
-        Id: Guid_1
+        Id: Guid_1,
+        Status: test-status,
+        ResponseStatus: {
+          IsSuccess: true
+        }
       }
     },
     {
@@ -277,12 +888,12 @@
       MethodName: SaveEmailUserNameWithPermissionsAsync,
       RequestType: SaveEmailUserNameWithPermissions,
       HttpMethod: POST,
-      Path: /{version}/membership/users/register/email-with-permissions,
+      Path: /{version}/membership/auth/register/email-with-permissions,
       IsAccountScoped: false,
       IsUnauthenticated: false,
       Sent: {
         Method: POST,
-        Path: /v2/membership/users/register/email-with-permissions,
+        Path: /v2/membership/auth/register/email-with-permissions,
         Headers: {
           Authorization: Bearer test-bearer,
           Content-Type: application/json; charset=utf-8,
@@ -292,6 +903,9 @@
         Body: {
           password: test-password,
           email: user@example.test,
+          roles: [
+            test-string
+          ],
           databaseIntegrationId: Guid_1,
           userGeneralInfo: {
             phone: test-phone,
@@ -304,12 +918,18 @@
             addressLine2: test-addressLine2,
             blockAllMarketingMessages: false
           },
-          ignoreUserRegistersAsRole: true
+          userId: Guid_1,
+          ignoreUserRegistersAsRole: true,
+          env: test-env
         }
       },
       ResponseType: IdResponse,
       Response: {
-        Id: Guid_1
+        Id: Guid_1,
+        Status: test-status,
+        ResponseStatus: {
+          IsSuccess: true
+        }
       }
     },
     {
@@ -318,12 +938,12 @@
       MethodName: SaveGuestUserAsync,
       RequestType: SaveGuestUser,
       HttpMethod: POST,
-      Path: /{version}/membership/users/register/guest,
+      Path: /{version}/membership/auth/register/guest,
       IsAccountScoped: false,
       IsUnauthenticated: false,
       Sent: {
         Method: POST,
-        Path: /v2/membership/users/register/guest,
+        Path: /v2/membership/auth/register/guest,
         Headers: {
           Authorization: Bearer test-bearer,
           Content-Type: application/json; charset=utf-8,
@@ -343,12 +963,18 @@
             addressLine2: test-addressLine2,
             blockAllMarketingMessages: false
           },
-          ignoreUserRegistersAsRole: true
+          userId: Guid_1,
+          ignoreUserRegistersAsRole: true,
+          env: test-env
         }
       },
       ResponseType: IdResponse,
       Response: {
-        Id: Guid_1
+        Id: Guid_1,
+        Status: test-status,
+        ResponseStatus: {
+          IsSuccess: true
+        }
       }
     },
     {
@@ -357,12 +983,12 @@
       MethodName: SavePhoneUserAsync,
       RequestType: SavePhoneUser,
       HttpMethod: POST,
-      Path: /{version}/membership/users/register/phone,
+      Path: /{version}/membership/auth/register/phone,
       IsAccountScoped: false,
       IsUnauthenticated: false,
       Sent: {
         Method: POST,
-        Path: /v2/membership/users/register/phone,
+        Path: /v2/membership/auth/register/phone,
         Headers: {
           Authorization: Bearer test-bearer,
           Content-Type: application/json; charset=utf-8,
@@ -383,12 +1009,18 @@
             addressLine2: test-addressLine2,
             blockAllMarketingMessages: false
           },
-          ignoreUserRegistersAsRole: true
+          userId: Guid_1,
+          ignoreUserRegistersAsRole: true,
+          env: test-env
         }
       },
       ResponseType: IdResponse,
       Response: {
-        Id: Guid_1
+        Id: Guid_1,
+        Status: test-status,
+        ResponseStatus: {
+          IsSuccess: true
+        }
       }
     },
     {
@@ -397,12 +1029,12 @@
       MethodName: SavePhoneUserNameWithPermissionsAsync,
       RequestType: SavePhoneUserNameWithPermissions,
       HttpMethod: POST,
-      Path: /{version}/membership/users/register/phone-with-permissions,
+      Path: /{version}/membership/auth/register/phone-with-permissions,
       IsAccountScoped: false,
       IsUnauthenticated: false,
       Sent: {
         Method: POST,
-        Path: /v2/membership/users/register/phone-with-permissions,
+        Path: /v2/membership/auth/register/phone-with-permissions,
         Headers: {
           Authorization: Bearer test-bearer,
           Content-Type: application/json; charset=utf-8,
@@ -411,6 +1043,9 @@
         },
         Body: {
           phone: test-phone,
+          roles: [
+            test-string
+          ],
           databaseIntegrationId: Guid_1,
           userGeneralInfo: {
             phone: test-phone,
@@ -423,12 +1058,18 @@
             addressLine2: test-addressLine2,
             blockAllMarketingMessages: false
           },
-          ignoreUserRegistersAsRole: true
+          userId: Guid_1,
+          ignoreUserRegistersAsRole: true,
+          env: test-env
         }
       },
       ResponseType: IdResponse,
       Response: {
-        Id: Guid_1
+        Id: Guid_1,
+        Status: test-status,
+        ResponseStatus: {
+          IsSuccess: true
+        }
       }
     },
     {
@@ -437,12 +1078,12 @@
       MethodName: SaveSystemUserWithPermissionsAsync,
       RequestType: SaveSystemUserWithPermissions,
       HttpMethod: POST,
-      Path: /{version}/membership/users/register/service,
+      Path: /{version}/membership/auth/register/service,
       IsAccountScoped: false,
       IsUnauthenticated: false,
       Sent: {
         Method: POST,
-        Path: /v2/membership/users/register/service,
+        Path: /v2/membership/auth/register/service,
         Headers: {
           Authorization: Bearer test-bearer,
           Content-Type: application/json; charset=utf-8,
@@ -450,6 +1091,9 @@
           X-CM-ProjectId: test-project
         },
         Body: {
+          roles: [
+            test-string
+          ],
           databaseIntegrationId: Guid_1,
           userGeneralInfo: {
             phone: test-phone,
@@ -462,12 +1106,18 @@
             addressLine2: test-addressLine2,
             blockAllMarketingMessages: false
           },
-          ignoreUserRegistersAsRole: true
+          userId: Guid_1,
+          ignoreUserRegistersAsRole: true,
+          env: test-env
         }
       },
       ResponseType: IdResponse,
       Response: {
-        Id: Guid_1
+        Id: Guid_1,
+        Status: test-status,
+        ResponseStatus: {
+          IsSuccess: true
+        }
       }
     },
     {
@@ -476,12 +1126,12 @@
       MethodName: SaveUserNameUserAsync,
       RequestType: SaveUserNameUser,
       HttpMethod: POST,
-      Path: /{version}/membership/users/register/user-name,
+      Path: /{version}/membership/auth/register/user-name,
       IsAccountScoped: false,
       IsUnauthenticated: false,
       Sent: {
         Method: POST,
-        Path: /v2/membership/users/register/user-name,
+        Path: /v2/membership/auth/register/user-name,
         Headers: {
           Authorization: Bearer test-bearer,
           Content-Type: application/json; charset=utf-8,
@@ -503,12 +1153,18 @@
             addressLine2: test-addressLine2,
             blockAllMarketingMessages: false
           },
-          ignoreUserRegistersAsRole: true
+          userId: Guid_1,
+          ignoreUserRegistersAsRole: true,
+          env: test-env
         }
       },
       ResponseType: IdResponse,
       Response: {
-        Id: Guid_1
+        Id: Guid_1,
+        Status: test-status,
+        ResponseStatus: {
+          IsSuccess: true
+        }
       }
     },
     {
@@ -517,12 +1173,12 @@
       MethodName: SaveUserNameWithPermissionsAsync,
       RequestType: SaveUserNameWithPermissions,
       HttpMethod: POST,
-      Path: /{version}/membership/users/register/user-name-with-permissions,
+      Path: /{version}/membership/auth/register/user-name-with-permissions,
       IsAccountScoped: false,
       IsUnauthenticated: false,
       Sent: {
         Method: POST,
-        Path: /v2/membership/users/register/user-name-with-permissions,
+        Path: /v2/membership/auth/register/user-name-with-permissions,
         Headers: {
           Authorization: Bearer test-bearer,
           Content-Type: application/json; charset=utf-8,
@@ -532,6 +1188,9 @@
         Body: {
           password: test-password,
           userName: test-userName,
+          roles: [
+            test-string
+          ],
           databaseIntegrationId: Guid_1,
           userGeneralInfo: {
             phone: test-phone,
@@ -544,12 +1203,90 @@
             addressLine2: test-addressLine2,
             blockAllMarketingMessages: false
           },
-          ignoreUserRegistersAsRole: true
+          userId: Guid_1,
+          ignoreUserRegistersAsRole: true,
+          env: test-env
         }
       },
       ResponseType: IdResponse,
       Response: {
-        Id: Guid_1
+        Id: Guid_1,
+        Status: test-status,
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: membership,
+      MethodName: SetContactRolesAsync,
+      RequestType: SetContactRolesRequest,
+      HttpMethod: PUT,
+      Path: /{version}/membership/users/{userId}/roles,
+      PathParams: [
+        userId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: PUT,
+        Path: /v2/membership/users/{guid}/roles,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          roles: [
+            test-string
+          ],
+          databaseIntegrationId: Guid_1,
+          env: test-env
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: membership,
+      MethodName: SetContactTagSubscriptionAsync,
+      RequestType: SetContactTagSubscriptionRequest,
+      HttpMethod: PUT,
+      Path: /{version}/membership/users/{contactId}/marketing-state/{commChannel}/{channel}/tags/{tag},
+      PathParams: [
+        contactId,
+        commChannel,
+        channel,
+        tag
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: PUT,
+        Path: /v2/membership/users/{guid}/marketing-state/test-commChannel/test-channel/tags/test-tag,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          subscribed: true,
+          env: test-env
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
       }
     },
     {
@@ -558,12 +1295,12 @@
       MethodName: UnblockUserAsync,
       RequestType: UnblockUserRequest,
       HttpMethod: PATCH,
-      Path: /{version}/membership/users/unblock,
+      Path: /{version}/membership/auth/unblock,
       IsAccountScoped: false,
       IsUnauthenticated: false,
       Sent: {
         Method: PATCH,
-        Path: /v2/membership/users/unblock,
+        Path: /v2/membership/auth/unblock,
         Headers: {
           Authorization: Bearer test-bearer,
           Content-Type: application/json; charset=utf-8,
@@ -572,7 +1309,42 @@
         },
         Body: {
           id: Guid_1,
-          databaseIntegrationId: Guid_1
+          databaseIntegrationId: Guid_1,
+          env: test-env
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: membership,
+      MethodName: UnsubscribeContactAsync,
+      RequestType: UnsubscribeContactRequest,
+      HttpMethod: POST,
+      Path: /{version}/membership/users/{contactId}/marketing-state/{channel}/unsubscribe,
+      PathParams: [
+        contactId,
+        channel
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/membership/users/{guid}/marketing-state/test-channel/unsubscribe,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          reason: test-reason,
+          env: test-env
         }
       },
       ResponseType: EmptyResponse,
@@ -588,7 +1360,7 @@
       MethodName: UpdateUserPreferencesAsync,
       RequestType: UpdateUserPreferencesRequest,
       HttpMethod: PUT,
-      Path: /{version}/membership/users/{id}/preferences,
+      Path: /{version}/membership/auth/{id}/preferences,
       PathParams: [
         id
       ],
@@ -596,7 +1368,7 @@
       IsUnauthenticated: false,
       Sent: {
         Method: PUT,
-        Path: /v2/membership/users/{guid}/preferences,
+        Path: /v2/membership/auth/{guid}/preferences,
         Headers: {
           Authorization: Bearer test-bearer,
           Content-Type: application/json; charset=utf-8,
@@ -606,11 +1378,10 @@
         Body: {
           blockAllMarketingMessages: true,
           blockedTags: {
-            test-key: [
-              test-string
-            ]
+            test-key: null
           },
-          databaseIntegrationId: Guid_1
+          databaseIntegrationId: Guid_1,
+          env: test-env
         }
       },
       ResponseType: EmptyResponse,
@@ -626,12 +1397,12 @@
       MethodName: UpdateUserAsync,
       RequestType: UpdateUserRequest,
       HttpMethod: PUT,
-      Path: /{version}/membership/users,
+      Path: /{version}/membership/auth,
       IsAccountScoped: false,
       IsUnauthenticated: false,
       Sent: {
         Method: PUT,
-        Path: /v2/membership/users,
+        Path: /v2/membership/auth,
         Headers: {
           Authorization: Bearer test-bearer,
           Content-Type: application/json; charset=utf-8,
@@ -652,12 +1423,112 @@
             addressLine2: test-addressLine2,
             blockAllMarketingMessages: false
           },
-          ignoreUserRegistersAsRole: true
+          userId: Guid_1,
+          ignoreUserRegistersAsRole: true,
+          env: test-env
         }
       },
       ResponseType: IdResponse,
       Response: {
-        Id: Guid_1
+        Id: Guid_1,
+        Status: test-status,
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: membership,
+      MethodName: ChangePasswordAsync,
+      RequestType: ChangePasswordRequest,
+      HttpMethod: POST,
+      Path: /{version}/membership/userauth/password/change,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/membership/userauth/password/change,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          currentPassword: test-currentPassword,
+          newPassword: test-newPassword,
+          databaseIntegrationId: Guid_1,
+          env: test-env
+        }
+      },
+      ResponseType: PasskeyOkResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: membership,
+      MethodName: RequestPasswordResetAsync,
+      RequestType: RequestPasswordResetRequest,
+      HttpMethod: POST,
+      Path: /{version}/membership/userauth/password/reset/request,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/membership/userauth/password/reset/request,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          email: user@example.test,
+          env: test-env
+        }
+      },
+      ResponseType: PasskeyOkResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: membership,
+      MethodName: ConfirmPasswordResetAsync,
+      RequestType: ConfirmPasswordResetRequest,
+      HttpMethod: POST,
+      Path: /{version}/membership/userauth/password/reset/confirm,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/membership/userauth/password/reset/confirm,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          token: test-token,
+          newPassword: test-newPassword,
+          databaseIntegrationId: Guid_1,
+          env: test-env
+        }
+      },
+      ResponseType: PasskeyOkResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
       }
     }
   ]

@@ -22,7 +22,8 @@
           X-CM-ProjectId: test-project
         },
         Body: {
-          prompt: test-prompt
+          prompt: test-prompt,
+          env: test-env
         }
       },
       ResponseType: AskChatResponse,
