@@ -1,0 +1,81 @@
+﻿{
+  Target: Hub,
+  Group: public,
+  Count: 2,
+  Endpoints: [
+    {
+      Target: Hub,
+      Group: public,
+      MethodName: GetPublicProjectConfigAsync,
+      RequestType: GetPublicProjectConfig,
+      HttpMethod: GET,
+      Path: /{version}/public/projects/{ProjectId}/config,
+      PathParams: [
+        ProjectId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/public/projects/{guid}/config,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: PublicProjectConfigDto,
+      Response: {
+        DisplayName: test-displayName,
+        AdminPortalEnabled: true,
+        Branding: {
+          DisplayName: test-displayName,
+          MainColor: test-mainColor,
+          AccentColor: test-accentColor,
+          LogoUrl: https://example.test/logoUrl,
+          IconUrl: https://example.test/iconUrl
+        },
+        Auth: {
+          SocialProviders: [
+            test-string
+          ],
+          Passkey: true,
+          Methods: [
+            test-string
+          ],
+          PasswordPolicy: {}
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: public,
+      MethodName: GetPublicProjectLegalAsync,
+      RequestType: GetPublicProjectLegal,
+      HttpMethod: GET,
+      Path: /{version}/public/projects/{ProjectId}/legal/{Kind},
+      PathParams: [
+        ProjectId,
+        Kind
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/public/projects/{guid}/legal/test-kind,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: PublicLegalDocumentDto,
+      Response: {
+        Kind: test-kind,
+        Title: test-title,
+        Body: test-body,
+        Available: true
+      }
+    }
+  ]
+}

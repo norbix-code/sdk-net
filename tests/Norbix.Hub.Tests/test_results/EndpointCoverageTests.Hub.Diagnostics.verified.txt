@@ -1,0 +1,270 @@
+﻿{
+  Target: Hub,
+  Group: diagnostics,
+  Count: 7,
+  Endpoints: [
+    {
+      Target: Hub,
+      Group: diagnostics,
+      MethodName: GetDiagnosticEchoAsync,
+      RequestType: GetDiagnosticEcho,
+      HttpMethod: GET,
+      Path: /{version}/diagnostics/echo,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/diagnostics/echo,
+        Query: ?caseId={guid}&env=test-env,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: GetDiagnosticEchoResponse,
+      Response: {
+        Result: {
+          ContainerName: test-containerName,
+          IsManagedService: true,
+          ApiVersion: test-apiVersion,
+          HubVersion: test-hubVersion,
+          Release: test-release,
+          Runtime: test-runtime,
+          HubUrl: https://example.test/hubUrl,
+          ApiUrl: https://example.test/apiUrl,
+          LicensePresent: false
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: diagnostics,
+      MethodName: GetDiagnosticPacksAsync,
+      RequestType: GetDiagnosticPacks,
+      HttpMethod: GET,
+      Path: /{version}/diagnostics/packs,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/diagnostics/packs,
+        Query: ?env=test-env,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: GetDiagnosticPacksResponse,
+      Response: {
+        Packs: [
+          {}
+        ],
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: diagnostics,
+      MethodName: InspectDiagnosticRedisAsync,
+      RequestType: InspectDiagnosticRedisRequest,
+      HttpMethod: GET,
+      Path: /{version}/diagnostics/redis,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/diagnostics/redis,
+        Query: ?keyPattern=test-keyPattern&caseId={guid}&env=test-env,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: InspectDiagnosticRedisResponse,
+      Response: {
+        Result: {
+          KeyPattern: test-keyPattern,
+          CacheKey: test-cacheKey,
+          IsList: true,
+          Item: {
+            sample-key: {
+              ValueKind: Object
+            }
+          },
+          ListItems: [
+            {}
+          ],
+          HasMore: true,
+          StartingAfter: test-startingAfter
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: diagnostics,
+      MethodName: QueryDiagnosticLogsAsync,
+      RequestType: QueryDiagnosticLogsRequest,
+      HttpMethod: GET,
+      Path: /{version}/diagnostics/logs,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/diagnostics/logs,
+        Query: ?level=test-level&module=test-module&logCorrelationId={guid}&eventCode=test-eventCode&search=test-search&fromUtc=2026-04-27T12%3a00%3a00.0000000Z&toUtc=2026-04-27T12%3a00%3a00.0000000Z&caseId={guid}&env=test-env&resolvedEnv=Norbix.Sdk.Types.Hub.Env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1&paging=Norbix.Sdk.Types.Hub.PagingArgs,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: QueryDiagnosticLogsResponse,
+      Response: {
+        Result: {
+          List: {
+            Items: [
+              {}
+            ],
+            HasMore: false,
+            HasPrevious: false,
+            StartingAfter: cursor-start,
+            EndingBefore: cursor-end
+          }
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: diagnostics,
+      MethodName: ReadDiagnosticEventsAsync,
+      RequestType: ReadDiagnosticEventsRequest,
+      HttpMethod: GET,
+      Path: /{version}/diagnostics/events,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/diagnostics/events,
+        Query: ?stream=test-stream&from=1&count=1&caseId={guid}&env=test-env,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: ReadDiagnosticEventsResponse,
+      Response: {
+        Result: {
+          Stream: test-stream,
+          From: 42,
+          Count: 7,
+          HasMore: true,
+          NextFrom: 42,
+          Items: [
+            {}
+          ]
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: diagnostics,
+      MethodName: RunDiagnosticHealthCheckAsync,
+      RequestType: RunDiagnosticHealthCheckRequest,
+      HttpMethod: POST,
+      Path: /{version}/diagnostics/health/{CheckId},
+      PathParams: [
+        CheckId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/diagnostics/health/{guid},
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          caseId: Guid_1,
+          env: test-env
+        }
+      },
+      ResponseType: RunDiagnosticHealthCheckResponse,
+      Response: {
+        Result: {
+          CheckId: Guid_1,
+          IsHealthy: true,
+          StatusCode: 7,
+          Detail: test-detail
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: diagnostics,
+      MethodName: RunDiagnosticPackAsync,
+      RequestType: RunDiagnosticPackRequest,
+      HttpMethod: POST,
+      Path: /{version}/diagnostics/packs/{PackName}/run,
+      PathParams: [
+        PackName
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/diagnostics/packs/test-packName/run,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          packVersion: 1.0,
+          caseId: Guid_1,
+          env: test-env
+        }
+      },
+      ResponseType: RunDiagnosticPackResponse,
+      Response: {
+        Result: {
+          PackName: test-packName,
+          PackVersion: 7,
+          CaseId: Guid_1,
+          Steps: [
+            {
+              IsSuccess: false
+            }
+          ]
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    }
+  ]
+}

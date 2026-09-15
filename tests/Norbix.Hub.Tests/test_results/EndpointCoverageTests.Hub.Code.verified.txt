@@ -1,0 +1,1168 @@
+﻿{
+  Target: Hub,
+  Group: code,
+  Count: 33,
+  Endpoints: [
+    {
+      Target: Hub,
+      Group: code,
+      MethodName: DisableCodeAsync,
+      RequestType: DisableCode,
+      HttpMethod: GET,
+      Path: /{version}/code/disable,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/code/disable,
+        Query: ?env=test-env,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: code,
+      MethodName: EnableCodeAsync,
+      RequestType: EnableCode,
+      HttpMethod: GET,
+      Path: /{version}/code/enable,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/code/enable,
+        Query: ?env=test-env,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: code,
+      MethodName: ConfirmCodeIntegrationHumanDeliveryAsync,
+      RequestType: ConfirmCodeIntegrationHumanDeliveryRequest,
+      HttpMethod: POST,
+      Path: /{version}/code/integrations/confirm-human-delivery,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/code/integrations/confirm-human-delivery,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          integrationId: Guid_1,
+          env: test-env
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: code,
+      MethodName: DeleteCodeIntegrationAsync,
+      RequestType: DeleteCodeIntegrationRequest,
+      HttpMethod: DELETE,
+      Path: /{version}/code/integrations/{Id},
+      PathParams: [
+        Id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: DELETE,
+        Path: /v2/code/integrations/{guid},
+        Query: ?env=test-env,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: code,
+      MethodName: DisableCodeIntegrationAsync,
+      RequestType: DisableCodeIntegrationRequest,
+      HttpMethod: PUT,
+      Path: /{version}/code/integrations/{Id}/disable,
+      PathParams: [
+        Id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: PUT,
+        Path: /v2/code/integrations/{guid}/disable,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          env: test-env
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: code,
+      MethodName: EnableCodeIntegrationAsync,
+      RequestType: EnableCodeIntegrationRequest,
+      HttpMethod: PUT,
+      Path: /{version}/code/integrations/{Id}/enable,
+      PathParams: [
+        Id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: PUT,
+        Path: /v2/code/integrations/{guid}/enable,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          env: test-env
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: code,
+      MethodName: GetCodeIntegrationAsync,
+      RequestType: GetCodeIntegration,
+      HttpMethod: GET,
+      Path: /{version}/code/integrations/{id},
+      PathParams: [
+        id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/code/integrations/{guid},
+        Query: ?env=test-env,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: GetCodeIntegrationResponse,
+      Response: {
+        Item: {
+          ViewId: Guid_1,
+          IntegrationName: test-integrationName,
+          IsEnabled: true,
+          Env: test-env,
+          LastIntegrationTestAtUtc: DateTime_1,
+          LastIntegrationTestSucceeded: true,
+          LastIntegrationTestErrors: [
+            test-string
+          ],
+          RequiresHumanDeliveryConfirmation: false
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: code,
+      MethodName: GetCodeIntegrationsAsync,
+      RequestType: GetCodeIntegrations,
+      HttpMethod: GET,
+      Path: /{version}/code/integrations,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/code/integrations,
+        Query: ?env=test-env&resolvedEnv=Norbix.Sdk.Types.Hub.Env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1&paging=Norbix.Sdk.Types.Hub.PagingArgs,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: GetCodeIntegrationsResponse,
+      Response: {
+        List: {
+          Items: [
+            {
+              IsEnabled: false,
+              RequiresHumanDeliveryConfirmation: false
+            }
+          ],
+          HasMore: false,
+          HasPrevious: false,
+          StartingAfter: cursor-start,
+          EndingBefore: cursor-end
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: code,
+      MethodName: SaveCodeIntegrationAsync,
+      RequestType: SaveCodeIntegration,
+      HttpMethod: POST,
+      Path: /{version}/code/integrations,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/code/integrations,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          integration: {
+            integrationId: Guid_1,
+            provider: 0.0,
+            integrationName: test-integrationName,
+            isEnabled: true
+          },
+          env: test-env
+        }
+      },
+      ResponseType: IdResponse,
+      Response: {
+        Id: Guid_1,
+        Status: test-status,
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: code,
+      MethodName: SetCodeIntegrationAsDefaultAsync,
+      RequestType: SetCodeIntegrationAsDefault,
+      HttpMethod: PUT,
+      Path: /{version}/code/integrations/{Id}/default,
+      PathParams: [
+        Id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: PUT,
+        Path: /v2/code/integrations/{guid}/default,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          env: test-env
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: code,
+      MethodName: TestCodeIntegrationAsync,
+      RequestType: TestCodeIntegration,
+      HttpMethod: POST,
+      Path: /{version}/code/integrations/test,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/code/integrations/test,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          integrationId: Guid_1,
+          env: test-env
+        }
+      },
+      ResponseType: TestCodeIntegrationResponse,
+      Response: {
+        Items: [
+          {}
+        ],
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: code,
+      MethodName: DeleteMarketplaceFunctionAsync,
+      RequestType: DeleteMarketplaceFunction,
+      HttpMethod: DELETE,
+      Path: /{version}/code/marketplace/integrations/{IntegrationViewId}/functions/{FunctionViewId},
+      PathParams: [
+        IntegrationViewId,
+        FunctionViewId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: DELETE,
+        Path: /v2/code/marketplace/integrations/{guid}/functions/{guid},
+        Query: ?env=test-env,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: IdResponse,
+      Response: {
+        Id: Guid_1,
+        Status: test-status,
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: code,
+      MethodName: DisableMarketplaceFunctionAsync,
+      RequestType: DisableMarketplaceFunction,
+      HttpMethod: POST,
+      Path: /{version}/code/marketplace/integrations/{IntegrationViewId}/functions/{FunctionViewId}/disable,
+      PathParams: [
+        IntegrationViewId,
+        FunctionViewId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/code/marketplace/integrations/{guid}/functions/{guid}/disable,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          env: test-env
+        }
+      },
+      ResponseType: IdResponse,
+      Response: {
+        Id: Guid_1,
+        Status: test-status,
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: code,
+      MethodName: EnableMarketplaceFunctionAsync,
+      RequestType: EnableMarketplaceFunction,
+      HttpMethod: POST,
+      Path: /{version}/code/marketplace/integrations/{IntegrationViewId}/functions/{FunctionViewId}/enable,
+      PathParams: [
+        IntegrationViewId,
+        FunctionViewId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/code/marketplace/integrations/{guid}/functions/{guid}/enable,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          env: test-env
+        }
+      },
+      ResponseType: IdResponse,
+      Response: {
+        Id: Guid_1,
+        Status: test-status,
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: code,
+      MethodName: GetMarketplaceFunctionAsync,
+      RequestType: GetMarketplaceFunction,
+      HttpMethod: GET,
+      Path: /{version}/code/marketplace/integrations/{IntegrationViewId}/functions/{FunctionViewId},
+      PathParams: [
+        IntegrationViewId,
+        FunctionViewId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/code/marketplace/integrations/{guid}/functions/{guid},
+        Query: ?env=test-env,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: GetMarketplaceFunctionResponse,
+      Response: {
+        Function: {
+          ViewId: Guid_1,
+          IntegrationViewId: Guid_1,
+          FunctionKey: test-functionKey,
+          DisplayName: test-displayName,
+          Description: test-description,
+          IsEnabled: true,
+          RequestTemplate: test-requestTemplate,
+          MappedTokens: [
+            {}
+          ]
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: code,
+      MethodName: GetMarketplaceFunctionCatalogAsync,
+      RequestType: GetMarketplaceFunctionCatalog,
+      HttpMethod: GET,
+      Path: /{version}/code/marketplace/integrations/{IntegrationViewId}/catalog,
+      PathParams: [
+        IntegrationViewId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/code/marketplace/integrations/{guid}/catalog,
+        Query: ?env=test-env,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: GetMarketplaceFunctionCatalogResponse,
+      Response: {
+        Functions: [
+          {}
+        ],
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: code,
+      MethodName: GetMarketplaceFunctionsAsync,
+      RequestType: GetMarketplaceFunctions,
+      HttpMethod: GET,
+      Path: /{version}/code/marketplace/integrations/{IntegrationViewId}/functions,
+      PathParams: [
+        IntegrationViewId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/code/marketplace/integrations/{guid}/functions,
+        Query: ?env=test-env&resolvedEnv=Norbix.Sdk.Types.Hub.Env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1&paging=Norbix.Sdk.Types.Hub.PagingArgs,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: GetMarketplaceFunctionsResponse,
+      Response: {
+        List: {
+          Items: [
+            {
+              IsEnabled: false
+            }
+          ],
+          HasMore: false,
+          HasPrevious: false,
+          StartingAfter: cursor-start,
+          EndingBefore: cursor-end
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: code,
+      MethodName: GetMarketplaceFunctionTokensAsync,
+      RequestType: GetMarketplaceFunctionTokens,
+      HttpMethod: GET,
+      Path: /{version}/code/marketplace/integrations/{IntegrationViewId}/functions/{FunctionViewId}/tokens,
+      PathParams: [
+        IntegrationViewId,
+        FunctionViewId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/code/marketplace/integrations/{guid}/functions/{guid}/tokens,
+        Query: ?env=test-env,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: GetMarketplaceTokensResponse,
+      Response: {
+        Tokens: [
+          test-string
+        ],
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: code,
+      MethodName: InvokeMarketplaceFunctionAsync,
+      RequestType: InvokeMarketplaceFunction,
+      HttpMethod: POST,
+      Path: /{version}/code/marketplace/functions/{FunctionViewId}/invoke,
+      PathParams: [
+        FunctionViewId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/code/marketplace/functions/{guid}/invoke,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          payload: {
+            test-key: null
+          },
+          env: test-env
+        }
+      },
+      ResponseType: InvokeMarketplaceFunctionResponse,
+      Response: {
+        IsSuccess: true,
+        Output: {
+          ValueKind: Object
+        },
+        VendorRequestId: Guid_1,
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: code,
+      MethodName: SaveMarketplaceFunctionAsync,
+      RequestType: SaveMarketplaceFunction,
+      HttpMethod: POST,
+      Path: /{version}/code/marketplace/integrations/{IntegrationViewId}/functions,
+      PathParams: [
+        IntegrationViewId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/code/marketplace/integrations/{guid}/functions,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          function: {
+            viewId: Guid_1,
+            integrationViewId: Guid_1,
+            functionKey: test-functionKey,
+            displayName: test-displayName,
+            description: test-description,
+            isEnabled: true,
+            requestTemplate: test-requestTemplate,
+            mappedTokens: [
+              null
+            ]
+          },
+          env: test-env
+        }
+      },
+      ResponseType: IdResponse,
+      Response: {
+        Id: Guid_1,
+        Status: test-status,
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: code,
+      MethodName: DeleteMarketplaceIntegrationAsync,
+      RequestType: DeleteMarketplaceIntegration,
+      HttpMethod: DELETE,
+      Path: /{version}/code/marketplace/integrations/{IntegrationViewId},
+      PathParams: [
+        IntegrationViewId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: DELETE,
+        Path: /v2/code/marketplace/integrations/{guid},
+        Query: ?env=test-env,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: IdResponse,
+      Response: {
+        Id: Guid_1,
+        Status: test-status,
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: code,
+      MethodName: DisableMarketplaceIntegrationAsync,
+      RequestType: DisableMarketplaceIntegration,
+      HttpMethod: POST,
+      Path: /{version}/code/marketplace/integrations/{IntegrationViewId}/disable,
+      PathParams: [
+        IntegrationViewId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/code/marketplace/integrations/{guid}/disable,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          env: test-env
+        }
+      },
+      ResponseType: IdResponse,
+      Response: {
+        Id: Guid_1,
+        Status: test-status,
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: code,
+      MethodName: EnableMarketplaceIntegrationAsync,
+      RequestType: EnableMarketplaceIntegration,
+      HttpMethod: POST,
+      Path: /{version}/code/marketplace/integrations/{IntegrationViewId}/enable,
+      PathParams: [
+        IntegrationViewId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/code/marketplace/integrations/{guid}/enable,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          env: test-env
+        }
+      },
+      ResponseType: IdResponse,
+      Response: {
+        Id: Guid_1,
+        Status: test-status,
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: code,
+      MethodName: GetMarketplaceIntegrationAsync,
+      RequestType: GetMarketplaceIntegration,
+      HttpMethod: GET,
+      Path: /{version}/code/marketplace/integrations/{IntegrationViewId},
+      PathParams: [
+        IntegrationViewId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/code/marketplace/integrations/{guid},
+        Query: ?env=test-env,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: GetMarketplaceIntegrationResponse,
+      Response: {
+        Integration: {
+          ListingViewId: Guid_1,
+          Vendor: test-vendor,
+          Description: test-description,
+          Config: {
+            sample-key: test-string
+          }
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: code,
+      MethodName: GetMarketplaceIntegrationsAsync,
+      RequestType: GetMarketplaceIntegrations,
+      HttpMethod: GET,
+      Path: /{version}/code/marketplace/integrations,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/code/marketplace/integrations,
+        Query: ?env=test-env&resolvedEnv=Norbix.Sdk.Types.Hub.Env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1&paging=Norbix.Sdk.Types.Hub.PagingArgs,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: GetMarketplaceIntegrationsResponse,
+      Response: {
+        List: {
+          Items: [
+            {
+              IsEnabled: false,
+              RequiresHumanDeliveryConfirmation: false
+            }
+          ],
+          HasMore: false,
+          HasPrevious: false,
+          StartingAfter: cursor-start,
+          EndingBefore: cursor-end
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: code,
+      MethodName: ReplaceMarketplaceIntegrationSecretsAsync,
+      RequestType: ReplaceMarketplaceIntegrationSecretsRequest,
+      HttpMethod: PUT,
+      Path: /{version}/code/marketplace/integrations/{IntegrationViewId}/secrets,
+      PathParams: [
+        IntegrationViewId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: PUT,
+        Path: /v2/code/marketplace/integrations/{guid}/secrets,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          secrets: {
+            test-key: test-string
+          },
+          env: test-env
+        }
+      },
+      ResponseType: EmptyMarketplaceSecretsResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: code,
+      MethodName: RevealMarketplaceIntegrationSecretsAsync,
+      RequestType: RevealMarketplaceIntegrationSecretsRequest,
+      HttpMethod: POST,
+      Path: /{version}/code/marketplace/integrations/{IntegrationViewId}/secrets/reveal,
+      PathParams: [
+        IntegrationViewId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/code/marketplace/integrations/{guid}/secrets/reveal,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          env: test-env
+        }
+      },
+      ResponseType: RevealMarketplaceIntegrationSecretsResponse,
+      Response: {
+        Secrets: {
+          sample-key: test-string
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: code,
+      MethodName: SaveMarketplaceIntegrationAsync,
+      RequestType: SaveMarketplaceIntegration,
+      HttpMethod: POST,
+      Path: /{version}/code/marketplace/integrations,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/code/marketplace/integrations,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          integration: {
+            listingViewId: Guid_1,
+            transport: 0.0,
+            vendor: test-vendor,
+            category: 0.0,
+            description: test-description,
+            config: {
+              test-key: test-string
+            },
+            viewId: Guid_1,
+            integrationName: test-integrationName,
+            isEnabled: false,
+            requiresHumanDeliveryConfirmation: false
+          },
+          secrets: {
+            test-key: test-string
+          },
+          env: test-env
+        }
+      },
+      ResponseType: IdResponse,
+      Response: {
+        Id: Guid_1,
+        Status: test-status,
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: code,
+      MethodName: SetMarketplaceIntegrationTokenMappingsAsync,
+      RequestType: SetMarketplaceIntegrationTokenMappingsRequest,
+      HttpMethod: PUT,
+      Path: /{version}/code/marketplace/integrations/{IntegrationViewId}/token-mappings,
+      PathParams: [
+        IntegrationViewId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: PUT,
+        Path: /v2/code/marketplace/integrations/{guid}/token-mappings,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          tokenMappings: [
+            null
+          ],
+          env: test-env
+        }
+      },
+      ResponseType: SetMarketplaceIntegrationTokenMappingsResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: code,
+      MethodName: TestMarketplaceIntegrationAsync,
+      RequestType: TestMarketplaceIntegration,
+      HttpMethod: POST,
+      Path: /{version}/code/marketplace/integrations/{IntegrationViewId}/test,
+      PathParams: [
+        IntegrationViewId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/code/marketplace/integrations/{guid}/test,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          env: test-env
+        }
+      },
+      ResponseType: TestMarketplaceIntegrationResponse,
+      Response: {
+        Items: [
+          {}
+        ],
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: code,
+      MethodName: GetMarketplaceListingAsync,
+      RequestType: GetMarketplaceListing,
+      HttpMethod: GET,
+      Path: /{version}/code/marketplace/listings/{ListingViewId},
+      PathParams: [
+        ListingViewId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/code/marketplace/listings/{guid},
+        Query: ?env=test-env,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: GetMarketplaceListingResponse,
+      Response: {
+        Listing: {
+          ViewId: Guid_1,
+          Slug: test-slug,
+          DisplayName: test-displayName,
+          Vendor: test-vendor,
+          Description: test-description,
+          IconUrl: https://example.test/iconUrl,
+          IsOfficial: false
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: code,
+      MethodName: GetMarketplaceListingFunctionTokensAsync,
+      RequestType: GetMarketplaceListingFunctionTokens,
+      HttpMethod: GET,
+      Path: /{version}/code/marketplace/listings/{ListingViewId}/functions/{FunctionKey}/tokens,
+      PathParams: [
+        ListingViewId,
+        FunctionKey
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/code/marketplace/listings/{guid}/functions/test-functionKey/tokens,
+        Query: ?env=test-env,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: GetMarketplaceTokensResponse,
+      Response: {
+        Tokens: [
+          test-string
+        ],
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: code,
+      MethodName: GetMarketplaceListingsAsync,
+      RequestType: GetMarketplaceListings,
+      HttpMethod: GET,
+      Path: /{version}/code/marketplace/listings,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/code/marketplace/listings,
+        Query: ?search=test-search&officialOnly=True&env=test-env&resolvedEnv=Norbix.Sdk.Types.Hub.Env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1&paging=Norbix.Sdk.Types.Hub.PagingArgs,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: GetMarketplaceListingsResponse,
+      Response: {
+        List: {
+          Items: [
+            {
+              IsOfficial: false
+            }
+          ],
+          HasMore: false,
+          HasPrevious: false,
+          StartingAfter: cursor-start,
+          EndingBefore: cursor-end
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    }
+  ]
+}

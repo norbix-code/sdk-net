@@ -1,0 +1,552 @@
+﻿{
+  Target: Hub,
+  Group: compliance,
+  Count: 18,
+  Endpoints: [
+    {
+      Target: Hub,
+      Group: compliance,
+      MethodName: GetAccountComplianceAsync,
+      RequestType: GetAccountCompliance,
+      HttpMethod: GET,
+      Path: /{version}/compliance/account,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/compliance/account,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: GetAccountComplianceResponse,
+      Response: {
+        Settings: {
+          DsarMode: test-dsarMode,
+          DsarDelayDays: 7,
+          AutoForwardAdvisories: true,
+          SecurityContact: https://example.test/securityContact
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: compliance,
+      MethodName: SaveDsarPolicyAsync,
+      RequestType: SaveDsarPolicyRequest,
+      HttpMethod: POST,
+      Path: /{version}/compliance/account/dsar-policy,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/compliance/account/dsar-policy,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          mode: test-mode,
+          delayDays: 1.0
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: compliance,
+      MethodName: SaveIncidentRoutingAsync,
+      RequestType: SaveIncidentRoutingRequest,
+      HttpMethod: POST,
+      Path: /{version}/compliance/account/incident-routing,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/compliance/account/incident-routing,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          autoForwardAdvisories: true,
+          securityContact: https://example.test/securityContact
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: compliance,
+      MethodName: GetComplianceAuditLogAsync,
+      RequestType: GetComplianceAuditLog,
+      HttpMethod: GET,
+      Path: /{version}/compliance/audit,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/compliance/audit,
+        Query: ?from=2026-04-27T12%3a00%3a00.0000000Z&to=2026-04-27T12%3a00%3a00.0000000Z&subjectKind=test-subjectKind&subjectId={guid}&limit=1&env=test-env,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: GetComplianceAuditLogResponse,
+      Response: {
+        Entries: [
+          {}
+        ],
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: compliance,
+      MethodName: ApproveDsarRequestAsync,
+      RequestType: ApproveDsarRequestRequest,
+      HttpMethod: POST,
+      Path: /{version}/compliance/dsar/approve,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/compliance/dsar/approve,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          requestId: Guid_1,
+          env: test-env
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: compliance,
+      MethodName: GetDsarRequestsAsync,
+      RequestType: GetDsarRequests,
+      HttpMethod: GET,
+      Path: /{version}/compliance/dsar,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/compliance/dsar,
+        Query: ?env=test-env,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: GetDsarRequestsResponse,
+      Response: {
+        Requests: [
+          {}
+        ],
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: compliance,
+      MethodName: OpenDsarRequestAsync,
+      RequestType: OpenDsarRequestRequest,
+      HttpMethod: POST,
+      Path: /{version}/compliance/dsar,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/compliance/dsar,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          subjectKind: test-subjectKind,
+          subjectId: Guid_1,
+          env: test-env
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: compliance,
+      MethodName: RejectDsarRequestAsync,
+      RequestType: RejectDsarRequestRequest,
+      HttpMethod: POST,
+      Path: /{version}/compliance/dsar/reject,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/compliance/dsar/reject,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          requestId: Guid_1,
+          reason: test-reason,
+          env: test-env
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: compliance,
+      MethodName: GetLegalHoldsAsync,
+      RequestType: GetLegalHolds,
+      HttpMethod: GET,
+      Path: /{version}/compliance/holds,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/compliance/holds,
+        Query: ?env=test-env,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: GetLegalHoldsResponse,
+      Response: {
+        Holds: [
+          {}
+        ],
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: compliance,
+      MethodName: PlaceLegalHoldAsync,
+      RequestType: PlaceLegalHoldRequest,
+      HttpMethod: POST,
+      Path: /{version}/compliance/holds,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/compliance/holds,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          subjectKind: test-subjectKind,
+          subjectId: Guid_1,
+          reason: test-reason,
+          env: test-env
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: compliance,
+      MethodName: ReleaseLegalHoldAsync,
+      RequestType: ReleaseLegalHoldRequest,
+      HttpMethod: POST,
+      Path: /{version}/compliance/holds/release,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/compliance/holds/release,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          holdId: Guid_1,
+          env: test-env
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: compliance,
+      MethodName: DefineConsentPurposeAsync,
+      RequestType: DefineConsentPurposeRequest,
+      HttpMethod: POST,
+      Path: /{version}/compliance/purposes,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/compliance/purposes,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          key: test-key,
+          name: test-name,
+          channel: test-channel,
+          description: test-description,
+          env: test-env
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: compliance,
+      MethodName: DeprecateConsentPurposeAsync,
+      RequestType: DeprecateConsentPurposeRequest,
+      HttpMethod: POST,
+      Path: /{version}/compliance/purposes/deprecate,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/compliance/purposes/deprecate,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          key: test-key,
+          env: test-env
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: compliance,
+      MethodName: AssignRegimeAsync,
+      RequestType: AssignRegimeRequest,
+      HttpMethod: POST,
+      Path: /{version}/compliance/regimes,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/compliance/regimes,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          regime: test-regime,
+          env: test-env
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: compliance,
+      MethodName: ClearRegimeAsync,
+      RequestType: ClearRegimeRequest,
+      HttpMethod: DELETE,
+      Path: /{version}/compliance/regimes,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: DELETE,
+        Path: /v2/compliance/regimes,
+        Query: ?regime=test-regime&env=test-env,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: compliance,
+      MethodName: RemoveRetentionWindowAsync,
+      RequestType: RemoveRetentionWindowRequest,
+      HttpMethod: DELETE,
+      Path: /{version}/compliance/retention,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: DELETE,
+        Path: /v2/compliance/retention,
+        Query: ?dataKind=test-dataKind&env=test-env,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: compliance,
+      MethodName: SaveRetentionWindowAsync,
+      RequestType: SaveRetentionWindowRequest,
+      HttpMethod: POST,
+      Path: /{version}/compliance/retention,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/compliance/retention,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          dataKind: test-dataKind,
+          days: 1.0,
+          action: test-action,
+          env: test-env
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: compliance,
+      MethodName: GetComplianceSettingsAsync,
+      RequestType: GetComplianceSettings,
+      HttpMethod: GET,
+      Path: /{version}/compliance/settings,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/compliance/settings,
+        Query: ?env=test-env,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: GetComplianceSettingsResponse,
+      Response: {
+        Settings: {
+          ConsentPurposes: [
+            {
+              IsDeprecated: false
+            }
+          ],
+          RetentionWindows: [
+            {}
+          ]
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    }
+  ]
+}

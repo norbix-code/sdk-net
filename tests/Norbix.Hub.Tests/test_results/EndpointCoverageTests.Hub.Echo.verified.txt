@@ -32,17 +32,27 @@
         ApiVersion: test-apiVersion,
         HubVersion: test-hubVersion,
         MjmlUrl: https://example.test/mjmlUrl,
+        AdminUrlTemplate: https://example.test/adminUrlTemplate,
         License: {
-          domain: test-domainFromLicense,
-          accountId: test-accountIdFromLicense,
-          refCustomerId: Guid_1,
-          refSubscriptionId: Guid_1,
-          issued: 42,
+          domain: test-domain,
+          accountId: Guid_1,
+          email: user@example.test,
+          release: test-release,
           expire: 42,
-          cap: 7,
-          isTrial: true
+          isTrial: true,
+          cap: 7
         },
-        AskForEnterpriseLicenseEmail: user@example.test
+        AskForEnterpriseLicenseEmail: user@example.test,
+        EmailServiceConfigured: true,
+        RootBootstrapPasswordSource: test-rootBootstrapPasswordSource,
+        Regions: [
+          {}
+        ],
+        IsProductionInstallation: true,
+        LicensingMode: test-licensingMode,
+        GraceDaysLeft: 7,
+        InstallationDomain: test-installationDomain,
+        LicensingDocsUrl: https://example.test/licensingDocsUrl
       }
     }
   ]

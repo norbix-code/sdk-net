@@ -1,0 +1,3089 @@
+﻿{
+  Target: Hub,
+  Group: account,
+  Count: 93,
+  Endpoints: [
+    {
+      Target: Hub,
+      Group: account,
+      MethodName: CreateStripeCheckoutSessionAsync,
+      RequestType: CreateStripeCheckoutSession,
+      HttpMethod: POST,
+      Path: /{version}/account/stripe/create-checkout-session,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/account/stripe/create-checkout-session,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          subscriptionType: 0.0,
+          domain: test-domain,
+          projectCap: 1.0,
+          newProjectSessionId: Guid_1,
+          returnUrl: https://example.test/returnUrl
+        }
+      },
+      ResponseType: CreateStripeCheckoutSessionResponse,
+      Response: {
+        Id: Guid_1,
+        Status: test-status,
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: account,
+      MethodName: CreateTeamMemberFromInvitationAsync,
+      RequestType: CreateTeamMemberFromInvitation,
+      HttpMethod: POST,
+      Path: /{version}/account/team/member,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/account/team/member,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          displayName: test-displayName,
+          token: test-token,
+          password: test-password
+        }
+      },
+      ResponseType: CreateTeamMemberFromInvitationResponse,
+      Response: {
+        Token: test-token,
+        Id: Guid_1,
+        Status: test-status,
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: account,
+      MethodName: GetAccountProfileAsync,
+      RequestType: GetAccountProfile,
+      HttpMethod: GET,
+      Path: /{version}/account/profile,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/account/profile,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: GetAccountProfileResponse,
+      Response: {
+        Item: {
+          Email: user@example.test,
+          DisplayName: test-displayName,
+          BillingEmail: user@example.test,
+          OperationsEmail: user@example.test,
+          SecurityEmail: https://example.test/securityEmail
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: account,
+      MethodName: GetAccountStatusAsync,
+      RequestType: GetAccountStatus,
+      HttpMethod: GET,
+      Path: /{version}/account/status,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/account/status,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: GetAccountStatusResponse,
+      Response: {
+        Item: {
+          AccountId: Guid_1,
+          AccountIdAsGuid: Guid_1,
+          UserId: Guid_1,
+          LoggedInUserId: Guid_1,
+          LoggedInUserEmail: user@example.test,
+          Status: Registered,
+          ProjectCap: 7,
+          Permissions: [
+            test-string
+          ],
+          TrialWasIssued: false
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: account,
+      MethodName: GetAccountUsageBillingAsync,
+      RequestType: GetAccountUsageBilling,
+      HttpMethod: GET,
+      Path: /{version}/account/usage-billing,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/account/usage-billing,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: GetAccountUsageBillingResponse,
+      Response: {
+        Item: {
+          AccountId: Guid_1,
+          Atlas: {
+            sample-key: {}
+          },
+          IngestionFailures: [
+            {}
+          ]
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: account,
+      MethodName: GetStripeBillingPortalUrlAsync,
+      RequestType: GetStripeBillingPortalUrl,
+      HttpMethod: POST,
+      Path: /{version}/account/stripe/get-portal-url,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/account/stripe/get-portal-url,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          subscriptionType: 0.0,
+          returnUrl: https://example.test/returnUrl
+        }
+      },
+      ResponseType: GetStripeBillingPortalUrlResponse,
+      Response: {
+        Id: Guid_1,
+        Status: test-status,
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: account,
+      MethodName: ResendAccountVerificationTokenAsync,
+      RequestType: ResendAccountVerificationToken,
+      HttpMethod: GET,
+      Path: /{version}/account/verify/resend,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/account/verify/resend,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: account,
+      MethodName: UpdateAccountProfileAsync,
+      RequestType: UpdateAccountProfile,
+      HttpMethod: PUT,
+      Path: /{version}/account/profile,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: PUT,
+        Path: /v2/account/profile,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          displayName: test-displayName,
+          billingEmail: user@example.test,
+          operationsEmail: user@example.test,
+          securityEmail: https://example.test/securityEmail
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: account,
+      MethodName: VerifyAccountAsync,
+      RequestType: VerifyAccount,
+      HttpMethod: GET,
+      Path: /{version}/account/verify,
+      IsAccountScoped: true,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/account/verify,
+        Query: ?token=test-token&accountId={guid},
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: account,
+      MethodName: CreateAccountAsync,
+      RequestType: CreateAccount,
+      HttpMethod: POST,
+      Path: /{version}/account,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/account,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          displayName: test-displayName,
+          email: user@example.test,
+          password: test-password
+        }
+      },
+      ResponseType: CreateAccountResponse,
+      Response: {
+        Token: test-token,
+        Id: Guid_1,
+        Status: test-status,
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: account,
+      MethodName: GetInstallationLicenseStatusAsync,
+      RequestType: GetInstallationLicenseStatus,
+      HttpMethod: GET,
+      Path: /{version}/account/licensing/status,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/account/licensing/status,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: GetInstallationLicenseStatusResponse,
+      Response: {
+        Status: {
+          storedMode: test-storedMode,
+          effectiveMode: test-effectiveMode,
+          isProduction: true,
+          graceDaysLeft: 7,
+          graceUntilUtc: DateTime_1,
+          lastProvenAtUtc: DateTime_1,
+          lastHeartbeatAtUtc: DateTime_1,
+          installationDomain: test-installationDomain,
+          isTrialLicense: false
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: account,
+      MethodName: GetLicenseDomainDnsStatusAsync,
+      RequestType: GetLicenseDomainDnsStatus,
+      HttpMethod: GET,
+      Path: /{version}/account/licensing/dns-status,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/account/licensing/dns-status,
+        Query: ?domain=test-domain,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: GetLicenseDomainDnsStatusResponse,
+      Response: {
+        Status: {
+          Domain: test-domain,
+          AllRequiredResolved: true,
+          Records: [
+            {
+              Resolved: false,
+              Required: false
+            }
+          ]
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: account,
+      MethodName: GetLicensesAsync,
+      RequestType: GetLicenses,
+      HttpMethod: GET,
+      Path: /{version}/account/licenses,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/account/licenses,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: GetLicensesResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: account,
+      MethodName: AccountConfirmEmailVerificationAsync,
+      RequestType: AccountConfirmEmailVerificationRequest,
+      HttpMethod: POST,
+      Path: /{version}/account/userauth/email/confirm-verification,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/account/userauth/email/confirm-verification,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          email: user@example.test,
+          code: test-code
+        }
+      },
+      ResponseType: AccountPasskeyVerificationTokenResponse,
+      Response: {
+        VerificationToken: test-verificationToken,
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: account,
+      MethodName: AccountHasPasskeyAsync,
+      RequestType: AccountHasPasskeyRequest,
+      HttpMethod: POST,
+      Path: /{version}/account/userauth/has-passkey,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/account/userauth/has-passkey,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          email: user@example.test
+        }
+      },
+      ResponseType: AccountPasskeyOkResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: account,
+      MethodName: AccountPasskeyAuthenticationOptionsAsync,
+      RequestType: AccountPasskeyAuthenticationOptionsRequest,
+      HttpMethod: POST,
+      Path: /{version}/account/userauth/passkey/authentication-options,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/account/userauth/passkey/authentication-options,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          email: user@example.test
+        }
+      },
+      ResponseType: AccountPasskeyCeremonyOptionsResponse,
+      Response: {
+        CeremonyId: Guid_1,
+        OptionsJson: test-optionsJson,
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: account,
+      MethodName: AccountPasskeyEnrollmentOptionsAsync,
+      RequestType: AccountPasskeyEnrollmentOptionsRequest,
+      HttpMethod: POST,
+      Path: /{version}/account/userauth/passkey/enrollment-options,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/account/userauth/passkey/enrollment-options,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: AccountPasskeyCeremonyOptionsResponse,
+      Response: {
+        CeremonyId: Guid_1,
+        OptionsJson: test-optionsJson,
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: account,
+      MethodName: AccountPasskeyRegistrationOptionsAsync,
+      RequestType: AccountPasskeyRegistrationOptionsRequest,
+      HttpMethod: POST,
+      Path: /{version}/account/userauth/passkey/registration-options,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/account/userauth/passkey/registration-options,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          verificationToken: test-verificationToken
+        }
+      },
+      ResponseType: AccountPasskeyCeremonyOptionsResponse,
+      Response: {
+        CeremonyId: Guid_1,
+        OptionsJson: test-optionsJson,
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: account,
+      MethodName: AccountStartEmailVerificationAsync,
+      RequestType: AccountStartEmailVerificationRequest,
+      HttpMethod: POST,
+      Path: /{version}/account/userauth/email/start-verification,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/account/userauth/email/start-verification,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          email: user@example.test
+        }
+      },
+      ResponseType: AccountPasskeyOkResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: account,
+      MethodName: AccountVerifyPasskeyAuthenticationAsync,
+      RequestType: AccountVerifyPasskeyAuthenticationRequest,
+      HttpMethod: POST,
+      Path: /{version}/account/userauth/passkey/verify-authentication,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/account/userauth/passkey/verify-authentication,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          ceremonyId: Guid_1,
+          assertionResponse: test-assertionResponse
+        }
+      },
+      ResponseType: AccountPasskeyAuthTokensResponse,
+      Response: {
+        AccessToken: test-accessToken,
+        RefreshToken: test-refreshToken,
+        ExpiresInSeconds: 7,
+        RecoveryCodes: [
+          test-string
+        ],
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: account,
+      MethodName: AccountVerifyPasskeyEnrollmentAsync,
+      RequestType: AccountVerifyPasskeyEnrollmentRequest,
+      HttpMethod: POST,
+      Path: /{version}/account/userauth/passkey/verify-enrollment,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/account/userauth/passkey/verify-enrollment,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          ceremonyId: Guid_1,
+          attestationResponse: test-attestationResponse,
+          friendlyName: test-friendlyName
+        }
+      },
+      ResponseType: AccountPasskeyEnrollmentResponse,
+      Response: {
+        RecoveryCodes: [
+          test-string
+        ],
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: account,
+      MethodName: AccountVerifyPasskeyRegistrationAsync,
+      RequestType: AccountVerifyPasskeyRegistrationRequest,
+      HttpMethod: POST,
+      Path: /{version}/account/userauth/passkey/verify-registration,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/account/userauth/passkey/verify-registration,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          verificationToken: test-verificationToken,
+          ceremonyId: Guid_1,
+          attestationResponse: test-attestationResponse,
+          friendlyName: test-friendlyName
+        }
+      },
+      ResponseType: AccountPasskeyAuthTokensResponse,
+      Response: {
+        AccessToken: test-accessToken,
+        RefreshToken: test-refreshToken,
+        ExpiresInSeconds: 7,
+        RecoveryCodes: [
+          test-string
+        ],
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: account,
+      MethodName: ListAccountPasskeysAsync,
+      RequestType: ListAccountPasskeysRequest,
+      HttpMethod: GET,
+      Path: /{version}/account/userauth/passkeys,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/account/userauth/passkeys,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: AccountPasskeyListResponse,
+      Response: {
+        Passkeys: [
+          {
+            IsRevoked: false
+          }
+        ],
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: account,
+      MethodName: RenameAccountPasskeyAsync,
+      RequestType: RenameAccountPasskeyRequest,
+      HttpMethod: POST,
+      Path: /{version}/account/userauth/passkeys/{CredentialId}/rename,
+      PathParams: [
+        CredentialId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/account/userauth/passkeys/{guid}/rename,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          friendlyName: test-friendlyName
+        }
+      },
+      ResponseType: AccountPasskeyOkResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: account,
+      MethodName: RevokeAccountPasskeyAsync,
+      RequestType: RevokeAccountPasskeyRequest,
+      HttpMethod: POST,
+      Path: /{version}/account/userauth/passkeys/{CredentialId}/revoke,
+      PathParams: [
+        CredentialId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/account/userauth/passkeys/{guid}/revoke,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: AccountPasskeyOkResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: account,
+      MethodName: ChangeTeamMemberPasswordAsync,
+      RequestType: ChangeTeamMemberPassword,
+      HttpMethod: POST,
+      Path: /{version}/account/team/member/password,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/account/team/member/password,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          email: user@example.test,
+          currentPassword: test-currentPassword,
+          newPassword: test-newPassword
+        }
+      },
+      ResponseType: IdResponse,
+      Response: {
+        Id: Guid_1,
+        Status: test-status,
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: account,
+      MethodName: CreateAccountPolicyAsync,
+      RequestType: CreateAccountPolicy,
+      HttpMethod: POST,
+      Path: /{version}/account/team/policies,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/account/team/policies,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          policyName: test-policyName,
+          description: test-description,
+          policyDocumentJson: test-policyDocumentJson
+        }
+      },
+      ResponseType: IdResponse,
+      Response: {
+        Id: Guid_1,
+        Status: test-status,
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: account,
+      MethodName: CreateAccountRoleAsync,
+      RequestType: CreateAccountRole,
+      HttpMethod: POST,
+      Path: /{version}/account/team/roles,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/account/team/roles,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          roleName: test-roleName,
+          description: test-description
+        }
+      },
+      ResponseType: IdResponse,
+      Response: {
+        Id: Guid_1,
+        Status: test-status,
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: account,
+      MethodName: CreateTeamMemberAsync,
+      RequestType: CreateTeamMember,
+      HttpMethod: POST,
+      Path: /{version}/account/team/member/create,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/account/team/member/create,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          email: user@example.test,
+          displayName: test-displayName,
+          password: test-password,
+          sendInvitation: true
+        }
+      },
+      ResponseType: IdResponse,
+      Response: {
+        Id: Guid_1,
+        Status: test-status,
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: account,
+      MethodName: DeleteAccountPolicyAsync,
+      RequestType: DeleteAccountPolicy,
+      HttpMethod: DELETE,
+      Path: /{version}/account/team/policies/{Id},
+      PathParams: [
+        Id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: DELETE,
+        Path: /v2/account/team/policies/{guid},
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: IdResponse,
+      Response: {
+        Id: Guid_1,
+        Status: test-status,
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: account,
+      MethodName: DeleteAccountRoleAsync,
+      RequestType: DeleteAccountRole,
+      HttpMethod: DELETE,
+      Path: /{version}/account/team/roles/{Id},
+      PathParams: [
+        Id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: DELETE,
+        Path: /v2/account/team/roles/{guid},
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: IdResponse,
+      Response: {
+        Id: Guid_1,
+        Status: test-status,
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: account,
+      MethodName: GetAccountCollaboratorsAsync,
+      RequestType: GetAccountCollaborators,
+      HttpMethod: GET,
+      Path: /{version}/account/collaborators,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/account/collaborators,
+        Query: ?includeAccountOwner=True&userShouldHavePushDevice=True&pagingArgs=Norbix.Sdk.Types.Hub.PagingArgs,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: GetAccountCollaboratorsResponse,
+      Response: {
+        List: {
+          Items: [
+            {}
+          ],
+          HasMore: false,
+          HasPrevious: false,
+          StartingAfter: cursor-start,
+          EndingBefore: cursor-end
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: account,
+      MethodName: GetAccountPasswordPolicyAsync,
+      RequestType: GetAccountPasswordPolicy,
+      HttpMethod: GET,
+      Path: /{version}/account/team/password-policy,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/account/team/password-policy,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: GetAccountPasswordPolicyResponse,
+      Response: {
+        Policy: {
+          MinLength: 7,
+          MaxLength: 7,
+          MinNumbers: 7,
+          MaxNumbers: 7,
+          MinUpper: 7,
+          MaxUpper: 7,
+          MinLower: 7,
+          MaxLower: 7
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: account,
+      MethodName: GetAccountTeamPoliciesAsync,
+      RequestType: GetAccountTeamPolicies,
+      HttpMethod: GET,
+      Path: /{version}/account/team/policies,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/account/team/policies,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: GetAccountTeamPoliciesResponse,
+      Response: {
+        Policies: [
+          {
+            IsSystem: false
+          }
+        ],
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: account,
+      MethodName: GetAccountTeamRolesAsync,
+      RequestType: GetAccountTeamRoles,
+      HttpMethod: GET,
+      Path: /{version}/account/team/roles,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/account/team/roles,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: GetAccountTeamRolesResponse,
+      Response: {
+        Roles: [
+          {
+            IsSystem: false
+          }
+        ],
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: account,
+      MethodName: SendInviteToTeamMemberAsync,
+      RequestType: SendInviteToTeamMember,
+      HttpMethod: POST,
+      Path: /{version}/account/team/member/invite,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/account/team/member/invite,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          email: user@example.test
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: account,
+      MethodName: UpdateAccountPolicyAsync,
+      RequestType: UpdateAccountPolicy,
+      HttpMethod: PUT,
+      Path: /{version}/account/team/policies,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: PUT,
+        Path: /v2/account/team/policies,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          id: Guid_1,
+          policyName: test-policyName,
+          description: test-description,
+          policyDocumentJson: test-policyDocumentJson
+        }
+      },
+      ResponseType: IdResponse,
+      Response: {
+        Id: Guid_1,
+        Status: test-status,
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: account,
+      MethodName: UpdateAccountRoleAsync,
+      RequestType: UpdateAccountRole,
+      HttpMethod: PUT,
+      Path: /{version}/account/team/roles,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: PUT,
+        Path: /v2/account/team/roles,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          id: Guid_1,
+          roleName: test-roleName,
+          description: test-description
+        }
+      },
+      ResponseType: IdResponse,
+      Response: {
+        Id: Guid_1,
+        Status: test-status,
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: account,
+      MethodName: CreateProjectEnvironmentAsync,
+      RequestType: CreateProjectEnvironmentRequest,
+      HttpMethod: POST,
+      Path: /{version}/account/projects/environments,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/account/projects/environments,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          environmentName: test-environmentName,
+          integration: {
+            integrationId: Guid_1,
+            provider: 0.0,
+            integrationName: test-integrationName,
+            isEnabled: true
+          },
+          env: test-env
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: account,
+      MethodName: CreateProjectAsync,
+      RequestType: CreateProjectRequest,
+      HttpMethod: POST,
+      Path: /{version}/account/projects,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/account/projects,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          integration: {
+            integrationId: Guid_1,
+            provider: 0.0,
+            integrationName: test-integrationName,
+            isEnabled: true
+          },
+          projectName: test-projectName,
+          primaryRegion: test-primaryRegion,
+          description: test-description
+        }
+      },
+      ResponseType: IdResponse,
+      Response: {
+        Id: Guid_1,
+        Status: test-status,
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: account,
+      MethodName: DeleteProjectAsync,
+      RequestType: DeleteProject,
+      HttpMethod: DELETE,
+      Path: /{version}/account/projects/{projectId},
+      PathParams: [
+        projectId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: DELETE,
+        Path: /v2/account/projects/{guid},
+        Query: ?env=test-env,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: account,
+      MethodName: DeleteProjectEnvironmentAsync,
+      RequestType: DeleteProjectEnvironmentRequest,
+      HttpMethod: DELETE,
+      Path: /{version}/account/projects/environments/{environmentName},
+      PathParams: [
+        environmentName
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: DELETE,
+        Path: /v2/account/projects/environments/test-environmentName,
+        Query: ?env=test-env,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: account,
+      MethodName: GetAccountRegionsAsync,
+      RequestType: GetAccountRegions,
+      HttpMethod: GET,
+      Path: /{version}/account/regions,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/account/regions,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: GetAccountRegionsResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: account,
+      MethodName: GetProjectAsync,
+      RequestType: GetProject,
+      HttpMethod: GET,
+      Path: /{version}/account/projects/{projectId},
+      PathParams: [
+        projectId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/account/projects/{guid},
+        Query: ?env=test-env,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: GetProjectResponse,
+      Response: {
+        Item: {
+          AccountViewId: Guid_1,
+          IsActive: true,
+          ViewId: Guid_1,
+          Name: test-name,
+          UniqueName: test-uniqueName,
+          HostLabel: test-hostLabel,
+          ApiHost: test-apiHost,
+          IsMultiRegionEligible: false,
+          ExposeBrandToAdminPortal: false,
+          ExposeAuthToAdminPortal: false,
+          AdminPortalEnabled: false,
+          ExposeLegalToAdminPortal: false,
+          DatabaseEnabled: false,
+          EmailEnabled: false,
+          MembershipEnabled: false,
+          LoggingEnabled: false,
+          ServerEventsEnabled: false,
+          PushEnabled: false,
+          SchedulerEnabled: false,
+          CodeEnabled: false,
+          FilesEnabled: false,
+          PaymentsEnabled: false,
+          SmsEnabled: false
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: account,
+      MethodName: GetProjectEnvironmentsAsync,
+      RequestType: GetProjectEnvironments,
+      HttpMethod: GET,
+      Path: /{version}/account/projects/environments,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/account/projects/environments,
+        Query: ?env=test-env,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: GetProjectEnvironmentsResponse,
+      Response: {
+        Item: {
+          Environments: [
+            test-string
+          ]
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: account,
+      MethodName: GetProjectsAsync,
+      RequestType: GetProjects,
+      HttpMethod: GET,
+      Path: /{version}/account/projects,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/account/projects,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: GetProjectsResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: account,
+      MethodName: PromoteEnvironmentAsync,
+      RequestType: PromoteEnvironmentRequest,
+      HttpMethod: POST,
+      Path: /{version}/account/projects/environments/promote,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/account/projects/environments/promote,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          sourceEnv: test-sourceEnv,
+          targetEnv: test-targetEnv,
+          dryRun: true,
+          env: test-env
+        }
+      },
+      ResponseType: PromoteEnvironmentResponse,
+      Response: {
+        Item: {
+          ContentMirrored: [
+            {}
+          ],
+          ContentDeleted: [
+            {}
+          ],
+          IntegrationsSeeded: [
+            {}
+          ],
+          IntegrationsSkipped: [
+            {}
+          ],
+          Blockers: [
+            {}
+          ],
+          FromVersion: 42,
+          WasDryRun: true
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: account,
+      MethodName: RollbackPromotionAsync,
+      RequestType: RollbackPromotionRequest,
+      HttpMethod: POST,
+      Path: /{version}/account/projects/environments/promote/rollback,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/account/projects/environments/promote/rollback,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          targetEnv: test-targetEnv,
+          fromVersion: 1.0,
+          env: test-env
+        }
+      },
+      ResponseType: PromoteEnvironmentResponse,
+      Response: {
+        Item: {
+          ContentMirrored: [
+            {}
+          ],
+          ContentDeleted: [
+            {}
+          ],
+          IntegrationsSeeded: [
+            {}
+          ],
+          IntegrationsSkipped: [
+            {}
+          ],
+          Blockers: [
+            {}
+          ],
+          FromVersion: 42,
+          WasDryRun: true
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: account,
+      MethodName: SetEnvironmentRankAsync,
+      RequestType: SetEnvironmentRankRequest,
+      HttpMethod: PATCH,
+      Path: /{version}/account/projects/environments/{environmentName}/rank,
+      PathParams: [
+        environmentName
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: PATCH,
+        Path: /v2/account/projects/environments/test-environmentName/rank,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          rank: 1.0,
+          env: test-env
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: account,
+      MethodName: WaitForProjectActiveAsync,
+      RequestType: WaitForProjectActiveRequest,
+      HttpMethod: GET,
+      Path: /{version}/account/projects/{projectId}/wait-active,
+      PathParams: [
+        projectId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/account/projects/{guid}/wait-active,
+        Query: ?timeoutSeconds=1&env=test-env,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: WaitForProjectActiveResponse,
+      Response: {
+        Status: test-status,
+        IsActive: true,
+        WaitedSeconds: 7,
+        Message: test-message,
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: account,
+      MethodName: AssignAdminPortalServiceUserAsync,
+      RequestType: AssignAdminPortalServiceUserRequest,
+      HttpMethod: PUT,
+      Path: /{version}/account/projects/{projectId}/settings/admin-portal/service-user,
+      PathParams: [
+        projectId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: PUT,
+        Path: /v2/account/projects/{guid}/settings/admin-portal/service-user,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          serviceUserId: Guid_1,
+          env: test-env
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: account,
+      MethodName: DisableProjectAsync,
+      RequestType: DisableProject,
+      HttpMethod: PATCH,
+      Path: /{version}/account/projects/{projectId}/disable,
+      PathParams: [
+        projectId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: PATCH,
+        Path: /v2/account/projects/{guid}/disable,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          env: test-env
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: account,
+      MethodName: EnableProjectAsync,
+      RequestType: EnableProject,
+      HttpMethod: PATCH,
+      Path: /{version}/account/projects/{projectId}/enable,
+      PathParams: [
+        projectId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: PATCH,
+        Path: /v2/account/projects/{guid}/enable,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          env: test-env
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: account,
+      MethodName: GetAdminPortalStructureAsync,
+      RequestType: GetAdminPortalStructure,
+      HttpMethod: GET,
+      Path: /{version}/account/projects/{projectId}/admin-portal/structure,
+      PathParams: [
+        projectId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/account/projects/{guid}/admin-portal/structure,
+        Query: ?env=test-env,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: AdminPortalStructureDto,
+      Response: {
+        ProjectId: Guid_1,
+        AdminPortalEnabled: true,
+        DisplayName: test-displayName,
+        Modules: [
+          {
+            Enabled: false
+          }
+        ]
+      }
+    },
+    {
+      Target: Hub,
+      Group: account,
+      MethodName: UpdateProjectAccentColorAsync,
+      RequestType: UpdateProjectAccentColor,
+      HttpMethod: PATCH,
+      Path: /{version}/account/projects/{projectId}/settings/accent-color,
+      PathParams: [
+        projectId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: PATCH,
+        Path: /v2/account/projects/{guid}/settings/accent-color,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          color: test-color,
+          env: test-env
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: account,
+      MethodName: UpdateProjectAdminUrlAsync,
+      RequestType: UpdateProjectAdminUrl,
+      HttpMethod: PATCH,
+      Path: /{version}/account/projects/{projectId}/settings/admin-url,
+      PathParams: [
+        projectId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: PATCH,
+        Path: /v2/account/projects/{guid}/settings/admin-url,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          url: https://example.test/url,
+          env: test-env
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: account,
+      MethodName: UpdateProjectAllowedOriginsAsync,
+      RequestType: UpdateProjectAllowedOrigins,
+      HttpMethod: PATCH,
+      Path: /{version}/account/projects/{projectId}/settings/origins,
+      PathParams: [
+        projectId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: PATCH,
+        Path: /v2/account/projects/{guid}/settings/origins,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          env: test-env
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: account,
+      MethodName: UpdateProjectDefaultLanguageAsync,
+      RequestType: UpdateProjectDefaultLanguage,
+      HttpMethod: PATCH,
+      Path: /{version}/account/projects/{projectId}/settings/default-language,
+      PathParams: [
+        projectId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: PATCH,
+        Path: /v2/account/projects/{guid}/settings/default-language,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          defaultLanguage: test-defaultLanguage,
+          env: test-env
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: account,
+      MethodName: UpdateProjectDescriptionAsync,
+      RequestType: UpdateProjectDescription,
+      HttpMethod: PATCH,
+      Path: /{version}/account/projects/{projectId}/settings/description,
+      PathParams: [
+        projectId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: PATCH,
+        Path: /v2/account/projects/{guid}/settings/description,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          description: test-description,
+          env: test-env
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: account,
+      MethodName: UpdateProjectExposeLegalAsync,
+      RequestType: UpdateProjectExposeLegal,
+      HttpMethod: PATCH,
+      Path: /{version}/account/projects/{projectId}/settings/legal/expose,
+      PathParams: [
+        projectId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: PATCH,
+        Path: /v2/account/projects/{guid}/settings/legal/expose,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          exposed: true,
+          env: test-env
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: account,
+      MethodName: UpdateProjectIconAsync,
+      RequestType: UpdateProjectIcon,
+      HttpMethod: PATCH,
+      Path: /{version}/account/projects/{projectId}/settings/icon,
+      PathParams: [
+        projectId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: PATCH,
+        Path: /v2/account/projects/{guid}/settings/icon,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          fileResource: {
+            publicUrl: https://example.test/publicUrl,
+            isPublic: true,
+            integrationId: Guid_1,
+            provider: 0.0,
+            path: test-path
+          },
+          env: test-env
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: account,
+      MethodName: UpdateProjectLanguagesAsync,
+      RequestType: UpdateProjectLanguages,
+      HttpMethod: PATCH,
+      Path: /{version}/account/projects/{projectId}/settings/languages,
+      PathParams: [
+        projectId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: PATCH,
+        Path: /v2/account/projects/{guid}/settings/languages,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          env: test-env
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: account,
+      MethodName: UpdateProjectLegalDocumentsAsync,
+      RequestType: UpdateProjectLegalDocuments,
+      HttpMethod: PATCH,
+      Path: /{version}/account/projects/{projectId}/settings/legal,
+      PathParams: [
+        projectId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: PATCH,
+        Path: /v2/account/projects/{guid}/settings/legal,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          termsMarkdown: test-termsMarkdown,
+          privacyMarkdown: test-privacyMarkdown,
+          env: test-env
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: account,
+      MethodName: UpdateProjectLogoAsync,
+      RequestType: UpdateProjectLogo,
+      HttpMethod: PATCH,
+      Path: /{version}/account/projects/{projectId}/settings/logo,
+      PathParams: [
+        projectId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: PATCH,
+        Path: /v2/account/projects/{guid}/settings/logo,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          fileResource: {
+            publicUrl: https://example.test/publicUrl,
+            isPublic: true,
+            integrationId: Guid_1,
+            provider: 0.0,
+            path: test-path
+          },
+          env: test-env
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: account,
+      MethodName: UpdateProjectMainColorAsync,
+      RequestType: UpdateProjectMainColor,
+      HttpMethod: PATCH,
+      Path: /{version}/account/projects/{projectId}/settings/main-color,
+      PathParams: [
+        projectId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: PATCH,
+        Path: /v2/account/projects/{guid}/settings/main-color,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          color: test-color,
+          env: test-env
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: account,
+      MethodName: UpdateProjectNameAsync,
+      RequestType: UpdateProjectName,
+      HttpMethod: PATCH,
+      Path: /{version}/account/projects/{projectId}/settings/name,
+      PathParams: [
+        projectId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: PATCH,
+        Path: /v2/account/projects/{guid}/settings/name,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          name: test-name,
+          env: test-env
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: account,
+      MethodName: UpdateProjectRegionsAsync,
+      RequestType: UpdateProjectRegions,
+      HttpMethod: PATCH,
+      Path: /{version}/account/projects/{projectId}/settings/regions,
+      PathParams: [
+        projectId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: PATCH,
+        Path: /v2/account/projects/{guid}/settings/regions,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          primaryRegion: test-primaryRegion,
+          env: test-env
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: account,
+      MethodName: UpdateProjectUrlAsync,
+      RequestType: UpdateProjectUrl,
+      HttpMethod: PATCH,
+      Path: /{version}/account/projects/{projectId}/settings/url,
+      PathParams: [
+        projectId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: PATCH,
+        Path: /v2/account/projects/{guid}/settings/url,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          url: https://example.test/url,
+          env: test-env
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: account,
+      MethodName: GetProjectTokensAsync,
+      RequestType: GetProjectTokens,
+      HttpMethod: GET,
+      Path: /{version}/account/projects/{projectId}/tokens,
+      PathParams: [
+        projectId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/account/projects/{guid}/tokens,
+        Query: ?initiatorId={guid}&recipientId={guid}&targetUserId={guid}&membershipTriggerOldUserId={guid}&membershipTriggerNewUserId={guid}&env=test-env,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: GetProjectTokensResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: account,
+      MethodName: DeleteNotificationsGroupAsync,
+      RequestType: DeleteNotificationsGroup,
+      HttpMethod: DELETE,
+      Path: /{version}/account/projects/{projectId}/notifications/settings/group,
+      PathParams: [
+        projectId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: DELETE,
+        Path: /v2/account/projects/{guid}/notifications/settings/group,
+        Query: ?groupTag=test-groupTag&env=test-env,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: account,
+      MethodName: DeleteNotificationsTagAsync,
+      RequestType: DeleteNotificationsTag,
+      HttpMethod: DELETE,
+      Path: /{version}/account/projects/{projectId}/notifications/settings/tag,
+      PathParams: [
+        projectId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: DELETE,
+        Path: /v2/account/projects/{guid}/notifications/settings/tag,
+        Query: ?tag=test-tag&env=test-env,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: account,
+      MethodName: RemoveTagFromNotificationsGroupAsync,
+      RequestType: RemoveTagFromNotificationsGroup,
+      HttpMethod: DELETE,
+      Path: /{version}/account/projects/{projectId}/notifications/settings/group/tag,
+      PathParams: [
+        projectId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: DELETE,
+        Path: /v2/account/projects/{guid}/notifications/settings/group/tag,
+        Query: ?groupTag=test-groupTag&tag=test-tag&env=test-env,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: account,
+      MethodName: SaveNotificationsGroupAsync,
+      RequestType: SaveNotificationsGroup,
+      HttpMethod: POST,
+      Path: /{version}/account/projects/{projectId}/notifications/settings/group,
+      PathParams: [
+        projectId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/account/projects/{guid}/notifications/settings/group,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          groupDefinition: {
+            tag: test-tag
+          },
+          channel: 0.0,
+          originChannel: 0.0,
+          env: test-env
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: account,
+      MethodName: SaveNotificationsTagAsync,
+      RequestType: SaveNotificationsTag,
+      HttpMethod: POST,
+      Path: /{version}/account/projects/{projectId}/notifications/settings/tag,
+      PathParams: [
+        projectId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/account/projects/{guid}/notifications/settings/tag,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          tagDefinition: {
+            defaultDelivery: {
+              Email: true
+            },
+            tag: test-tag
+          },
+          channel: 0.0,
+          groupTag: test-groupTag,
+          env: test-env
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: account,
+      MethodName: AnswerChatQuestionAsync,
+      RequestType: AnswerChatQuestionRequest,
+      HttpMethod: POST,
+      Path: /{version}/account/chat/sessions/{SessionId}/questions/{EntryId}/answer,
+      PathParams: [
+        SessionId,
+        EntryId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/account/chat/sessions/{guid}/questions/{guid}/answer,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          answers: {
+            test-key: test-string
+          }
+        }
+      },
+      ResponseType: IdResponse,
+      Response: {
+        Id: Guid_1,
+        Status: test-status,
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: account,
+      MethodName: AskChatAsync,
+      RequestType: AskChatRequest,
+      HttpMethod: POST,
+      Path: /{version}/account/chat/complete,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/account/chat/complete,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          prompt: test-prompt,
+          profile: test-profile
+        }
+      },
+      ResponseType: AskChatResponse,
+      Response: {
+        Result: test-result,
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: account,
+      MethodName: ChatAvailabilityAsync,
+      RequestType: ChatAvailabilityRequest,
+      HttpMethod: GET,
+      Path: /{version}/account/chat/availability,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/account/chat/availability,
+        Query: ?env=test-env,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: ChatAvailabilityResponse,
+      Response: {
+        Available: true,
+        Reason: test-reason,
+        Profiles: [
+          test-string
+        ],
+        Models: [
+          {
+            IsDefault: false,
+            IsAuto: false
+          }
+        ],
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: account,
+      MethodName: ChatTurnAsync,
+      RequestType: ChatTurnRequest,
+      HttpMethod: POST,
+      Path: /{version}/account/chat/turn,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/account/chat/turn,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          sessionId: Guid_1,
+          message: test-message,
+          profile: test-profile,
+          topic: test-topic,
+          llmIntegrationId: Guid_1,
+          model: test-model,
+          env: test-env,
+          screenContext: {
+            kind: test-kind,
+            viewId: Guid_1
+          }
+        }
+      },
+      ResponseType: ChatTurnResponse,
+      Response: {
+        SessionId: Guid_1,
+        Reply: test-reply,
+        ScreenPatch: {
+          Kind: test-kind,
+          ViewId: Guid_1
+        },
+        ToolTrace: [
+          test-string
+        ],
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: account,
+      MethodName: DecideChatPlanAsync,
+      RequestType: DecideChatPlanRequest,
+      HttpMethod: POST,
+      Path: /{version}/account/chat/sessions/{SessionId}/plans/{EntryId}/decision,
+      PathParams: [
+        SessionId,
+        EntryId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/account/chat/sessions/{guid}/plans/{guid}/decision,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          decision: test-decision,
+          comment: test-comment
+        }
+      },
+      ResponseType: IdResponse,
+      Response: {
+        Id: Guid_1,
+        Status: test-status,
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: account,
+      MethodName: DeleteChatSessionAsync,
+      RequestType: DeleteChatSessionRequest,
+      HttpMethod: DELETE,
+      Path: /{version}/account/chat/sessions/{SessionId},
+      PathParams: [
+        SessionId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: DELETE,
+        Path: /v2/account/chat/sessions/{guid},
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: IdResponse,
+      Response: {
+        Id: Guid_1,
+        Status: test-status,
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: account,
+      MethodName: ForgetChatMemoryAsync,
+      RequestType: ForgetChatMemoryRequest,
+      HttpMethod: DELETE,
+      Path: /{version}/account/chat/memory/{NoteId},
+      PathParams: [
+        NoteId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: DELETE,
+        Path: /v2/account/chat/memory/{guid},
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: account,
+      MethodName: GetAiToolsAsync,
+      RequestType: GetAiToolsRequest,
+      HttpMethod: GET,
+      Path: /{version}/account/ai/tools,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/account/ai/tools,
+        Query: ?toolset=test-toolset,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: GetAiToolsResponse,
+      Response: {
+        Tools: [
+          {
+            RequiresConfirmation: false
+          }
+        ],
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: account,
+      MethodName: GetChatMemoryAsync,
+      RequestType: GetChatMemoryRequest,
+      HttpMethod: GET,
+      Path: /{version}/account/chat/memory,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/account/chat/memory,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: GetChatMemoryResponse,
+      Response: {
+        Notes: [
+          {}
+        ],
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: account,
+      MethodName: GetChatSessionEntriesAsync,
+      RequestType: GetChatSessionEntriesRequest,
+      HttpMethod: GET,
+      Path: /{version}/account/chat/sessions/{SessionId}/entries,
+      PathParams: [
+        SessionId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/account/chat/sessions/{guid}/entries,
+        Query: ?sinceSeq=1,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: GetChatSessionEntriesResponse,
+      Response: {
+        SessionId: Guid_1,
+        Profile: test-profile,
+        ProjectId: Guid_1,
+        Env: test-env,
+        Entries: [
+          {}
+        ],
+        LastSeq: 42,
+        ActiveWorkItemIds: [
+          test-string
+        ],
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: account,
+      MethodName: GetChatSessionsAsync,
+      RequestType: GetChatSessionsRequest,
+      HttpMethod: GET,
+      Path: /{version}/account/chat/sessions,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/account/chat/sessions,
+        Query: ?take=1&includeArchived=True,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: GetChatSessionsResponse,
+      Response: {
+        Sessions: [
+          {
+            IsArchived: false,
+            IsPinned: false
+          }
+        ],
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: account,
+      MethodName: InvokeAiToolAsync,
+      RequestType: InvokeAiToolRequest,
+      HttpMethod: POST,
+      Path: /{version}/account/ai/tools/{ToolName},
+      PathParams: [
+        ToolName
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/account/ai/tools/test-toolName,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          argumentsJson: test-argumentsJson
+        }
+      },
+      ResponseType: InvokeAiToolResponse,
+      Response: {
+        Result: test-result,
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: account,
+      MethodName: McpAsync,
+      RequestType: McpRequest,
+      HttpMethod: POST,
+      Path: /{version}/account/mcp,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/account/mcp,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: String,
+      Response: test-response
+    },
+    {
+      Target: Hub,
+      Group: account,
+      MethodName: SetChatEntryFeedbackAsync,
+      RequestType: SetChatEntryFeedbackRequest,
+      HttpMethod: POST,
+      Path: /{version}/account/chat/sessions/{SessionId}/entries/{EntryId}/feedback,
+      PathParams: [
+        SessionId,
+        EntryId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/account/chat/sessions/{guid}/entries/{guid}/feedback,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          feedback: test-feedback
+        }
+      },
+      ResponseType: IdResponse,
+      Response: {
+        Id: Guid_1,
+        Status: test-status,
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: account,
+      MethodName: SetChatSessionArchivedAsync,
+      RequestType: SetChatSessionArchivedRequest,
+      HttpMethod: PATCH,
+      Path: /{version}/account/chat/sessions/{SessionId}/archive,
+      PathParams: [
+        SessionId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: PATCH,
+        Path: /v2/account/chat/sessions/{guid}/archive,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          archived: true
+        }
+      },
+      ResponseType: IdResponse,
+      Response: {
+        Id: Guid_1,
+        Status: test-status,
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: account,
+      MethodName: SetChatSessionPinnedAsync,
+      RequestType: SetChatSessionPinnedRequest,
+      HttpMethod: PATCH,
+      Path: /{version}/account/chat/sessions/{SessionId}/pin,
+      PathParams: [
+        SessionId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: PATCH,
+        Path: /v2/account/chat/sessions/{guid}/pin,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          pinned: true
+        }
+      },
+      ResponseType: IdResponse,
+      Response: {
+        Id: Guid_1,
+        Status: test-status,
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: account,
+      MethodName: SetChatSessionSharingAsync,
+      RequestType: SetChatSessionSharingRequest,
+      HttpMethod: PATCH,
+      Path: /{version}/account/chat/sessions/{SessionId}/sharing,
+      PathParams: [
+        SessionId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: PATCH,
+        Path: /v2/account/chat/sessions/{guid}/sharing,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          doNotShare: true
+        }
+      },
+      ResponseType: IdResponse,
+      Response: {
+        Id: Guid_1,
+        Status: test-status,
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: account,
+      MethodName: StopChatRunStepAsync,
+      RequestType: StopChatRunStepRequest,
+      HttpMethod: POST,
+      Path: /{version}/account/chat/sessions/{SessionId}/steps/{EntryId}/stop,
+      PathParams: [
+        SessionId,
+        EntryId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/account/chat/sessions/{guid}/steps/{guid}/stop,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: IdResponse,
+      Response: {
+        Id: Guid_1,
+        Status: test-status,
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: account,
+      MethodName: UploadChatAttachmentAsync,
+      RequestType: UploadChatAttachmentRequest,
+      HttpMethod: POST,
+      Path: /{version}/account/chat/attachments,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/account/chat/attachments,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          sessionId: Guid_1,
+          fileName: test-fileName,
+          contentType: test-contentType,
+          base64Content: test-base64Content,
+          profile: test-profile,
+          topic: test-topic,
+          env: test-env
+        }
+      },
+      ResponseType: UploadChatAttachmentResponse,
+      Response: {
+        Id: Guid_1,
+        SessionId: Guid_1,
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    }
+  ]
+}
