@@ -18,6 +18,7 @@
       Sent: {
         Method: DELETE,
         Path: /v2/ai/integrations/llms/{guid},
+        Query: ?env=test-env,
         Headers: {
           Authorization: Bearer test-bearer,
           X-CM-AccountId: test-account,
@@ -46,6 +47,7 @@
       Sent: {
         Method: DELETE,
         Path: /v2/ai/integrations/mcp/{guid},
+        Query: ?env=test-env,
         Headers: {
           Authorization: Bearer test-bearer,
           X-CM-AccountId: test-account,
@@ -76,8 +78,12 @@
         Path: /v2/ai/integrations/llms/{guid}/disable,
         Headers: {
           Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
           X-CM-AccountId: test-account,
           X-CM-ProjectId: test-project
+        },
+        Body: {
+          env: test-env
         }
       },
       ResponseType: EmptyResponse,
@@ -104,8 +110,12 @@
         Path: /v2/ai/integrations/mcp/{guid}/disable,
         Headers: {
           Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
           X-CM-AccountId: test-account,
           X-CM-ProjectId: test-project
+        },
+        Body: {
+          env: test-env
         }
       },
       ResponseType: EmptyResponse,
@@ -132,8 +142,12 @@
         Path: /v2/ai/integrations/llms/{guid}/enable,
         Headers: {
           Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
           X-CM-AccountId: test-account,
           X-CM-ProjectId: test-project
+        },
+        Body: {
+          env: test-env
         }
       },
       ResponseType: EmptyResponse,
@@ -160,8 +174,12 @@
         Path: /v2/ai/integrations/mcp/{guid}/enable,
         Headers: {
           Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
           X-CM-AccountId: test-account,
           X-CM-ProjectId: test-project
+        },
+        Body: {
+          env: test-env
         }
       },
       ResponseType: EmptyResponse,
@@ -186,6 +204,7 @@
       Sent: {
         Method: GET,
         Path: /v2/ai/integrations/llms/{guid},
+        Query: ?env=test-env,
         Headers: {
           Authorization: Bearer test-bearer,
           X-CM-AccountId: test-account,
@@ -198,7 +217,11 @@
           BaseUrl: https://example.test/baseUrl,
           DefaultModel: test-defaultModel,
           IsConfigured: true,
-          IsSystemOwned: true
+          IsSystemOwned: true,
+          ViewId: Guid_1,
+          IntegrationName: test-integrationName,
+          IsEnabled: true,
+          RequiresHumanDeliveryConfirmation: false
         },
         ResponseStatus: {
           IsSuccess: true
@@ -217,7 +240,7 @@
       Sent: {
         Method: GET,
         Path: /v2/ai/integrations/llms/integrations,
-        Query: ?paging=Norbix.Sdk.Types.Hub.PagingArgs,
+        Query: ?env=test-env&resolvedEnv=Norbix.Sdk.Types.Hub.Env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1&paging=Norbix.Sdk.Types.Hub.PagingArgs,
         Headers: {
           Authorization: Bearer test-bearer,
           X-CM-AccountId: test-account,
@@ -229,7 +252,10 @@
         DefaultIntegrationId: Guid_1,
         List: {
           Items: [
-            {}
+            {
+              IsEnabled: false,
+              RequiresHumanDeliveryConfirmation: false
+            }
           ],
           HasMore: false,
           HasPrevious: false,
@@ -256,6 +282,7 @@
       Sent: {
         Method: GET,
         Path: /v2/ai/integrations/mcp/{guid},
+        Query: ?env=test-env,
         Headers: {
           Authorization: Bearer test-bearer,
           X-CM-AccountId: test-account,
@@ -272,7 +299,9 @@
           Args: [
             test-string
           ],
-          ServerUrl: https://example.test/serverUrl
+          ServerUrl: https://example.test/serverUrl,
+          IsEnabled: false,
+          RequiresHumanDeliveryConfirmation: false
         },
         ResponseStatus: {
           IsSuccess: true
@@ -291,7 +320,7 @@
       Sent: {
         Method: GET,
         Path: /v2/ai/integrations/mcp/integrations,
-        Query: ?paging=Norbix.Sdk.Types.Hub.PagingArgs,
+        Query: ?env=test-env&resolvedEnv=Norbix.Sdk.Types.Hub.Env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1&paging=Norbix.Sdk.Types.Hub.PagingArgs,
         Headers: {
           Authorization: Bearer test-bearer,
           X-CM-AccountId: test-account,
@@ -303,7 +332,10 @@
         DefaultIntegrationId: Guid_1,
         List: {
           Items: [
-            {}
+            {
+              IsEnabled: false,
+              RequiresHumanDeliveryConfirmation: false
+            }
           ],
           HasMore: false,
           HasPrevious: false,
@@ -341,12 +373,17 @@
             isEnabled: true,
             endpoint: test-endpoint,
             defaultModel: test-defaultModel
-          }
+          },
+          env: test-env
         }
       },
       ResponseType: IdResponse,
       Response: {
-        Id: Guid_1
+        Id: Guid_1,
+        Status: test-status,
+        ResponseStatus: {
+          IsSuccess: true
+        }
       }
     },
     {
@@ -377,12 +414,17 @@
             name: test-name,
             category: test-category,
             description: test-description
-          }
+          },
+          env: test-env
         }
       },
       ResponseType: IdResponse,
       Response: {
-        Id: Guid_1
+        Id: Guid_1,
+        Status: test-status,
+        ResponseStatus: {
+          IsSuccess: true
+        }
       }
     },
     {
@@ -404,14 +446,18 @@
           X-CM-ProjectId: test-project
         },
         Body: {
-          integrationId: Guid_1
+          integrationId: Guid_1,
+          env: test-env
         }
       },
       ResponseType: TestLlmIntegrationResponse,
       Response: {
         Items: [
           {}
-        ]
+        ],
+        ResponseStatus: {
+          IsSuccess: true
+        }
       }
     },
     {
@@ -433,14 +479,18 @@
           X-CM-ProjectId: test-project
         },
         Body: {
-          integrationId: Guid_1
+          integrationId: Guid_1,
+          env: test-env
         }
       },
       ResponseType: TestLlmIntegrationResponse,
       Response: {
         Items: [
           {}
-        ]
+        ],
+        ResponseStatus: {
+          IsSuccess: true
+        }
       }
     }
   ]

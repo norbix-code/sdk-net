@@ -1,0 +1,247 @@
+﻿{
+  Target: Hub,
+  Group: support,
+  Count: 7,
+  Endpoints: [
+    {
+      Target: Hub,
+      Group: support,
+      MethodName: GetSupportCaseAsync,
+      RequestType: GetSupportCase,
+      HttpMethod: GET,
+      Path: /{version}/support/cases/{CaseId},
+      PathParams: [
+        CaseId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/support/cases/{guid},
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: GetSupportCaseResponse,
+      Response: {
+        Result: {
+          Case: {},
+          Messages: [
+            {}
+          ]
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: support,
+      MethodName: GetSupportCasesAsync,
+      RequestType: GetSupportCases,
+      HttpMethod: GET,
+      Path: /{version}/support/cases,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/support/cases,
+        Query: ?pagingArgs=Norbix.Sdk.Types.Hub.PagingArgs,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: GetSupportCasesResponse,
+      Response: {
+        List: {
+          Items: [
+            {}
+          ],
+          HasMore: false,
+          HasPrevious: false,
+          StartingAfter: cursor-start,
+          EndingBefore: cursor-end
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: support,
+      MethodName: OpenSupportCaseAsync,
+      RequestType: OpenSupportCaseRequest,
+      HttpMethod: POST,
+      Path: /{version}/support/cases,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/support/cases,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          kind: test-kind,
+          severity: test-severity,
+          subject: test-subject,
+          message: test-message
+        }
+      },
+      ResponseType: IdResponse,
+      Response: {
+        Id: Guid_1,
+        Status: test-status,
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: support,
+      MethodName: AppendSupportCaseMessageAsync,
+      RequestType: AppendSupportCaseMessageRequest,
+      HttpMethod: POST,
+      Path: /{version}/support/cases/{CaseId}/messages,
+      PathParams: [
+        CaseId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/support/cases/{guid}/messages,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          message: test-message
+        }
+      },
+      ResponseType: IdResponse,
+      Response: {
+        Id: Guid_1,
+        Status: test-status,
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: support,
+      MethodName: CloseSupportCaseAsync,
+      RequestType: CloseSupportCaseRequest,
+      HttpMethod: POST,
+      Path: /{version}/support/cases/{CaseId}/close,
+      PathParams: [
+        CaseId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/support/cases/{guid}/close,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: support,
+      MethodName: ReopenSupportCaseAsync,
+      RequestType: ReopenSupportCaseRequest,
+      HttpMethod: POST,
+      Path: /{version}/support/cases/{CaseId}/reopen,
+      PathParams: [
+        CaseId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/support/cases/{guid}/reopen,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          reason: test-reason
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: support,
+      MethodName: ResolveSupportCaseAsync,
+      RequestType: ResolveSupportCaseRequest,
+      HttpMethod: POST,
+      Path: /{version}/support/cases/{CaseId}/resolve,
+      PathParams: [
+        CaseId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/support/cases/{guid}/resolve,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          resolution: {
+            problem: test-problem,
+            symptoms: [
+              test-string
+            ],
+            rootCause: test-rootCause,
+            fix: 0.0,
+            fixDetail: test-fixDetail,
+            affectedVersions: [
+              test-string
+            ]
+          }
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    }
+  ]
+}

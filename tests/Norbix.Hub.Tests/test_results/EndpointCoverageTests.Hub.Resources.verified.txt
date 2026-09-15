@@ -1,0 +1,42 @@
+﻿{
+  Target: Hub,
+  Group: resources,
+  Count: 1,
+  Endpoints: [
+    {
+      Target: Hub,
+      Group: resources,
+      MethodName: ResolveResourcesAsync,
+      RequestType: ResolveResources,
+      HttpMethod: POST,
+      Path: /{version}/resources/resolve,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/resources/resolve,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          refs: [
+            null
+          ],
+          env: test-env
+        }
+      },
+      ResponseType: ResolveResourcesResponse,
+      Response: {
+        Resolved: [
+          {}
+        ],
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    }
+  ]
+}

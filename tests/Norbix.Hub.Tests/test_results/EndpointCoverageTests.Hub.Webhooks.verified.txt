@@ -1,7 +1,7 @@
 ﻿{
   Target: Hub,
   Group: webhooks,
-  Count: 8,
+  Count: 9,
   Endpoints: [
     {
       Target: Hub,
@@ -20,8 +20,12 @@
         Path: /v2/webhooks/destinations/{guid}/disable,
         Headers: {
           Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
           X-CM-AccountId: test-account,
           X-CM-ProjectId: test-project
+        },
+        Body: {
+          env: test-env
         }
       },
       ResponseType: EmptyResponse,
@@ -48,8 +52,12 @@
         Path: /v2/webhooks/destinations/{guid}/enable,
         Headers: {
           Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
           X-CM-AccountId: test-account,
           X-CM-ProjectId: test-project
+        },
+        Body: {
+          env: test-env
         }
       },
       ResponseType: EmptyResponse,
@@ -74,6 +82,7 @@
       Sent: {
         Method: DELETE,
         Path: /v2/webhooks/destinations/{guid},
+        Query: ?env=test-env,
         Headers: {
           Authorization: Bearer test-bearer,
           X-CM-AccountId: test-account,
@@ -115,7 +124,8 @@
           extraHeaders: {
             test-key: test-string
           },
-          isEnabled: true
+          isEnabled: true,
+          env: test-env
         }
       },
       ResponseType: SaveWebhookDestinationResponse,
@@ -124,6 +134,33 @@
         ResponseStatus: {
           IsSuccess: true
         }
+      }
+    },
+    {
+      Target: Hub,
+      Group: webhooks,
+      MethodName: ReceiveWebhookAsync,
+      RequestType: ReceiveWebhook,
+      HttpMethod: POST,
+      Path: /{version}/webhooks/{source}/{integrationInstanceId},
+      PathParams: [
+        source,
+        integrationInstanceId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/webhooks/test-source/{guid},
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: Object,
+      Response: {
+        ValueKind: Object
       }
     },
     {
@@ -138,6 +175,7 @@
       Sent: {
         Method: GET,
         Path: /v2/webhooks/integration,
+        Query: ?env=test-env,
         Headers: {
           Authorization: Bearer test-bearer,
           X-CM-AccountId: test-account,
@@ -147,6 +185,7 @@
       ResponseType: GetWebhookIntegrationResponse,
       Response: {
         Item: {
+          IsConfigured: true,
           Destinations: [
             {
               IsEnabled: false
@@ -154,7 +193,13 @@
           ],
           ExtraHeaders: {
             sample-key: test-string
-          }
+          },
+          ViewId: Guid_1,
+          IntegrationName: test-integrationName,
+          IsEnabled: true,
+          Env: test-env,
+          LastIntegrationTestAtUtc: DateTime_1,
+          RequiresHumanDeliveryConfirmation: false
         },
         ResponseStatus: {
           IsSuccess: true
@@ -173,6 +218,7 @@
       Sent: {
         Method: GET,
         Path: /v2/webhooks/integration/secret,
+        Query: ?env=test-env,
         Headers: {
           Authorization: Bearer test-bearer,
           X-CM-AccountId: test-account,
@@ -201,8 +247,12 @@
         Path: /v2/webhooks/integration/secret/rotate,
         Headers: {
           Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
           X-CM-AccountId: test-account,
           X-CM-ProjectId: test-project
+        },
+        Body: {
+          env: test-env
         }
       },
       ResponseType: RotateWebhookIntegrationSecretResponse,
@@ -234,7 +284,8 @@
         Body: {
           extraHeaders: {
             test-key: test-string
-          }
+          },
+          env: test-env
         }
       },
       ResponseType: EmptyResponse,

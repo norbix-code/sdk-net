@@ -1,0 +1,126 @@
+﻿{
+  Target: Hub,
+  Group: licensing,
+  Count: 3,
+  Endpoints: [
+    {
+      Target: Hub,
+      Group: licensing,
+      MethodName: GetLicenseDomainVerificationStatusAsync,
+      RequestType: GetLicenseDomainVerificationStatus,
+      HttpMethod: GET,
+      Path: /{version}/licensing/domain-verification/status,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/licensing/domain-verification/status,
+        Query: ?domain=test-domain,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: GetLicenseDomainVerificationStatusResponse,
+      Response: {
+        Status: {
+          Domain: test-domain,
+          Verified: true,
+          Skipped: true,
+          TxtHost: test-txtHost,
+          ExpectedTxtValue: test-expectedTxtValue,
+          ObservedTxtValue: test-observedTxtValue,
+          ExpiresAtUtc: DateTime_1,
+          VerifiedAtUtc: DateTime_1
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: licensing,
+      MethodName: PostLicenseHeartbeatAsync,
+      RequestType: PostLicenseHeartbeat,
+      HttpMethod: POST,
+      Path: /{version}/licensing/heartbeat,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/licensing/heartbeat,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          license: test-license,
+          licenseAccountId: Guid_1,
+          installationId: Guid_1,
+          domain: test-domain,
+          hostKind: test-hostKind,
+          release: test-release,
+          instanceVersion: test-instanceVersion
+        }
+      },
+      ResponseType: PostLicenseHeartbeatResponse,
+      Response: {
+        Verdict: {
+          status: test-status,
+          proofToken: test-proofToken,
+          serverTimeUtc: DateTime_1,
+          graceUntilUtc: DateTime_1,
+          installationId: Guid_1,
+          licenseAccountId: Guid_1,
+          domain: test-domain,
+          signature: test-signature
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: licensing,
+      MethodName: StartLicenseDomainVerificationAsync,
+      RequestType: StartLicenseDomainVerificationRequest,
+      HttpMethod: POST,
+      Path: /{version}/licensing/domain-verification/start,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/licensing/domain-verification/start,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          domain: test-domain
+        }
+      },
+      ResponseType: StartLicenseDomainVerificationResponse,
+      Response: {
+        Challenge: {
+          Domain: test-domain,
+          TxtHost: test-txtHost,
+          TxtValue: test-txtValue,
+          ExpiresAtUtc: DateTime_1,
+          Verified: true,
+          VerifiedAtUtc: DateTime_1,
+          Skipped: true
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    }
+  ]
+}

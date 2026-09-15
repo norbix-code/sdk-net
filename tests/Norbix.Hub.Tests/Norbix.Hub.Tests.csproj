@@ -27,10 +27,15 @@
     <ProjectReference Include="..\..\src\Norbix.Contracts\Norbix.Contracts.csproj" />
   </ItemGroup>
 
-  <!-- Share the Api suite's fixture and endpoint driver instead of copying them. -->
+  <!-- Share the Api suite's fixture, endpoint driver and the per-module
+       coverage suite instead of copying them. The driver reads whichever
+       NorbixEndpointCatalog is compiled into the assembly under test, so the
+       same file yields the Api modules over in Norbix.Sdk.Tests and the Hub
+       modules here. -->
   <ItemGroup>
     <Compile Include="..\Norbix.Sdk.Tests\Helpers\*.cs" LinkBase="Helpers" />
     <Compile Include="..\Norbix.Sdk.Tests\EndpointCoverageDriver.cs" LinkBase="Shared" />
+    <Compile Include="..\Norbix.Sdk.Tests\EndpointCoverageTests.cs" LinkBase="Shared" />
   </ItemGroup>
 
 </Project>

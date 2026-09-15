@@ -94,27 +94,44 @@ internal static class EndpointCoverageDriver
             .All.Where(e => e.Target == target && e.Group == group)
             .ToList();
 
+        // Endpoints whose route token has no settable property can never be
+        // called. Report them, then cover the rest of the module anyway — one
+        // broken endpoint used to blank out every other endpoint in its group,
+        // which is how whole hub modules ended up with no real coverage.
         var missingPathParameters = FindMissingPathParameters(endpoints);
-        if (missingPathParameters.Count > 0)
-        {
-            return new EndpointCoverageResult(
-                SnapshotFileName: $"EndpointCoverageTests.{target}.{ToPascal(group)}.MissingPathParameters",
-                Snapshot: new { MissingPathParameters = missingPathParameters }
-            );
-        }
+        var uncallable = missingPathParameters
+            .Select(m => m.MethodName)
+            .ToHashSet(StringComparer.Ordinal);
+
+        var snapshotFileName = $"EndpointCoverageTests.{target}.{ToPascal(group)}";
 
         var invoked = new List<object>();
-        foreach (var endpoint in endpoints)
+        foreach (var endpoint in endpoints.Where(e => !uncallable.Contains(e.MethodName)))
         {
             invoked.Add(await InvokeEndpointAsync(fixture, endpoint));
         }
 
+        if (missingPathParameters.Count == 0)
+        {
+            return new EndpointCoverageResult(
+                SnapshotFileName: snapshotFileName,
+                Snapshot: new
+                {
+                    Target = target,
+                    Group = group,
+                    Count = invoked.Count,
+                    Endpoints = invoked,
+                }
+            );
+        }
+
         return new EndpointCoverageResult(
-            SnapshotFileName: $"EndpointCoverageTests.{target}.{ToPascal(group)}",
+            SnapshotFileName: snapshotFileName,
             Snapshot: new
             {
                 Target = target,
                 Group = group,
+                MissingPathParameters = missingPathParameters,
                 Count = invoked.Count,
                 Endpoints = invoked,
             }
@@ -198,9 +215,11 @@ internal static class EndpointCoverageDriver
         }
     }
 
-    private static List<object> FindMissingPathParameters(IEnumerable<NorbixEndpointInfo> endpoints)
+    private static List<MissingPathParameter> FindMissingPathParameters(
+        IEnumerable<NorbixEndpointInfo> endpoints
+    )
     {
-        var missing = new List<object>();
+        var missing = new List<MissingPathParameter>();
         foreach (var endpoint in endpoints)
         {
             foreach (var pathParam in endpoint.PathParams)
@@ -212,15 +231,14 @@ internal static class EndpointCoverageDriver
                 if (prop is null || !prop.CanWrite)
                 {
                     missing.Add(
-                        new
-                        {
+                        new MissingPathParameter(
                             endpoint.Target,
                             endpoint.Group,
                             endpoint.MethodName,
-                            RequestType = endpoint.RequestType.Name,
+                            endpoint.RequestType.Name,
                             endpoint.Path,
-                            PathParam = pathParam,
-                        }
+                            pathParam
+                        )
                     );
                 }
             }
@@ -461,8 +479,17 @@ internal static class EndpointCoverageDriver
         return "test-key";
     }
 
-    private static Dictionary<string, object?> CreateResponsePayload(Type responseType)
+    private static object CreateResponsePayload(Type responseType)
     {
+        // A few endpoints answer with a bare scalar instead of a response
+        // envelope — the Hub MCP endpoint returns raw JSON-RPC text as a
+        // string. Feeding those the property-by-property envelope below makes
+        // the client fail to deserialize, so give them a body of their shape.
+        if (responseType == typeof(string))
+        {
+            return "test-response";
+        }
+
         var payload = new Dictionary<string, object?>(StringComparer.Ordinal)
         {
             ["responseStatus"] = ResponseStatusValue(),
@@ -682,3 +709,17 @@ internal static class EndpointCoverageDriver
 }
 
 internal sealed record EndpointCoverageResult(string SnapshotFileName, object Snapshot);
+
+/// <summary>
+/// One route token that has no settable property on the request DTO, so the
+/// generated method can never build a valid URL. Property order matches how
+/// the snapshots already render it.
+/// </summary>
+internal sealed record MissingPathParameter(
+    string Target,
+    string Group,
+    string MethodName,
+    string RequestType,
+    string Path,
+    string PathParam
+);

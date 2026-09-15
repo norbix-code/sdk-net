@@ -1,20 +1,21 @@
 ﻿{
   Target: Hub,
-  Group: files,
-  Count: 15,
+  Group: logs,
+  Count: 14,
   Endpoints: [
     {
       Target: Hub,
-      Group: files,
-      MethodName: DisableFilesAsync,
-      RequestType: DisableFiles,
+      Group: logs,
+      MethodName: DisableLoggingAsync,
+      RequestType: DisableLogging,
       HttpMethod: GET,
-      Path: /{version}/files/disable,
+      Path: /{version}/logs/disable,
       IsAccountScoped: false,
       IsUnauthenticated: false,
       Sent: {
         Method: GET,
-        Path: /v2/files/disable,
+        Path: /v2/logs/disable,
+        Query: ?env=test-env,
         Headers: {
           Authorization: Bearer test-bearer,
           X-CM-AccountId: test-account,
@@ -30,16 +31,17 @@
     },
     {
       Target: Hub,
-      Group: files,
-      MethodName: EnableFilesAsync,
-      RequestType: EnableFiles,
+      Group: logs,
+      MethodName: EnableLoggingAsync,
+      RequestType: EnableLogging,
       HttpMethod: GET,
-      Path: /{version}/files/enable,
+      Path: /{version}/logs/enable,
       IsAccountScoped: false,
       IsUnauthenticated: false,
       Sent: {
         Method: GET,
-        Path: /v2/files/enable,
+        Path: /v2/logs/enable,
+        Query: ?createNorbixLogging=True&env=test-env,
         Headers: {
           Authorization: Bearer test-bearer,
           X-CM-AccountId: test-account,
@@ -55,26 +57,27 @@
     },
     {
       Target: Hub,
-      Group: files,
-      MethodName: DeleteFilesIntegrationAsync,
-      RequestType: DeleteFilesIntegrationRequest,
-      HttpMethod: DELETE,
-      Path: /{version}/files/integrations/{Id},
-      PathParams: [
-        Id
-      ],
+      Group: logs,
+      MethodName: CleanLogsAsync,
+      RequestType: CleanLogs,
+      HttpMethod: POST,
+      Path: /{version}/logs/clean,
       IsAccountScoped: false,
       IsUnauthenticated: false,
       Sent: {
-        Method: DELETE,
-        Path: /v2/files/integrations/{guid},
+        Method: POST,
+        Path: /v2/logs/clean,
         Headers: {
           Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
           X-CM-AccountId: test-account,
           X-CM-ProjectId: test-project
+        },
+        Body: {
+          env: test-env
         }
       },
-      ResponseType: EmptyResponse,
+      ResponseType: CleanLogsResponse,
       Response: {
         ResponseStatus: {
           IsSuccess: true
@@ -83,111 +86,25 @@
     },
     {
       Target: Hub,
-      Group: files,
-      MethodName: DisableFilesIntegrationAsync,
-      RequestType: DisableFilesIntegrationRequest,
-      HttpMethod: PUT,
-      Path: /{version}/files/integrations/{Id}/disable,
-      PathParams: [
-        Id
-      ],
-      IsAccountScoped: false,
-      IsUnauthenticated: false,
-      Sent: {
-        Method: PUT,
-        Path: /v2/files/integrations/{guid}/disable,
-        Headers: {
-          Authorization: Bearer test-bearer,
-          X-CM-AccountId: test-account,
-          X-CM-ProjectId: test-project
-        }
-      },
-      ResponseType: EmptyResponse,
-      Response: {
-        ResponseStatus: {
-          IsSuccess: true
-        }
-      }
-    },
-    {
-      Target: Hub,
-      Group: files,
-      MethodName: EnableFilesIntegrationAsync,
-      RequestType: EnableFilesIntegrationRequest,
-      HttpMethod: PUT,
-      Path: /{version}/files/integrations/{Id}/enable,
-      PathParams: [
-        Id
-      ],
-      IsAccountScoped: false,
-      IsUnauthenticated: false,
-      Sent: {
-        Method: PUT,
-        Path: /v2/files/integrations/{guid}/enable,
-        Headers: {
-          Authorization: Bearer test-bearer,
-          X-CM-AccountId: test-account,
-          X-CM-ProjectId: test-project
-        }
-      },
-      ResponseType: EmptyResponse,
-      Response: {
-        ResponseStatus: {
-          IsSuccess: true
-        }
-      }
-    },
-    {
-      Target: Hub,
-      Group: files,
-      MethodName: GetFilesIntegrationAsync,
-      RequestType: GetFilesIntegration,
+      Group: logs,
+      MethodName: GetLogsAsync,
+      RequestType: GetLogs,
       HttpMethod: GET,
-      Path: /{version}/files/integrations/{id},
-      PathParams: [
-        id
-      ],
+      Path: /{version}/logs,
       IsAccountScoped: false,
       IsUnauthenticated: false,
       Sent: {
         Method: GET,
-        Path: /v2/files/integrations/{guid},
+        Path: /v2/logs,
+        Query: ?level=test-level&module=test-module&logCorrelationId={guid}&eventCode=test-eventCode&search=test-search&fromUtc=2026-04-27T12%3a00%3a00.0000000Z&toUtc=2026-04-27T12%3a00%3a00.0000000Z&env=test-env&resolvedEnv=Norbix.Sdk.Types.Hub.Env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1&paging=Norbix.Sdk.Types.Hub.PagingArgs,
         Headers: {
           Authorization: Bearer test-bearer,
           X-CM-AccountId: test-account,
           X-CM-ProjectId: test-project
         }
       },
-      ResponseType: GetFilesIntegrationResponse,
+      ResponseType: GetLogsResponse,
       Response: {
-        Item: {},
-        ResponseStatus: {
-          IsSuccess: true
-        }
-      }
-    },
-    {
-      Target: Hub,
-      Group: files,
-      MethodName: GetFilesIntegrationsAsync,
-      RequestType: GetFilesIntegrations,
-      HttpMethod: GET,
-      Path: /{version}/files/integrations,
-      IsAccountScoped: false,
-      IsUnauthenticated: false,
-      Sent: {
-        Method: GET,
-        Path: /v2/files/integrations,
-        Query: ?paging=Norbix.Sdk.Types.Hub.PagingArgs,
-        Headers: {
-          Authorization: Bearer test-bearer,
-          X-CM-AccountId: test-account,
-          X-CM-ProjectId: test-project
-        }
-      },
-      ResponseType: GetFilesIntegrationsResponse,
-      Response: {
-        DefaultIntegrationId: Guid_1,
         List: {
           Items: [
             {}
@@ -204,16 +121,75 @@
     },
     {
       Target: Hub,
-      Group: files,
-      MethodName: SaveFilesIntegrationAsync,
-      RequestType: SaveFilesIntegration,
+      Group: logs,
+      MethodName: GetLogsByCorrelationIdAsync,
+      RequestType: GetLogsByCorrelationId,
+      HttpMethod: GET,
+      Path: /{version}/logs/audit,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/logs/audit,
+        Query: ?targetCorrelationId={guid}&env=test-env,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: GetLogsByCorrelationIdResponse,
+      Response: {
+        Items: [
+          {}
+        ],
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: logs,
+      MethodName: GetLogSettingsAsync,
+      RequestType: GetLogSettings,
+      HttpMethod: GET,
+      Path: /{version}/logs/settings,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/logs/settings,
+        Query: ?env=test-env,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: GetLogSettingsResponse,
+      Response: {
+        SkipCloudDashboardLogs: true,
+        SkipHttpBodyMeta: true,
+        AiChatLoggingEnabled: true,
+        HasNorbixLogging: true,
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: logs,
+      MethodName: SaveLogSettingsAsync,
+      RequestType: SaveLogSettings,
       HttpMethod: POST,
-      Path: /{version}/files/integrations,
+      Path: /{version}/logs/settings,
       IsAccountScoped: false,
       IsUnauthenticated: false,
       Sent: {
         Method: POST,
-        Path: /v2/files/integrations,
+        Path: /v2/logs/settings,
         Headers: {
           Authorization: Bearer test-bearer,
           Content-Type: application/json; charset=utf-8,
@@ -221,26 +197,55 @@
           X-CM-ProjectId: test-project
         },
         Body: {
-          integration: {
-            integrationId: Guid_1,
-            provider: 0.0,
-            integrationName: test-integrationName,
-            isEnabled: true
-          }
+          skipCloudDashboardLogs: true,
+          skipHttpBodyMeta: true,
+          aiChatLoggingEnabled: true,
+          env: test-env
         }
       },
-      ResponseType: IdResponse,
+      ResponseType: SaveLogSettingsResponse,
       Response: {
-        Id: Guid_1
+        ResponseStatus: {
+          IsSuccess: true
+        }
       }
     },
     {
       Target: Hub,
-      Group: files,
-      MethodName: SetFilesIntegrationAsDefaultAsync,
-      RequestType: SetFilesIntegrationAsDefaultRequest,
+      Group: logs,
+      MethodName: DeleteLoggingIntegrationAsync,
+      RequestType: DeleteLoggingIntegrationRequest,
+      HttpMethod: DELETE,
+      Path: /{version}/logs/integrations/{Id},
+      PathParams: [
+        Id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: DELETE,
+        Path: /v2/logs/integrations/{guid},
+        Query: ?wipeLogs=True&env=test-env,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: logs,
+      MethodName: DisableLoggingIntegrationAsync,
+      RequestType: DisableLoggingIntegrationRequest,
       HttpMethod: PUT,
-      Path: /{version}/files/integrations/{Id}/default,
+      Path: /{version}/logs/integrations/{Id}/disable,
       PathParams: [
         Id
       ],
@@ -248,64 +253,7 @@
       IsUnauthenticated: false,
       Sent: {
         Method: PUT,
-        Path: /v2/files/integrations/{guid}/default,
-        Headers: {
-          Authorization: Bearer test-bearer,
-          X-CM-AccountId: test-account,
-          X-CM-ProjectId: test-project
-        }
-      },
-      ResponseType: EmptyResponse,
-      Response: {
-        ResponseStatus: {
-          IsSuccess: true
-        }
-      }
-    },
-    {
-      Target: Hub,
-      Group: files,
-      MethodName: DeleteFilesTriggerAsync,
-      RequestType: DeleteFilesTrigger,
-      HttpMethod: DELETE,
-      Path: /{version}/files/triggers/{triggerId},
-      PathParams: [
-        triggerId
-      ],
-      IsAccountScoped: false,
-      IsUnauthenticated: false,
-      Sent: {
-        Method: DELETE,
-        Path: /v2/files/triggers/{guid},
-        Query: ?triggerType=Membership&schemaId={guid},
-        Headers: {
-          Authorization: Bearer test-bearer,
-          X-CM-AccountId: test-account,
-          X-CM-ProjectId: test-project
-        }
-      },
-      ResponseType: EmptyResponse,
-      Response: {
-        ResponseStatus: {
-          IsSuccess: true
-        }
-      }
-    },
-    {
-      Target: Hub,
-      Group: files,
-      MethodName: DisableFilesTriggerAsync,
-      RequestType: DisableFilesTrigger,
-      HttpMethod: PATCH,
-      Path: /{version}/files/triggers/{triggerId}/disable,
-      PathParams: [
-        triggerId
-      ],
-      IsAccountScoped: false,
-      IsUnauthenticated: false,
-      Sent: {
-        Method: PATCH,
-        Path: /v2/files/triggers/{guid}/disable,
+        Path: /v2/logs/integrations/{guid}/disable,
         Headers: {
           Authorization: Bearer test-bearer,
           Content-Type: application/json; charset=utf-8,
@@ -313,8 +261,7 @@
           X-CM-ProjectId: test-project
         },
         Body: {
-          triggerType: 0.0,
-          schemaId: Guid_1
+          env: test-env
         }
       },
       ResponseType: EmptyResponse,
@@ -326,19 +273,19 @@
     },
     {
       Target: Hub,
-      Group: files,
-      MethodName: EnableFilesTriggerAsync,
-      RequestType: EnableFilesTrigger,
-      HttpMethod: PATCH,
-      Path: /{version}/files/triggers/{triggerId}/enable,
+      Group: logs,
+      MethodName: EnableLoggingIntegrationAsync,
+      RequestType: EnableLoggingIntegrationRequest,
+      HttpMethod: PUT,
+      Path: /{version}/logs/integrations/{Id}/enable,
       PathParams: [
-        triggerId
+        Id
       ],
       IsAccountScoped: false,
       IsUnauthenticated: false,
       Sent: {
-        Method: PATCH,
-        Path: /v2/files/triggers/{guid}/enable,
+        Method: PUT,
+        Path: /v2/logs/integrations/{guid}/enable,
         Headers: {
           Authorization: Bearer test-bearer,
           Content-Type: application/json; charset=utf-8,
@@ -346,8 +293,7 @@
           X-CM-ProjectId: test-project
         },
         Body: {
-          triggerType: 0.0,
-          schemaId: Guid_1
+          env: test-env
         }
       },
       ResponseType: EmptyResponse,
@@ -359,11 +305,11 @@
     },
     {
       Target: Hub,
-      Group: files,
-      MethodName: GetFilesTriggerAsync,
-      RequestType: GetFilesTrigger,
+      Group: logs,
+      MethodName: GetLoggingIntegrationAsync,
+      RequestType: GetLoggingIntegration,
       HttpMethod: GET,
-      Path: /{version}/files/triggers/{id},
+      Path: /{version}/logs/integrations/{id},
       PathParams: [
         id
       ],
@@ -371,22 +317,27 @@
       IsUnauthenticated: false,
       Sent: {
         Method: GET,
-        Path: /v2/files/triggers/{guid},
+        Path: /v2/logs/integrations/{guid},
+        Query: ?env=test-env,
         Headers: {
           Authorization: Bearer test-bearer,
           X-CM-AccountId: test-account,
           X-CM-ProjectId: test-project
         }
       },
-      ResponseType: GetFilesTriggerResponse,
+      ResponseType: GetLoggingIntegrationResponse,
       Response: {
-        Trigger: {
+        Item: {
           ViewId: Guid_1,
-          Name: test-name,
-          ThenAction: {},
-          Description: test-description,
+          IntegrationName: test-integrationName,
           IsEnabled: true,
-          ActivationCode: test-activationCode
+          Env: test-env,
+          LastIntegrationTestAtUtc: DateTime_1,
+          LastIntegrationTestSucceeded: true,
+          LastIntegrationTestErrors: [
+            test-string
+          ],
+          RequiresHumanDeliveryConfirmation: false
         },
         ResponseStatus: {
           IsSuccess: true
@@ -395,30 +346,30 @@
     },
     {
       Target: Hub,
-      Group: files,
-      MethodName: GetFilesTriggersAsync,
-      RequestType: GetFilesTriggers,
+      Group: logs,
+      MethodName: GetLoggingIntegrationsAsync,
+      RequestType: GetLoggingIntegrations,
       HttpMethod: GET,
-      Path: /{version}/files/triggers,
+      Path: /{version}/logs/integrations,
       IsAccountScoped: false,
       IsUnauthenticated: false,
       Sent: {
         Method: GET,
-        Path: /v2/files/triggers,
-        Query: ?paging=Norbix.Sdk.Types.Hub.PagingArgs,
+        Path: /v2/logs/integrations,
+        Query: ?env=test-env&resolvedEnv=Norbix.Sdk.Types.Hub.Env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1&paging=Norbix.Sdk.Types.Hub.PagingArgs,
         Headers: {
           Authorization: Bearer test-bearer,
           X-CM-AccountId: test-account,
           X-CM-ProjectId: test-project
         }
       },
-      ResponseType: GetFilesTriggersResponse,
+      ResponseType: GetLoggingIntegrationsResponse,
       Response: {
         List: {
           Items: [
             {
-              HasPreExecuteCode: false,
-              IsEnabled: false
+              IsEnabled: false,
+              RequiresHumanDeliveryConfirmation: false
             }
           ],
           HasMore: false,
@@ -433,16 +384,16 @@
     },
     {
       Target: Hub,
-      Group: files,
-      MethodName: SaveFilesTriggerAsync,
-      RequestType: SaveFilesTrigger,
+      Group: logs,
+      MethodName: SaveLoggingIntegrationAsync,
+      RequestType: SaveLoggingIntegration,
       HttpMethod: POST,
-      Path: /{version}/files/triggers,
+      Path: /{version}/logs/integrations,
       IsAccountScoped: false,
       IsUnauthenticated: false,
       Sent: {
         Method: POST,
-        Path: /v2/files/triggers,
+        Path: /v2/logs/integrations,
         Headers: {
           Authorization: Bearer test-bearer,
           Content-Type: application/json; charset=utf-8,
@@ -450,19 +401,55 @@
           X-CM-ProjectId: test-project
         },
         Body: {
-          trigger: {
-            type: 0.0,
-            triggerId: Guid_1,
-            name: test-name,
-            description: test-description,
-            isEnabled: true,
-            preExecuteCode: test-preExecuteCode
-          }
+          integration: {
+            integrationId: Guid_1,
+            provider: 0.0,
+            integrationName: test-integrationName,
+            isEnabled: true
+          },
+          env: test-env
         }
       },
       ResponseType: IdResponse,
       Response: {
-        Id: Guid_1
+        Id: Guid_1,
+        Status: test-status,
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: logs,
+      MethodName: TestLoggingIntegrationAsync,
+      RequestType: TestLoggingIntegration,
+      HttpMethod: POST,
+      Path: /{version}/logs/integrations/test,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/logs/integrations/test,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          integrationId: Guid_1,
+          env: test-env
+        }
+      },
+      ResponseType: TestLoggingIntegrationResponse,
+      Response: {
+        Items: [
+          {}
+        ],
+        ResponseStatus: {
+          IsSuccess: true
+        }
       }
     }
   ]
