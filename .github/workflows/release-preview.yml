@@ -28,15 +28,7 @@ jobs:
           node-version: '22'
 
       - name: Install semantic-release
-        run: |
-          npm install -g \
-            semantic-release@24 \
-            conventional-changelog-conventionalcommits \
-            @semantic-release/commit-analyzer \
-            @semantic-release/release-notes-generator \
-            @semantic-release/exec \
-            @semantic-release/git \
-            @semantic-release/github
+        run: ./scripts/install-semantic-release.sh
 
       - name: Compute next version
         id: dry

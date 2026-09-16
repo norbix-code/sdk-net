@@ -14,6 +14,19 @@ updates:
     labels:
       - dependencies
       - nuget
+    ignore:
+      # Verify 33.0 changed the license from MIT to a paid EULA (OsmfEula.txt)
+      # and fails the build without a sponsorship property. Stay on 32.x unless
+      # that license is accepted.
+      - dependency-name: 'Verify*'
+        versions: ['>= 33']
+      # Microsoft.CodeAnalysis.CSharp must not be newer than the compiler in
+      # the lowest supported SDK (10.0.100 = Roslyn 5.0.x).
+      - dependency-name: 'Microsoft.CodeAnalysis.CSharp'
+        versions: ['>= 5.1']
+      # Analyzers 5.x needs Roslyn 5.3+ (see Directory.Packages.props).
+      - dependency-name: 'Microsoft.CodeAnalysis.Analyzers'
+        versions: ['>= 5']
     groups:
       nuget-minor-and-patch:
         update-types:

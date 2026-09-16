@@ -1,20 +1,33 @@
 name: Release
 
-# Publishes Norbix.Sdk + Norbix.Sdk.Types to NuGet via semantic-release.
+# Publishes Norbix.Api + Norbix.Hub to NuGet via semantic-release.
 # Triggers on push to main / next / beta. Uses @semantic-release/exec to call
 # `dotnet pack` and `dotnet nuget push` with the version semantic-release
 # computed from conventional commits.
 #
 # Required secrets:
-#   - NUGET_API_KEY  — push key for nuget.org (or a GitHub Packages PAT).
+#   - NUGET_API_KEY  — push key for nuget.org. nuget.org keys expire (max 365
+#                      days); an expired key fails the push with 403.
 #   - GITHUB_TOKEN   — provided automatically; tags + GH release.
 #
 # NuGet trusted publishing (OIDC) is not used yet — keep an API key for now.
+#
+# `main` is protected (changes only through pull requests), so the release does
+# NOT commit back: no CHANGELOG.md commit. The git tag is the source of truth for
+# the version; release notes live on the GitHub Release.
 
 on:
   push:
     branches: [main, next, beta]
   workflow_dispatch:
+    inputs:
+      republish:
+        description: >-
+          Recovery mode — skip semantic-release and pack + push the latest git
+          tag to NuGet, then create its GitHub Release if missing (use when a
+          tag exists but the NuGet push failed).
+        type: boolean
+        default: false
 
 concurrency:
   group: release-${{ github.ref }}
@@ -63,29 +76,44 @@ jobs:
         run: dotnet test --configuration Release --no-build
 
       - name: Install semantic-release
-        run: |
-          npm install -g \
-            semantic-release@24 \
-            conventional-changelog-conventionalcommits \
-            @semantic-release/changelog \
-            @semantic-release/commit-analyzer \
-            @semantic-release/release-notes-generator \
-            @semantic-release/exec \
-            @semantic-release/git \
-            @semantic-release/github
+        if: github.event_name != 'workflow_dispatch' || inputs.republish != true
+        run: ./scripts/install-semantic-release.sh
 
       - name: Release
+        if: github.event_name != 'workflow_dispatch' || inputs.republish != true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
         run: npx semantic-release
 
+      - name: Republish to NuGet (recovery)
+        if: github.event_name == 'workflow_dispatch' && inputs.republish == true
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+        run: |
+          test -n "$NUGET_API_KEY" || { echo "::error::NUGET_API_KEY is required"; exit 1; }
+          TAG=$(git describe --tags --abbrev=0 --match 'v[0-9]*')
+          VERSION="${TAG#v}"
+          echo "Recovery publish: ${VERSION} (from tag ${TAG})"
+          # Build the packages from the tag's own tree, not the branch tip.
+          git checkout --detach "${TAG}"
+          rm -rf ./packages
+          dotnet pack src/Norbix.Sdk/Norbix.Sdk.csproj -c Release -p:Version="${VERSION}" -o ./packages
+          dotnet pack src/Norbix.Hub/Norbix.Hub.csproj -c Release -p:Version="${VERSION}" -o ./packages
+          for pkg in ./packages/*.nupkg; do
+            echo "Pushing $pkg"
+            dotnet nuget push "$pkg" --api-key "$NUGET_API_KEY" --source https://api.nuget.org/v3/index.json --skip-duplicate
+          done
+          if ! gh release view "${TAG}" >/dev/null 2>&1; then
+            gh release create "${TAG}" --verify-tag --title "${TAG}" --generate-notes
+          fi
+
       - name: Summary
         if: always()
         run: |
           echo "### Release · ${{ github.ref_name }}" >> $GITHUB_STEP_SUMMARY
-          if [ -f CHANGELOG.md ]; then
-            echo '```' >> $GITHUB_STEP_SUMMARY
-            head -40 CHANGELOG.md >> $GITHUB_STEP_SUMMARY
-            echo '```' >> $GITHUB_STEP_SUMMARY
+          TAG=$(git describe --tags --abbrev=0 --match 'v[0-9]*' 2>/dev/null || true)
+          if [ -n "$TAG" ]; then
+            echo "Latest tag: \`${TAG}\` — notes: ${{ github.server_url }}/${{ github.repository }}/releases/tag/${TAG}" >> $GITHUB_STEP_SUMMARY
           fi
