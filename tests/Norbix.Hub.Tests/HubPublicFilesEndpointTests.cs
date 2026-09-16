@@ -94,7 +94,7 @@ public sealed class HubPublicFilesEndpointTests
                         {
                             path = FilePath,
                             isPublic = true,
-                            publicUrl = "https://api.norbix.dev/v3/files/public/" + PublicId + "/invoice.pdf",
+                            publicUrl = "https://api.norbix.io/v3/files/public/" + PublicId + "/invoice.pdf",
                         },
                     },
                 },
@@ -105,7 +105,7 @@ public sealed class HubPublicFilesEndpointTests
                     {
                         path = "invoices",
                         publicId = "nbpf_folder1",
-                        publicUrl = "https://api.norbix.dev/v3/files/public/nbpf_folder1/",
+                        publicUrl = "https://api.norbix.io/v3/files/public/nbpf_folder1/",
                         inherited = false,
                     },
                 },
