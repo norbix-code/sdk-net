@@ -5,7 +5,7 @@
 [![NuGet](https://img.shields.io/nuget/v/Norbix.Hub.svg?logo=nuget)](https://www.nuget.org/packages/Norbix.Hub)
 [![License](https://img.shields.io/nuget/l/Norbix.Api.svg)](./LICENSE)
 
-Official .NET SDK for [Norbix](https://norbix.dev). There are **two packages**:
+Official .NET SDK for [Norbix](https://norbix.ai). There are **two packages**:
 
 - **`Norbix.Api`**: project-scoped data (collections, users, AI chat)
 - **`Norbix.Hub`**: project/account configuration (schemas, integrations, team, billing)

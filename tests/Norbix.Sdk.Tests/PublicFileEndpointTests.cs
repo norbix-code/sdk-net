@@ -140,7 +140,7 @@ public sealed class PublicFileEndpointTests
                         {
                             path = "invoices/invoice.pdf",
                             isPublic = true,
-                            publicUrl = "https://api.norbix.dev/v3/files/public/" + PublicId + "/invoice.pdf",
+                            publicUrl = "https://api.norbix.io/v3/files/public/" + PublicId + "/invoice.pdf",
                         },
                     },
                 },

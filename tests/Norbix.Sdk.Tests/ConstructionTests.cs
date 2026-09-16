@@ -58,8 +58,8 @@ public sealed class ConstructionTests
             ["NORBIX_API_KEY"] = "env-key",
             ["NORBIX_PROJECT_ID"] = "env-project",
             ["NORBIX_ACCOUNT_ID"] = "env-account",
-            ["NORBIX_API_URL"] = "https://api.staging.norbix.dev",
-            ["NORBIX_HUB_URL"] = "https://hub.staging.norbix.dev",
+            ["NORBIX_API_URL"] = "https://api.staging.norbix.io",
+            ["NORBIX_HUB_URL"] = "https://hub.staging.norbix.io",
             ["NORBIX_API_VERSION"] = "v3",
             ["NORBIX_TIMEOUT_MS"] = "5000",
         });
