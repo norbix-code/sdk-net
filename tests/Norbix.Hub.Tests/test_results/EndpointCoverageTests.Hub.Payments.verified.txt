@@ -1,7 +1,7 @@
 ﻿{
   Target: Hub,
   Group: payments,
-  Count: 16,
+  Count: 17,
   Endpoints: [
     {
       Target: Hub,
@@ -15,6 +15,7 @@
       Sent: {
         Method: GET,
         Path: /v2/payments/disable,
+        Query: ?env=test-env,
         Headers: {
           Authorization: Bearer test-bearer,
           X-CM-AccountId: test-account,
@@ -40,6 +41,7 @@
       Sent: {
         Method: GET,
         Path: /v2/payments/enable,
+        Query: ?env=test-env,
         Headers: {
           Authorization: Bearer test-bearer,
           X-CM-AccountId: test-account,
@@ -72,7 +74,8 @@
           X-CM-ProjectId: test-project
         },
         Body: {
-          integrationId: Guid_1
+          integrationId: Guid_1,
+          env: test-env
         }
       },
       ResponseType: EmptyResponse,
@@ -97,6 +100,7 @@
       Sent: {
         Method: DELETE,
         Path: /v2/payments/integrations/{guid},
+        Query: ?env=test-env,
         Headers: {
           Authorization: Bearer test-bearer,
           X-CM-AccountId: test-account,
@@ -127,8 +131,12 @@
         Path: /v2/payments/integrations/{guid}/disable,
         Headers: {
           Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
           X-CM-AccountId: test-account,
           X-CM-ProjectId: test-project
+        },
+        Body: {
+          env: test-env
         }
       },
       ResponseType: EmptyResponse,
@@ -155,8 +163,12 @@
         Path: /v2/payments/integrations/{guid}/enable,
         Headers: {
           Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
           X-CM-AccountId: test-account,
           X-CM-ProjectId: test-project
+        },
+        Body: {
+          env: test-env
         }
       },
       ResponseType: EmptyResponse,
@@ -181,6 +193,7 @@
       Sent: {
         Method: GET,
         Path: /v2/payments/integrations/{guid},
+        Query: ?env=test-env,
         Headers: {
           Authorization: Bearer test-bearer,
           X-CM-AccountId: test-account,
@@ -189,7 +202,18 @@
       },
       ResponseType: GetPaymentsIntegrationResponse,
       Response: {
-        Item: {},
+        Item: {
+          ViewId: Guid_1,
+          IntegrationName: test-integrationName,
+          IsEnabled: true,
+          Env: test-env,
+          LastIntegrationTestAtUtc: DateTime_1,
+          LastIntegrationTestSucceeded: true,
+          LastIntegrationTestErrors: [
+            test-string
+          ],
+          RequiresHumanDeliveryConfirmation: false
+        },
         ResponseStatus: {
           IsSuccess: true
         }
@@ -207,7 +231,7 @@
       Sent: {
         Method: GET,
         Path: /v2/payments/integrations,
-        Query: ?paging=Norbix.Sdk.Types.Hub.PagingArgs,
+        Query: ?env=test-env&resolvedEnv=Norbix.Sdk.Types.Hub.Env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1&paging=Norbix.Sdk.Types.Hub.PagingArgs,
         Headers: {
           Authorization: Bearer test-bearer,
           X-CM-AccountId: test-account,
@@ -218,7 +242,10 @@
       Response: {
         List: {
           Items: [
-            {}
+            {
+              IsEnabled: false,
+              RequiresHumanDeliveryConfirmation: false
+            }
           ],
           HasMore: false,
           HasPrevious: false,
@@ -251,15 +278,20 @@
         Body: {
           integration: {
             integrationId: Guid_1,
-            gatewayPlatform: 0.0,
+            provider: 0.0,
             integrationName: test-integrationName,
             isEnabled: true
-          }
+          },
+          env: test-env
         }
       },
       ResponseType: IdResponse,
       Response: {
-        Id: Guid_1
+        Id: Guid_1,
+        Status: test-status,
+        ResponseStatus: {
+          IsSuccess: true
+        }
       }
     },
     {
@@ -281,14 +313,18 @@
           X-CM-ProjectId: test-project
         },
         Body: {
-          integrationId: Guid_1
+          integrationId: Guid_1,
+          env: test-env
         }
       },
       ResponseType: TestPaymentsIntegrationResponse,
       Response: {
         Items: [
           {}
-        ]
+        ],
+        ResponseStatus: {
+          IsSuccess: true
+        }
       }
     },
     {
@@ -306,7 +342,7 @@
       Sent: {
         Method: DELETE,
         Path: /v2/payments/triggers/{guid},
-        Query: ?triggerType=Membership&schemaId={guid},
+        Query: ?triggerType=Membership&schemaId={guid}&env=test-env,
         Headers: {
           Authorization: Bearer test-bearer,
           X-CM-AccountId: test-account,
@@ -343,7 +379,8 @@
         },
         Body: {
           triggerType: 0.0,
-          schemaId: Guid_1
+          schemaId: Guid_1,
+          env: test-env
         }
       },
       ResponseType: EmptyResponse,
@@ -376,7 +413,8 @@
         },
         Body: {
           triggerType: 0.0,
-          schemaId: Guid_1
+          schemaId: Guid_1,
+          env: test-env
         }
       },
       ResponseType: EmptyResponse,
@@ -401,6 +439,7 @@
       Sent: {
         Method: GET,
         Path: /v2/payments/triggers/{guid},
+        Query: ?schemaId={guid}&env=test-env,
         Headers: {
           Authorization: Bearer test-bearer,
           X-CM-AccountId: test-account,
@@ -410,12 +449,17 @@
       ResponseType: GetPaymentsTriggerResponse,
       Response: {
         Trigger: {
+          Integrations: [
+            test-string
+          ],
+          Events: [
+            test-string
+          ],
           ViewId: Guid_1,
           Name: test-name,
           ThenAction: {},
           Description: test-description,
-          IsEnabled: true,
-          ActivationCode: test-activationCode
+          IsEnabled: false
         },
         ResponseStatus: {
           IsSuccess: true
@@ -434,7 +478,7 @@
       Sent: {
         Method: GET,
         Path: /v2/payments/triggers,
-        Query: ?paging=Norbix.Sdk.Types.Hub.PagingArgs,
+        Query: ?schemaId={guid}&env=test-env&resolvedEnv=Norbix.Sdk.Types.Hub.Env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1&paging=Norbix.Sdk.Types.Hub.PagingArgs,
         Headers: {
           Authorization: Bearer test-bearer,
           X-CM-AccountId: test-account,
@@ -486,12 +530,46 @@
             description: test-description,
             isEnabled: true,
             preExecuteCode: test-preExecuteCode
-          }
+          },
+          env: test-env
         }
       },
       ResponseType: IdResponse,
       Response: {
-        Id: Guid_1
+        Id: Guid_1,
+        Status: test-status,
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: payments,
+      MethodName: GetPaymentsWebhookLogAsync,
+      RequestType: GetPaymentsWebhookLog,
+      HttpMethod: GET,
+      Path: /{version}/payments/webhooks/log,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/payments/webhooks/log,
+        Query: ?integrationId={guid}&limit=1&env=test-env,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: GetPaymentsWebhookLogResponse,
+      Response: {
+        List: [
+          {}
+        ],
+        ResponseStatus: {
+          IsSuccess: true
+        }
       }
     }
   ]

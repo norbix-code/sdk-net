@@ -1,3 +1,5 @@
+> Release notes after 1.3.1 are published on [GitHub Releases](https://github.com/norbix-code/sdk-net/releases); this file is no longer updated.
+
 ## [1.3.1](https://github.com/norbix-code/sdk-net/compare/v1.3.0...v1.3.1) (2026-04-29)
 
 ### Bug Fixes

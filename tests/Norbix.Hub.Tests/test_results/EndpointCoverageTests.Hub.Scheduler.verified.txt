@@ -1,20 +1,21 @@
 ﻿{
   Target: Hub,
-  Group: logs,
-  Count: 9,
+  Group: scheduler,
+  Count: 8,
   Endpoints: [
     {
       Target: Hub,
-      Group: logs,
-      MethodName: DisableLoggingAsync,
-      RequestType: DisableLogging,
+      Group: scheduler,
+      MethodName: DisableSchedulerAsync,
+      RequestType: DisableScheduler,
       HttpMethod: GET,
-      Path: /{version}/logs/disable,
+      Path: /{version}/scheduler/disable,
       IsAccountScoped: false,
       IsUnauthenticated: false,
       Sent: {
         Method: GET,
-        Path: /v2/logs/disable,
+        Path: /v2/scheduler/disable,
+        Query: ?env=test-env,
         Headers: {
           Authorization: Bearer test-bearer,
           X-CM-AccountId: test-account,
@@ -30,16 +31,17 @@
     },
     {
       Target: Hub,
-      Group: logs,
-      MethodName: EnableLoggingAsync,
-      RequestType: EnableLogging,
+      Group: scheduler,
+      MethodName: EnableSchedulerAsync,
+      RequestType: EnableScheduler,
       HttpMethod: GET,
-      Path: /{version}/logs/enable,
+      Path: /{version}/scheduler/enable,
       IsAccountScoped: false,
       IsUnauthenticated: false,
       Sent: {
         Method: GET,
-        Path: /v2/logs/enable,
+        Path: /v2/scheduler/enable,
+        Query: ?env=test-env,
         Headers: {
           Authorization: Bearer test-bearer,
           X-CM-AccountId: test-account,
@@ -55,11 +57,11 @@
     },
     {
       Target: Hub,
-      Group: logs,
-      MethodName: DeleteLoggingIntegrationAsync,
-      RequestType: DeleteLoggingIntegrationRequest,
+      Group: scheduler,
+      MethodName: DeleteSchedulerTaskAsync,
+      RequestType: DeleteSchedulerTask,
       HttpMethod: DELETE,
-      Path: /{version}/logs/integrations/{Id},
+      Path: /{version}/scheduler/tasks/{Id},
       PathParams: [
         Id
       ],
@@ -67,7 +69,8 @@
       IsUnauthenticated: false,
       Sent: {
         Method: DELETE,
-        Path: /v2/logs/integrations/{guid},
+        Path: /v2/scheduler/tasks/{guid},
+        Query: ?env=test-env,
         Headers: {
           Authorization: Bearer test-bearer,
           X-CM-AccountId: test-account,
@@ -83,11 +86,11 @@
     },
     {
       Target: Hub,
-      Group: logs,
-      MethodName: DisableLoggingIntegrationAsync,
-      RequestType: DisableLoggingIntegrationRequest,
+      Group: scheduler,
+      MethodName: DisableSchedulerTaskAsync,
+      RequestType: DisableSchedulerTask,
       HttpMethod: PUT,
-      Path: /{version}/logs/integrations/{Id}/disable,
+      Path: /{version}/scheduler/tasks/{Id}/disable,
       PathParams: [
         Id
       ],
@@ -95,11 +98,15 @@
       IsUnauthenticated: false,
       Sent: {
         Method: PUT,
-        Path: /v2/logs/integrations/{guid}/disable,
+        Path: /v2/scheduler/tasks/{guid}/disable,
         Headers: {
           Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
           X-CM-AccountId: test-account,
           X-CM-ProjectId: test-project
+        },
+        Body: {
+          env: test-env
         }
       },
       ResponseType: EmptyResponse,
@@ -111,11 +118,11 @@
     },
     {
       Target: Hub,
-      Group: logs,
-      MethodName: EnableLoggingIntegrationAsync,
-      RequestType: EnableLoggingIntegrationRequest,
+      Group: scheduler,
+      MethodName: EnableSchedulerTaskAsync,
+      RequestType: EnableSchedulerTask,
       HttpMethod: PUT,
-      Path: /{version}/logs/integrations/{Id}/enable,
+      Path: /{version}/scheduler/tasks/{Id}/enable,
       PathParams: [
         Id
       ],
@@ -123,11 +130,15 @@
       IsUnauthenticated: false,
       Sent: {
         Method: PUT,
-        Path: /v2/logs/integrations/{guid}/enable,
+        Path: /v2/scheduler/tasks/{guid}/enable,
         Headers: {
           Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
           X-CM-AccountId: test-account,
           X-CM-ProjectId: test-project
+        },
+        Body: {
+          env: test-env
         }
       },
       ResponseType: EmptyResponse,
@@ -139,11 +150,11 @@
     },
     {
       Target: Hub,
-      Group: logs,
-      MethodName: GetLoggingIntegrationAsync,
-      RequestType: GetLoggingIntegration,
+      Group: scheduler,
+      MethodName: GetSchedulerTaskAsync,
+      RequestType: GetSchedulerTask,
       HttpMethod: GET,
-      Path: /{version}/logs/integrations/{id},
+      Path: /{version}/scheduler/tasks/{id},
       PathParams: [
         id
       ],
@@ -151,16 +162,27 @@
       IsUnauthenticated: false,
       Sent: {
         Method: GET,
-        Path: /v2/logs/integrations/{guid},
+        Path: /v2/scheduler/tasks/{guid},
+        Query: ?env=test-env,
         Headers: {
           Authorization: Bearer test-bearer,
           X-CM-AccountId: test-account,
           X-CM-ProjectId: test-project
         }
       },
-      ResponseType: GetLoggingIntegrationResponse,
+      ResponseType: GetSchedulerTaskResponse,
       Response: {
-        Item: {},
+        Item: {
+          ProjectId: Guid_1,
+          TaskId: Guid_1,
+          Name: test-name,
+          Description: test-description,
+          Cron: test-cron,
+          PayloadJson: test-payloadJson,
+          InitiatorId: Guid_1,
+          IsEnabled: false,
+          StopOnError: false
+        },
         ResponseStatus: {
           IsSuccess: true
         }
@@ -168,28 +190,30 @@
     },
     {
       Target: Hub,
-      Group: logs,
-      MethodName: GetLoggingIntegrationsAsync,
-      RequestType: GetLoggingIntegrations,
+      Group: scheduler,
+      MethodName: GetSchedulerTasksAsync,
+      RequestType: GetSchedulerTasks,
       HttpMethod: GET,
-      Path: /{version}/logs/integrations,
+      Path: /{version}/scheduler/tasks,
       IsAccountScoped: false,
       IsUnauthenticated: false,
       Sent: {
         Method: GET,
-        Path: /v2/logs/integrations,
-        Query: ?paging=Norbix.Sdk.Types.Hub.PagingArgs,
+        Path: /v2/scheduler/tasks,
+        Query: ?type=EmailCampaign&enabled=True&env=test-env&resolvedEnv=Norbix.Sdk.Types.Hub.Env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1&paging=Norbix.Sdk.Types.Hub.PagingArgs,
         Headers: {
           Authorization: Bearer test-bearer,
           X-CM-AccountId: test-account,
           X-CM-ProjectId: test-project
         }
       },
-      ResponseType: GetLoggingIntegrationsResponse,
+      ResponseType: GetSchedulerTasksResponse,
       Response: {
         List: {
           Items: [
-            {}
+            {
+              IsEnabled: false
+            }
           ],
           HasMore: false,
           HasPrevious: false,
@@ -203,16 +227,16 @@
     },
     {
       Target: Hub,
-      Group: logs,
-      MethodName: SaveLoggingIntegrationAsync,
-      RequestType: SaveLoggingIntegration,
+      Group: scheduler,
+      MethodName: SaveSchedulerTaskAsync,
+      RequestType: SaveSchedulerTaskRequest,
       HttpMethod: POST,
-      Path: /{version}/logs/integrations,
+      Path: /{version}/scheduler/tasks,
       IsAccountScoped: false,
       IsUnauthenticated: false,
       Sent: {
         Method: POST,
-        Path: /v2/logs/integrations,
+        Path: /v2/scheduler/tasks,
         Headers: {
           Authorization: Bearer test-bearer,
           Content-Type: application/json; charset=utf-8,
@@ -220,46 +244,26 @@
           X-CM-ProjectId: test-project
         },
         Body: {
-          integration: {
-            integrationId: Guid_1,
-            provider: 0.0,
-            integrationName: test-integrationName,
-            isEnabled: true
-          }
+          taskId: Guid_1,
+          name: test-name,
+          description: test-description,
+          cron: test-cron,
+          initiatorUserId: Guid_1,
+          isEnabled: true,
+          stopOnError: true,
+          task: {
+            type: 0.0
+          },
+          env: test-env
         }
       },
       ResponseType: IdResponse,
       Response: {
-        Id: Guid_1
-      }
-    },
-    {
-      Target: Hub,
-      Group: logs,
-      MethodName: TestLoggingIntegrationAsync,
-      RequestType: TestLoggingIntegration,
-      HttpMethod: POST,
-      Path: /{version}/logs/integrations/test,
-      IsAccountScoped: false,
-      IsUnauthenticated: false,
-      Sent: {
-        Method: POST,
-        Path: /v2/logs/integrations/test,
-        Headers: {
-          Authorization: Bearer test-bearer,
-          Content-Type: application/json; charset=utf-8,
-          X-CM-AccountId: test-account,
-          X-CM-ProjectId: test-project
-        },
-        Body: {
-          integrationId: Guid_1
+        Id: Guid_1,
+        Status: test-status,
+        ResponseStatus: {
+          IsSuccess: true
         }
-      },
-      ResponseType: TestLoggingIntegrationResponse,
-      Response: {
-        Items: [
-          {}
-        ]
       }
     }
   ]

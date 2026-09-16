@@ -74,15 +74,20 @@ Required secrets:
 
 | Secret | Where | What it's for |
 | --- | --- | --- |
-| `NUGET_API_KEY` | repo settings → Secrets → Actions | NuGet push key (or GitHub Packages PAT). |
+| `NUGET_API_KEY` | repo settings → Secrets → Actions | nuget.org push key. Keys expire (max 365 days) — renew before it lapses; an expired key fails the push with 403. |
 | `GITHUB_TOKEN` | provided automatically | tag + GH release. |
 
-semantic-release runs `@semantic-release/exec` which:
+semantic-release (installed with pinned versions by `scripts/install-semantic-release.sh`):
 
 1. Computes the next version from conventional commits.
-2. Runs `dotnet pack ... -p:Version=<next>` for both `Norbix.Sdk` and `Norbix.Sdk.Types`.
-3. Runs `dotnet nuget push *.nupkg --skip-duplicate`.
-4. Pushes a tag and writes `CHANGELOG.md` back to the branch.
+2. Pushes the `vX.Y.Z` tag.
+3. Runs `dotnet pack ... -p:Version=<next>` for `Norbix.Api` (`src/Norbix.Sdk`) and `Norbix.Hub` (`src/Norbix.Hub`) via `@semantic-release/exec`. Each package bundles `Norbix.Contracts` and its Types assembly; the source generator is not shipped.
+4. Runs `dotnet nuget push *.nupkg --skip-duplicate`.
+5. Creates the GitHub Release with the notes.
+
+`main` only accepts changes through pull requests, so the release does **not** commit back: `CHANGELOG.md` stopped at 1.3.1, and release notes live on [GitHub Releases](https://github.com/norbix-code/sdk-net/releases).
+
+If the tag was pushed but the NuGet push failed, run the Release workflow manually with `republish=true`: it packs the latest tag from the tag's own tree, pushes it, and creates the GitHub Release if it is missing.
 
 ## Repo layout
 

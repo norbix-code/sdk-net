@@ -1,0 +1,210 @@
+﻿{
+  Target: Hub,
+  Group: projects,
+  Count: 5,
+  Endpoints: [
+    {
+      Target: Hub,
+      Group: projects,
+      MethodName: ExportWorkItemAsync,
+      RequestType: ExportWorkItemRequest,
+      HttpMethod: GET,
+      Path: /{version}/projects/{projectId}/ai/work-items/{WorkItemId}/export.md,
+      PathParams: [
+        projectId,
+        WorkItemId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/projects/{guid}/ai/work-items/{guid}/export.md,
+        Query: ?env=test-env,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: ExportWorkItemResponse,
+      Response: {
+        WorkItemId: Guid_1,
+        Markdown: test-markdown,
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: projects,
+      MethodName: GetProjectBriefAsync,
+      RequestType: GetProjectBriefRequest,
+      HttpMethod: GET,
+      Path: /{version}/projects/{projectId}/ai/brief,
+      PathParams: [
+        projectId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/projects/{guid}/ai/brief,
+        Query: ?sinceSeq=1&env=test-env,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: GetProjectBriefResponse,
+      Response: {
+        ProjectId: Guid_1,
+        Snapshot: {
+          ProjectId: Guid_1,
+          UpToSeq: 42,
+          AtUtc: DateTime_1,
+          Requirements: [
+            {
+              IsAssumption: false
+            }
+          ],
+          Decisions: [
+            {}
+          ],
+          OpenAssumptions: [
+            {}
+          ],
+          Summary: test-summary
+        },
+        Events: [
+          {}
+        ],
+        LastSeq: 42,
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: projects,
+      MethodName: GetWorkItemAsync,
+      RequestType: GetWorkItemRequest,
+      HttpMethod: GET,
+      Path: /{version}/projects/{projectId}/ai/work-items/{WorkItemId},
+      PathParams: [
+        projectId,
+        WorkItemId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/projects/{guid}/ai/work-items/{guid},
+        Query: ?env=test-env,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: GetWorkItemResponse,
+      Response: {
+        WorkItem: {
+          Id: Guid_1,
+          ProjectId: Guid_1,
+          Status: test-status,
+          Goal: test-goal,
+          NotInScope: [
+            test-string
+          ],
+          ScopeRequirementIds: [
+            test-string
+          ],
+          Difficulty: 7,
+          DifficultyReason: test-difficultyReason
+        },
+        Plans: [
+          {}
+        ],
+        Steps: [
+          {}
+        ],
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: projects,
+      MethodName: GetWorkItemsAsync,
+      RequestType: GetWorkItemsRequest,
+      HttpMethod: GET,
+      Path: /{version}/projects/{projectId}/ai/work-items,
+      PathParams: [
+        projectId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/projects/{guid}/ai/work-items,
+        Query: ?status=test-status&env=test-env,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: GetWorkItemsResponse,
+      Response: {
+        ProjectId: Guid_1,
+        WorkItems: [
+          {}
+        ],
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: projects,
+      MethodName: MarkNeedsYouDoneAsync,
+      RequestType: MarkNeedsYouDoneRequest,
+      HttpMethod: POST,
+      Path: /{version}/projects/{projectId}/ai/work-items/{WorkItemId}/needs-you/{Index}/done,
+      PathParams: [
+        projectId,
+        WorkItemId,
+        Index
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/projects/{guid}/ai/work-items/{guid}/needs-you/1/done,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          done: true,
+          env: test-env
+        }
+      },
+      ResponseType: IdResponse,
+      Response: {
+        Id: Guid_1,
+        Status: test-status,
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    }
+  ]
+}

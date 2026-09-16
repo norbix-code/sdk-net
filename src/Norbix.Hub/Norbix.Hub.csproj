@@ -8,10 +8,30 @@
     <AssemblyName>Norbix.Hub</AssemblyName>
   </PropertyGroup>
 
+  <!--
+    Norbix.Contracts and Norbix.Hub.Types are not published on their own
+    (IsPackable=false). PrivateAssets=all keeps them out of the nuspec
+    dependencies, and IncludeBundledProjectReferences packs their DLLs into
+    this package's lib folder instead. Without this the package depended on
+    Norbix.Contracts / Norbix.Hub.Types packages that do not exist (NU1101).
+  -->
   <ItemGroup>
-    <ProjectReference Include="..\Norbix.Contracts\Norbix.Contracts.csproj" />
-    <ProjectReference Include="..\Norbix.Hub.Types\Norbix.Hub.Types.csproj" />
+    <ProjectReference Include="..\Norbix.Contracts\Norbix.Contracts.csproj" PrivateAssets="all" />
+    <ProjectReference Include="..\Norbix.Hub.Types\Norbix.Hub.Types.csproj" PrivateAssets="all" />
   </ItemGroup>
+
+  <PropertyGroup>
+    <TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);IncludeBundledProjectReferences</TargetsForTfmSpecificBuildOutput>
+    <!-- Packing with NoBuild (CI pack dry-run): resolve the referenced outputs without building
+         them (NETSDK1085 otherwise). -->
+    <BuildProjectReferences Condition="'$(NoBuild)' == 'true'">false</BuildProjectReferences>
+  </PropertyGroup>
+
+  <Target Name="IncludeBundledProjectReferences" DependsOnTargets="ResolveReferences">
+    <ItemGroup>
+      <BuildOutputInPackage Include="@(ReferenceCopyLocalPaths->WithMetadataValue('ReferenceSourceTarget', 'ProjectReference'))" />
+    </ItemGroup>
+  </Target>
 
   <ItemGroup>
     <!-- Share the same runtime sources as Norbix.Api (no extra package). -->
@@ -20,19 +40,13 @@
              LinkBase="SharedSdk" />
   </ItemGroup>
 
+  <!-- The source generator runs in this project's own build only and is not
+       packed; see the note in Norbix.Sdk.csproj. -->
   <ItemGroup>
     <ProjectReference
       Include="..\Norbix.Sdk.Generators\Norbix.Sdk.Generators.csproj"
       OutputItemType="Analyzer"
       ReferenceOutputAssembly="false" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None
-      Include="..\Norbix.Sdk.Generators\bin\$(Configuration)\netstandard2.0\Norbix.Sdk.Generators.dll"
-      Pack="true"
-      PackagePath="analyzers/dotnet/cs/Norbix.Sdk.Generators.dll"
-      Visible="false" />
   </ItemGroup>
 
   <ItemGroup>
