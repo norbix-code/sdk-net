@@ -22,6 +22,9 @@
 
   <PropertyGroup>
     <TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);IncludeBundledProjectReferences</TargetsForTfmSpecificBuildOutput>
+    <!-- Packing with NoBuild (CI pack dry-run): resolve the referenced outputs without building
+         them (NETSDK1085 otherwise). -->
+    <BuildProjectReferences Condition="'$(NoBuild)' == 'true'">false</BuildProjectReferences>
   </PropertyGroup>
 
   <Target Name="IncludeBundledProjectReferences" DependsOnTargets="ResolveReferences">
