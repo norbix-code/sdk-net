@@ -43,4 +43,18 @@
     <NoWarn>$(NoWarn);CS1591</NoWarn> <!-- CS1591: missing XML comment on public member -->
   </PropertyGroup>
 
+  <!--
+    Verify 33+ is licensed under the OSMF EULA (OsmfEula.txt in the package):
+    a maintenance fee applies only to users with annual gross revenue of
+    US$10,000 or more. Norbix is under that threshold, so it claims the
+    publisher-defined SmallRevenue exemption. The publisher limits the claim
+    to 12 months: before the date below passes, re-check that Norbix still
+    qualifies, then move it forward (or pay the fee and switch to
+    Verify_SponsorshipLicensedUntil).
+  -->
+  <PropertyGroup>
+    <Verify_SponsorshipExemption>SmallRevenue</Verify_SponsorshipExemption>
+    <Verify_SponsorshipExemptionUntil>2027-09</Verify_SponsorshipExemptionUntil>
+  </PropertyGroup>
+
 </Project>

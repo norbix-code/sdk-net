@@ -21,10 +21,7 @@
     <PackageVersion Include="NUnit3TestAdapter" Version="6.3.0" />
     <PackageVersion Include="NUnit.Analyzers" Version="4.15.0" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.10.1" />
-    <!-- Verify is pinned to 32.x: 33.0 changed the license from MIT to a paid
-         EULA (OsmfEula.txt) and fails the build without a sponsorship property.
-         Dependabot ignores Verify >= 33 (see .github/dependabot.yml). -->
-    <PackageVersion Include="Verify.NUnit" Version="32.0.1" />
+    <PackageVersion Include="Verify.NUnit" Version="33.0.2" />
 
     <!-- ASP.NET / DI integration helper packages used by Norbix.Sdk's optional
          AddNorbix(...) helpers. We don't take a hard runtime dep on the full
