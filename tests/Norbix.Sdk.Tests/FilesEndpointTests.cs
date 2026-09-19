@@ -23,6 +23,7 @@ namespace Norbix.Sdk.Tests;
 public sealed class FilesEndpointTests
 {
     private const string IntegrationId = "11111111-1111-1111-1111-111111111111";
+    private static readonly string[] GetFileStepErrors = { "Access denied" };
 
     [Test]
     public async Task ListFiles_sends_integration_id_and_path()
@@ -150,5 +151,69 @@ public sealed class FilesEndpointTests
             });
 
         await Verifier.Verify(fixture.LastRequest, VerifyConfig.VerifySettings);
+    }
+
+    /// <summary>
+    /// The API-surface twin of the Hub's <c>TestFilesIntegrationAsync</c>
+    /// (slice API-TEST, #39): the integration id goes in the URL, not in the
+    /// body, and every probe step comes back parsed — a failed step included,
+    /// because a failed step is an answer, not an error.
+    /// </summary>
+    [Test]
+    public async Task TestFilesIntegration_posts_to_the_integration_route_and_parses_every_step()
+    {
+        using var fixture = NorbixTestFixture.Create();
+        fixture.Respond("/files/" + IntegrationId + "/test", new
+        {
+            items = new object[]
+            {
+                new { operation = "UploadFile", result = "OK" },
+                new { operation = "GetFile", result = "FAILED", errors = GetFileStepErrors },
+                new { operation = "GetAllFiles", result = "NOT_TESTED" },
+                new { operation = "DeleteFile", result = "NOT_TESTED" },
+            },
+        });
+
+        var response = await fixture.Client.Files.TestFilesIntegrationAsync(
+            new TestFilesIntegrationRequest { FilesIntegrationId = IntegrationId });
+
+        Assert.That(fixture.LastRequest!.Method, Is.EqualTo("POST"));
+        Assert.That(fixture.LastRequest.Path, Is.EqualTo("/v2/files/" + IntegrationId + "/test"));
+        Assert.That(response?.Items, Has.Count.EqualTo(4));
+        Assert.That(response!.Items![1].Errors, Is.EqualTo(GetFileStepErrors));
+
+        await Verifier.Verify(
+            new
+            {
+                Sent = fixture.LastRequest,
+                Results = response.Items.Select(i => new { i.Operation, i.Result, i.Errors }),
+            },
+            VerifyConfig.VerifySettings);
+    }
+
+    /// <summary>
+    /// A request the gateway refuses (here: the API key lacks
+    /// <c>files:create</c>) surfaces as the SDK's usual <see cref="NorbixException"/>.
+    /// </summary>
+    [Test]
+    public void TestFilesIntegration_throws_when_the_gateway_refuses()
+    {
+        using var fixture = NorbixTestFixture.Create();
+        fixture.Respond("/files/" + IntegrationId + "/test", new
+        {
+            responseStatus = new
+            {
+                errorCode = "Forbidden",
+                message = "Missing permission files:create",
+            },
+        }, System.Net.HttpStatusCode.Forbidden);
+
+        var thrown = Assert.ThrowsAsync<NorbixException>(async () =>
+            await fixture.Client.Files.TestFilesIntegrationAsync(
+                new TestFilesIntegrationRequest { FilesIntegrationId = IntegrationId }));
+
+        Assert.That(thrown!.StatusCode, Is.EqualTo(403));
+        Assert.That(thrown.Code, Is.EqualTo("Forbidden"));
+        Assert.That(thrown.Message, Does.Contain("files:create"));
     }
 }

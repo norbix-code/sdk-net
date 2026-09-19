@@ -1,8 +1,43 @@
 ﻿{
   Target: Api,
   Group: files,
-  Count: 9,
+  Count: 10,
   Endpoints: [
+    {
+      Target: Api,
+      Group: files,
+      MethodName: TestFilesIntegrationAsync,
+      RequestType: TestFilesIntegrationRequest,
+      HttpMethod: POST,
+      Path: /{version}/files/{filesIntegrationId}/test,
+      PathParams: [
+        filesIntegrationId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/files/{guid}/test,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          env: test-env
+        }
+      },
+      ResponseType: TestFilesIntegrationResponse,
+      Response: {
+        Items: [
+          {}
+        ],
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
     {
       Target: Api,
       Group: files,
