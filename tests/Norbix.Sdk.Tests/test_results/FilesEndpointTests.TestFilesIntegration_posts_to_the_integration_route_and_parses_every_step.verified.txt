@@ -1,0 +1,31 @@
+﻿{
+  Sent: {
+    Method: POST,
+    Path: /v2/files/{guid}/test,
+    Headers: {
+      Authorization: Bearer test-api-key,
+      X-CM-ProjectId: test-project
+    }
+  },
+  Results: [
+    {
+      Operation: UploadFile,
+      Result: OK
+    },
+    {
+      Operation: GetFile,
+      Result: OK
+    },
+    {
+      Operation: ListFiles,
+      Result: OK
+    },
+    {
+      Operation: DeleteFile,
+      Result: Failed,
+      Errors: [
+        Access denied
+      ]
+    }
+  ]
+}
