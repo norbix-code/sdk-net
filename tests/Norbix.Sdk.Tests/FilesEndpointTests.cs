@@ -23,7 +23,7 @@ namespace Norbix.Sdk.Tests;
 public sealed class FilesEndpointTests
 {
     private const string IntegrationId = "11111111-1111-1111-1111-111111111111";
-    private static readonly string[] DeleteStepErrors = { "Access denied" };
+    private static readonly string[] GetFileStepErrors = { "Access denied" };
 
     [Test]
     public async Task ListFiles_sends_integration_id_and_path()
@@ -168,9 +168,9 @@ public sealed class FilesEndpointTests
             items = new object[]
             {
                 new { operation = "UploadFile", result = "OK" },
-                new { operation = "GetFile", result = "OK" },
-                new { operation = "ListFiles", result = "OK" },
-                new { operation = "DeleteFile", result = "Failed", errors = DeleteStepErrors },
+                new { operation = "GetFile", result = "FAILED", errors = GetFileStepErrors },
+                new { operation = "GetAllFiles", result = "NOT_TESTED" },
+                new { operation = "DeleteFile", result = "NOT_TESTED" },
             },
         });
 
@@ -180,7 +180,7 @@ public sealed class FilesEndpointTests
         Assert.That(fixture.LastRequest!.Method, Is.EqualTo("POST"));
         Assert.That(fixture.LastRequest.Path, Is.EqualTo("/v2/files/" + IntegrationId + "/test"));
         Assert.That(response?.Items, Has.Count.EqualTo(4));
-        Assert.That(response!.Items![3].Errors, Is.EqualTo(DeleteStepErrors));
+        Assert.That(response!.Items![1].Errors, Is.EqualTo(GetFileStepErrors));
 
         await Verifier.Verify(
             new

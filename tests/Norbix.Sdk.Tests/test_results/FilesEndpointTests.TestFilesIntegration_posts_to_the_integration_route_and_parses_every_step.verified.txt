@@ -14,18 +14,18 @@
     },
     {
       Operation: GetFile,
-      Result: OK
-    },
-    {
-      Operation: ListFiles,
-      Result: OK
-    },
-    {
-      Operation: DeleteFile,
-      Result: Failed,
+      Result: FAILED,
       Errors: [
         Access denied
       ]
+    },
+    {
+      Operation: GetAllFiles,
+      Result: NOT_TESTED
+    },
+    {
+      Operation: DeleteFile,
+      Result: NOT_TESTED
     }
   ]
 }

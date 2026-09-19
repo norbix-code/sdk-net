@@ -33,7 +33,8 @@ namespace Norbix.Sdk.Types.Api;
 ///<para>
 ///A step that fails does not throw: it comes back in
 ///<see cref="TestFilesIntegrationResponse.Items"/> with <c>Result</c> set to
-///<c>"Failed"</c> and its <c>Errors</c>. Only a request the gateway refuses
+///<c>"FAILED"</c> and its <c>Errors</c>; the steps after it come back
+///<c>"NOT_TESTED"</c>. Only a request the gateway refuses
 ///(bad id, no permission, unknown integration) throws a
 ///<c>NorbixException</c>.
 ///</para>
@@ -60,11 +61,11 @@ public partial class TestFilesIntegrationResponse
 [DataContract]
 public partial class IntegrationTestResultItemDto
 {
-    ///<summary>The step, for example <c>"UploadFile"</c> or <c>"ListFiles"</c>.</summary>
+    ///<summary>The step: <c>"UploadFile"</c>, <c>"GetFile"</c>, <c>"GetAllFiles"</c> or <c>"DeleteFile"</c>.</summary>
     [DataMember]
     public virtual string Operation { get; set; }
 
-    ///<summary><c>"OK"</c> or <c>"Failed"</c>.</summary>
+    ///<summary><c>"OK"</c>, <c>"FAILED"</c> or <c>"NOT_TESTED"</c> (skipped because an earlier step failed).</summary>
     [DataMember]
     public virtual string Result { get; set; }
 
