@@ -1,43 +1,8 @@
 ﻿{
   Target: Api,
   Group: files,
-  Count: 10,
+  Count: 12,
   Endpoints: [
-    {
-      Target: Api,
-      Group: files,
-      MethodName: TestFilesIntegrationAsync,
-      RequestType: TestFilesIntegrationRequest,
-      HttpMethod: POST,
-      Path: /{version}/files/{filesIntegrationId}/test,
-      PathParams: [
-        filesIntegrationId
-      ],
-      IsAccountScoped: false,
-      IsUnauthenticated: false,
-      Sent: {
-        Method: POST,
-        Path: /v2/files/{guid}/test,
-        Headers: {
-          Authorization: Bearer test-bearer,
-          Content-Type: application/json; charset=utf-8,
-          X-CM-AccountId: test-account,
-          X-CM-ProjectId: test-project
-        },
-        Body: {
-          env: test-env
-        }
-      },
-      ResponseType: TestFilesIntegrationResponse,
-      Response: {
-        Items: [
-          {}
-        ],
-        ResponseStatus: {
-          IsSuccess: true
-        }
-      }
-    },
     {
       Target: Api,
       Group: files,
@@ -162,6 +127,32 @@
     {
       Target: Api,
       Group: files,
+      MethodName: GetFileContentAsync,
+      RequestType: GetFileContentRequest,
+      HttpMethod: GET,
+      Path: /{version}/files/{filesIntegrationId}/content,
+      PathParams: [
+        filesIntegrationId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: true,
+      Sent: {
+        Method: GET,
+        Path: /v2/files/{guid}/content,
+        Query: ?path=test-path&token=test-token,
+        Headers: {
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: Byte[],
+      Response: {
+        BinaryLength: 49
+      }
+    },
+    {
+      Target: Api,
+      Group: files,
       MethodName: GetFileInfoAsync,
       RequestType: GetFileInfoRequest,
       HttpMethod: GET,
@@ -195,6 +186,32 @@
         ResponseStatus: {
           IsSuccess: true
         }
+      }
+    },
+    {
+      Target: Api,
+      Group: files,
+      MethodName: GetPublicFileAsync,
+      RequestType: GetPublicFileRequest,
+      HttpMethod: GET,
+      Path: /{version}/files/public/{PublicId}/{Name*},
+      PathParams: [
+        PublicId,
+        Name
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: true,
+      Sent: {
+        Method: GET,
+        Path: /v2/files/public/{guid}/test-name,
+        Headers: {
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: Byte[],
+      Response: {
+        BinaryLength: 49
       }
     },
     {
@@ -278,6 +295,39 @@
     {
       Target: Api,
       Group: files,
+      MethodName: PutFileContentAsync,
+      RequestType: PutFileContentRequest,
+      HttpMethod: PUT,
+      Path: /{version}/files/{filesIntegrationId}/content,
+      PathParams: [
+        filesIntegrationId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: PUT,
+        Path: /v2/files/{guid}/content,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          path: test-path,
+          token: test-token
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: files,
       MethodName: RequestUploadUrlAsync,
       RequestType: RequestUploadUrlRequest,
       HttpMethod: POST,
@@ -314,27 +364,36 @@
     {
       Target: Api,
       Group: files,
-      MethodName: GetPublicFileAsync,
-      RequestType: GetPublicFileRequest,
-      HttpMethod: GET,
-      Path: /{version}/files/public/{publicId}/{name*},
+      MethodName: TestFilesIntegrationAsync,
+      RequestType: TestFilesIntegrationRequest,
+      HttpMethod: POST,
+      Path: /{version}/files/{filesIntegrationId}/test,
       PathParams: [
-        publicId,
-        name
+        filesIntegrationId
       ],
       IsAccountScoped: false,
-      IsUnauthenticated: true,
+      IsUnauthenticated: false,
       Sent: {
-        Method: GET,
-        Path: /v2/files/public/{guid}/test-name,
+        Method: POST,
+        Path: /v2/files/{guid}/test,
         Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
           X-CM-AccountId: test-account,
           X-CM-ProjectId: test-project
+        },
+        Body: {
+          env: test-env
         }
       },
-      ResponseType: Byte[],
+      ResponseType: TestFilesIntegrationResponse,
       Response: {
-        BinaryLength: 49
+        Items: [
+          {}
+        ],
+        ResponseStatus: {
+          IsSuccess: true
+        }
       }
     }
   ]

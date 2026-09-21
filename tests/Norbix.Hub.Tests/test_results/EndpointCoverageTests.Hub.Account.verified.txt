@@ -2002,11 +2002,11 @@
         },
         Body: {
           fileResource: {
-            publicUrl: https://example.test/publicUrl,
-            isPublic: true,
             integrationId: Guid_1,
             provider: 0.0,
-            path: test-path
+            path: test-path,
+            publicUrl: https://example.test/publicUrl,
+            isPublic: true
           },
           env: test-env
         }
@@ -2107,11 +2107,11 @@
         },
         Body: {
           fileResource: {
-            publicUrl: https://example.test/publicUrl,
-            isPublic: true,
             integrationId: Guid_1,
             provider: 0.0,
-            path: test-path
+            path: test-path,
+            publicUrl: https://example.test/publicUrl,
+            isPublic: true
           },
           env: test-env
         }

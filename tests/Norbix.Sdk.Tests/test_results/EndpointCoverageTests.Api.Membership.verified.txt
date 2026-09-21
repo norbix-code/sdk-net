@@ -499,6 +499,100 @@
     {
       Target: Api,
       Group: membership,
+      MethodName: ChangePasswordAsync,
+      RequestType: ChangePasswordRequest,
+      HttpMethod: POST,
+      Path: /{version}/membership/userauth/password/change,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/membership/userauth/password/change,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          currentPassword: test-currentPassword,
+          newPassword: test-newPassword,
+          databaseIntegrationId: Guid_1,
+          env: test-env
+        }
+      },
+      ResponseType: PasskeyOkResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: membership,
+      MethodName: ConfirmPasswordResetAsync,
+      RequestType: ConfirmPasswordResetRequest,
+      HttpMethod: POST,
+      Path: /{version}/membership/userauth/password/reset/confirm,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/membership/userauth/password/reset/confirm,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          token: test-token,
+          newPassword: test-newPassword,
+          databaseIntegrationId: Guid_1,
+          env: test-env
+        }
+      },
+      ResponseType: PasskeyOkResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: membership,
+      MethodName: RequestPasswordResetAsync,
+      RequestType: RequestPasswordResetRequest,
+      HttpMethod: POST,
+      Path: /{version}/membership/userauth/password/reset/request,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/membership/userauth/password/reset/request,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          email: user@example.test,
+          env: test-env
+        }
+      },
+      ResponseType: PasskeyOkResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: membership,
       MethodName: AssignRolePermissionsAsync,
       RequestType: AssignRolePermissionsRequest,
       HttpMethod: PUT,
@@ -1432,100 +1526,6 @@
       Response: {
         Id: Guid_1,
         Status: test-status,
-        ResponseStatus: {
-          IsSuccess: true
-        }
-      }
-    },
-    {
-      Target: Api,
-      Group: membership,
-      MethodName: ChangePasswordAsync,
-      RequestType: ChangePasswordRequest,
-      HttpMethod: POST,
-      Path: /{version}/membership/userauth/password/change,
-      IsAccountScoped: false,
-      IsUnauthenticated: false,
-      Sent: {
-        Method: POST,
-        Path: /v2/membership/userauth/password/change,
-        Headers: {
-          Authorization: Bearer test-bearer,
-          Content-Type: application/json; charset=utf-8,
-          X-CM-AccountId: test-account,
-          X-CM-ProjectId: test-project
-        },
-        Body: {
-          currentPassword: test-currentPassword,
-          newPassword: test-newPassword,
-          databaseIntegrationId: Guid_1,
-          env: test-env
-        }
-      },
-      ResponseType: PasskeyOkResponse,
-      Response: {
-        ResponseStatus: {
-          IsSuccess: true
-        }
-      }
-    },
-    {
-      Target: Api,
-      Group: membership,
-      MethodName: RequestPasswordResetAsync,
-      RequestType: RequestPasswordResetRequest,
-      HttpMethod: POST,
-      Path: /{version}/membership/userauth/password/reset/request,
-      IsAccountScoped: false,
-      IsUnauthenticated: false,
-      Sent: {
-        Method: POST,
-        Path: /v2/membership/userauth/password/reset/request,
-        Headers: {
-          Authorization: Bearer test-bearer,
-          Content-Type: application/json; charset=utf-8,
-          X-CM-AccountId: test-account,
-          X-CM-ProjectId: test-project
-        },
-        Body: {
-          email: user@example.test,
-          env: test-env
-        }
-      },
-      ResponseType: PasskeyOkResponse,
-      Response: {
-        ResponseStatus: {
-          IsSuccess: true
-        }
-      }
-    },
-    {
-      Target: Api,
-      Group: membership,
-      MethodName: ConfirmPasswordResetAsync,
-      RequestType: ConfirmPasswordResetRequest,
-      HttpMethod: POST,
-      Path: /{version}/membership/userauth/password/reset/confirm,
-      IsAccountScoped: false,
-      IsUnauthenticated: false,
-      Sent: {
-        Method: POST,
-        Path: /v2/membership/userauth/password/reset/confirm,
-        Headers: {
-          Authorization: Bearer test-bearer,
-          Content-Type: application/json; charset=utf-8,
-          X-CM-AccountId: test-account,
-          X-CM-ProjectId: test-project
-        },
-        Body: {
-          token: test-token,
-          newPassword: test-newPassword,
-          databaseIntegrationId: Guid_1,
-          env: test-env
-        }
-      },
-      ResponseType: PasskeyOkResponse,
-      Response: {
         ResponseStatus: {
           IsSuccess: true
         }
