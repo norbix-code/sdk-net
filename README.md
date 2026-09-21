@@ -657,6 +657,30 @@ Four rules worth knowing:
 After publishing, `ListFilesAsync` and `GetFileInfoAsync` report `IsPublic` and
 `PublicUrl` on each file, and a listing carries `PublicFolders`.
 
+## Testing a Files Integration
+
+`TestFilesIntegrationAsync` on the API client runs a live probe against a files
+integration — it uploads a small file, reads it, lists the folder and deletes
+the file again — and answers one result per step. It needs the `files:create`
+permission, because the probe writes to the storage.
+
+```csharp
+var probe = await api.Files.TestFilesIntegrationAsync(new TestFilesIntegrationRequest
+{
+    FilesIntegrationId = integrationId,   // POST /{version}/files/{filesIntegrationId}/test
+});
+
+foreach (var step in probe!.Items!)
+    Console.WriteLine($"{step.Operation}: {step.Result} {string.Join("; ", step.Errors ?? [])}");
+```
+
+The steps are `UploadFile`, `GetFile`, `GetAllFiles` and `DeleteFile`, in that
+order. A step that fails does not throw — it comes back with `Result = "FAILED"`
+and its `Errors`, and the steps after it come back `"NOT_TESTED"`. Only a refused request (unknown integration, missing permission)
+throws `NorbixException`. The Hub client keeps its own
+`TestFilesIntegrationAsync` (`POST /{version}/files/integrations/test`, id in
+the body) for the dashboard.
+
 ## Error Handling
 
 ```csharp
