@@ -21,7 +21,7 @@
     <PackageVersion Include="NUnit3TestAdapter" Version="6.3.0" />
     <PackageVersion Include="NUnit.Analyzers" Version="4.15.0" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.10.1" />
-    <PackageVersion Include="Verify.NUnit" Version="33.0.2" />
+    <PackageVersion Include="Verify.NUnit" Version="33.1.1" />
 
     <!-- ASP.NET / DI integration helper packages used by Norbix.Sdk's optional
          AddNorbix(...) helpers. We don't take a hard runtime dep on the full
