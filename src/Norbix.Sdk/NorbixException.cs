@@ -26,6 +26,18 @@ public sealed class NorbixException : Exception
     /// <summary>Raw response body, parsed as JSON when possible.</summary>
     public object? RawBody { get; }
 
+    /// <summary>Same value as <see cref="StatusCode"/>. The name every Norbix SDK uses for it.</summary>
+    public int HttpStatus => StatusCode;
+
+    /// <summary>Same value as <see cref="Code"/>. The name every Norbix SDK uses for it.</summary>
+    public string? ErrorCode => Code;
+
+    /// <summary>Same list as <see cref="FieldErrors"/>. The name every Norbix SDK uses for it.</summary>
+    public IReadOnlyList<ResponseError> Errors => FieldErrors;
+
+    /// <summary>Same value as <see cref="RawBody"/> — the answer as it arrived.</summary>
+    public object? Body => RawBody;
+
     public NorbixException(
         string message,
         int statusCode = 0,

@@ -7,10 +7,23 @@ namespace Norbix.Sdk.Types;
 /// </summary>
 public sealed class ResponseStatus
 {
+    /// <summary>
+    /// <c>false</c> when the gateway refused the call. It is sent even when the
+    /// HTTP status is 200, which is how a business refusal (an unknown id, a
+    /// rule that says no) reaches the caller.
+    /// </summary>
+    public bool? IsSuccess { get; set; }
+
     public string? ErrorCode { get; set; }
     public string? Message { get; set; }
     public string? StackTrace { get; set; }
+
+    /// <summary>
+    /// The real errors. The gateway puts its message and its error code in
+    /// here, not at the top of this block, so this list is read first.
+    /// </summary>
     public List<ResponseError>? Errors { get; set; }
+
     public Dictionary<string, string>? Meta { get; set; }
 }
 
@@ -20,6 +33,10 @@ public sealed class ResponseError
     public string? ErrorCode { get; set; }
     public string? FieldName { get; set; }
     public string? Message { get; set; }
+
+    /// <summary>Extra values the gateway attached to this error.</summary>
+    public Dictionary<string, string?>? Context { get; set; }
+
     public Dictionary<string, string>? Meta { get; set; }
 }
 

@@ -90,6 +90,18 @@ internal sealed class NorbixTestFixture : IDisposable
         return this;
     }
 
+    /// <summary>Register a body that is not JSON (an HTML error page, say).</summary>
+    public NorbixTestFixture RespondText(
+        string pathSuffix,
+        string text,
+        System.Net.HttpStatusCode status,
+        string contentType = "text/html"
+    )
+    {
+        _handler.RespondText(pathSuffix, text, status, contentType);
+        return this;
+    }
+
     /// <summary>All requests captured during the test, in the order they fired.</summary>
     public IReadOnlyList<RecordedRequest> RecordedRequests => _handler.Requests;
 

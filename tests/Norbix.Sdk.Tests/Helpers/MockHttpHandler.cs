@@ -80,6 +80,34 @@ internal sealed class MockHttpHandler : HttpMessageHandler
     /// <paramref name="pathSuffix"/>. Used by file download, which streams the
     /// file itself rather than a JSON envelope.
     /// </summary>
+    /// <summary>
+    /// Register a plain-text response for a route — a body that is NOT JSON,
+    /// such as the HTML error page a proxy sends on a 500.
+    /// </summary>
+    public MockHttpHandler RespondText(
+        string pathSuffix,
+        string text,
+        HttpStatusCode status,
+        string contentType = "text/html"
+    )
+    {
+        _responders.Insert(
+            0,
+            new RequestResponder
+            {
+                Match = req =>
+                    req.RequestUri?.AbsolutePath.EndsWith(pathSuffix, StringComparison.Ordinal)
+                    == true,
+                Build = () =>
+                {
+                    var content = new StringContent(text, System.Text.Encoding.UTF8, contentType);
+                    return new HttpResponseMessage(status) { Content = content };
+                },
+            }
+        );
+        return this;
+    }
+
     public MockHttpHandler RespondBytes(
         string pathSuffix,
         byte[] payload,
