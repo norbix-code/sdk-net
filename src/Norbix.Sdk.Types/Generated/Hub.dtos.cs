@@ -17194,6 +17194,105 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual string? DatabaseIntegrationId { get; set; }
     }
 
+    [DataContract]
+    public partial class PushDeviceListProjection
+    {
+        [DataMember]
+        public virtual string Id { get; set; }
+
+        [DataMember]
+        public virtual string UserId { get; set; }
+
+        [DataMember]
+        public virtual string DeviceOs { get; set; }
+
+        [DataMember]
+        public virtual string Token { get; set; }
+
+        [DataMember]
+        public virtual string? Brand { get; set; }
+
+        [DataMember]
+        public virtual string? Manufacturer { get; set; }
+
+        [DataMember]
+        public virtual string? ModelName { get; set; }
+
+        [DataMember]
+        public virtual string? DeviceName { get; set; }
+
+        [DataMember]
+        public virtual string? DeviceType { get; set; }
+
+        [DataMember]
+        public virtual string? OsName { get; set; }
+
+        [DataMember]
+        public virtual string? OsVersion { get; set; }
+
+        [DataMember]
+        public virtual int? PlatformApiLevel { get; set; }
+    }
+
+    ///<summary>
+    ///Gets a registered push device
+    ///</summary>
+    [NorbixRoute("/{version}/notifications/push/devices/{id}", "GET")]
+    public partial class GetPushDevice
+        : CodeMashRequestBase, INorbixRequest<GetPushDeviceResponse>
+    {
+        ///<summary>
+        ///The device id to fetch. Get it from get_push_devices.
+        ///</summary>
+        public virtual string Id { get; set; }
+
+        ///<summary>
+        ///Optional database integration id; omit to use the project's default.
+        ///</summary>
+        public virtual string? DatabaseIntegrationId { get; set; }
+    }
+
+    public partial class GetPushDeviceResponse
+        : ResponseBase
+    {
+        public virtual PushDeviceDto? Item { get; set; }
+        public virtual string? UserId { get; set; }
+    }
+
+    ///<summary>
+    ///Gets registered push devices
+    ///</summary>
+    [NorbixRoute("/{version}/notifications/push/devices", "GET")]
+    public partial class GetPushDevices
+        : CodeMashListPaginationRequestBase, INorbixRequest<GetPushDevicesResponse>
+    {
+        ///<summary>
+        ///Optional: only the devices of this user.
+        ///</summary>
+        public virtual string? UserId { get; set; }
+
+        ///<summary>
+        ///Optional: only the device registered with this provider token.
+        ///</summary>
+        public virtual string? DeviceKey { get; set; }
+
+        ///<summary>
+        ///Optional: only devices of this platform — ios, android, chrome, safari or expo.
+        ///</summary>
+        public virtual string? Platform { get; set; }
+
+        ///<summary>
+        ///Optional database integration id; omit to use the project's default.
+        ///</summary>
+        public virtual string? DatabaseIntegrationId { get; set; }
+    }
+
+    public partial class GetPushDevicesResponse
+        : ResponseBase
+    {
+        public virtual PaginatedResponse<PushDeviceListProjection>? List { get; set; }
+    }
+
     public partial class AndroidFirebasePushIntegrationRequest
         : PushIntegrationRequest
     {

@@ -1,5 +1,5 @@
 ﻿{
-  Count: 37,
+  Count: 39,
   Endpoints: [
     DELETE /{version}/notifications/push/campaigns/{Id} -> DeletePushCampaignAsync,
     DELETE /{version}/notifications/push/integrations/{Id} -> DeletePushIntegrationAsync,
@@ -12,6 +12,8 @@
     GET /{version}/notifications/push/campaigns/{id}/batches/{batchId} -> GetPushCampaignBatchNotificationsAsync,
     GET /{version}/notifications/push/campaigns/{id}/batches/{batchId}/{notificationId} -> GetPushCampaignBatchNotificationAsync,
     GET /{version}/notifications/push/campaigns/{id}/stats -> GetPushCampaignStatisticsAsync,
+    GET /{version}/notifications/push/devices -> GetPushDevicesAsync,
+    GET /{version}/notifications/push/devices/{id} -> GetPushDeviceAsync,
     GET /{version}/notifications/push/disable -> DisablePushAsync,
     GET /{version}/notifications/push/disable-dependencies -> GetPushDisableDependenciesAsync,
     GET /{version}/notifications/push/enable -> EnablePushAsync,

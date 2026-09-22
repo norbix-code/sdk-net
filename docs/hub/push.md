@@ -136,6 +136,20 @@ the gateway writes them.
 | method | verb | path |
 |---|---|---|
 | `RegisterDeviceAsync` | `POST` | `/notifications/push/devices` |
+| `GetPushDevicesAsync` | `GET` | `/notifications/push/devices` |
+| `GetPushDeviceAsync` | `GET` | `/notifications/push/devices/{id}` |
+
+`GetPushDevicesAsync` lists the devices registered in the project, each with
+the user it belongs to. Narrow it with `UserId`, `DeviceKey` (the provider
+token) or `Platform` (`ios`, `android`, `chrome`, `safari`, `expo`); a word
+outside that list is refused rather than answered with an empty page.
+
+Devices are stored inside their user, so a page is a page of **users** and
+carries every matching device those users hold. Follow `HasMore` rather than
+stopping at the first short page.
+
+`GetPushDeviceAsync` takes one device id and answers with the device and its
+owner.
 
 ## Choosing who a campaign goes to
 

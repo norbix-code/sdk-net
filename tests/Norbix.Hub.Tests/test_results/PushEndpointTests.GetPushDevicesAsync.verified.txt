@@ -1,0 +1,35 @@
+﻿{
+  Target: Hub,
+  Group: notifications,
+  MethodName: GetPushDevicesAsync,
+  RequestType: GetPushDevices,
+  HttpMethod: GET,
+  Path: /{version}/notifications/push/devices,
+  IsAccountScoped: false,
+  IsUnauthenticated: false,
+  Sent: {
+    Method: GET,
+    Path: /v2/notifications/push/devices,
+    Query: ?userId={guid}&deviceKey=test-deviceKey&platform=test-platform&databaseIntegrationId={guid}&env=test-env&resolvedEnv=Norbix.Sdk.Types.Hub.Env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1&paging=Norbix.Sdk.Types.Hub.PagingArgs,
+    Headers: {
+      Authorization: Bearer test-bearer,
+      X-CM-AccountId: test-account,
+      X-CM-ProjectId: test-project
+    }
+  },
+  ResponseType: GetPushDevicesResponse,
+  Response: {
+    List: {
+      Items: [
+        {}
+      ],
+      HasMore: false,
+      HasPrevious: false,
+      StartingAfter: cursor-start,
+      EndingBefore: cursor-end
+    },
+    ResponseStatus: {
+      IsSuccess: true
+    }
+  }
+}

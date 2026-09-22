@@ -27,7 +27,7 @@
       PathParam: id
     }
   ],
-  Count: 118,
+  Count: 120,
   Endpoints: [
     {
       Target: Hub,
@@ -2225,6 +2225,81 @@
       Response: {
         Id: Guid_1,
         Status: test-status,
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: notifications,
+      MethodName: GetPushDeviceAsync,
+      RequestType: GetPushDevice,
+      HttpMethod: GET,
+      Path: /{version}/notifications/push/devices/{id},
+      PathParams: [
+        id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/notifications/push/devices/{guid},
+        Query: ?databaseIntegrationId={guid}&env=test-env,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: GetPushDeviceResponse,
+      Response: {
+        Item: {
+          DeviceId: Guid_1,
+          DeviceOs: test-deviceOs,
+          Token: test-token,
+          Brand: test-brand,
+          Manufacturer: test-manufacturer,
+          ModelName: test-modelName,
+          DeviceName: test-deviceName,
+          DeviceType: Unknown
+        },
+        UserId: Guid_1,
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: notifications,
+      MethodName: GetPushDevicesAsync,
+      RequestType: GetPushDevices,
+      HttpMethod: GET,
+      Path: /{version}/notifications/push/devices,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/notifications/push/devices,
+        Query: ?userId={guid}&deviceKey=test-deviceKey&platform=test-platform&databaseIntegrationId={guid}&env=test-env&resolvedEnv=Norbix.Sdk.Types.Hub.Env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1&paging=Norbix.Sdk.Types.Hub.PagingArgs,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: GetPushDevicesResponse,
+      Response: {
+        List: {
+          Items: [
+            {}
+          ],
+          HasMore: false,
+          HasPrevious: false,
+          StartingAfter: cursor-start,
+          EndingBefore: cursor-end
+        },
         ResponseStatus: {
           IsSuccess: true
         }
