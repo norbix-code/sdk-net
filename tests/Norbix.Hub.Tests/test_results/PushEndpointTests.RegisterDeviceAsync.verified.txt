@@ -25,7 +25,7 @@
         manufacturer: test-manufacturer,
         modelName: test-modelName,
         deviceName: test-deviceName,
-        deviceType: 0.0
+        deviceType: unknown
       },
       userId: Guid_1,
       accountId: Guid_1,

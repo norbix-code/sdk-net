@@ -22,7 +22,7 @@
           X-CM-ProjectId: test-project
         },
         Body: {
-          subscriptionType: 0.0,
+          subscriptionType: managedService,
           domain: test-domain,
           projectCap: 1.0,
           newProjectSessionId: Guid_1,
@@ -195,7 +195,7 @@
           X-CM-ProjectId: test-project
         },
         Body: {
-          subscriptionType: 0.0,
+          subscriptionType: managedService,
           returnUrl: https://example.test/returnUrl
         }
       },
@@ -1238,7 +1238,7 @@
           environmentName: test-environmentName,
           integration: {
             integrationId: Guid_1,
-            provider: 0.0,
+            provider: mongoDbConnectionString,
             integrationName: test-integrationName,
             isEnabled: true
           },
@@ -1273,7 +1273,7 @@
         Body: {
           integration: {
             integrationId: Guid_1,
-            provider: 0.0,
+            provider: mongoDbConnectionString,
             integrationName: test-integrationName,
             isEnabled: true
           },
@@ -2005,7 +2005,7 @@
             publicUrl: https://example.test/publicUrl,
             isPublic: true,
             integrationId: Guid_1,
-            provider: 0.0,
+            provider: local,
             path: test-path
           },
           env: test-env
@@ -2110,7 +2110,7 @@
             publicUrl: https://example.test/publicUrl,
             isPublic: true,
             integrationId: Guid_1,
-            provider: 0.0,
+            provider: local,
             path: test-path
           },
           env: test-env
@@ -2396,8 +2396,8 @@
           groupDefinition: {
             tag: test-tag
           },
-          channel: 0.0,
-          originChannel: 0.0,
+          channel: transactional,
+          originChannel: transactional,
           env: test-env
         }
       },
@@ -2432,11 +2432,11 @@
         Body: {
           tagDefinition: {
             defaultDelivery: {
-              Email: true
+              email: true
             },
             tag: test-tag
           },
-          channel: 0.0,
+          channel: transactional,
           groupTag: test-groupTag,
           env: test-env
         }

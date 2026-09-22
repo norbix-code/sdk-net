@@ -9,7 +9,7 @@
   },
   Body: {
     integration: {
-      provider: 3.0,
+      provider: androidFirebase,
       projectId: fb-project,
       clientEmail: svc@example.test,
       serviceAccountJson: {},

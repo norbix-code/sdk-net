@@ -21,21 +21,13 @@
     {
       Target: Hub,
       Group: notifications,
-      MethodName: GetPushCampaignMessageAsync,
-      RequestType: GetPushCampaignMessage,
-      Path: /{version}/notifications/push/campaigns/{campaignId}/messages/{id},
-      PathParam: id
-    },
-    {
-      Target: Hub,
-      Group: notifications,
       MethodName: GetSmsCampaignMessageAsync,
       RequestType: GetSmsCampaignMessage,
       Path: /{version}/notifications/sms/campaigns/{campaignId}/messages/{id},
       PathParam: id
     }
   ],
-  Count: 117,
+  Count: 118,
   Endpoints: [
     {
       Target: Hub,
@@ -149,7 +141,7 @@
         },
         Body: {
           campaign: {
-            source: 0.0,
+            source: allUsers,
             templateId: Guid_1,
             integrationId: Guid_1,
             validationIntegrationId: Guid_1,
@@ -823,7 +815,7 @@
         Body: {
           integration: {
             integrationId: Guid_1,
-            provider: 0.0,
+            provider: smtp,
             integrationName: test-integrationName,
             isEnabled: true,
             emailAddress: user@example.test,
@@ -1128,7 +1120,7 @@
             publicUrl: https://example.test/publicUrl,
             isPublic: true,
             integrationId: Guid_1,
-            provider: 0.0,
+            provider: local,
             path: test-path
           },
           env: test-env
@@ -1162,7 +1154,7 @@
         Body: {
           templateName: test-templateName,
           description: test-description,
-          communicationChannel: 0.0,
+          communicationChannel: transactional,
           env: test-env
         }
       },
@@ -1445,7 +1437,7 @@
           viewId: Guid_1,
           templateName: test-templateName,
           description: test-description,
-          communicationChannel: 0.0,
+          communicationChannel: transactional,
           env: test-env
         }
       },
@@ -1607,7 +1599,7 @@
         Body: {
           integration: {
             integrationId: Guid_1,
-            provider: 1.0,
+            provider: zeroBounce,
             integrationName: test-integrationName,
             isEnabled: true
           },
@@ -1768,7 +1760,7 @@
         },
         Body: {
           campaign: {
-            source: 0.0,
+            source: allUsers,
             templateId: Guid_1,
             integrationId: Guid_1,
             language: test-language,
@@ -2118,6 +2110,48 @@
     {
       Target: Hub,
       Group: notifications,
+      MethodName: GetPushCampaignMessageAsync,
+      RequestType: GetPushCampaignMessage,
+      HttpMethod: GET,
+      Path: /{version}/notifications/push/campaigns/{campaignId}/messages/{id},
+      PathParams: [
+        campaignId,
+        id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/notifications/push/campaigns/{guid}/messages/{guid},
+        Query: ?campaignBatchId={guid}&notificationId={guid}&databaseIntegrationId={guid}&env=test-env,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: GetPushCampaignMessageResponse,
+      Response: {
+        PushMessageEntity: {
+          Recipients: {
+            HasMore: false
+          },
+          Content: {},
+          CampaignId: Guid_1,
+          BatchId: Guid_1,
+          NotificationId: Guid_1,
+          RefNotificationId: Guid_1,
+          Subject: test-subject,
+          Body: test-body
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: notifications,
       MethodName: GetPushCampaignMessagesAsync,
       RequestType: GetPushCampaignMessagesRequest,
       HttpMethod: GET,
@@ -2180,7 +2214,7 @@
             manufacturer: test-manufacturer,
             modelName: test-modelName,
             deviceName: test-deviceName,
-            deviceType: 0.0
+            deviceType: unknown
           },
           userId: Guid_1,
           accountId: Guid_1,
@@ -2420,7 +2454,7 @@
         Body: {
           integration: {
             integrationId: Guid_1,
-            provider: 0.0,
+            provider: appleApns,
             integrationName: test-integrationName,
             isEnabled: true
           },
@@ -2650,7 +2684,7 @@
         Body: {
           templateName: test-templateName,
           description: test-description,
-          communicationChannel: 0.0,
+          communicationChannel: transactional,
           env: test-env
         }
       },
@@ -2887,7 +2921,7 @@
           viewId: Guid_1,
           templateName: test-templateName,
           description: test-description,
-          communicationChannel: 0.0,
+          communicationChannel: transactional,
           env: test-env
         }
       },
@@ -3013,27 +3047,27 @@
           databaseIntegrationId: Guid_1,
           language: test-language,
           initiatorId: Guid_1,
-          deliveryType: 0.0,
+          deliveryType: allUsers,
           allUsers: {
-            recipientsSourceType: 0.0,
+            recipientsSourceType: allUsers,
             campaignTime: 1.0,
-            respectTimeZoneSettings: 1.0
+            respectTimeZoneSettings: respectToLastLoginZone
           },
           specifiedUsers: {
-            recipientsSourceType: 0.0,
+            recipientsSourceType: allUsers,
             campaignTime: 1.0,
-            respectTimeZoneSettings: 1.0
+            respectTimeZoneSettings: respectToLastLoginZone
           },
           collection: {
-            fieldType: 0.0,
+            fieldType: user,
             schemaName: test-schemaName,
-            recipientsSourceType: 0.0,
+            recipientsSourceType: allUsers,
             campaignTime: 1.0
           },
           phoneNumbers: {
-            recipientsSourceType: 0.0,
+            recipientsSourceType: allUsers,
             campaignTime: 1.0,
-            respectTimeZoneSettings: 1.0
+            respectTimeZoneSettings: respectToLastLoginZone
           },
           env: test-env
         }
@@ -3633,7 +3667,7 @@
         Body: {
           integration: {
             integrationId: Guid_1,
-            provider: 0.0,
+            provider: twilio,
             integrationName: test-integrationName,
             isEnabled: true
           },
@@ -3827,7 +3861,7 @@
         Body: {
           templateName: test-templateName,
           description: test-description,
-          communicationChannel: 0.0,
+          communicationChannel: transactional,
           env: test-env
         }
       },
@@ -4062,7 +4096,7 @@
           viewId: Guid_1,
           templateName: test-templateName,
           description: test-description,
-          communicationChannel: 0.0,
+          communicationChannel: transactional,
           env: test-env
         }
       },

@@ -1,12 +1,42 @@
 ﻿{
-  MissingPathParameters: [
-    {
-      Target: Hub,
-      Group: notifications,
-      MethodName: GetPushCampaignMessageAsync,
-      RequestType: GetPushCampaignMessage,
-      Path: /{version}/notifications/push/campaigns/{campaignId}/messages/{id},
-      PathParam: id
+  Target: Hub,
+  Group: notifications,
+  MethodName: GetPushCampaignMessageAsync,
+  RequestType: GetPushCampaignMessage,
+  HttpMethod: GET,
+  Path: /{version}/notifications/push/campaigns/{campaignId}/messages/{id},
+  PathParams: [
+    campaignId,
+    id
+  ],
+  IsAccountScoped: false,
+  IsUnauthenticated: false,
+  Sent: {
+    Method: GET,
+    Path: /v2/notifications/push/campaigns/{guid}/messages/{guid},
+    Query: ?campaignBatchId={guid}&notificationId={guid}&databaseIntegrationId={guid}&env=test-env,
+    Headers: {
+      Authorization: Bearer test-bearer,
+      X-CM-AccountId: test-account,
+      X-CM-ProjectId: test-project
     }
-  ]
+  },
+  ResponseType: GetPushCampaignMessageResponse,
+  Response: {
+    PushMessageEntity: {
+      Recipients: {
+        HasMore: false
+      },
+      Content: {},
+      CampaignId: Guid_1,
+      BatchId: Guid_1,
+      NotificationId: Guid_1,
+      RefNotificationId: Guid_1,
+      Subject: test-subject,
+      Body: test-body
+    },
+    ResponseStatus: {
+      IsSuccess: true
+    }
+  }
 }

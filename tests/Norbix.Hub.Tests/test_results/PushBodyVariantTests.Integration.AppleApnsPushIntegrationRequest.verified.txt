@@ -9,7 +9,7 @@
   },
   Body: {
     integration: {
-      provider: 0.0,
+      provider: appleApns,
       teamId: team-1,
       appBundleId: test.bundle,
       keyId: key-1,

@@ -9,7 +9,7 @@
   },
   Body: {
     integration: {
-      provider: 2.0,
+      provider: safariPush,
       websitePushId: web.test.push,
       certificateP12Base64: base64,
       certificatePassword: pwd,

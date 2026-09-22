@@ -14,6 +14,7 @@
     <Compile Include="..\Norbix.Sdk.Types\Generated\Hub.dtos.cs" Link="Generated/Hub.dtos.cs" />
     <!-- Hand-written companions to the generated Hub DTOs. -->
     <Compile Include="..\Norbix.Sdk.Types\PushCampaignEndpoints.cs" Link="PushCampaignEndpoints.cs" />
+    <Compile Include="..\Norbix.Sdk.Types\PushIntegrationEndpoints.cs" Link="PushIntegrationEndpoints.cs" />
   </ItemGroup>
 
   <ItemGroup>
