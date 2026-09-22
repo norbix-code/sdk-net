@@ -251,11 +251,11 @@
         },
         Body: {
           file: {
-            publicUrl: https://example.test/publicUrl,
-            isPublic: true,
             integrationId: Guid_1,
             provider: 0.0,
-            path: test-path
+            path: test-path,
+            publicUrl: https://example.test/publicUrl,
+            isPublic: true
           },
           delimiter: test-delimiter,
           hasHeader: true,
@@ -298,11 +298,11 @@
         },
         Body: {
           file: {
-            publicUrl: https://example.test/publicUrl,
-            isPublic: true,
             integrationId: Guid_1,
             provider: 0.0,
-            path: test-path
+            path: test-path,
+            publicUrl: https://example.test/publicUrl,
+            isPublic: true
           },
           schemaId: Guid_1,
           collectionName: test-collectionName,

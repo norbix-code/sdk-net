@@ -1503,6 +1503,24 @@ namespace Norbix.Sdk.Types.Api;
     ///<summary>
     ///Files
     ///</summary>
+    [NorbixRoute("/{version}/files/{filesIntegrationId}/content", "GET")]
+    [DataContract]
+    public partial class GetFileContentRequest
+        : RequestBase, INorbixRequest<byte[]>, INorbixUnauthenticated
+    {
+        [DataMember]
+        public virtual string FilesIntegrationId { get; set; }
+
+        [DataMember]
+        public virtual string Path { get; set; }
+
+        [DataMember]
+        public virtual string? Token { get; set; }
+    }
+
+    ///<summary>
+    ///Files
+    ///</summary>
     [NorbixRoute("/{version}/files/{filesIntegrationId}/info", "GET")]
     [DataContract]
     public partial class GetFileInfoRequest
@@ -1521,6 +1539,21 @@ namespace Norbix.Sdk.Types.Api;
         public virtual FileResourceRefDto? File { get; set; }
         public virtual bool? IsPublic { get; set; }
         public virtual string? PublicUrl { get; set; }
+    }
+
+    ///<summary>
+    ///Files
+    ///</summary>
+    [NorbixRoute("/{version}/files/public/{PublicId}/{Name*}", "GET")]
+    [DataContract]
+    public partial class GetPublicFileRequest
+        : RequestBase, INorbixRequest<byte[]>, INorbixUnauthenticated
+    {
+        [DataMember]
+        public virtual string? PublicId { get; set; }
+
+        [DataMember]
+        public virtual string? Name { get; set; }
     }
 
     ///<summary>
@@ -1567,6 +1600,25 @@ namespace Norbix.Sdk.Types.Api;
     {
         public virtual PaginatedResponse<FileResourceRefDto>? List { get; set; }
         public virtual IList<string>? Folders { get; set; }
+        public virtual IList<PublicFolderDto>? PublicFolders { get; set; }
+    }
+
+    ///<summary>
+    ///Files
+    ///</summary>
+    [NorbixRoute("/{version}/files/{filesIntegrationId}/content", "PUT")]
+    [DataContract]
+    public partial class PutFileContentRequest
+        : RequestBase, INorbixRequest<EmptyResponse>
+    {
+        [DataMember]
+        public virtual string FilesIntegrationId { get; set; }
+
+        [DataMember]
+        public virtual string Path { get; set; }
+
+        [DataMember]
+        public virtual string? Token { get; set; }
     }
 
     ///<summary>
@@ -1594,6 +1646,18 @@ namespace Norbix.Sdk.Types.Api;
         : ResponseBase
     {
         public virtual string? Url { get; set; }
+    }
+
+    ///<summary>
+    ///Files
+    ///</summary>
+    [NorbixRoute("/{version}/files/{filesIntegrationId}/test", "POST")]
+    [DataContract]
+    public partial class TestFilesIntegrationRequest
+        : CodeMashRequestBase, INorbixRequest<TestFilesIntegrationResponse>
+    {
+        [DataMember]
+        public virtual string FilesIntegrationId { get; set; }
     }
 
     ///<summary>
@@ -1857,6 +1921,75 @@ namespace Norbix.Sdk.Types.Api;
 
         [DataMember]
         public virtual string? FriendlyName { get; set; }
+    }
+
+    ///<summary>
+    ///Membership · Password
+    ///</summary>
+    [NorbixRoute("/{version}/membership/userauth/password/change", "POST")]
+    [DataContract]
+    public partial class ChangePasswordRequest
+        : CodeMashRequestBase, INorbixRequest<PasskeyOkResponse>
+    {
+        ///<summary>
+        ///The member's current password.
+        ///</summary>
+        [DataMember]
+        public virtual string CurrentPassword { get; set; }
+
+        ///<summary>
+        ///The new password. Validated against the project's complexity policy.
+        ///</summary>
+        [DataMember]
+        public virtual string NewPassword { get; set; }
+
+        ///<summary>
+        ///Database integration id. Optional — defaults to the request environment's default integration.
+        ///</summary>
+        [DataMember]
+        public virtual string? DatabaseIntegrationId { get; set; }
+    }
+
+    ///<summary>
+    ///Membership · Password
+    ///</summary>
+    [NorbixRoute("/{version}/membership/userauth/password/reset/confirm", "POST")]
+    [DataContract]
+    public partial class ConfirmPasswordResetRequest
+        : CodeMashRequestBase, INorbixRequest<PasskeyOkResponse>
+    {
+        ///<summary>
+        ///One-time reset token from the email link.
+        ///</summary>
+        [DataMember]
+        public virtual string Token { get; set; }
+
+        ///<summary>
+        ///The new password. Validated against the project's complexity policy.
+        ///</summary>
+        [DataMember]
+        public virtual string NewPassword { get; set; }
+
+        ///<summary>
+        ///Database integration id. Optional — defaults to the request environment's default integration.
+        ///</summary>
+        [DataMember]
+        public virtual string? DatabaseIntegrationId { get; set; }
+    }
+
+    ///<summary>
+    ///Membership · Password
+    ///</summary>
+    [NorbixRoute("/{version}/membership/userauth/password/reset/request", "POST")]
+    [DataContract]
+    public partial class RequestPasswordResetRequest
+        : CodeMashRequestBase, INorbixRequest<PasskeyOkResponse>
+    {
+        ///<summary>
+        ///Email address to send the reset link to.
+        ///</summary>
+        [DataMember]
+        public virtual string Email { get; set; }
     }
 
     ///<summary>
@@ -2462,6 +2595,12 @@ namespace Norbix.Sdk.Types.Api;
 
         [DataMember(Order=4)]
         public virtual string Path { get; set; }
+
+        [DataMember(Order=5)]
+        public virtual string? PublicUrl { get; set; }
+
+        [DataMember(Order=6)]
+        public virtual bool IsPublic { get; set; }
     }
 
     public partial interface IHasEnv
@@ -2484,6 +2623,22 @@ namespace Norbix.Sdk.Types.Api;
         public virtual string? AccentColor { get; set; }
         public virtual string? LogoUrl { get; set; }
         public virtual string? IconUrl { get; set; }
+    }
+
+    [DataContract]
+    public partial class PublicFolderDto
+    {
+        [DataMember(Order=1)]
+        public virtual string Path { get; set; }
+
+        [DataMember(Order=2)]
+        public virtual string PublicId { get; set; }
+
+        [DataMember(Order=3)]
+        public virtual string? PublicUrl { get; set; }
+
+        [DataMember(Order=4)]
+        public virtual bool Inherited { get; set; }
     }
 
     public partial class PublicLegalDocumentDto
@@ -2968,10 +3123,31 @@ namespace Norbix.Sdk.Types.Api;
     }
 
     [DataContract]
+    public partial class IntegrationTestResultItemDto
+    {
+        [DataMember]
+        public virtual string Operation { get; set; }
+
+        [DataMember]
+        public virtual string Result { get; set; }
+
+        [DataMember]
+        public virtual IReadOnlyList<string>? Errors { get; set; }
+    }
+
+    [DataContract]
     public partial class ResponseBase
     {
         [DataMember]
         public virtual CodeMashResponseStatus ResponseStatus { get; set; }
+    }
+
+    [DataContract]
+    public partial class TestFilesIntegrationResponse
+        : ResponseBase
+    {
+        [DataMember]
+        public virtual IReadOnlyList<IntegrationTestResultItemDto>? Items { get; set; }
     }
 
     [DataContract]
@@ -3008,6 +3184,9 @@ namespace Norbix.Sdk.Types.Api;
 
         [DataMember]
         public virtual string? ActivationCode { get; set; }
+
+        [DataMember]
+        public virtual string? SavedByAuthId { get; set; }
     }
 
     [NorbixRoute("/{version}/echo", "GET")]
