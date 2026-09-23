@@ -226,9 +226,29 @@ internal sealed class HttpTransport : INorbixTransport, IDisposable
             return default;
         }
 
+        // The body is read into memory first because a 2xx does not mean the
+        // call worked: the gateway answers a business refusal with HTTP 200
+        // and responseStatus.isSuccess = false, and that has to be seen before
+        // the answer is handed back (10b-files, issue #67).
+        using var buffer = new MemoryStream();
+        await stream.CopyToAsync(buffer, cancellationToken).ConfigureAwait(false);
+        if (buffer.Length == 0)
+        {
+            return default;
+        }
+
+        buffer.Position = 0;
+        if (SaysItFailed(buffer))
+        {
+            buffer.Position = 0;
+            throw await BuildExceptionAsync(buffer, (int)response.StatusCode, url, cancellationToken)
+                .ConfigureAwait(false);
+        }
+
+        buffer.Position = 0;
         try
         {
-            return await JsonSerializer.DeserializeAsync<TResponse>(stream, JsonOptions, cancellationToken)
+            return await JsonSerializer.DeserializeAsync<TResponse>(buffer, JsonOptions, cancellationToken)
                 .ConfigureAwait(false);
         }
         catch (JsonException ex)
@@ -239,6 +259,47 @@ internal sealed class HttpTransport : INorbixTransport, IDisposable
                 url: url,
                 innerException: ex);
         }
+    }
+
+    /// <summary>
+    /// <c>true</c> when the body carries <c>responseStatus.isSuccess = false</c>.
+    /// Never throws — a body that is not JSON simply does not say it failed.
+    /// </summary>
+    private static bool SaysItFailed(Stream body)
+    {
+        try
+        {
+            using var doc = JsonDocument.Parse(body);
+            if (doc.RootElement.ValueKind != JsonValueKind.Object) return false;
+            if (!TryGetResponseStatus(doc.RootElement, out var rs)) return false;
+            foreach (var prop in rs.EnumerateObject())
+            {
+                if (prop.NameEquals("isSuccess") || prop.NameEquals("IsSuccess"))
+                {
+                    return prop.Value.ValueKind == JsonValueKind.False;
+                }
+            }
+            return false;
+        }
+        catch (JsonException)
+        {
+            return false;
+        }
+    }
+
+    /// <summary>The <c>responseStatus</c> block of a body, whatever its casing.</summary>
+    private static bool TryGetResponseStatus(JsonElement root, out JsonElement status)
+    {
+        foreach (var prop in root.EnumerateObject())
+        {
+            if (prop.NameEquals("responseStatus") || prop.NameEquals("ResponseStatus"))
+            {
+                status = prop.Value;
+                return status.ValueKind == JsonValueKind.Object;
+            }
+        }
+        status = default;
+        return false;
     }
 
     private static async Task<NorbixException> BuildExceptionAsync(
@@ -255,16 +316,14 @@ internal sealed class HttpTransport : INorbixTransport, IDisposable
                 .ConfigureAwait(false);
             if (raw is JsonElement el && el.ValueKind == JsonValueKind.Object)
             {
-                if (el.TryGetProperty("responseStatus", out var rs))
+                if (TryGetResponseStatus(el, out var rs))
                 {
                     status = rs.Deserialize<ResponseStatus>(JsonOptions);
                 }
-                else if (el.TryGetProperty("ResponseStatus", out var rs2))
-                {
-                    status = rs2.Deserialize<ResponseStatus>(JsonOptions);
-                }
                 else
                 {
+                    // No responseStatus block: the top of the body may carry
+                    // message / errorCode itself.
                     status = el.Deserialize<ResponseStatus>(JsonOptions);
                 }
             }
@@ -274,13 +333,24 @@ internal sealed class HttpTransport : INorbixTransport, IDisposable
             // Best-effort; non-JSON bodies fall back to a generic message.
         }
 
+        // The gateway's real message and error code live inside
+        // responseStatus.errors[]. Reading the top of the block first gave
+        // every caller "Request failed with status 404" and no code (#66).
+        var first = status?.Errors?.FirstOrDefault(
+            e => !string.IsNullOrEmpty(e.Message) || !string.IsNullOrEmpty(e.ErrorCode));
+
+        var message = Pick(first?.Message) ?? Pick(status?.Message) ?? $"Request failed (HTTP {statusCode})";
+        var code = Pick(first?.ErrorCode) ?? Pick(status?.ErrorCode);
+
         return new NorbixException(
-            status?.Message ?? $"Request failed with status {statusCode}",
+            message,
             statusCode: statusCode,
-            code: status?.ErrorCode,
+            code: code,
             fieldErrors: status?.Errors,
             url: url,
             rawBody: raw);
+
+        static string? Pick(string? value) => string.IsNullOrEmpty(value) ? null : value;
     }
 
     private (string Url, string? Body) BuildUrlAndBody(in NorbixRequestSpec spec)

@@ -657,6 +657,30 @@ Four rules worth knowing:
 After publishing, `ListFilesAsync` and `GetFileInfoAsync` report `IsPublic` and
 `PublicUrl` on each file, and a listing carries `PublicFolders`.
 
+## Testing a Files Integration
+
+`TestFilesIntegrationAsync` on the API client runs a live probe against a files
+integration — it uploads a small file, reads it, lists the folder and deletes
+the file again — and answers one result per step. It needs the `files:create`
+permission, because the probe writes to the storage.
+
+```csharp
+var probe = await api.Files.TestFilesIntegrationAsync(new TestFilesIntegrationRequest
+{
+    FilesIntegrationId = integrationId,   // POST /{version}/files/{filesIntegrationId}/test
+});
+
+foreach (var step in probe!.Items!)
+    Console.WriteLine($"{step.Operation}: {step.Result} {string.Join("; ", step.Errors ?? [])}");
+```
+
+The steps are `UploadFile`, `GetFile`, `GetAllFiles` and `DeleteFile`, in that
+order. A step that fails does not throw — it comes back with `Result = "FAILED"`
+and its `Errors`, and the steps after it come back `"NOT_TESTED"`. Only a refused request (unknown integration, missing permission)
+throws `NorbixException`. The Hub client keeps its own
+`TestFilesIntegrationAsync` (`POST /{version}/files/integrations/test`, id in
+the body) for the dashboard.
+
 ## Error Handling
 
 ```csharp
@@ -666,14 +690,23 @@ try
 }
 catch (NorbixException ex)
 {
-    Console.WriteLine($"{ex.StatusCode} {ex.Code}: {ex.Message}");
+    // HttpStatus / ErrorCode / Errors are the names every Norbix SDK uses.
+    // StatusCode / Code / FieldErrors are the same values, kept for older code.
+    Console.WriteLine($"{ex.HttpStatus} {ex.ErrorCode}: {ex.Message}");
 
-    foreach (var fieldError in ex.FieldErrors)
+    foreach (var error in ex.Errors)
     {
-        Console.WriteLine($"{fieldError.FieldName}: {fieldError.Message}");
+        Console.WriteLine($"{error.ErrorCode} {error.FieldName}: {error.Message}");
     }
 }
 ```
+
+`Message` and `ErrorCode` are the gateway's own. The gateway puts them inside
+`responseStatus.errors[]`, so `NorbixException` reads that list first, takes the
+first entry for `Message` / `ErrorCode`, and keeps every entry in `Errors`. Only
+when the body has no `responseStatus` are the top-level `message` and
+`errorCode` read. `Request failed (HTTP <status>)` is the last fallback, used
+when the body says nothing (for example a 500 page that is not JSON).
 
 | Code | Meaning |
 | --- | --- |
@@ -681,6 +714,18 @@ catch (NorbixException ex)
 | `NORBIX_ACCOUNT_SCOPE_REQUIRED` | Account-scoped endpoint called without `AccountId`. |
 | `NORBIX_MISSING_PATH_PARAM` | A `{token}` in the route was not provided on the request DTO. |
 | `NORBIX_NETWORK_ERROR` | HTTP failed (timeout, connection reset, DNS). |
+
+### Breaking change — a refused call now throws
+
+The gateway answers a business refusal (an unknown id, a rule that says no)
+with **HTTP 200** and `responseStatus.isSuccess = false`. The SDK used to hand
+that answer back as a normal value, so code carried on as if the call had
+worked. It now throws a `NorbixException` with `HttpStatus = 200` and the
+gateway's message and error code.
+
+If your code checked `res.ResponseStatus.IsSuccess` itself, move that check into
+a `try / catch`. Endpoints that answer with raw bytes rather than a document
+(file download, the public file link) are not JSON and are unchanged.
 
 ## How It Stays in Sync With the Backend
 

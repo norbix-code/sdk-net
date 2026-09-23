@@ -1117,11 +1117,11 @@
           language: test-language,
           templateId: Guid_1,
           fileRef: {
-            publicUrl: https://example.test/publicUrl,
-            isPublic: true,
             integrationId: Guid_1,
             provider: local,
-            path: test-path
+            path: test-path,
+            publicUrl: https://example.test/publicUrl,
+            isPublic: true
           },
           env: test-env
         }

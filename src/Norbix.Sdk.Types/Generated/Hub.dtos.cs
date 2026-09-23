@@ -8,16 +8,12 @@
 #pragma warning disable CS0114, CS1570, CS0102, CS0108, CS0618
 
 using System;
-using System.Collections.Generic;
 using System.IO;
+using System.Collections.Generic;
 using System.Runtime.Serialization;
 using Norbix.Sdk.Types;
 
 namespace Norbix.Sdk.Types.Hub;
-
-    public partial class CronExpression
-    {
-    }
 
     public partial class RenderPushResponse
         : ResponseBase
@@ -275,6 +271,10 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual string Value { get; set; }
     }
 
+    public partial class CronExpression
+    {
+        public virtual string Value { get; set; }
+    }
 
     public partial class CurrencyField
         : JsonSchemaField
@@ -3761,6 +3761,7 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual TelnyxSmsIntegrationDto? Typegen_169_TelnyxSmsIntegrationDto { get; set; }
         public virtual TwilioSmsIntegrationDto? Typegen_170_TwilioSmsIntegrationDto { get; set; }
         public virtual VonageSmsIntegrationDto? Typegen_171_VonageSmsIntegrationDto { get; set; }
+        public virtual FakeSmsIntegrationDto? Typegen_246_FakeSmsIntegrationDto { get; set; }
         public virtual AndroidFirebasePushIntegrationDto? Typegen_172_AndroidFirebasePushIntegrationDto { get; set; }
         public virtual AppleApnsPushIntegrationDto? Typegen_173_AppleApnsPushIntegrationDto { get; set; }
         public virtual ChromePluginPushIntegrationDto? Typegen_174_ChromePluginPushIntegrationDto { get; set; }
@@ -3768,11 +3769,13 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual EdgeWebPushIntegrationDto? Typegen_176_EdgeWebPushIntegrationDto { get; set; }
         public virtual FirefoxWebPushIntegrationDto? Typegen_177_FirefoxWebPushIntegrationDto { get; set; }
         public virtual SafariPushIntegrationDto? Typegen_178_SafariPushIntegrationDto { get; set; }
+        public virtual FakePushIntegrationDto? Typegen_247_FakePushIntegrationDto { get; set; }
         public virtual AwsCrossAccountRoleEmailIntegrationDto? Typegen_179_AwsCrossAccountRoleEmailIntegrationDto { get; set; }
         public virtual AwsIamEmailIntegrationDto? Typegen_180_AwsIamEmailIntegrationDto { get; set; }
         public virtual MailGunEmailIntegrationDto? Typegen_181_MailGunEmailIntegrationDto { get; set; }
         public virtual SendGridEmailIntegrationDto? Typegen_182_SendGridEmailIntegrationDto { get; set; }
         public virtual SmtpEmailIntegrationDto? Typegen_183_SmtpEmailIntegrationDto { get; set; }
+        public virtual FakeEmailIntegrationDto? Typegen_248_FakeEmailIntegrationDto { get; set; }
         public virtual WebhookIntegrationDto? Typegen_192_WebhookIntegrationDto { get; set; }
         public virtual WebhookDestinationDto? Typegen_193_WebhookDestinationDto { get; set; }
         public virtual SchedulerTaskDto? Typegen_194_SchedulerTaskDto { get; set; }
@@ -4010,6 +4013,12 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember(Order=4)]
         public virtual string Path { get; set; }
+
+        [DataMember(Order=5)]
+        public virtual string? PublicUrl { get; set; }
+
+        [DataMember(Order=6)]
+        public virtual bool IsPublic { get; set; }
     }
 
     [DataContract]
@@ -4290,6 +4299,22 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual string? AccentColor { get; set; }
         public virtual string? LogoUrl { get; set; }
         public virtual string? IconUrl { get; set; }
+    }
+
+    [DataContract]
+    public partial class PublicFolderDto
+    {
+        [DataMember(Order=1)]
+        public virtual string Path { get; set; }
+
+        [DataMember(Order=2)]
+        public virtual string PublicId { get; set; }
+
+        [DataMember(Order=3)]
+        public virtual string? PublicUrl { get; set; }
+
+        [DataMember(Order=4)]
+        public virtual bool Inherited { get; set; }
     }
 
     public partial class PublicLegalDocumentDto
@@ -8022,6 +8047,11 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual string? ConfigurationSetName { get; set; }
     }
 
+    public partial class FakeEmailIntegrationDto
+        : EmailIntegrationDto
+    {
+    }
+
     public partial class MailGunEmailIntegrationDto
         : EmailIntegrationDto
     {
@@ -8191,6 +8221,11 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual string? Subject { get; set; }
     }
 
+    public partial class FakePushIntegrationDto
+        : PushIntegrationDto
+    {
+    }
+
     public partial class FirefoxWebPushIntegrationDto
         : PushIntegrationDto
     {
@@ -8238,6 +8273,11 @@ namespace Norbix.Sdk.Types.Hub;
     {
         public virtual string Originator { get; set; }
         public virtual string Region { get; set; }
+    }
+
+    public partial class FakeSmsIntegrationDto
+        : SmsIntegrationDto
+    {
     }
 
     public partial class PlivoSmsIntegrationDto
@@ -9326,6 +9366,9 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember]
         public virtual string? ActivationCode { get; set; }
+
+        [DataMember]
+        public virtual string? SavedByAuthId { get; set; }
     }
 
     [DataContract]
@@ -15196,6 +15239,7 @@ namespace Norbix.Sdk.Types.Hub;
     {
         public virtual PaginatedResponse<FileResourceRefDto>? List { get; set; }
         public virtual IList<string>? Folders { get; set; }
+        public virtual IList<PublicFolderDto>? PublicFolders { get; set; }
     }
 
     public partial class AppleICloudFilesIntegrationRequest
@@ -15322,6 +15366,7 @@ namespace Norbix.Sdk.Types.Hub;
     {
         public virtual string? DefaultIntegrationId { get; set; }
         public virtual PaginatedResponse<FilesIntegrationListProjection>? List { get; set; }
+        public virtual List<FileProvider> AvailableProviders { get; set; } = [];
     }
 
     public partial class GoogleCloudFilesIntegrationRequest
@@ -15374,6 +15419,66 @@ namespace Norbix.Sdk.Types.Hub;
         ///Integration id, from get_files_integrations.
         ///</summary>
         public virtual string IntegrationId { get; set; }
+    }
+
+    [NorbixRoute("/{version}/files/item/private", "POST")]
+    public partial class MakeFilePrivateRequest
+        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
+    {
+        ///<summary>
+        ///The files integration the file lives on.
+        ///</summary>
+        public virtual string FilesIntegrationId { get; set; }
+
+        ///<summary>
+        ///Path of the file, relative to the integration.
+        ///</summary>
+        public virtual string Path { get; set; }
+    }
+
+    [NorbixRoute("/{version}/files/item/public", "POST")]
+    public partial class MakeFilePublicRequest
+        : CodeMashRequestBase, INorbixRequest<IdResponse>
+    {
+        ///<summary>
+        ///The files integration the file lives on.
+        ///</summary>
+        public virtual string FilesIntegrationId { get; set; }
+
+        ///<summary>
+        ///Path of the file to publish, relative to the integration.
+        ///</summary>
+        public virtual string Path { get; set; }
+    }
+
+    [NorbixRoute("/{version}/files/folder/private", "POST")]
+    public partial class MakeFolderPrivateRequest
+        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
+    {
+        ///<summary>
+        ///The files integration the folder lives on.
+        ///</summary>
+        public virtual string FilesIntegrationId { get; set; }
+
+        ///<summary>
+        ///Folder prefix, relative to the integration.
+        ///</summary>
+        public virtual string Path { get; set; }
+    }
+
+    [NorbixRoute("/{version}/files/folder/public", "POST")]
+    public partial class MakeFolderPublicRequest
+        : CodeMashRequestBase, INorbixRequest<IdResponse>
+    {
+        ///<summary>
+        ///The files integration the folder lives on.
+        ///</summary>
+        public virtual string FilesIntegrationId { get; set; }
+
+        ///<summary>
+        ///Folder prefix to publish, relative to the integration.
+        ///</summary>
+        public virtual string Path { get; set; }
     }
 
     [NorbixRoute("/{version}/files/triggers/{triggerId}", "DELETE")]
@@ -19047,7 +19152,6 @@ namespace Norbix.Sdk.Types.Hub;
         string? CultureCode { get; set; }
     }
 
-
     public partial interface IHasCorrelationIdRequest
     {
         Guid? CorrelationId { get; set; }
@@ -19337,6 +19441,7 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual ProjectId ProjectId { get; set; }
         public virtual IntegrationId IntegrationId { get; set; }
         public virtual FileResourceRef FileRef { get; set; }
+        public virtual bool Verified { get; set; }
     }
 
     public enum AwsS3IntegrationType
@@ -19396,21 +19501,49 @@ namespace Norbix.Sdk.Types.Hub;
     public partial class EmailCampaignTriggered
     {
         public virtual ProjectId ProjectId { get; set; }
+        public virtual AccountId AccountId { get; set; }
         public virtual TriggerId TriggerId { get; set; }
         public virtual TriggerType TriggerType { get; set; }
         public virtual string SourceEvent { get; set; }
         public virtual string? SchemaId { get; set; }
-        public virtual IReadOnlyDictionary<string, string>? TokenMappings { get; set; }
+        public virtual Dictionary<string, string>? TokenMappings { get; set; }
+    }
+
+    public partial class MarketplaceFunctionTriggered
+    {
+        public virtual ProjectId ProjectId { get; set; }
+        public virtual AccountId AccountId { get; set; }
+        public virtual TriggerId TriggerId { get; set; }
+        public virtual TriggerType TriggerType { get; set; }
+        public virtual string SourceEvent { get; set; }
+        public virtual string? SchemaId { get; set; }
+        public virtual string? TargetUserAuthId { get; set; }
+        public virtual string? OldDocumentJson { get; set; }
+        public virtual string? NewDocumentJson { get; set; }
+        public virtual string? Collection { get; set; }
+        public virtual string? CorrelationId { get; set; }
+    }
+
+    public partial class PushCampaignTriggered
+    {
+        public virtual ProjectId ProjectId { get; set; }
+        public virtual AccountId AccountId { get; set; }
+        public virtual TriggerId TriggerId { get; set; }
+        public virtual TriggerType TriggerType { get; set; }
+        public virtual string SourceEvent { get; set; }
+        public virtual string? SchemaId { get; set; }
+        public virtual Dictionary<string, string>? TokenMappings { get; set; }
     }
 
     public partial class SmsCampaignTriggered
     {
         public virtual ProjectId ProjectId { get; set; }
+        public virtual AccountId AccountId { get; set; }
         public virtual TriggerId TriggerId { get; set; }
         public virtual TriggerType TriggerType { get; set; }
         public virtual string SourceEvent { get; set; }
         public virtual string? SchemaId { get; set; }
-        public virtual IReadOnlyDictionary<string, string>? TokenMappings { get; set; }
+        public virtual Dictionary<string, string>? TokenMappings { get; set; }
     }
 
     public partial class SseCallTriggered
@@ -19422,7 +19555,7 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual string SourceEvent { get; set; }
         public virtual string? TargetUserAuthId { get; set; }
         public virtual string? SchemaId { get; set; }
-        public virtual IReadOnlyDictionary<string, string>? TokenMappings { get; set; }
+        public virtual Dictionary<string, string>? TokenMappings { get; set; }
         public virtual string? CorrelationId { get; set; }
     }
 
@@ -19462,6 +19595,51 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual Guid ProjectId { get; set; }
         public virtual string Token { get; set; }
         public virtual DateTime ExpiresAtUtc { get; set; }
+    }
+
+    public partial class PushBatchRegistered
+    {
+        public virtual CampaignId CampaignId { get; set; }
+        public virtual CampaignBatchId CampaignBatchId { get; set; }
+        public virtual string? StartingAfter { get; set; }
+    }
+
+    public partial class PushCampaignCompleted
+    {
+        public virtual CampaignId CampaignId { get; set; }
+        public virtual HashSet<ErrorDto>? Errors { get; set; }
+    }
+
+    public partial class PushCampaignFailed
+    {
+        public virtual CampaignId CampaignId { get; set; }
+        public virtual HashSet<ErrorDto> Errors { get; set; } = [];
+    }
+
+    public partial class PushCampaignStarted
+    {
+        public virtual CampaignId CampaignId { get; set; }
+    }
+
+    public partial class PushCampaignStopped
+    {
+        public virtual CampaignId CampaignId { get; set; }
+        public virtual CampaignStopReason? Reason { get; set; }
+    }
+
+    public partial class PushNotificationClicked
+    {
+        public virtual CampaignId CampaignId { get; set; }
+        public virtual CampaignBatchId CampaignBatchId { get; set; }
+        public virtual NotificationId NotificationId { get; set; }
+        public virtual string? SourceId { get; set; }
+    }
+
+    public partial class PushNotificationRead
+    {
+        public virtual CampaignId CampaignId { get; set; }
+        public virtual CampaignBatchId CampaignBatchId { get; set; }
+        public virtual NotificationId NotificationId { get; set; }
     }
 
     public partial interface IHasViewId
