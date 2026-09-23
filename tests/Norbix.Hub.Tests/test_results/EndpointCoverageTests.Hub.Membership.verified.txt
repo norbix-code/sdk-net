@@ -724,7 +724,7 @@
       Sent: {
         Method: GET,
         Path: /v2/membership/integrations,
-        Query: ?env=test-env&resolvedEnv=Norbix.Sdk.Types.Hub.Env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1&paging=Norbix.Sdk.Types.Hub.PagingArgs,
+        Query: ?env=test-env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1,
         Headers: {
           Authorization: Bearer test-bearer,
           X-CM-AccountId: test-account,
@@ -1348,7 +1348,7 @@
       Sent: {
         Method: GET,
         Path: /v2/membership/triggers,
-        Query: ?schemaId={guid}&env=test-env&resolvedEnv=Norbix.Sdk.Types.Hub.Env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1&paging=Norbix.Sdk.Types.Hub.PagingArgs,
+        Query: ?schemaId={guid}&env=test-env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1,
         Headers: {
           Authorization: Bearer test-bearer,
           X-CM-AccountId: test-account,

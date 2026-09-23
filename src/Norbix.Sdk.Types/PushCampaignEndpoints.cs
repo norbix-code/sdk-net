@@ -10,11 +10,11 @@ namespace Norbix.Sdk.Types.Hub;
 // Hand-written companions to Generated/Hub.dtos.cs for the push campaign
 // endpoints. Two things the export drops:
 //
-//  1. DeletePushCampaignRequest and StopPushCampaignRequest carry an `Id` on
-//     the gateway, but the exported class is empty, so the `{Id}` route token
-//     could never be filled and neither call could be made at all. Both are
-//     `partial`, so the property is added back here and survives the next
-//     regeneration of Hub.dtos.cs.
+//  1. (fixed upstream) DeletePushCampaignRequest and StopPushCampaignRequest
+//     used to export without their `Id`, so neither call could be made. The
+//     gateway ships both properties now, and the companions that added them
+//     back were removed in the types regeneration — they had started to
+//     collide with the generated partial.
 //
 //  2. PushCampaignRequest is abstract on the gateway with one subclass per
 //     audience, routed by the wire-level `source` discriminator. The export
@@ -23,29 +23,7 @@ namespace Norbix.Sdk.Types.Hub;
 //     that, each fixing `Source` in its constructor.
 
 ///<summary>Deletes push campaign from queue</summary>
-public partial class DeletePushCampaignRequest
-{
-    ///<summary>The push campaign id to delete. Get it from GetPushCampaignsAsync.</summary>
-    [DataMember]
-    public virtual string Id { get; set; }
-
-    ///<summary>Optional database integration id; omit to use the project's default.</summary>
-    [DataMember]
-    public virtual string? DatabaseIntegrationId { get; set; }
-}
-
 ///<summary>Stops a running push campaign</summary>
-public partial class StopPushCampaignRequest
-{
-    ///<summary>The campaign id to stop.</summary>
-    [DataMember]
-    public virtual string Id { get; set; }
-
-    ///<summary>Optional database integration id; omit to use the project's default.</summary>
-    [DataMember]
-    public virtual string? DatabaseIntegrationId { get; set; }
-}
-
 ///<summary>
 ///Sends to every user in the project, optionally narrowed to roles or tags.
 ///</summary>

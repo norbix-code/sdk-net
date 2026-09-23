@@ -1,26 +1,23 @@
 ﻿{
   Target: Hub,
   Group: notifications,
-  MethodName: GetPushCampaignBatchesAsync,
-  RequestType: GetPushCampaignBatches,
+  MethodName: GetPushDevicesAsync,
+  RequestType: GetPushDevices,
   HttpMethod: GET,
-  Path: /{version}/notifications/push/campaigns/{id}/batches,
-  PathParams: [
-    id
-  ],
+  Path: /{version}/notifications/push/devices,
   IsAccountScoped: false,
   IsUnauthenticated: false,
   Sent: {
     Method: GET,
-    Path: /v2/notifications/push/campaigns/{guid}/batches,
-    Query: ?databaseIntegrationId={guid}&batchId={guid}&env=test-env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1,
+    Path: /v2/notifications/push/devices,
+    Query: ?userId={guid}&deviceKey=test-deviceKey&platform=test-platform&databaseIntegrationId={guid}&env=test-env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1,
     Headers: {
       Authorization: Bearer test-bearer,
       X-CM-AccountId: test-account,
       X-CM-ProjectId: test-project
     }
   },
-  ResponseType: GetPushCampaignBatchesResponse,
+  ResponseType: GetPushDevicesResponse,
   Response: {
     List: {
       Items: [

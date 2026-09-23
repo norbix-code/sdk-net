@@ -122,7 +122,7 @@
       Sent: {
         Method: GET,
         Path: /v2/diagnostics/logs,
-        Query: ?level=test-level&module=test-module&logCorrelationId={guid}&eventCode=test-eventCode&search=test-search&fromUtc=2026-04-27T12%3a00%3a00.0000000Z&toUtc=2026-04-27T12%3a00%3a00.0000000Z&caseId={guid}&env=test-env&resolvedEnv=Norbix.Sdk.Types.Hub.Env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1&paging=Norbix.Sdk.Types.Hub.PagingArgs,
+        Query: ?level=test-level&module=test-module&logCorrelationId={guid}&eventCode=test-eventCode&search=test-search&fromUtc=2026-04-27T12%3a00%3a00.0000000Z&toUtc=2026-04-27T12%3a00%3a00.0000000Z&caseId={guid}&env=test-env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1,
         Headers: {
           Authorization: Bearer test-bearer,
           X-CM-AccountId: test-account,

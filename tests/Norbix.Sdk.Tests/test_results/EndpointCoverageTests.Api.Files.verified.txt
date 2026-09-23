@@ -259,7 +259,7 @@
       Sent: {
         Method: GET,
         Path: /v2/files/{guid},
-        Query: ?path=test-path&env=test-env&resolvedEnv=Norbix.Sdk.Types.Api.Env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1&paging=Norbix.Sdk.Types.Api.PagingArgs,
+        Query: ?path=test-path&env=test-env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1,
         Headers: {
           Authorization: Bearer test-bearer,
           X-CM-AccountId: test-account,

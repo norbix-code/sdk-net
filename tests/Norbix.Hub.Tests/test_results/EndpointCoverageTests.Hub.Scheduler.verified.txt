@@ -200,7 +200,7 @@
       Sent: {
         Method: GET,
         Path: /v2/scheduler/tasks,
-        Query: ?type=EmailCampaign&enabled=True&env=test-env&resolvedEnv=Norbix.Sdk.Types.Hub.Env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1&paging=Norbix.Sdk.Types.Hub.PagingArgs,
+        Query: ?type=EmailCampaign&enabled=True&env=test-env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1,
         Headers: {
           Authorization: Bearer test-bearer,
           X-CM-AccountId: test-account,

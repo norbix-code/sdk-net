@@ -14,7 +14,7 @@
   Sent: {
     Method: GET,
     Path: /v2/notifications/push/campaigns/{guid}/batches/{guid},
-    Query: ?databaseIntegrationId={guid}&env=test-env&resolvedEnv=Norbix.Sdk.Types.Hub.Env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1&paging=Norbix.Sdk.Types.Hub.PagingArgs,
+    Query: ?databaseIntegrationId={guid}&env=test-env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1,
     Headers: {
       Authorization: Bearer test-bearer,
       X-CM-AccountId: test-account,
