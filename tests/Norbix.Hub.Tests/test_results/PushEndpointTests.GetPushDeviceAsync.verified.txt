@@ -1,0 +1,40 @@
+﻿{
+  Target: Hub,
+  Group: notifications,
+  MethodName: GetPushDeviceAsync,
+  RequestType: GetPushDevice,
+  HttpMethod: GET,
+  Path: /{version}/notifications/push/devices/{id},
+  PathParams: [
+    id
+  ],
+  IsAccountScoped: false,
+  IsUnauthenticated: false,
+  Sent: {
+    Method: GET,
+    Path: /v2/notifications/push/devices/{guid},
+    Query: ?databaseIntegrationId={guid}&env=test-env,
+    Headers: {
+      Authorization: Bearer test-bearer,
+      X-CM-AccountId: test-account,
+      X-CM-ProjectId: test-project
+    }
+  },
+  ResponseType: GetPushDeviceResponse,
+  Response: {
+    Item: {
+      DeviceId: Guid_1,
+      DeviceOs: test-deviceOs,
+      Token: test-token,
+      Brand: test-brand,
+      Manufacturer: test-manufacturer,
+      ModelName: test-modelName,
+      DeviceName: test-deviceName,
+      DeviceType: Unknown
+    },
+    UserId: Guid_1,
+    ResponseStatus: {
+      IsSuccess: true
+    }
+  }
+}

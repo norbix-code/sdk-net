@@ -769,7 +769,7 @@
       Sent: {
         Method: GET,
         Path: /v2/membership/auth,
-        Query: ?databaseIntegrationId={guid}&includePermissions=True&userShouldHavePushDevice=True&userShouldHaveEmail=True&includeMeta=True&env=test-env&resolvedEnv=Norbix.Sdk.Types.Api.Env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1&paging=Norbix.Sdk.Types.Api.PagingArgs,
+        Query: ?databaseIntegrationId={guid}&includePermissions=True&userShouldHavePushDevice=True&userShouldHaveEmail=True&includeMeta=True&env=test-env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1,
         Headers: {
           Authorization: Bearer test-bearer,
           X-CM-AccountId: test-account,

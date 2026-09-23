@@ -290,7 +290,7 @@
       Sent: {
         Method: GET,
         Path: /v2/database/collections/test-collectionName/own,
-        Query: ?databaseIntegrationId={guid}&filter=test-filter&schemaVersion=1&pagingArgs=Norbix.Sdk.Types.Api.PagingArgs&env=test-env&resolvedEnv=Norbix.Sdk.Types.Api.Env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1&paging=Norbix.Sdk.Types.Api.PagingArgs,
+        Query: ?databaseIntegrationId={guid}&filter=test-filter&schemaVersion=1&pagingArgs=Norbix.Sdk.Types.Api.PagingArgs&env=test-env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1,
         Headers: {
           Authorization: Bearer test-bearer,
           X-CM-AccountId: test-account,
@@ -330,7 +330,7 @@
       Sent: {
         Method: GET,
         Path: /v2/database/collections/test-collectionName,
-        Query: ?databaseIntegrationId={guid}&filter=test-filter&schemaVersion=1&pagingArgs=Norbix.Sdk.Types.Api.PagingArgs&sortBy=test-sortBy&sortOrder=1&env=test-env&resolvedEnv=Norbix.Sdk.Types.Api.Env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1&paging=Norbix.Sdk.Types.Api.PagingArgs,
+        Query: ?databaseIntegrationId={guid}&filter=test-filter&schemaVersion=1&pagingArgs=Norbix.Sdk.Types.Api.PagingArgs&sortBy=test-sortBy&sortOrder=1&env=test-env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1,
         Headers: {
           Authorization: Bearer test-bearer,
           X-CM-AccountId: test-account,
@@ -581,7 +581,7 @@
       Sent: {
         Method: GET,
         Path: /v2/database/schemas,
-        Query: ?pagingArgs=Norbix.Sdk.Types.Api.PagingArgs&env=test-env&resolvedEnv=Norbix.Sdk.Types.Api.Env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1&paging=Norbix.Sdk.Types.Api.PagingArgs,
+        Query: ?pagingArgs=Norbix.Sdk.Types.Api.PagingArgs&env=test-env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1,
         Headers: {
           Authorization: Bearer test-bearer,
           X-CM-AccountId: test-account,
@@ -683,7 +683,7 @@
       Sent: {
         Method: GET,
         Path: /v2/database/taxonomies/test-taxonomyName/terms/{guid}/children,
-        Query: ?databaseIntegrationId={guid}&filter=test-filter&pagingArgs=Norbix.Sdk.Types.Api.PagingArgs&env=test-env&resolvedEnv=Norbix.Sdk.Types.Api.Env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1&paging=Norbix.Sdk.Types.Api.PagingArgs,
+        Query: ?databaseIntegrationId={guid}&filter=test-filter&pagingArgs=Norbix.Sdk.Types.Api.PagingArgs&env=test-env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1,
         Headers: {
           Authorization: Bearer test-bearer,
           X-CM-AccountId: test-account,
@@ -721,7 +721,7 @@
       Sent: {
         Method: GET,
         Path: /v2/database/taxonomies/test-taxonomyName/terms,
-        Query: ?databaseIntegrationId={guid}&filter=test-filter&sortDescending=True&pagingArgs=Norbix.Sdk.Types.Api.PagingArgs&env=test-env&resolvedEnv=Norbix.Sdk.Types.Api.Env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1&paging=Norbix.Sdk.Types.Api.PagingArgs,
+        Query: ?databaseIntegrationId={guid}&filter=test-filter&sortDescending=True&pagingArgs=Norbix.Sdk.Types.Api.PagingArgs&env=test-env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1,
         Headers: {
           Authorization: Bearer test-bearer,
           X-CM-AccountId: test-account,

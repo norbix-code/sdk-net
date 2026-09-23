@@ -1,41 +1,7 @@
 ﻿{
   Target: Hub,
   Group: notifications,
-  MissingPathParameters: [
-    {
-      Target: Hub,
-      Group: notifications,
-      MethodName: DeleteEmailCampaignAsync,
-      RequestType: DeleteEmailCampaignRequest,
-      Path: /{version}/notifications/email/campaigns/{Id},
-      PathParam: Id
-    },
-    {
-      Target: Hub,
-      Group: notifications,
-      MethodName: GetEmailCampaignMessageAsync,
-      RequestType: GetEmailCampaignMessage,
-      Path: /{version}/notifications/emails/campaigns/{campaignId}/messages/{id},
-      PathParam: id
-    },
-    {
-      Target: Hub,
-      Group: notifications,
-      MethodName: GetPushCampaignMessageAsync,
-      RequestType: GetPushCampaignMessage,
-      Path: /{version}/notifications/push/campaigns/{campaignId}/messages/{id},
-      PathParam: id
-    },
-    {
-      Target: Hub,
-      Group: notifications,
-      MethodName: GetSmsCampaignMessageAsync,
-      RequestType: GetSmsCampaignMessage,
-      Path: /{version}/notifications/sms/campaigns/{campaignId}/messages/{id},
-      PathParam: id
-    }
-  ],
-  Count: 117,
+  Count: 123,
   Endpoints: [
     {
       Target: Hub,
@@ -173,6 +139,35 @@
     {
       Target: Hub,
       Group: notifications,
+      MethodName: DeleteEmailCampaignAsync,
+      RequestType: DeleteEmailCampaignRequest,
+      HttpMethod: DELETE,
+      Path: /{version}/notifications/email/campaigns/{Id},
+      PathParams: [
+        Id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: DELETE,
+        Path: /v2/notifications/email/campaigns/{guid},
+        Query: ?databaseIntegrationId={guid}&env=test-env,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: notifications,
       MethodName: GetEmailCampaignAsync,
       RequestType: GetEmailCampaign,
       HttpMethod: GET,
@@ -226,7 +221,7 @@
       Sent: {
         Method: GET,
         Path: /v2/notifications/email/campaigns/{guid}/batches,
-        Query: ?databaseIntegrationId={guid}&batchId={guid}&emailAddress=user%40example.test&env=test-env&resolvedEnv=Norbix.Sdk.Types.Hub.Env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1&paging=Norbix.Sdk.Types.Hub.PagingArgs,
+        Query: ?databaseIntegrationId={guid}&batchId={guid}&emailAddress=user%40example.test&env=test-env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1,
         Headers: {
           Authorization: Bearer test-bearer,
           X-CM-AccountId: test-account,
@@ -266,7 +261,7 @@
       Sent: {
         Method: GET,
         Path: /v2/notifications/email/campaigns/{guid}/batches/{guid}/{guid},
-        Query: ?databaseIntegrationId={guid}&env=test-env&resolvedEnv=Norbix.Sdk.Types.Hub.Env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1&paging=Norbix.Sdk.Types.Hub.PagingArgs,
+        Query: ?databaseIntegrationId={guid}&env=test-env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1,
         Headers: {
           Authorization: Bearer test-bearer,
           X-CM-AccountId: test-account,
@@ -308,7 +303,7 @@
       Sent: {
         Method: GET,
         Path: /v2/notifications/email/campaigns/{guid}/batches/{guid},
-        Query: ?databaseIntegrationId={guid}&env=test-env&resolvedEnv=Norbix.Sdk.Types.Hub.Env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1&paging=Norbix.Sdk.Types.Hub.PagingArgs,
+        Query: ?databaseIntegrationId={guid}&env=test-env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1,
         Headers: {
           Authorization: Bearer test-bearer,
           X-CM-AccountId: test-account,
@@ -346,7 +341,7 @@
       Sent: {
         Method: GET,
         Path: /v2/notifications/email/campaigns,
-        Query: ?databaseIntegrationId={guid}&campaignId={guid}&emailAddress=user%40example.test&templateId={guid}&from=1&to=1&env=test-env&resolvedEnv=Norbix.Sdk.Types.Hub.Env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1&paging=Norbix.Sdk.Types.Hub.PagingArgs,
+        Query: ?databaseIntegrationId={guid}&campaignId={guid}&emailAddress=user%40example.test&templateId={guid}&from=1&to=1&env=test-env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1,
         Headers: {
           Authorization: Bearer test-bearer,
           X-CM-AccountId: test-account,
@@ -468,6 +463,48 @@
     {
       Target: Hub,
       Group: notifications,
+      MethodName: GetEmailCampaignMessageAsync,
+      RequestType: GetEmailCampaignMessage,
+      HttpMethod: GET,
+      Path: /{version}/notifications/emails/campaigns/{campaignId}/messages/{notificationId},
+      PathParams: [
+        campaignId,
+        notificationId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/notifications/emails/campaigns/{guid}/messages/{guid},
+        Query: ?campaignBatchId={guid}&databaseIntegrationId={guid}&env=test-env,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: GetEmailCampaignMessageResponse,
+      Response: {
+        EmailMessageEntity: {
+          Recipients: {
+            HasMore: false
+          },
+          Content: {},
+          CampaignId: Guid_1,
+          BatchId: Guid_1,
+          NotificationId: Guid_1,
+          RefNotificationId: Guid_1,
+          Subject: test-subject,
+          Body: test-body
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: notifications,
       MethodName: GetEmailCampaignMessagesAsync,
       RequestType: GetEmailCampaignMessagesRequest,
       HttpMethod: GET,
@@ -480,7 +517,7 @@
       Sent: {
         Method: GET,
         Path: /v2/notifications/emails/campaigns/{guid}/messages,
-        Query: ?campaignBatchId={guid}&databaseIntegrationId={guid}&env=test-env&resolvedEnv=Norbix.Sdk.Types.Hub.Env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1&paging=Norbix.Sdk.Types.Hub.PagingArgs,
+        Query: ?campaignBatchId={guid}&databaseIntegrationId={guid}&env=test-env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1,
         Headers: {
           Authorization: Bearer test-bearer,
           X-CM-AccountId: test-account,
@@ -775,7 +812,7 @@
       Sent: {
         Method: GET,
         Path: /v2/notifications/email/integrations,
-        Query: ?env=test-env&resolvedEnv=Norbix.Sdk.Types.Hub.Env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1&paging=Norbix.Sdk.Types.Hub.PagingArgs,
+        Query: ?env=test-env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1,
         Headers: {
           Authorization: Bearer test-bearer,
           X-CM-AccountId: test-account,
@@ -1047,7 +1084,7 @@
       Sent: {
         Method: GET,
         Path: /v2/notifications/email/signatures,
-        Query: ?env=test-env&resolvedEnv=Norbix.Sdk.Types.Hub.Env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1&paging=Norbix.Sdk.Types.Hub.PagingArgs,
+        Query: ?env=test-env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1,
         Headers: {
           Authorization: Bearer test-bearer,
           X-CM-AccountId: test-account,
@@ -1286,7 +1323,7 @@
       Sent: {
         Method: GET,
         Path: /v2/notifications/email/templates,
-        Query: ?showArchived=True&templateId={guid}&env=test-env&resolvedEnv=Norbix.Sdk.Types.Hub.Env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1&paging=Norbix.Sdk.Types.Hub.PagingArgs,
+        Query: ?showArchived=True&templateId={guid}&env=test-env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1,
         Headers: {
           Authorization: Bearer test-bearer,
           X-CM-AccountId: test-account,
@@ -1397,7 +1434,7 @@
       Sent: {
         Method: GET,
         Path: /v2/notifications/email/system-templates,
-        Query: ?communicationChannel=Transactional&forTrigger=Membership&env=test-env&resolvedEnv=Norbix.Sdk.Types.Hub.Env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1&paging=Norbix.Sdk.Types.Hub.PagingArgs,
+        Query: ?communicationChannel=Transactional&forTrigger=Membership&env=test-env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1,
         Headers: {
           Authorization: Bearer test-bearer,
           X-CM-AccountId: test-account,
@@ -1530,7 +1567,7 @@
       Sent: {
         Method: GET,
         Path: /v2/notifications/email/footers,
-        Query: ?env=test-env&resolvedEnv=Norbix.Sdk.Types.Hub.Env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1&paging=Norbix.Sdk.Types.Hub.PagingArgs,
+        Query: ?env=test-env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1,
         Headers: {
           Authorization: Bearer test-bearer,
           X-CM-AccountId: test-account,
@@ -1873,7 +1910,7 @@
       Sent: {
         Method: GET,
         Path: /v2/notifications/push/campaigns/{guid}/batches,
-        Query: ?databaseIntegrationId={guid}&batchId={guid}&env=test-env&resolvedEnv=Norbix.Sdk.Types.Hub.Env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1&paging=Norbix.Sdk.Types.Hub.PagingArgs,
+        Query: ?databaseIntegrationId={guid}&batchId={guid}&env=test-env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1,
         Headers: {
           Authorization: Bearer test-bearer,
           X-CM-AccountId: test-account,
@@ -1913,7 +1950,7 @@
       Sent: {
         Method: GET,
         Path: /v2/notifications/push/campaigns/{guid}/batches/{guid}/{guid},
-        Query: ?databaseIntegrationId={guid}&env=test-env&resolvedEnv=Norbix.Sdk.Types.Hub.Env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1&paging=Norbix.Sdk.Types.Hub.PagingArgs,
+        Query: ?databaseIntegrationId={guid}&env=test-env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1,
         Headers: {
           Authorization: Bearer test-bearer,
           X-CM-AccountId: test-account,
@@ -1955,7 +1992,7 @@
       Sent: {
         Method: GET,
         Path: /v2/notifications/push/campaigns/{guid}/batches/{guid},
-        Query: ?databaseIntegrationId={guid}&env=test-env&resolvedEnv=Norbix.Sdk.Types.Hub.Env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1&paging=Norbix.Sdk.Types.Hub.PagingArgs,
+        Query: ?databaseIntegrationId={guid}&env=test-env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1,
         Headers: {
           Authorization: Bearer test-bearer,
           X-CM-AccountId: test-account,
@@ -1993,7 +2030,7 @@
       Sent: {
         Method: GET,
         Path: /v2/notifications/push/campaigns,
-        Query: ?databaseIntegrationId={guid}&templateId={guid}&from=1&to=1&env=test-env&resolvedEnv=Norbix.Sdk.Types.Hub.Env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1&paging=Norbix.Sdk.Types.Hub.PagingArgs,
+        Query: ?databaseIntegrationId={guid}&templateId={guid}&from=1&to=1&env=test-env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1,
         Headers: {
           Authorization: Bearer test-bearer,
           X-CM-AccountId: test-account,
@@ -2118,6 +2155,48 @@
     {
       Target: Hub,
       Group: notifications,
+      MethodName: GetPushCampaignMessageAsync,
+      RequestType: GetPushCampaignMessage,
+      HttpMethod: GET,
+      Path: /{version}/notifications/push/campaigns/{campaignId}/messages/{notificationId},
+      PathParams: [
+        campaignId,
+        notificationId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/notifications/push/campaigns/{guid}/messages/{guid},
+        Query: ?campaignBatchId={guid}&databaseIntegrationId={guid}&env=test-env,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: GetPushCampaignMessageResponse,
+      Response: {
+        PushMessageEntity: {
+          Recipients: {
+            HasMore: false
+          },
+          Content: {},
+          CampaignId: Guid_1,
+          BatchId: Guid_1,
+          NotificationId: Guid_1,
+          RefNotificationId: Guid_1,
+          Subject: test-subject,
+          Body: test-body
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: notifications,
       MethodName: GetPushCampaignMessagesAsync,
       RequestType: GetPushCampaignMessagesRequest,
       HttpMethod: GET,
@@ -2130,7 +2209,7 @@
       Sent: {
         Method: GET,
         Path: /v2/notifications/push/campaigns/{guid}/messages,
-        Query: ?campaignBatchId={guid}&databaseIntegrationId={guid}&env=test-env&resolvedEnv=Norbix.Sdk.Types.Hub.Env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1&paging=Norbix.Sdk.Types.Hub.PagingArgs,
+        Query: ?campaignBatchId={guid}&databaseIntegrationId={guid}&env=test-env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1,
         Headers: {
           Authorization: Bearer test-bearer,
           X-CM-AccountId: test-account,
@@ -2138,6 +2217,81 @@
         }
       },
       ResponseType: GetPushCampaignMessagesResponse,
+      Response: {
+        List: {
+          Items: [
+            {}
+          ],
+          HasMore: false,
+          HasPrevious: false,
+          StartingAfter: cursor-start,
+          EndingBefore: cursor-end
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: notifications,
+      MethodName: GetPushDeviceAsync,
+      RequestType: GetPushDevice,
+      HttpMethod: GET,
+      Path: /{version}/notifications/push/devices/{id},
+      PathParams: [
+        id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/notifications/push/devices/{guid},
+        Query: ?databaseIntegrationId={guid}&env=test-env,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: GetPushDeviceResponse,
+      Response: {
+        Item: {
+          DeviceId: Guid_1,
+          DeviceOs: test-deviceOs,
+          Token: test-token,
+          Brand: test-brand,
+          Manufacturer: test-manufacturer,
+          ModelName: test-modelName,
+          DeviceName: test-deviceName,
+          DeviceType: Unknown
+        },
+        UserId: Guid_1,
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: notifications,
+      MethodName: GetPushDevicesAsync,
+      RequestType: GetPushDevices,
+      HttpMethod: GET,
+      Path: /{version}/notifications/push/devices,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/notifications/push/devices,
+        Query: ?userId={guid}&deviceKey=test-deviceKey&platform=test-platform&databaseIntegrationId={guid}&env=test-env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: GetPushDevicesResponse,
       Response: {
         List: {
           Items: [
@@ -2372,7 +2526,7 @@
       Sent: {
         Method: GET,
         Path: /v2/notifications/push/integrations,
-        Query: ?env=test-env&resolvedEnv=Norbix.Sdk.Types.Hub.Env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1&paging=Norbix.Sdk.Types.Hub.PagingArgs,
+        Query: ?env=test-env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1,
         Headers: {
           Authorization: Bearer test-bearer,
           X-CM-AccountId: test-account,
@@ -2774,7 +2928,7 @@
       Sent: {
         Method: GET,
         Path: /v2/notifications/push/templates,
-        Query: ?showArchived=True&templateId={guid}&env=test-env&resolvedEnv=Norbix.Sdk.Types.Hub.Env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1&paging=Norbix.Sdk.Types.Hub.PagingArgs,
+        Query: ?showArchived=True&templateId={guid}&env=test-env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1,
         Headers: {
           Authorization: Bearer test-bearer,
           X-CM-AccountId: test-account,
@@ -3131,7 +3285,7 @@
       Sent: {
         Method: GET,
         Path: /v2/notifications/sms/campaigns/{guid}/batches,
-        Query: ?databaseIntegrationId={guid}&env=test-env&resolvedEnv=Norbix.Sdk.Types.Hub.Env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1&paging=Norbix.Sdk.Types.Hub.PagingArgs,
+        Query: ?databaseIntegrationId={guid}&env=test-env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1,
         Headers: {
           Authorization: Bearer test-bearer,
           X-CM-AccountId: test-account,
@@ -3171,7 +3325,7 @@
       Sent: {
         Method: GET,
         Path: /v2/notifications/sms/campaigns/{guid}/batches/{guid}/{guid},
-        Query: ?databaseIntegrationId={guid}&env=test-env&resolvedEnv=Norbix.Sdk.Types.Hub.Env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1&paging=Norbix.Sdk.Types.Hub.PagingArgs,
+        Query: ?databaseIntegrationId={guid}&env=test-env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1,
         Headers: {
           Authorization: Bearer test-bearer,
           X-CM-AccountId: test-account,
@@ -3213,7 +3367,7 @@
       Sent: {
         Method: GET,
         Path: /v2/notifications/sms/campaigns/{guid}/batches/{guid},
-        Query: ?databaseIntegrationId={guid}&env=test-env&resolvedEnv=Norbix.Sdk.Types.Hub.Env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1&paging=Norbix.Sdk.Types.Hub.PagingArgs,
+        Query: ?databaseIntegrationId={guid}&env=test-env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1,
         Headers: {
           Authorization: Bearer test-bearer,
           X-CM-AccountId: test-account,
@@ -3251,7 +3405,7 @@
       Sent: {
         Method: GET,
         Path: /v2/notifications/sms/campaigns,
-        Query: ?databaseIntegrationId={guid}&templateId={guid}&from=1&to=1&env=test-env&resolvedEnv=Norbix.Sdk.Types.Hub.Env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1&paging=Norbix.Sdk.Types.Hub.PagingArgs,
+        Query: ?databaseIntegrationId={guid}&templateId={guid}&from=1&to=1&env=test-env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1,
         Headers: {
           Authorization: Bearer test-bearer,
           X-CM-AccountId: test-account,
@@ -3374,6 +3528,48 @@
     {
       Target: Hub,
       Group: notifications,
+      MethodName: GetSmsCampaignMessageAsync,
+      RequestType: GetSmsCampaignMessage,
+      HttpMethod: GET,
+      Path: /{version}/notifications/sms/campaigns/{campaignId}/messages/{notificationId},
+      PathParams: [
+        campaignId,
+        notificationId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/notifications/sms/campaigns/{guid}/messages/{guid},
+        Query: ?campaignBatchId={guid}&databaseIntegrationId={guid}&env=test-env,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: GetSmsCampaignMessageResponse,
+      Response: {
+        SmsMessageEntity: {
+          Recipients: {
+            HasMore: false
+          },
+          Content: {},
+          CampaignId: Guid_1,
+          BatchId: Guid_1,
+          NotificationId: Guid_1,
+          RefNotificationId: Guid_1,
+          Subject: test-subject,
+          Body: test-body
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: notifications,
       MethodName: GetSmsCampaignMessagesAsync,
       RequestType: GetSmsCampaignMessagesRequest,
       HttpMethod: GET,
@@ -3386,7 +3582,7 @@
       Sent: {
         Method: GET,
         Path: /v2/notifications/sms/campaigns/{guid}/messages,
-        Query: ?campaignBatchId={guid}&databaseIntegrationId={guid}&env=test-env&resolvedEnv=Norbix.Sdk.Types.Hub.Env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1&paging=Norbix.Sdk.Types.Hub.PagingArgs,
+        Query: ?campaignBatchId={guid}&databaseIntegrationId={guid}&env=test-env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1,
         Headers: {
           Authorization: Bearer test-bearer,
           X-CM-AccountId: test-account,
@@ -3585,7 +3781,7 @@
       Sent: {
         Method: GET,
         Path: /v2/notifications/sms/integrations,
-        Query: ?env=test-env&resolvedEnv=Norbix.Sdk.Types.Hub.Env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1&paging=Norbix.Sdk.Types.Hub.PagingArgs,
+        Query: ?env=test-env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1,
         Headers: {
           Authorization: Bearer test-bearer,
           X-CM-AccountId: test-account,
@@ -3951,7 +4147,7 @@
       Sent: {
         Method: GET,
         Path: /v2/notifications/sms/templates,
-        Query: ?showArchived=True&templateId={guid}&env=test-env&resolvedEnv=Norbix.Sdk.Types.Hub.Env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1&paging=Norbix.Sdk.Types.Hub.PagingArgs,
+        Query: ?showArchived=True&templateId={guid}&env=test-env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1,
         Headers: {
           Authorization: Bearer test-bearer,
           X-CM-AccountId: test-account,
