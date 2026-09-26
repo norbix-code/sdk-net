@@ -9157,6 +9157,9 @@ namespace Norbix.Sdk.Types.Hub;
     {
         [DataMember]
         public virtual FilesTriggerType When { get; set; }
+
+        [DataMember]
+        public virtual string? Folder { get; set; }
     }
 
     [DataContract]
@@ -9165,6 +9168,9 @@ namespace Norbix.Sdk.Types.Hub;
     {
         [DataMember]
         public virtual FilesTriggerType Type { get; set; }
+
+        [DataMember]
+        public virtual string? Folder { get; set; }
     }
 
     [DataContract]
@@ -18783,7 +18789,7 @@ namespace Norbix.Sdk.Types.Hub;
     {
         public virtual TriggerType Type { get; set; }
         public virtual FilesTriggerType When { get; set; }
-        public virtual FileResourceRefDto FileRef { get; set; }
+        public virtual string? Folder { get; set; }
     }
 
     public partial class GetFilesTriggerResponse
