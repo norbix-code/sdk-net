@@ -8,47 +8,22 @@ using Norbix.Sdk.Types;
 namespace Norbix.Sdk.Types.Hub;
 
 // Hand-written companions to Generated/Hub.dtos.cs for the push campaign
-// endpoints. Three things the export gets wrong:
+// endpoints. Two things the export drops:
 //
-//  1. DeletePushCampaignRequest and StopPushCampaignRequest carry an `Id` on
-//     the gateway, but the exported class is empty, so the `{Id}` route token
-//     could never be filled and neither call could be made at all. Both are
-//     `partial`, so the property is added back here and survives the next
-//     regeneration of Hub.dtos.cs.
+//  1. (fixed upstream) DeletePushCampaignRequest and StopPushCampaignRequest
+//     used to export without their `Id`, so neither call could be made. The
+//     gateway ships both properties now, and the companions that added them
+//     back were removed in the types regeneration — they had started to
+//     collide with the generated partial.
 //
 //  2. PushCampaignRequest is abstract on the gateway with one subclass per
 //     audience, routed by the wire-level `source` discriminator. The export
 //     flattens it to a single concrete class with no audience fields, so no
 //     campaign could actually be targeted. The five subclasses below restore
 //     that, each fixing `Source` in its constructor.
-//
-//  3. GetPushCampaignMessage's route token `{id}` has no matching field;
-//     `Id` below aliases `NotificationId` so the call can be made.
 
 ///<summary>Deletes push campaign from queue</summary>
-public partial class DeletePushCampaignRequest
-{
-    ///<summary>The push campaign id to delete. Get it from GetPushCampaignsAsync.</summary>
-    [DataMember]
-    public virtual string Id { get; set; }
-
-    ///<summary>Optional database integration id; omit to use the project's default.</summary>
-    [DataMember]
-    public virtual string? DatabaseIntegrationId { get; set; }
-}
-
 ///<summary>Stops a running push campaign</summary>
-public partial class StopPushCampaignRequest
-{
-    ///<summary>The campaign id to stop.</summary>
-    [DataMember]
-    public virtual string Id { get; set; }
-
-    ///<summary>Optional database integration id; omit to use the project's default.</summary>
-    [DataMember]
-    public virtual string? DatabaseIntegrationId { get; set; }
-}
-
 ///<summary>
 ///Sends to every user in the project, optionally narrowed to roles or tags.
 ///</summary>
@@ -124,24 +99,6 @@ public partial class PushToDevicesRequest : PushCampaignRequest
 
     ///<summary>The devices to send to.</summary>
     public virtual HashSet<PushDeviceDeliveryTokenRequest> Devices { get; set; } = new();
-}
-
-///<summary>
-///Gets one campaign message. The gateway route names its last token `{id}`,
-///but the gateway request has no `Id` — it reads `NotificationId` (plus
-///`CampaignId` and `CampaignBatchId`) and ignores the token. Without a field
-///named `Id` the token could never be filled and the call could not be made.
-///`Id` here is the same value as `NotificationId`, so the path carries it and
-///the query still sends `notificationId` for the server to read.
-///</summary>
-public partial class GetPushCampaignMessage
-{
-    [IgnoreDataMember]
-    public virtual string Id
-    {
-        get => NotificationId;
-        set => NotificationId = value;
-    }
 }
 
 ///<summary>

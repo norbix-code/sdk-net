@@ -4,17 +4,17 @@
   MethodName: GetPushCampaignMessageAsync,
   RequestType: GetPushCampaignMessage,
   HttpMethod: GET,
-  Path: /{version}/notifications/push/campaigns/{campaignId}/messages/{id},
+  Path: /{version}/notifications/push/campaigns/{campaignId}/messages/{notificationId},
   PathParams: [
     campaignId,
-    id
+    notificationId
   ],
   IsAccountScoped: false,
   IsUnauthenticated: false,
   Sent: {
     Method: GET,
     Path: /v2/notifications/push/campaigns/{guid}/messages/{guid},
-    Query: ?campaignBatchId={guid}&notificationId={guid}&databaseIntegrationId={guid}&env=test-env,
+    Query: ?campaignBatchId={guid}&databaseIntegrationId={guid}&env=test-env,
     Headers: {
       Authorization: Bearer test-bearer,
       X-CM-AccountId: test-account,

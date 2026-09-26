@@ -31,11 +31,6 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual string? Text { get; set; }
     }
 
-    public partial class AccountId
-        : AggregateId, IHasDomainEntityId
-    {
-    }
-
     [Flags]
     public enum AccountStatus
     {
@@ -45,69 +40,6 @@ namespace Norbix.Sdk.Types.Hub;
         InActive = 16,
         Blocked = 32,
         Unregistered = 64,
-    }
-
-    public partial class Address
-    {
-        public virtual City? City { get; set; }
-        public virtual Country? Country { get; set; }
-        public virtual AddressLine? AddressLine1 { get; set; }
-        public virtual AddressLine? AddressLine2 { get; set; }
-        public virtual PostalCode? PostalCode { get; set; }
-        public virtual CountryState? State { get; set; }
-    }
-
-    public partial class AddressLine
-    {
-        public virtual string Value { get; set; }
-    }
-
-    public partial class AggregateId
-    {
-        public virtual Guid Value { get; set; }
-    }
-
-    [Flags]
-    public enum ApplicationModule
-    {
-        Account = 0,
-        Membership = 1,
-        Database = 2,
-        Files = 4,
-        Code = 8,
-        Email = 16,
-        Push = 32,
-        Payment = 64,
-        Scheduler = 128,
-        Logging = 256,
-        ServerEvents = 512,
-        Ai = 1024,
-        Sms = 2048,
-        Project = 4096,
-        Compliance = 8192,
-        Contacts = 16384,
-        Marketplace = 32768,
-    }
-
-    public partial class AtlasClusterChargeRecord
-    {
-        public virtual string AtlasProjectId { get; set; }
-        public virtual string AtlasClusterName { get; set; }
-        public virtual long Cents { get; set; }
-    }
-
-    public partial class AtlasUsageRecord
-    {
-        public virtual BillingPeriod Period { get; set; }
-        public virtual long TotalCents { get; set; }
-        public virtual IReadOnlyList<AtlasClusterChargeRecord> PerCluster { get; set; }
-        public virtual UtcDateTime RecordedAtUtc { get; set; }
-    }
-
-    public partial class AuthId
-        : IHasDomainEntityId
-    {
-        public virtual Guid Value { get; set; }
     }
 
     public enum AuthType
@@ -120,62 +52,6 @@ namespace Norbix.Sdk.Types.Hub;
         Social,
     }
 
-    public partial class AuthUserName
-    {
-        public virtual string Value { get; set; }
-    }
-
-    public partial class BaseTagDefinition
-    {
-        public virtual Tag Tag { get; set; }
-        public virtual HashSet<TagTranslation> Translations { get; set; } = [];
-    }
-
-    public partial class BillingPeriod
-    {
-        public virtual int Year { get; set; }
-        public virtual int Month { get; set; }
-        public virtual DateTimeOffset StartUtc { get; set; }
-        public virtual DateTimeOffset EndExclusiveUtc { get; set; }
-        public virtual DateTimeOffset LastInstantUtc { get; set; }
-    }
-
-    public partial class BooleanField
-        : JsonSchemaField
-    {
-    }
-
-    [DataContract]
-    public partial class BrandColor
-    {
-        [DataMember]
-        public virtual string Value { get; set; }
-    }
-
-    public partial class CampaignBatchId
-    {
-        public virtual Guid Id { get; set; }
-    }
-
-    public partial class CampaignId
-    {
-        public virtual Guid Id { get; set; }
-    }
-
-    public partial class CaseResolution
-    {
-        public virtual string Problem { get; set; }
-        public virtual IReadOnlyList<string> Symptoms { get; set; }
-        public virtual string RootCause { get; set; }
-        public virtual CaseResolutionFixKind Fix { get; set; }
-        public virtual string? FixDetail { get; set; }
-        public virtual string? Module { get; set; }
-        public virtual SupportCaseKind Kind { get; set; }
-        public virtual SupportCaseSeverity Severity { get; set; }
-        public virtual IReadOnlyList<string> AffectedVersions { get; set; }
-        public virtual string? ResolvedBy { get; set; }
-    }
-
     public enum CaseResolutionFixKind
     {
         CodeFix,
@@ -183,41 +59,6 @@ namespace Norbix.Sdk.Types.Hub;
         CustomerInstruction,
         KnownLimitation,
         Duplicate,
-    }
-
-    public partial class City
-    {
-        public virtual string Value { get; set; }
-    }
-
-    public partial class CodeIntegration
-        : Integration
-    {
-        public virtual CodeProvider Provider { get; set; }
-    }
-
-    public partial class CodeMashLicense
-        : CodeMashManagedServiceSubscription
-    {
-        public virtual DomainUrl Domain { get; set; }
-        public virtual AccountId AccountId { get; set; }
-        public virtual bool IsEnterprise { get; set; }
-    }
-
-    public partial class CodeMashManagedServiceSubscription
-    {
-        public virtual CodeMashSubscriptionId SubscriptionId { get; set; }
-        public virtual PaymentCustomerRef PaymentCustomerRef { get; set; }
-        public virtual string RefSubscriptionId { get; set; }
-        public virtual UtcDateTime IssuedOn { get; set; }
-        public virtual UtcDateTime WillExpireOn { get; set; }
-        public virtual Quantity ProjectCap { get; set; }
-        public virtual bool IsTrial { get; set; }
-    }
-
-    public partial class CodeMashSubscriptionId
-        : AggregateId
-    {
     }
 
     public enum CodeProvider
@@ -232,14 +73,6 @@ namespace Norbix.Sdk.Types.Hub;
         Netlify,
         SupabaseEdge,
         Modal,
-    }
-
-    public partial class CollectionSelectionField
-        : JsonSchemaField
-    {
-        public virtual string? CollectionId { get; set; }
-        public virtual string? DisplayField { get; set; }
-        public virtual bool Multiple { get; set; }
     }
 
     public enum CommunicationChannel
@@ -260,63 +93,10 @@ namespace Norbix.Sdk.Types.Hub;
         SouthAmerica,
     }
 
-    public partial class Country
-    {
-        public virtual string Code { get; set; }
-        public virtual string Name { get; set; }
-    }
-
-    public partial class CountryState
-    {
-        public virtual string Value { get; set; }
-    }
-
-    public partial class CronExpression
-    {
-        public virtual string Value { get; set; }
-    }
-
-    public partial class CurrencyField
-        : JsonSchemaField
-    {
-        public virtual IReadOnlyList<string>? AllowedCurrencies { get; set; }
-    }
-
-    public partial class DatabaseIntegration
-        : Integration
-    {
-        public virtual DatabaseProvider Provider { get; set; }
-        public virtual IntegrationStatus Status { get; set; }
-        public virtual string? AtlasProjectId { get; set; }
-        public virtual string? AtlasClusterName { get; set; }
-        public virtual string? FailureReason { get; set; }
-    }
-
     public enum DatabaseProvider
     {
         MongoDbConnectionString,
         CodeMashMongoDbAtlasFlexManaged,
-    }
-
-    public partial class DataSchema
-    {
-        public virtual string RawJson { get; set; }
-        public virtual HashSet<JsonSchemaField> Fields { get; set; } = [];
-    }
-
-    public partial class DateField
-        : JsonSchemaField
-    {
-        public virtual long? Minimum { get; set; }
-        public virtual long? Maximum { get; set; }
-    }
-
-    public partial class DecimalField
-        : JsonSchemaField
-    {
-        public virtual decimal? Minimum { get; set; }
-        public virtual decimal? Maximum { get; set; }
-        public virtual decimal? MultipleOf { get; set; }
     }
 
     public enum DeliveryChannel
@@ -337,11 +117,6 @@ namespace Norbix.Sdk.Types.Hub;
         Enterprise,
     }
 
-    public partial class DeviceId
-    {
-        public virtual Guid Id { get; set; }
-    }
-
     public enum DeviceType
     {
         Unknown,
@@ -356,29 +131,6 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual string Value { get; set; }
     }
 
-    public partial class DomainUrl
-    {
-        public virtual Uri Value { get; set; }
-    }
-
-    public partial class EmailAddress
-    {
-        public virtual string Address { get; set; }
-    }
-
-    [DataContract]
-    public partial class EmailBody
-    {
-        [DataMember]
-        public virtual TemplateCode Code { get; set; }
-
-        [DataMember]
-        public virtual string? Structure { get; set; }
-
-        [DataMember]
-        public virtual EmailTemplateEngine EmailTemplateEngine { get; set; }
-    }
-
     public enum EmailCampaignRecipientsSourceTypes
     {
         AllUsers,
@@ -386,40 +138,6 @@ namespace Norbix.Sdk.Types.Hub;
         AccountUsers,
         Email,
         Collection,
-    }
-
-    public partial class EmailFooter
-    {
-        public virtual EmailFooterId Id { get; set; }
-        public virtual DisplayName DisplayName { get; set; }
-        public virtual HashSet<MessageTranslation<TemplateCode>> Translations { get; set; } = [];
-        public virtual Env Env { get; set; }
-    }
-
-    public partial class EmailFooterId
-    {
-        public virtual Guid Value { get; set; }
-    }
-
-    public partial class EmailIntegration
-        : Integration
-    {
-        public virtual EmailProvider Provider { get; set; }
-        public virtual EmailAddress EmailAddress { get; set; }
-        public virtual EmailSenderName? EmailSenderName { get; set; }
-    }
-
-    [DataContract]
-    public partial class EmailMessageContent
-    {
-        [DataMember(Order=1)]
-        public virtual EmailSubject Subject { get; set; }
-
-        [DataMember(Order=2)]
-        public virtual EmailBody Body { get; set; }
-
-        [DataMember(Order=3)]
-        public virtual HashSet<FileResourceRef>? StaticAttachments { get; set; }
     }
 
     [DataContract]
@@ -432,37 +150,6 @@ namespace Norbix.Sdk.Types.Hub;
         Fake,
     }
 
-    [DataContract]
-    public partial class EmailSenderName
-    {
-    }
-
-    public partial class EmailSignature
-    {
-        public virtual EmailSignatureId Id { get; set; }
-        public virtual DisplayName DisplayName { get; set; }
-        public virtual HashSet<MessageTranslation<TemplateCode>> Translations { get; set; } = [];
-        public virtual Env Env { get; set; }
-    }
-
-    public partial class EmailSignatureId
-    {
-        public virtual Guid Value { get; set; }
-    }
-
-    [DataContract]
-    public partial class EmailSubject
-    {
-    }
-
-    [DataContract]
-    public partial class EmailTemplate
-        : Template<EmailMessageContent>
-    {
-        [DataMember]
-        public virtual HashSet<FileResourceRef>? StaticAttachments { get; set; }
-    }
-
     public enum EmailTemplateEngine
     {
         NotSet,
@@ -473,12 +160,6 @@ namespace Norbix.Sdk.Types.Hub;
         Mustache,
     }
 
-    public partial class EmailValidationIntegration
-        : Integration
-    {
-        public virtual EmailValidationProvider Provider { get; set; }
-    }
-
     [DataContract]
     public enum EmailValidationProvider
     {
@@ -486,53 +167,6 @@ namespace Norbix.Sdk.Types.Hub;
         NeverBounce = 2,
         Bouncer = 3,
         MailgunValidate = 4,
-    }
-
-    public partial class EnumSelectionField
-        : JsonSchemaField
-    {
-        public virtual IReadOnlyList<string>? Values { get; set; }
-        public virtual bool Multiple { get; set; }
-    }
-
-    public partial class Env
-    {
-        public virtual string Value { get; set; }
-        public virtual bool IsProd { get; set; }
-    }
-
-    public partial class ExpirationToken
-    {
-        public virtual long Items { get; set; }
-        public virtual TimeUnit Unit { get; set; }
-        public virtual long Value { get; set; }
-        public enum TimeUnit
-        {
-            Ticks,
-            Milliseconds,
-            Seconds,
-            Minutes,
-            Hours,
-        }
-
-    }
-
-    public partial class FileChecksum
-    {
-        public virtual string Algorithm { get; set; }
-        public virtual string Hash { get; set; }
-    }
-
-    public partial class FileField
-        : JsonSchemaField
-    {
-        public virtual IReadOnlyList<string>? Storages { get; set; }
-    }
-
-    public partial class FileIntegration
-        : Integration
-    {
-        public virtual FileProvider Provider { get; set; }
     }
 
     public enum FileProvider
@@ -547,143 +181,17 @@ namespace Norbix.Sdk.Types.Hub;
         GoogleDrive,
     }
 
-    [DataContract]
-    public partial class FileResource
-    {
-        [DataMember]
-        public virtual FileResourceId Id { get; set; }
-
-        [DataMember]
-        public virtual string OriginalFileName { get; set; }
-
-        [DataMember]
-        public virtual string Extension { get; set; }
-
-        [DataMember]
-        public virtual long? SizeBytes { get; set; }
-
-        [DataMember]
-        public virtual FileChecksum? Checksum { get; set; }
-
-        [DataMember]
-        public virtual string StoredFileName { get; set; }
-    }
-
-    public partial class FileResourceId
-    {
-        public virtual Guid Value { get; set; }
-    }
-
-    [DataContract]
-    public partial class FileResourceRef
-    {
-        [DataMember(Order=1)]
-        public virtual FileResource Resource { get; set; }
-
-        [DataMember(Order=2)]
-        public virtual IntegrationId IntegrationId { get; set; }
-
-        [DataMember(Order=3)]
-        public virtual FileProvider Provider { get; set; }
-
-        [DataMember(Order=4)]
-        public virtual string Path { get; set; }
-    }
-
     public enum FilesTriggerType
     {
         OnFileUploaded,
         OnFileDeleted,
     }
 
-    public partial class FileTrigger
-        : Trigger
-    {
-        public virtual FilesTriggerType When { get; set; }
-        public virtual FileResourceRef? FileResourceRef { get; set; }
-    }
-
-    [DataContract]
-    public partial class FirstName
-    {
-        [DataMember]
-        public virtual string Value { get; set; }
-    }
-
-    public partial class FullName
-    {
-        public virtual FirstName? FirstName { get; set; }
-        public virtual MidName? MidName { get; set; }
-        public virtual LastName? LastName { get; set; }
-        public virtual string? Title { get; set; }
-    }
-
-    public partial class GeolocationField
-        : JsonSchemaField
-    {
-        public virtual IReadOnlyList<string>? AllowedTypes { get; set; }
-    }
-
-    public partial class GroupDefinition
-        : BaseTagDefinition
-    {
-    }
-
-    [DataContract]
-    public partial class GroupTags
-    {
-        [DataMember]
-        public virtual Tag Group { get; set; }
-
-        [DataMember]
-        public virtual HashSet<Tag> Tags { get; set; } = [];
-    }
-
     public partial interface IBindableContract
     {
     }
 
-    public partial interface IHasDomainEntityId
-    {
-    }
-
     public partial interface IHasRazorTemplateCode
-    {
-    }
-
-    public partial interface IIntegrationIdentification
-    {
-        IntegrationId IntegrationId { get; set; }
-        string Capability { get; set; }
-        bool IsSystemOwned { get; set; }
-    }
-
-    public partial class IntegerField
-        : JsonSchemaField
-    {
-        public virtual long? Minimum { get; set; }
-        public virtual long? Maximum { get; set; }
-    }
-
-    public partial class Integration
-        : IIntegrationIdentification, IHasDomainEntityId
-    {
-        public virtual IntegrationId IntegrationId { get; set; }
-        public virtual Env Env { get; set; }
-        public virtual string Capability { get; set; }
-        public virtual bool IsSystemOwned { get; set; }
-        public virtual DisplayName IntegrationName { get; set; }
-        public virtual bool IsEnabled { get; set; }
-        public virtual bool IsConfigured { get; set; }
-        public virtual DateTime? LastIntegrationTestAtUtc { get; set; }
-        public virtual bool? LastIntegrationTestSucceeded { get; set; }
-        public virtual IReadOnlyList<string> LastIntegrationTestErrorMessages { get; set; }
-        public virtual DateTime? HumanDeliveryConfirmedAtUtc { get; set; }
-        public virtual bool IsApprovedThatItWorks { get; set; }
-    }
-
-    public partial class IntegrationId
-        : AggregateId, IHasDomainEntityId
     {
     }
 
@@ -697,34 +205,6 @@ namespace Norbix.Sdk.Types.Hub;
         Deprovisioning,
     }
 
-    public partial class IpAddress
-    {
-        public virtual string Ip { get; set; }
-    }
-
-    public partial class JsonSchemaField
-    {
-        public virtual JsonSchemaFieldName FieldName { get; set; }
-    }
-
-    public partial class JsonSchemaFieldName
-    {
-        public virtual string FieldName { get; set; }
-    }
-
-    public partial class Language
-    {
-        public virtual string Code { get; set; }
-        public virtual string Name { get; set; }
-    }
-
-    [DataContract]
-    public partial class LastName
-    {
-        [DataMember]
-        public virtual string Value { get; set; }
-    }
-
     public enum MarketingBlockReason
     {
         Unspecified,
@@ -733,104 +213,6 @@ namespace Norbix.Sdk.Types.Hub;
         HardBounce,
         InvalidEmail,
         AdminBlock,
-    }
-
-    public partial class MarketplaceFunction
-        : IHasDomainEntityId
-    {
-        public virtual MarketplaceFunctionId FunctionId { get; set; }
-        public virtual IntegrationId IntegrationId { get; set; }
-        public virtual Env Env { get; set; }
-        public virtual string FunctionKey { get; set; }
-        public virtual DisplayName DisplayName { get; set; }
-        public virtual string? Description { get; set; }
-        public virtual bool IsEnabled { get; set; }
-        public virtual string RequestTemplate { get; set; }
-        public virtual IReadOnlyList<MarketplaceTokenMapping> MappedTokens { get; set; }
-        public virtual string ViewId { get; set; }
-    }
-
-    public partial class MarketplaceFunctionId
-        : IHasDomainEntityId
-    {
-        public virtual Guid Value { get; set; }
-    }
-
-    public partial class MarketplaceIntegration
-        : Integration
-    {
-        public virtual string Capability { get; set; }
-        public virtual string ListingViewId { get; set; }
-        public virtual MarketplaceIntegrationTransport Transport { get; set; }
-        public virtual string Vendor { get; set; }
-        public virtual MarketplaceIntegrationCategory Category { get; set; }
-        public virtual string? Description { get; set; }
-        public virtual IReadOnlyDictionary<string, string> Config { get; set; }
-        public virtual IReadOnlyList<MarketplaceTokenMapping> TokenMappings { get; set; }
-    }
-
-    public enum MarketplaceIntegrationCategory
-    {
-        Other,
-        Crm,
-        Erp,
-        Marketing,
-        Communication,
-        Productivity,
-        Storage,
-        Analytics,
-        Identity,
-        Payments,
-        DevTools,
-        Ai,
-        Files,
-        Database,
-        Calendar,
-    }
-
-    public enum MarketplaceIntegrationTransport
-    {
-        Mcp,
-        Rest,
-        Code,
-        Internal,
-        Sdk,
-    }
-
-    public partial class MarketplaceTokenMapping
-    {
-        public virtual string Token { get; set; }
-        public virtual MarketplaceTokenResolver Resolver { get; set; }
-        public virtual string? Value { get; set; }
-        public virtual IReadOnlyList<string>? SecretKeys { get; set; }
-        public virtual SecretValueFormat Format { get; set; }
-    }
-
-    public enum MarketplaceTokenResolver
-    {
-        Static,
-        Request,
-        Project,
-        Initiator,
-        Custom,
-        IntegrationConfig,
-        IntegrationSecret,
-    }
-
-    public partial class MembershipIntegration
-        : Integration
-    {
-        public virtual MembershipProvider Provider { get; set; }
-    }
-
-    public partial class MembershipPolicy
-    {
-        public virtual PolicyId Id { get; set; }
-        public virtual DisplayName Name { get; set; }
-        public virtual string? Description { get; set; }
-        public virtual HashSet<Permission> Permissions { get; set; } = [];
-        public virtual bool Disabled { get; set; }
-        public virtual bool IsSystem { get; set; }
     }
 
     public enum MembershipProvider
@@ -846,22 +228,6 @@ namespace Norbix.Sdk.Types.Hub;
         Microsoft,
     }
 
-    public partial class MembershipRole
-    {
-        public virtual RoleId Id { get; set; }
-        public virtual DisplayName Name { get; set; }
-        public virtual string? Description { get; set; }
-        public virtual HashSet<PolicyId> AttachedPolicies { get; set; } = [];
-        public virtual bool Disabled { get; set; }
-        public virtual bool IsSystem { get; set; }
-    }
-
-    public partial class MembershipTrigger
-        : Trigger
-    {
-        public virtual MembershipTriggerType When { get; set; }
-    }
-
     public enum MembershipTriggerType
     {
         OnRegistered,
@@ -874,63 +240,11 @@ namespace Norbix.Sdk.Types.Hub;
         OnUserCreated,
     }
 
-    [DataContract]
-    public partial class MessageTranslation<TContent>
-    {
-    }
-
-    public partial class MetaSchemaVersion
-    {
-        public virtual int Value { get; set; }
-    }
-
-    public partial class MidName
-    {
-        public virtual string Value { get; set; }
-    }
-
-    public partial class MongoDbAggregate
-    {
-        public virtual MongoDbAggregateId Id { get; set; }
-        public virtual DisplayName DisplayName { get; set; }
-        public virtual string? Description { get; set; }
-        public virtual MongoDbAggregateQuery Query { get; set; }
-        public virtual SchemaId SchemaId { get; set; }
-    }
-
-    public partial class MongoDbAggregateId
-        : AggregateId, IHasDomainEntityId
-    {
-    }
-
-    public partial class MongoDbAggregateQuery
-    {
-        public virtual string Value { get; set; }
-    }
-
-    public partial class NorbixRegion
-    {
-        public virtual string Code { get; set; }
-    }
-
-    public partial class NotificationId
-        : AggregateId, IHasDomainEntityId
-    {
-    }
-
     public enum NotificationMedium
     {
         Email,
         Sms,
         Push,
-    }
-
-    public partial class PaymentCustomerRef
-        : ResourceRef
-    {
-        public virtual ResourceRefKind Kind { get; set; }
-        public virtual ResourceSource Source { get; set; }
-        public virtual string ExternalId { get; set; }
     }
 
     public enum PaymentGatewayPlatform
@@ -952,20 +266,6 @@ namespace Norbix.Sdk.Types.Hub;
         Worldpay,
     }
 
-    public partial class PaymentIntegration
-        : Integration
-    {
-        public virtual PaymentGatewayPlatform Provider { get; set; }
-    }
-
-    public partial class PaymentTrigger
-        : Trigger
-    {
-        public virtual PaymentTriggerType When { get; set; }
-        public virtual HashSet<IntegrationId>? Integrations { get; set; }
-        public virtual HashSet<string>? Events { get; set; }
-    }
-
     public enum PaymentTriggerType
     {
         OnOrderCreated,
@@ -973,115 +273,10 @@ namespace Norbix.Sdk.Types.Hub;
         OnWebhookCallReceived,
     }
 
-    public partial class Permission
-    {
-        public virtual string? Sid { get; set; }
-        public virtual PermissionEffect Effect { get; set; }
-        public virtual HashSet<PermissionAction> Actions { get; set; } = [];
-        public virtual HashSet<ResourcePattern> Resources { get; set; } = [];
-    }
-
-    public partial class PermissionAction
-    {
-        public virtual ApplicationModule? Module { get; set; }
-        public virtual string? Operation { get; set; }
-        public virtual bool IsModuleWildcard { get; set; }
-        public virtual bool IsOperationWildcard { get; set; }
-        public virtual bool IsConcrete { get; set; }
-        public virtual int Specificity { get; set; }
-    }
-
     public enum PermissionEffect
     {
         Allow,
         Deny,
-    }
-
-    public partial class Phone
-    {
-        public virtual string Value { get; set; }
-    }
-
-    public partial class PolicyId
-    {
-        public virtual Guid Template { get; set; }
-        public virtual string TenancyScopeViewId { get; set; }
-        public virtual string ViewId { get; set; }
-        public virtual bool IsSystem { get; set; }
-    }
-
-    public partial class PostalCode
-    {
-        public virtual string Value { get; set; }
-    }
-
-    [DataContract]
-    public partial class ProjectCommunication
-    {
-        [DataMember]
-        public virtual HashSet<ProjectCommunicationChannel> Channels { get; set; } = [];
-
-        [DataMember]
-        public virtual HashSet<GroupDefinition> Groups { get; set; } = [];
-
-        [DataMember]
-        public virtual HashSet<TagDefinition> Tags { get; set; } = [];
-    }
-
-    [DataContract]
-    public partial class ProjectCommunicationChannel
-    {
-        [DataMember]
-        public virtual CommunicationChannel Channel { get; set; }
-
-        [DataMember]
-        public virtual HashSet<GroupTags> Groups { get; set; } = [];
-    }
-
-    public partial class ProjectIcon
-    {
-        public virtual FileResourceRef FileResource { get; set; }
-        public virtual string PublicUrl { get; set; }
-    }
-
-    public partial class ProjectId
-        : AggregateId, IHasDomainEntityId
-    {
-    }
-
-    public partial class ProjectLegalDocuments
-    {
-        public virtual string? TermsMarkdown { get; set; }
-        public virtual string? PrivacyMarkdown { get; set; }
-    }
-
-    public partial class ProjectLogo
-    {
-        public virtual FileResourceRef FileResource { get; set; }
-        public virtual string PublicUrl { get; set; }
-    }
-
-    [DataContract]
-    public partial class ProjectName
-    {
-        [DataMember]
-        public virtual string Name { get; set; }
-
-        [DataMember]
-        public virtual string UniqueName { get; set; }
-    }
-
-    [DataContract]
-    public partial class ProjectRegion
-    {
-        [DataMember]
-        public virtual NorbixRegion Region { get; set; }
-
-        [DataMember]
-        public virtual string? Name { get; set; }
-
-        [DataMember]
-        public virtual Continent? Continent { get; set; }
     }
 
     public enum ProjectStatus
@@ -1095,54 +290,6 @@ namespace Norbix.Sdk.Types.Hub;
         Removed,
     }
 
-    public partial class PublishedSchemaVersion
-    {
-        public virtual SchemaVersion Version { get; set; }
-        public virtual DataSchema DataSchema { get; set; }
-        public virtual VisualSchema VisualSchema { get; set; }
-        public virtual MetaSchemaVersion MetaSchemaVersion { get; set; }
-        public virtual DateTimeOffset PublishedAt { get; set; }
-    }
-
-    public partial class PushBody
-    {
-        public virtual TemplateCode Value { get; set; }
-    }
-
-    [DataContract]
-    public partial class PushDevice
-    {
-        [DataMember]
-        public virtual DeviceId Id { get; set; }
-
-        [DataMember]
-        public virtual string? Brand { get; set; }
-
-        [DataMember]
-        public virtual string? Manufacturer { get; set; }
-
-        [DataMember]
-        public virtual string? ModelName { get; set; }
-
-        [DataMember]
-        public virtual string? DeviceName { get; set; }
-
-        [DataMember]
-        public virtual DeviceType? DeviceType { get; set; }
-
-        [DataMember]
-        public virtual string? OsName { get; set; }
-
-        [DataMember]
-        public virtual string? OsVersion { get; set; }
-
-        [DataMember]
-        public virtual int? PlatformApiLevel { get; set; }
-
-        [DataMember]
-        public virtual PushDeviceDeliveryToken Token { get; set; }
-    }
-
     public enum PushDeviceDeliveryFamily
     {
         Ios,
@@ -1150,45 +297,6 @@ namespace Norbix.Sdk.Types.Hub;
         Chrome,
         Safari,
         Expo,
-    }
-
-    [DataContract]
-    public partial class PushDeviceDeliveryToken
-    {
-        [DataMember]
-        public virtual PushDeviceToken PushDeviceToken { get; set; }
-
-        [DataMember]
-        public virtual PushDeviceDeliveryFamily DeliveryFamily { get; set; }
-    }
-
-    public partial class PushDevices
-        : HashSet<PushDevice>
-    {
-    }
-
-    public partial class PushDeviceToken
-    {
-        public virtual string Token { get; set; }
-    }
-
-    public partial class PushIntegration
-        : Integration
-    {
-        public virtual PushProvider Provider { get; set; }
-    }
-
-    [DataContract]
-    public partial class PushMessageContent
-    {
-        [DataMember(Order=1)]
-        public virtual PushTitle Title { get; set; }
-
-        [DataMember(Order=1)]
-        public virtual PushTitle? SubTitle { get; set; }
-
-        [DataMember(Order=2)]
-        public virtual PushBody Body { get; set; }
     }
 
     [DataContract]
@@ -1212,109 +320,12 @@ namespace Norbix.Sdk.Types.Hub;
         Fake,
     }
 
-    [DataContract]
-    public partial class PushTemplate
-        : Template<PushMessageContent>
-    {
-    }
-
-    [DataContract]
-    public partial class PushTitle
-    {
-        [DataMember]
-        public virtual TemplateCode Value { get; set; }
-    }
-
-    public partial class Quantity
-    {
-        public virtual int Value { get; set; }
-    }
-
-    public partial class RecordId
-    {
-        public virtual string Id { get; set; }
-    }
-
-    public partial class ResourceIdentifier
-    {
-        public virtual string Value { get; set; }
-    }
-
-    public partial class ResourceKind
-    {
-        public virtual string Name { get; set; }
-    }
-
-    public partial class ResourcePattern
-    {
-        public virtual AccountId? Account { get; set; }
-        public virtual ProjectId? Project { get; set; }
-        public virtual ApplicationModule? Module { get; set; }
-        public virtual ResourceKind? Kind { get; set; }
-        public virtual ResourceIdentifier? Id { get; set; }
-        public virtual bool IsAccountWildcard { get; set; }
-        public virtual bool IsProjectWildcard { get; set; }
-        public virtual bool IsModuleWildcard { get; set; }
-        public virtual bool IsKindWildcard { get; set; }
-        public virtual bool IsIdWildcard { get; set; }
-        public virtual bool IsConcrete { get; set; }
-        public virtual bool IsFullWildcard { get; set; }
-        public virtual int Specificity { get; set; }
-    }
-
-    public partial class ResourceRef
-    {
-        public virtual ProjectId ProjectId { get; set; }
-        public virtual IntegrationId? IntegrationId { get; set; }
-        public virtual ResourceRefKind Kind { get; set; }
-    }
-
-    public enum ResourceRefKind
-    {
-        Contact,
-        Document,
-        File,
-        PaymentCustomer,
-        Order,
-        Payment,
-        Product,
-        Integration,
-    }
-
-    public enum ResourceSource
-    {
-        Norbix,
-        Stripe,
-        Shopify,
-        PayPal,
-        Adyen,
-        Mollie,
-        Paddle,
-        LemonSqueezy,
-        AppleInApp,
-        GoogleInApp,
-        AuthorizeNet,
-        Braintree,
-        CheckOutCom,
-        WooCommerce,
-        Magento,
-        Worldpay,
-    }
-
     [Flags]
     public enum RespectTimeZoneSettings
     {
         RespectToLastLoginZone = 1,
         RespectToRegistrationZone = 2,
         RespectToRegistrationProjectZone = 4,
-    }
-
-    public partial class RoleId
-    {
-        public virtual Guid Template { get; set; }
-        public virtual string TenancyScopeViewId { get; set; }
-        public virtual string ViewId { get; set; }
-        public virtual bool IsSystem { get; set; }
     }
 
     public partial class RoleName
@@ -1338,26 +349,6 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual bool IsSystemRole { get; set; }
     }
 
-    public partial class RoleSelectionField
-        : JsonSchemaField
-    {
-        public virtual bool Multiple { get; set; }
-    }
-
-    public partial class SchedulerTask
-        : IHasDomainEntityId
-    {
-        public virtual TaskId Id { get; set; }
-        public virtual SchedulerTaskType Type { get; set; }
-        public virtual DisplayName Name { get; set; }
-        public virtual string? Description { get; set; }
-        public virtual CronExpression Cron { get; set; }
-        public virtual string PayloadJson { get; set; }
-        public virtual AuthId InitiatorId { get; set; }
-        public virtual bool IsEnabled { get; set; }
-        public virtual bool StopOnError { get; set; }
-    }
-
     public enum SchedulerTaskType
     {
         EmailCampaign,
@@ -1367,83 +358,11 @@ namespace Norbix.Sdk.Types.Hub;
         WebhookCall,
     }
 
-    public partial class Schema
-        : IHasDomainEntityId
-    {
-        public virtual SchemaName SchemaName { get; set; }
-        public virtual SchemaId Id { get; set; }
-        public virtual Env Env { get; set; }
-        public virtual SchemaDraft? Draft { get; set; }
-        public virtual IReadOnlyList<PublishedSchemaVersion> PublishedVersions { get; set; }
-        public virtual HashSet<Trigger>? Triggers { get; set; }
-        public virtual SchemaSettings? Settings { get; set; }
-    }
-
-    public partial class SchemaDiff
-    {
-        public virtual IReadOnlyList<string> AddedFields { get; set; }
-        public virtual IReadOnlyList<string> RemovedFields { get; set; }
-        public virtual IReadOnlyList<string> TypeChangedFields { get; set; }
-        public virtual IReadOnlyList<string> ValidatorTightenedFields { get; set; }
-        public virtual bool IsEmpty { get; set; }
-    }
-
-    public partial class SchemaDraft
-    {
-        public virtual DataSchema DataSchema { get; set; }
-        public virtual VisualSchema VisualSchema { get; set; }
-        public virtual DateTimeOffset UpdatedAt { get; set; }
-    }
-
-    public partial class SchemaId
-        : AggregateId, IHasDomainEntityId
-    {
-    }
-
-    public partial class SchemaName
-    {
-        public virtual string Value { get; set; }
-        public virtual string Title { get; set; }
-    }
-
-    public partial class SchemaSettings
-    {
-        public virtual bool SoftDelete { get; set; }
-        public virtual bool HasRecordOwner { get; set; }
-        public virtual string? Description { get; set; }
-    }
-
-    public partial class SchemaTrigger
-        : Trigger
-    {
-        public virtual SchemaId SchemaId { get; set; }
-        public virtual SchemaTriggerType When { get; set; }
-        public virtual TemplateCode? Configuration { get; set; }
-    }
-
     public enum SchemaTriggerType
     {
         OnInserted,
         OnDeleted,
         OnUpdated,
-    }
-
-    public partial class SchemaVersion
-    {
-        public virtual int Value { get; set; }
-    }
-
-    public enum SecretValueFormat
-    {
-        Raw,
-        Bearer,
-        Basic,
-        Prefixed,
-    }
-
-    public partial class SmsBody
-    {
-        public virtual TemplateCode Value { get; set; }
     }
 
     public enum SmsCampaignRecipientsSourceTypes
@@ -1455,53 +374,10 @@ namespace Norbix.Sdk.Types.Hub;
         Collection,
     }
 
-    [DataContract]
-    public partial class SmsMessageContent
-    {
-        [DataMember(Order=1)]
-        public virtual SmsTitle Title { get; set; }
-
-        [DataMember(Order=2)]
-        public virtual SmsBody Body { get; set; }
-    }
-
-    [DataContract]
-    public partial class SmsTemplate
-        : Template<SmsMessageContent>
-    {
-    }
-
-    public partial class SmsTitle
-    {
-        public virtual TemplateCode Value { get; set; }
-    }
-
-    public partial class StringField
-        : JsonSchemaField
-    {
-        public virtual string? Format { get; set; }
-        public virtual string? Pattern { get; set; }
-        public virtual int? MinLength { get; set; }
-        public virtual int? MaxLength { get; set; }
-        public virtual IReadOnlyDictionary<string, string>? TranslateOptions { get; set; }
-    }
-
     public enum SubscriptionType
     {
         ManagedService,
         License,
-    }
-
-    public enum SupportCaseCloseReason
-    {
-        Manual,
-        AutoClosedAfterResolve,
-    }
-
-    public partial class SupportCaseId
-        : AggregateId
-    {
-        public virtual string ViewId { get; set; }
     }
 
     public enum SupportCaseKind
@@ -1540,130 +416,11 @@ namespace Norbix.Sdk.Types.Hub;
         System,
     }
 
-    public partial class SupportMessageRef
-    {
-        public virtual string MessageId { get; set; }
-        public virtual SupportMessageAuthorKind AuthorKind { get; set; }
-        public virtual string? AuthorId { get; set; }
-        public virtual UtcDateTime SentOn { get; set; }
-    }
-
     public enum SystemEmailTemplateTheme
     {
         Text,
         Branded,
         Creative,
-    }
-
-    public partial class Tag
-    {
-    }
-
-    public partial class TagDefinition
-        : BaseTagDefinition
-    {
-        public virtual Dictionary<DeliveryChannel, bool> DefaultDelivery { get; set; } = new();
-    }
-
-    public partial class TagDescription
-    {
-        public virtual DisplayName DisplayName { get; set; }
-        public virtual string? Description { get; set; }
-    }
-
-    public partial class TagsField
-        : JsonSchemaField
-    {
-    }
-
-    public partial class TagTranslation
-        : MessageTranslation<TagDescription>
-    {
-    }
-
-    public partial class TaskId
-        : AggregateId
-    {
-    }
-
-    public partial class Taxonomy
-        : IHasDomainEntityId
-    {
-        public virtual TaxonomyId? ParentId { get; set; }
-        public virtual TaxonomyId Id { get; set; }
-        public virtual TaxonomyName Name { get; set; }
-        public virtual string? Description { get; set; }
-        public virtual VisualSchema? TermsMetaVisualSchema { get; set; }
-        public virtual DataSchema? TermsMetaDataSchema { get; set; }
-        public virtual List<TaxonomyId>? Dependencies { get; set; }
-        public virtual RecordId? RecordId { get; set; }
-    }
-
-    public partial class TaxonomyId
-        : AggregateId, IHasDomainEntityId
-    {
-    }
-
-    public partial class TaxonomyName
-    {
-        public virtual string Value { get; set; }
-        public virtual string Title { get; set; }
-    }
-
-    public partial class TaxonomySelectionField
-        : JsonSchemaField
-    {
-        public virtual string? TaxonomyId { get; set; }
-        public virtual bool Multiple { get; set; }
-    }
-
-    [DataContract]
-    public partial class Template<TMessageContent>
-        : IBindableContract
-    {
-        [DataMember]
-        public virtual TemplateId TemplateId { get; set; }
-
-        [DataMember]
-        public virtual DisplayName TemplateName { get; set; }
-
-        [DataMember]
-        public virtual HashSet<MessageTranslation<TMessageContent>> Translations { get; set; } = [];
-
-        [DataMember]
-        public virtual CommunicationChannel CommunicationChannel { get; set; }
-
-        [DataMember]
-        public virtual bool IsActive { get; set; }
-
-        [DataMember]
-        public virtual string? Description { get; set; }
-
-        [DataMember]
-        public virtual HashSet<Tag>? Tags { get; set; }
-
-        [DataMember]
-        public virtual IntegrationId? FileIntegrationId { get; set; }
-
-        [DataMember]
-        public virtual Env Env { get; set; }
-    }
-
-    [DataContract]
-    public partial class TemplateCode
-    {
-    }
-
-    public partial class TemplateId
-    {
-        public virtual Guid Value { get; set; }
-    }
-
-    [DataContract]
-    public partial class TimeZone
-    {
-        [DataMember]
-        public virtual string ZoneId { get; set; }
     }
 
     public enum TokenMappingResolverType
@@ -1685,25 +442,6 @@ namespace Norbix.Sdk.Types.Hub;
         New,
     }
 
-    public partial class Trigger
-        : IHasDomainEntityId
-    {
-        public virtual TriggerId TriggerId { get; set; }
-        public virtual DisplayName Name { get; set; }
-        public virtual TriggerAction TriggerAction { get; set; }
-        public virtual TemplateCode? ActivationCode { get; set; }
-        public virtual string? Description { get; set; }
-        public virtual bool IsEnabled { get; set; }
-        public virtual Env Env { get; set; }
-        public virtual IntegrationId? IntegrationId { get; set; }
-    }
-
-    public partial class TriggerAction
-    {
-        public virtual TriggerActionType Type { get; set; }
-        public virtual IntegrationId? IntegrationId { get; set; }
-    }
-
     public enum TriggerActionType
     {
         Code,
@@ -1715,97 +453,12 @@ namespace Norbix.Sdk.Types.Hub;
         Marketplace,
     }
 
-    public partial class TriggerEventName
-    {
-        public virtual string Value { get; set; }
-    }
-
-    public partial class TriggerId
-        : AggregateId, IHasDomainEntityId
-    {
-    }
-
     public enum TriggerType
     {
         Membership,
         Schema,
         Files,
         Payments,
-    }
-
-    public partial class UsageIngestionFailure
-    {
-        public virtual UsageIngestionFailureReason Reason { get; set; }
-        public virtual BillingPeriod? Period { get; set; }
-        public virtual string StripeEventId { get; set; }
-        public virtual string Message { get; set; }
-        public virtual UtcDateTime ReportedAtUtc { get; set; }
-    }
-
-    public enum UsageIngestionFailureReason
-    {
-        UnknownCustomer = 1,
-        MeterNotFound = 2,
-        ValidationFailed = 3,
-        ImportSetFailed = 4,
-    }
-
-    public partial class UserId
-        : IHasDomainEntityId
-    {
-        public virtual Guid Value { get; set; }
-    }
-
-    public partial class UserRef
-        : ResourceRef
-    {
-        public virtual ResourceRefKind Kind { get; set; }
-        public virtual UserId UserId { get; set; }
-    }
-
-    public partial class UserSelectionField
-        : JsonSchemaField
-    {
-        public virtual bool Multiple { get; set; }
-    }
-
-    public partial class UtcDateTime
-    {
-    }
-
-    public partial class VisualSchema
-    {
-        public virtual string RawJson { get; set; }
-    }
-
-    public partial class WebhookDestination
-    {
-        public virtual WebhookDestinationId DestinationId { get; set; }
-        public virtual DisplayName DestinationName { get; set; }
-        public virtual DomainUrl EndpointUrl { get; set; }
-        public virtual HashSet<TriggerEventName> SelectedEvents { get; set; } = [];
-        public virtual IReadOnlyDictionary<string, string>? ExtraHeaders { get; set; }
-        public virtual bool IsEnabled { get; set; }
-    }
-
-    public partial class WebhookDestinationId
-        : AggregateId, IHasDomainEntityId
-    {
-    }
-
-    public partial class WebhookIntegration
-        : Integration
-    {
-        public virtual string Capability { get; set; }
-        public virtual HashSet<WebhookDestination> Destinations { get; set; } = [];
-        public virtual IReadOnlyDictionary<string, string>? ExtraHeaders { get; set; }
-    }
-
-    public partial class LlmIntegration
-        : Integration
-    {
-        public virtual LlmProvider Provider { get; set; }
-        public virtual string DefaultModel { get; set; }
     }
 
     public enum LlmProvider
@@ -1826,14 +479,6 @@ namespace Norbix.Sdk.Types.Hub;
         OAuth2,
         ApiKey,
         None,
-    }
-
-    public partial class McpIntegration
-        : Integration
-    {
-        public virtual McpProvider Provider { get; set; }
-        public virtual McpTransport Transport { get; set; }
-        public virtual McpMetadata Metadata { get; set; }
     }
 
     public partial class McpMetadata
@@ -1861,1674 +506,6 @@ namespace Norbix.Sdk.Types.Hub;
         Sse,
         HttpStream,
         Stdio,
-    }
-
-    public partial class AccountBlocked
-    {
-    }
-
-    public partial class AccountCreated
-    {
-        public virtual EmailAddress Email { get; set; }
-        public virtual DisplayName DisplayName { get; set; }
-        public virtual AccountId AccountId { get; set; }
-        public virtual UtcDateTime CreatedOn { get; set; }
-    }
-
-    public partial class AccountProfileUpdated
-    {
-        public virtual DisplayName DisplayName { get; set; }
-        public virtual EmailAddress? BillingEmail { get; set; }
-        public virtual EmailAddress? OperationsEmail { get; set; }
-        public virtual EmailAddress? SecurityEmail { get; set; }
-    }
-
-    public partial class AccountSetAsActive
-    {
-    }
-
-    public partial class AccountSetAsInactive
-    {
-    }
-
-    public partial class AccountTeamPolicyCreated
-    {
-        public virtual MembershipPolicy Policy { get; set; }
-    }
-
-    public partial class AccountTeamPolicyDeleted
-    {
-        public virtual PolicyId PolicyId { get; set; }
-    }
-
-    public partial class AccountTeamPolicyUpdated
-    {
-        public virtual MembershipPolicy Policy { get; set; }
-    }
-
-    public partial class AccountTeamRoleCreated
-    {
-        public virtual MembershipRole Role { get; set; }
-    }
-
-    public partial class AccountTeamRoleDeleted
-    {
-        public virtual RoleId RoleId { get; set; }
-    }
-
-    public partial class AccountTeamRoleUpdated
-    {
-        public virtual MembershipRole Role { get; set; }
-    }
-
-    public partial class AccountUnregistered
-    {
-    }
-
-    public partial class AccountValidationTokenIssued
-    {
-        public virtual ExpirationToken Expiration { get; set; }
-    }
-
-    public partial class AccountVerified
-    {
-    }
-
-    public partial class AtlasUsageRecorded
-    {
-        public virtual AtlasUsageRecord Record { get; set; }
-    }
-
-    public partial class CodeIntegrationDeleted
-    {
-        public virtual IntegrationId Id { get; set; }
-        public virtual Env? Env { get; set; }
-    }
-
-    public partial class CodeIntegrationDisabled
-    {
-        public virtual IntegrationId Id { get; set; }
-        public virtual Env? Env { get; set; }
-    }
-
-    public partial class CodeIntegrationEnabled
-    {
-        public virtual IntegrationId Id { get; set; }
-        public virtual Env? Env { get; set; }
-    }
-
-    public partial class CodeIntegrationHumanDeliveryConfirmed
-    {
-        public virtual IntegrationId Id { get; set; }
-        public virtual DateTime ConfirmedAtUtc { get; set; }
-    }
-
-    public partial class CodeIntegrationRenamed
-    {
-        public virtual IntegrationId Id { get; set; }
-        public virtual DisplayName Name { get; set; }
-        public virtual Env? Env { get; set; }
-    }
-
-    public partial class CodeIntegrationSaved
-    {
-        public virtual CodeIntegration Integration { get; set; }
-    }
-
-    public partial class CodeIntegrationSetAsDefault
-    {
-        public virtual IntegrationId Id { get; set; }
-    }
-
-    public partial class CodeIntegrationTested
-    {
-        public virtual IntegrationId Id { get; set; }
-        public virtual bool Succeeded { get; set; }
-        public virtual IReadOnlyList<string> ErrorMessages { get; set; }
-        public virtual DateTime TestedAtUtc { get; set; }
-        public virtual Env? Env { get; set; }
-    }
-
-    public partial class CustomerCreated
-    {
-        public virtual PaymentCustomerRef PaymentCustomerRef { get; set; }
-    }
-
-    public partial class DatabaseDisabled
-    {
-    }
-
-    public partial class DatabaseEnabled
-    {
-    }
-
-    public partial class DatabaseEstablished
-    {
-    }
-
-    public partial class DatabaseIntegrationDeleted
-    {
-        public virtual IntegrationId Id { get; set; }
-        public virtual Env? Env { get; set; }
-    }
-
-    public partial class DatabaseIntegrationDeprovisioned
-    {
-        public virtual IntegrationId IntegrationId { get; set; }
-        public virtual string AtlasProjectId { get; set; }
-        public virtual string AtlasClusterName { get; set; }
-    }
-
-    public partial class DatabaseIntegrationDisabled
-    {
-        public virtual IntegrationId Id { get; set; }
-        public virtual Env? Env { get; set; }
-    }
-
-    public partial class DatabaseIntegrationEnabled
-    {
-        public virtual IntegrationId Id { get; set; }
-        public virtual Env? Env { get; set; }
-    }
-
-    public partial class DatabaseIntegrationProvisioningCompleted
-    {
-        public virtual IntegrationId IntegrationId { get; set; }
-        public virtual string ConnectionStringTemplate { get; set; }
-    }
-
-    public partial class DatabaseIntegrationProvisioningFailed
-    {
-        public virtual IntegrationId IntegrationId { get; set; }
-        public virtual string Reason { get; set; }
-        public virtual bool Retryable { get; set; }
-    }
-
-    public partial class DatabaseIntegrationProvisioningStarted
-    {
-        public virtual IntegrationId IntegrationId { get; set; }
-        public virtual string AtlasProjectId { get; set; }
-        public virtual string AtlasClusterName { get; set; }
-    }
-
-    public partial class DatabaseIntegrationRenamed
-    {
-        public virtual IntegrationId Id { get; set; }
-        public virtual DisplayName Name { get; set; }
-        public virtual Env? Env { get; set; }
-    }
-
-    public partial class DatabaseIntegrationSaved
-    {
-        public virtual DatabaseIntegration Integration { get; set; }
-    }
-
-    public partial class DatabaseIntegrationSetAsDefault
-    {
-        public virtual Env Env { get; set; }
-        public virtual IntegrationId Id { get; set; }
-    }
-
-    public partial class DatabaseIntegrationTested
-    {
-        public virtual IntegrationId Id { get; set; }
-        public virtual bool Succeeded { get; set; }
-        public virtual IReadOnlyList<string> ErrorMessages { get; set; }
-        public virtual DateTime TestedAtUtc { get; set; }
-        public virtual Env? Env { get; set; }
-    }
-
-    public partial class DatabaseTriggerMirrored
-    {
-        public virtual Trigger Trigger { get; set; }
-    }
-
-    public partial class EmailFooterDeleted
-    {
-        public virtual EmailFooterId Id { get; set; }
-        public virtual Env? Env { get; set; }
-    }
-
-    public partial class EmailFooterMirrored
-    {
-        public virtual EmailFooter Footer { get; set; }
-    }
-
-    public partial class EmailFooterSaved
-    {
-        public virtual EmailFooterId Id { get; set; }
-        public virtual DisplayName Name { get; set; }
-        public virtual HashSet<MessageTranslation<TemplateCode>> Translations { get; set; } = [];
-        public virtual Env? Env { get; set; }
-    }
-
-    public partial class EmailIntegrationDeleted
-    {
-        public virtual IntegrationId Id { get; set; }
-        public virtual Env? Env { get; set; }
-    }
-
-    public partial class EmailIntegrationDisabled
-    {
-        public virtual IntegrationId Id { get; set; }
-        public virtual Env? Env { get; set; }
-    }
-
-    public partial class EmailIntegrationEnabled
-    {
-        public virtual IntegrationId Id { get; set; }
-        public virtual Env? Env { get; set; }
-    }
-
-    public partial class EmailIntegrationHumanDeliveryConfirmed
-    {
-        public virtual IntegrationId Id { get; set; }
-        public virtual DateTime ConfirmedAtUtc { get; set; }
-    }
-
-    public partial class EmailIntegrationRenamed
-    {
-        public virtual IntegrationId Id { get; set; }
-        public virtual DisplayName Name { get; set; }
-        public virtual Env? Env { get; set; }
-    }
-
-    public partial class EmailIntegrationSaved
-    {
-        public virtual EmailIntegration Integration { get; set; }
-    }
-
-    public partial class EmailIntegrationSetAsDefault
-    {
-        public virtual Env Env { get; set; }
-        public virtual IntegrationId Id { get; set; }
-    }
-
-    public partial class EmailIntegrationTested
-    {
-        public virtual IntegrationId Id { get; set; }
-        public virtual bool Succeeded { get; set; }
-        public virtual IReadOnlyList<string> ErrorMessages { get; set; }
-        public virtual DateTime TestedAtUtc { get; set; }
-        public virtual Env? Env { get; set; }
-    }
-
-    public partial class EmailServiceDisabled
-    {
-    }
-
-    public partial class EmailServiceEnabled
-    {
-    }
-
-    public partial class EmailServiceEstablished
-    {
-    }
-
-    public partial class EmailSignatureDeleted
-    {
-        public virtual EmailSignatureId Id { get; set; }
-        public virtual Env? Env { get; set; }
-    }
-
-    public partial class EmailSignatureMirrored
-    {
-        public virtual EmailSignature Signature { get; set; }
-    }
-
-    public partial class EmailSignatureSaved
-    {
-        public virtual EmailSignatureId Id { get; set; }
-        public virtual DisplayName Name { get; set; }
-        public virtual HashSet<MessageTranslation<TemplateCode>> Translations { get; set; } = [];
-        public virtual Env? Env { get; set; }
-    }
-
-    public partial class EmailTemplateArchived
-    {
-        public virtual TemplateId TemplateId { get; set; }
-        public virtual Env? Env { get; set; }
-    }
-
-    public partial class EmailTemplateBackfilled
-    {
-        public virtual EmailTemplate Template { get; set; }
-    }
-
-    public partial class EmailTemplateCreated
-    {
-        public virtual TemplateId TemplateId { get; set; }
-        public virtual DisplayName DisplayName { get; set; }
-        public virtual HashSet<MessageTranslation<EmailMessageContent>> Translations { get; set; } = [];
-        public virtual CommunicationChannel Channel { get; set; }
-        public virtual string? Description { get; set; }
-        public virtual HashSet<Tag>? Tags { get; set; }
-        public virtual HashSet<FileResourceRef>? LanguageAgnosticAttachments { get; set; }
-        public virtual Env? Env { get; set; }
-    }
-
-    public partial class EmailTemplateDeleted
-    {
-        public virtual TemplateId TemplateId { get; set; }
-        public virtual HashSet<FileResourceRef>? FilesToBeDeleted { get; set; }
-        public virtual IntegrationId? FileIntegrationId { get; set; }
-        public virtual Env? Env { get; set; }
-    }
-
-    public partial class EmailTemplateMirrored
-    {
-        public virtual EmailTemplate Template { get; set; }
-    }
-
-    public partial class EmailTemplateUnArchived
-    {
-        public virtual TemplateId TemplateId { get; set; }
-        public virtual Env? Env { get; set; }
-    }
-
-    public partial class EmailTemplateUpdated
-    {
-        public virtual TemplateId TemplateId { get; set; }
-        public virtual DisplayName DisplayName { get; set; }
-        public virtual HashSet<MessageTranslation<EmailMessageContent>> Translations { get; set; } = [];
-        public virtual CommunicationChannel Channel { get; set; }
-        public virtual string? Description { get; set; }
-        public virtual HashSet<Tag>? Tags { get; set; }
-        public virtual HashSet<FileResourceRef>? LanguageAgnosticAttachments { get; set; }
-        public virtual HashSet<FileResourceRef>? AttachmentsToBeDeleted { get; set; }
-        public virtual Env? Env { get; set; }
-    }
-
-    public partial class EmailValidationIntegrationDeleted
-    {
-        public virtual IntegrationId Id { get; set; }
-        public virtual Env? Env { get; set; }
-    }
-
-    public partial class EmailValidationIntegrationSaved
-    {
-        public virtual EmailValidationIntegration Integration { get; set; }
-    }
-
-    public partial class EmailValidationIntegrationSecretsConfigurationFailed
-    {
-        public virtual IntegrationId Id { get; set; }
-        public virtual Env? Env { get; set; }
-    }
-
-    public partial class EmailValidationIntegrationSecretsConfigured
-    {
-        public virtual IntegrationId Id { get; set; }
-        public virtual Env? Env { get; set; }
-    }
-
-    public partial class EmailValidationIntegrationTested
-    {
-        public virtual IntegrationId Id { get; set; }
-        public virtual bool Succeeded { get; set; }
-        public virtual IReadOnlyList<string> ErrorMessages { get; set; }
-        public virtual DateTime TestedAtUtc { get; set; }
-        public virtual Env? Env { get; set; }
-    }
-
-    public partial class FilesDisabled
-    {
-    }
-
-    public partial class FilesEnabled
-    {
-    }
-
-    public partial class FilesEstablished
-    {
-    }
-
-    public partial class FilesIntegrationDeleted
-    {
-        public virtual IntegrationId Id { get; set; }
-        public virtual Env? Env { get; set; }
-    }
-
-    public partial class FilesIntegrationDisabled
-    {
-        public virtual IntegrationId Id { get; set; }
-        public virtual Env? Env { get; set; }
-    }
-
-    public partial class FilesIntegrationEnabled
-    {
-        public virtual IntegrationId Id { get; set; }
-        public virtual Env? Env { get; set; }
-    }
-
-    public partial class FilesIntegrationRenamed
-    {
-        public virtual IntegrationId Id { get; set; }
-        public virtual DisplayName Name { get; set; }
-        public virtual Env? Env { get; set; }
-    }
-
-    public partial class FilesIntegrationSaved
-    {
-        public virtual FileIntegration Integration { get; set; }
-    }
-
-    public partial class FilesIntegrationSetAsDefault
-    {
-        public virtual Env Env { get; set; }
-        public virtual IntegrationId Id { get; set; }
-    }
-
-    public partial class FilesIntegrationTested
-    {
-        public virtual IntegrationId Id { get; set; }
-        public virtual bool Succeeded { get; set; }
-        public virtual IReadOnlyList<string> ErrorMessages { get; set; }
-        public virtual DateTime TestedAtUtc { get; set; }
-        public virtual Env? Env { get; set; }
-    }
-
-    public partial class FilesTriggerDeleted
-        : TriggerByIdEventBase
-    {
-        public virtual Env Env { get; set; }
-    }
-
-    public partial class FilesTriggerDisabled
-        : TriggerByIdEventBase
-    {
-        public virtual Env Env { get; set; }
-    }
-
-    public partial class FilesTriggerEnabled
-        : TriggerByIdEventBase
-    {
-        public virtual Env Env { get; set; }
-    }
-
-    public partial class FilesTriggerMirrored
-    {
-        public virtual Trigger Trigger { get; set; }
-    }
-
-    public partial class FilesTriggerSaved
-    {
-        public virtual FileTrigger Trigger { get; set; }
-    }
-
-    public partial class LicenseCreated
-    {
-        public virtual CodeMashLicense License { get; set; }
-    }
-
-    public partial class LlmIntegrationDeleted
-    {
-        public virtual IntegrationId Id { get; set; }
-        public virtual Env? Env { get; set; }
-    }
-
-    public partial class LlmIntegrationDisabled
-    {
-        public virtual IntegrationId Id { get; set; }
-        public virtual Env? Env { get; set; }
-    }
-
-    public partial class LlmIntegrationEnabled
-    {
-        public virtual IntegrationId Id { get; set; }
-        public virtual Env? Env { get; set; }
-    }
-
-    public partial class LlmIntegrationSaved
-    {
-        public virtual LlmIntegration LlmIntegration { get; set; }
-    }
-
-    public partial class LlmIntegrationSecretsConfigurationFailed
-    {
-        public virtual IntegrationId Id { get; set; }
-        public virtual Env? Env { get; set; }
-    }
-
-    public partial class LlmIntegrationSecretsConfigured
-    {
-        public virtual IntegrationId Id { get; set; }
-        public virtual Env? Env { get; set; }
-    }
-
-    public partial class LlmIntegrationTested
-    {
-        public virtual IntegrationId Id { get; set; }
-        public virtual bool Succeeded { get; set; }
-        public virtual IReadOnlyList<string> ErrorMessages { get; set; }
-        public virtual DateTime TestedAtUtc { get; set; }
-        public virtual Env? Env { get; set; }
-    }
-
-    public partial class LoggingDisabled
-    {
-    }
-
-    public partial class LoggingEnabled
-    {
-    }
-
-    public partial class LoggingEstablished
-    {
-    }
-
-    public partial class LoggingIntegrationDeleted
-    {
-        public virtual IntegrationId Id { get; set; }
-        public virtual Env? Env { get; set; }
-    }
-
-    public partial class LoggingIntegrationDisabled
-    {
-        public virtual IntegrationId Id { get; set; }
-        public virtual Env? Env { get; set; }
-    }
-
-    public partial class LoggingIntegrationEnabled
-    {
-        public virtual IntegrationId Id { get; set; }
-        public virtual Env? Env { get; set; }
-    }
-
-    public partial class LoggingIntegrationRenamed
-    {
-        public virtual IntegrationId Id { get; set; }
-        public virtual DisplayName Name { get; set; }
-        public virtual Env? Env { get; set; }
-    }
-
-    public partial class LoggingIntegrationSaved
-    {
-        public virtual LoggingIntegration Integration { get; set; }
-    }
-
-    public partial class LoggingIntegrationSecretsCleared
-    {
-        public virtual IntegrationId Id { get; set; }
-        public virtual Env? Env { get; set; }
-    }
-
-    public partial class LoggingIntegrationSecretsClearingFailed
-    {
-        public virtual IntegrationId Id { get; set; }
-        public virtual Env? Env { get; set; }
-    }
-
-    public partial class LoggingIntegrationSecretsConfigurationFailed
-    {
-        public virtual IntegrationId Id { get; set; }
-        public virtual Env? Env { get; set; }
-    }
-
-    public partial class LoggingIntegrationSecretsConfigured
-    {
-        public virtual IntegrationId Id { get; set; }
-        public virtual Env? Env { get; set; }
-    }
-
-    public partial class LoggingIntegrationSetAsDefault
-    {
-        public virtual IntegrationId Id { get; set; }
-    }
-
-    public partial class LoggingIntegrationTested
-    {
-        public virtual IntegrationId Id { get; set; }
-        public virtual bool Succeeded { get; set; }
-        public virtual IReadOnlyList<string> ErrorMessages { get; set; }
-        public virtual DateTime TestedAtUtc { get; set; }
-        public virtual Env? Env { get; set; }
-    }
-
-    public partial class MarketplaceFunctionDeleted
-    {
-        public virtual IntegrationId IntegrationId { get; set; }
-        public virtual MarketplaceFunctionId FunctionId { get; set; }
-    }
-
-    public partial class MarketplaceFunctionDisabled
-    {
-        public virtual IntegrationId IntegrationId { get; set; }
-        public virtual MarketplaceFunctionId FunctionId { get; set; }
-    }
-
-    public partial class MarketplaceFunctionEnabled
-    {
-        public virtual IntegrationId IntegrationId { get; set; }
-        public virtual MarketplaceFunctionId FunctionId { get; set; }
-    }
-
-    public partial class MarketplaceFunctionSaved
-    {
-        public virtual MarketplaceFunction Function { get; set; }
-    }
-
-    public partial class MarketplaceIntegrationDeleted
-    {
-        public virtual IntegrationId Id { get; set; }
-        public virtual Env? Env { get; set; }
-    }
-
-    public partial class MarketplaceIntegrationDisabled
-    {
-        public virtual IntegrationId Id { get; set; }
-        public virtual Env? Env { get; set; }
-    }
-
-    public partial class MarketplaceIntegrationEnabled
-    {
-        public virtual IntegrationId Id { get; set; }
-        public virtual Env? Env { get; set; }
-    }
-
-    public partial class MarketplaceIntegrationSaved
-    {
-        public virtual MarketplaceIntegration Integration { get; set; }
-    }
-
-    public partial class MarketplaceIntegrationSecretsConfigurationFailed
-    {
-        public virtual IntegrationId Id { get; set; }
-        public virtual Env? Env { get; set; }
-    }
-
-    public partial class MarketplaceIntegrationSecretsConfigured
-    {
-        public virtual IntegrationId Id { get; set; }
-        public virtual Env? Env { get; set; }
-    }
-
-    public partial class MarketplaceIntegrationTested
-    {
-        public virtual IntegrationId Id { get; set; }
-        public virtual bool Succeeded { get; set; }
-        public virtual IReadOnlyList<string> ErrorMessages { get; set; }
-        public virtual DateTime TestedAtUtc { get; set; }
-        public virtual Env? Env { get; set; }
-    }
-
-    public partial class McpIntegrationDeleted
-    {
-        public virtual IntegrationId Id { get; set; }
-        public virtual Env? Env { get; set; }
-    }
-
-    public partial class McpIntegrationDisabled
-    {
-        public virtual IntegrationId Id { get; set; }
-        public virtual Env? Env { get; set; }
-    }
-
-    public partial class McpIntegrationEnabled
-    {
-        public virtual IntegrationId Id { get; set; }
-        public virtual Env? Env { get; set; }
-    }
-
-    public partial class McpIntegrationSaved
-    {
-        public virtual McpIntegration McpIntegration { get; set; }
-    }
-
-    public partial class McpIntegrationSecretsConfigurationFailed
-    {
-        public virtual IntegrationId Id { get; set; }
-        public virtual Env? Env { get; set; }
-    }
-
-    public partial class McpIntegrationSecretsConfigured
-    {
-        public virtual IntegrationId Id { get; set; }
-        public virtual Env? Env { get; set; }
-    }
-
-    public partial class McpIntegrationTested
-    {
-        public virtual IntegrationId Id { get; set; }
-        public virtual bool Succeeded { get; set; }
-        public virtual IReadOnlyList<string> ErrorMessages { get; set; }
-        public virtual DateTime TestedAtUtc { get; set; }
-        public virtual Env? Env { get; set; }
-    }
-
-    public partial class MembershipDisabled
-    {
-    }
-
-    public partial class MembershipEnabled
-    {
-    }
-
-    public partial class MembershipEstablished
-    {
-    }
-
-    public partial class MembershipIntegrationDeleted
-    {
-        public virtual IntegrationId Id { get; set; }
-        public virtual Env? Env { get; set; }
-    }
-
-    public partial class MembershipIntegrationDisabled
-    {
-        public virtual IntegrationId Id { get; set; }
-        public virtual Env? Env { get; set; }
-    }
-
-    public partial class MembershipIntegrationEnabled
-    {
-        public virtual IntegrationId Id { get; set; }
-        public virtual Env? Env { get; set; }
-    }
-
-    public partial class MembershipIntegrationRenamed
-    {
-        public virtual IntegrationId Id { get; set; }
-        public virtual DisplayName Name { get; set; }
-        public virtual Env? Env { get; set; }
-    }
-
-    public partial class MembershipIntegrationSaved
-    {
-        public virtual MembershipIntegration Integration { get; set; }
-    }
-
-    public partial class MembershipIntegrationSetAsDefault
-    {
-        public virtual IntegrationId Id { get; set; }
-    }
-
-    public partial class MembershipIntegrationTested
-    {
-        public virtual IntegrationId Id { get; set; }
-        public virtual bool Succeeded { get; set; }
-        public virtual IReadOnlyList<string> ErrorMessages { get; set; }
-        public virtual DateTime TestedAtUtc { get; set; }
-        public virtual Env? Env { get; set; }
-    }
-
-    public partial class MembershipTriggerDeleted
-        : TriggerByIdEventBase
-    {
-        public virtual Env Env { get; set; }
-    }
-
-    public partial class MembershipTriggerDisabled
-        : TriggerByIdEventBase
-    {
-        public virtual Env Env { get; set; }
-    }
-
-    public partial class MembershipTriggerEnabled
-        : TriggerByIdEventBase
-    {
-        public virtual Env Env { get; set; }
-    }
-
-    public partial class MembershipTriggerMirrored
-    {
-        public virtual Trigger Trigger { get; set; }
-    }
-
-    public partial class MembershipTriggerSaved
-    {
-        public virtual MembershipTrigger Trigger { get; set; }
-    }
-
-    public partial class MongoDbAggregateCreated
-    {
-        public virtual MongoDbAggregate Aggregate { get; set; }
-    }
-
-    public partial class MongoDbAggregateDeleted
-    {
-        public virtual SchemaId SchemaId { get; set; }
-        public virtual MongoDbAggregateId Id { get; set; }
-    }
-
-    public partial class MongoDbAggregateUpdated
-    {
-        public virtual MongoDbAggregate Aggregate { get; set; }
-    }
-
-    public partial class NorbixLoggingLogsWipeRequested
-    {
-        public virtual IntegrationId DeletedIntegrationId { get; set; }
-        public virtual IntegrationId DatabaseIntegrationId { get; set; }
-    }
-
-    public partial class PaymentsDisabled
-    {
-    }
-
-    public partial class PaymentsEnabled
-    {
-    }
-
-    public partial class PaymentsEstablished
-    {
-    }
-
-    public partial class PaymentsIntegrationDeleted
-    {
-        public virtual IntegrationId Id { get; set; }
-        public virtual Env? Env { get; set; }
-    }
-
-    public partial class PaymentsIntegrationDisabled
-    {
-        public virtual IntegrationId Id { get; set; }
-        public virtual Env? Env { get; set; }
-    }
-
-    public partial class PaymentsIntegrationEnabled
-    {
-        public virtual IntegrationId Id { get; set; }
-        public virtual Env? Env { get; set; }
-    }
-
-    public partial class PaymentsIntegrationHumanDeliveryConfirmed
-    {
-        public virtual IntegrationId Id { get; set; }
-        public virtual DateTime ConfirmedAtUtc { get; set; }
-    }
-
-    public partial class PaymentsIntegrationRenamed
-    {
-        public virtual IntegrationId Id { get; set; }
-        public virtual DisplayName Name { get; set; }
-        public virtual Env? Env { get; set; }
-    }
-
-    public partial class PaymentsIntegrationSaved
-    {
-        public virtual PaymentIntegration Integration { get; set; }
-    }
-
-    public partial class PaymentsIntegrationTested
-    {
-        public virtual IntegrationId Id { get; set; }
-        public virtual bool Succeeded { get; set; }
-        public virtual IReadOnlyList<string> ErrorMessages { get; set; }
-        public virtual DateTime TestedAtUtc { get; set; }
-        public virtual Env? Env { get; set; }
-    }
-
-    public partial class PaymentsTriggerDeleted
-        : TriggerByIdEventBase
-    {
-        public virtual Env Env { get; set; }
-    }
-
-    public partial class PaymentsTriggerDisabled
-        : TriggerByIdEventBase
-    {
-        public virtual Env Env { get; set; }
-    }
-
-    public partial class PaymentsTriggerEnabled
-        : TriggerByIdEventBase
-    {
-        public virtual Env Env { get; set; }
-    }
-
-    public partial class PaymentsTriggerSaved
-    {
-        public virtual PaymentTrigger Trigger { get; set; }
-    }
-
-    public partial class PaymentTriggerMirrored
-    {
-        public virtual Trigger Trigger { get; set; }
-    }
-
-    public partial class PolicyCreated
-    {
-        public virtual MembershipPolicy Policy { get; set; }
-    }
-
-    public partial class PolicyDeleted
-    {
-        public virtual PolicyId PolicyId { get; set; }
-    }
-
-    public partial class PolicyUpdated
-    {
-        public virtual MembershipPolicy Policy { get; set; }
-    }
-
-    public partial class ProjectAccentColorChanged
-    {
-        public virtual BrandColor Color { get; set; }
-    }
-
-    public partial class ProjectActivated
-    {
-    }
-
-    public partial class ProjectAdminPortalServiceUserAssigned
-    {
-        public virtual AuthId ServiceUserId { get; set; }
-    }
-
-    public partial class ProjectAdminUrlChanged
-    {
-        public virtual DomainUrl? Url { get; set; }
-    }
-
-    public partial class ProjectAllowedOriginsChanged
-    {
-        public virtual HashSet<DomainUrl>? Origins { get; set; }
-    }
-
-    public partial class ProjectCommunicationGroupDeleted
-    {
-        public virtual Tag GroupTag { get; set; }
-    }
-
-    public partial class ProjectCommunicationGroupSaved
-    {
-        public virtual GroupDefinition Group { get; set; }
-        public virtual CommunicationChannel Channel { get; set; }
-        public virtual CommunicationChannel? OriginChannel { get; set; }
-    }
-
-    public partial class ProjectCommunicationSet
-    {
-        public virtual ProjectCommunication ProjectCommunication { get; set; }
-    }
-
-    public partial class ProjectCommunicationTagDeleted
-    {
-        public virtual Tag Tag { get; set; }
-    }
-
-    public partial class ProjectCommunicationTagFromGroupDeleted
-    {
-        public virtual Tag GroupTag { get; set; }
-        public virtual Tag RemovedTag { get; set; }
-    }
-
-    public partial class ProjectCommunicationTagSaved
-    {
-        public virtual TagDefinition Tag { get; set; }
-        public virtual Tag? GroupTag { get; set; }
-        public virtual CommunicationChannel? Channel { get; set; }
-    }
-
-    public partial class ProjectCreated
-    {
-        public virtual ProjectId Id { get; set; }
-        public virtual ProjectName Name { get; set; }
-        public virtual IntegrationId DatabaseIntegrationId { get; set; }
-        public virtual ProjectRegion? PrimaryRegion { get; set; }
-        public virtual HashSet<ProjectRegion>? AdditionalRegions { get; set; }
-        public virtual string? Description { get; set; }
-        public virtual bool IsProvisioning { get; set; }
-    }
-
-    public partial class ProjectDatabaseConnected
-    {
-        public virtual Env Env { get; set; }
-    }
-
-    public partial class ProjectDefaultLanguageChanged
-    {
-        public virtual Language Language { get; set; }
-    }
-
-    public partial class ProjectDeleted
-    {
-    }
-
-    public partial class ProjectDescriptionChanged
-    {
-        public virtual string? Description { get; set; }
-    }
-
-    public partial class ProjectDisabled
-    {
-    }
-
-    public partial class ProjectEnvironmentCreated
-    {
-        public virtual Env Env { get; set; }
-        public virtual Dictionary<string, int> Ranks { get; set; } = new();
-    }
-
-    public partial class ProjectEnvironmentDeleted
-    {
-        public virtual Env Env { get; set; }
-        public virtual Dictionary<string, int> Ranks { get; set; } = new();
-    }
-
-    public partial class ProjectEnvironmentRanksChanged
-    {
-        public virtual Dictionary<string, int> Ranks { get; set; } = new();
-    }
-
-    public partial class ProjectExposeLegalToAdminPortalChanged
-    {
-        public virtual bool Exposed { get; set; }
-    }
-
-    public partial class ProjectIconChanged
-    {
-        public virtual ProjectIcon? Icon { get; set; }
-    }
-
-    public partial class ProjectLanguagesChanged
-    {
-        public virtual HashSet<Language> Languages { get; set; } = [];
-    }
-
-    public partial class ProjectLegalDocumentsChanged
-    {
-        public virtual ProjectLegalDocuments Documents { get; set; }
-    }
-
-    public partial class ProjectLogoChanged
-    {
-        public virtual ProjectLogo? Logo { get; set; }
-    }
-
-    public partial class ProjectMainColorChanged
-    {
-        public virtual BrandColor Color { get; set; }
-    }
-
-    public partial class ProjectMarketingUrlChanged
-    {
-        public virtual DomainUrl? Url { get; set; }
-    }
-
-    public partial class ProjectNameChanged
-    {
-        public virtual ProjectName ProjectName { get; set; }
-    }
-
-    public partial class ProjectPaymentZonesChanged
-    {
-        public virtual HashSet<TimeZone>? PaymentZones { get; set; }
-    }
-
-    public partial class ProjectRegionsChanged
-    {
-        public virtual ProjectRegion? PrimaryRegion { get; set; }
-        public virtual HashSet<ProjectRegion>? AdditionalRegions { get; set; }
-    }
-
-    public partial class ProjectResumedFromLicenseSuspension
-    {
-    }
-
-    public partial class ProjectStatusChanged
-    {
-        public virtual ProjectStatus Status { get; set; }
-    }
-
-    public partial class ProjectSuspendedByLicense
-    {
-    }
-
-    public partial class ProjectTimeZoneChanged
-    {
-        public virtual TimeZone? TimeZone { get; set; }
-    }
-
-    public partial class PushIntegrationDeleted
-    {
-        public virtual IntegrationId Id { get; set; }
-        public virtual Env? Env { get; set; }
-    }
-
-    public partial class PushIntegrationDisabled
-    {
-        public virtual IntegrationId Id { get; set; }
-        public virtual Env? Env { get; set; }
-    }
-
-    public partial class PushIntegrationEnabled
-    {
-        public virtual IntegrationId Id { get; set; }
-        public virtual Env? Env { get; set; }
-    }
-
-    public partial class PushIntegrationHumanDeliveryConfirmed
-    {
-        public virtual IntegrationId Id { get; set; }
-        public virtual DateTime ConfirmedAtUtc { get; set; }
-    }
-
-    public partial class PushIntegrationRenamed
-    {
-        public virtual IntegrationId Id { get; set; }
-        public virtual DisplayName Name { get; set; }
-        public virtual Env? Env { get; set; }
-    }
-
-    public partial class PushIntegrationSaved
-    {
-        public virtual PushIntegration Integration { get; set; }
-    }
-
-    public partial class PushIntegrationSetAsDefault
-    {
-        public virtual Env Env { get; set; }
-        public virtual IntegrationId Id { get; set; }
-    }
-
-    public partial class PushIntegrationTested
-    {
-        public virtual IntegrationId Id { get; set; }
-        public virtual bool Succeeded { get; set; }
-        public virtual IReadOnlyList<string> ErrorMessages { get; set; }
-        public virtual DateTime TestedAtUtc { get; set; }
-        public virtual Env? Env { get; set; }
-    }
-
-    public partial class PushModuleTagDeleted
-    {
-        public virtual Tag Tag { get; set; }
-        public virtual CommunicationChannel CommunicationChannel { get; set; }
-    }
-
-    public partial class PushModuleTagSaved
-    {
-        public virtual TagDefinition Tag { get; set; }
-        public virtual CommunicationChannel CommunicationChannel { get; set; }
-    }
-
-    public partial class PushServiceDisabled
-    {
-    }
-
-    public partial class PushServiceEnabled
-    {
-    }
-
-    public partial class PushServiceEstablished
-    {
-        public virtual HashSet<PushTemplate>? DefaultTemplates { get; set; }
-    }
-
-    public partial class PushTemplateArchived
-    {
-        public virtual TemplateId TemplateId { get; set; }
-        public virtual Env? Env { get; set; }
-    }
-
-    public partial class PushTemplateCreated
-    {
-        public virtual TemplateId TemplateId { get; set; }
-        public virtual DisplayName DisplayName { get; set; }
-        public virtual HashSet<MessageTranslation<PushMessageContent>> Translations { get; set; } = [];
-        public virtual CommunicationChannel Channel { get; set; }
-        public virtual string? Description { get; set; }
-        public virtual HashSet<Tag>? Tags { get; set; }
-        public virtual Env? Env { get; set; }
-    }
-
-    public partial class PushTemplateDeleted
-    {
-        public virtual TemplateId TemplateId { get; set; }
-        public virtual Env? Env { get; set; }
-    }
-
-    public partial class PushTemplateMirrored
-    {
-        public virtual PushTemplate Template { get; set; }
-    }
-
-    public partial class PushTemplateUnArchived
-    {
-        public virtual TemplateId TemplateId { get; set; }
-        public virtual Env? Env { get; set; }
-    }
-
-    public partial class PushTemplateUpdated
-    {
-        public virtual TemplateId TemplateId { get; set; }
-        public virtual DisplayName DisplayName { get; set; }
-        public virtual HashSet<MessageTranslation<PushMessageContent>> Translations { get; set; } = [];
-        public virtual CommunicationChannel Channel { get; set; }
-        public virtual string? Description { get; set; }
-        public virtual HashSet<Tag>? Tags { get; set; }
-        public virtual Env? Env { get; set; }
-    }
-
-    public partial class RoleCreated
-    {
-        public virtual MembershipRole Role { get; set; }
-    }
-
-    public partial class RoleDeleted
-    {
-        public virtual RoleId RoleId { get; set; }
-    }
-
-    public partial class RoleUpdated
-    {
-        public virtual MembershipRole Role { get; set; }
-    }
-
-    public partial class SchedulerDisabled
-    {
-    }
-
-    public partial class SchedulerEnabled
-    {
-    }
-
-    public partial class SchedulerTaskDeleted
-    {
-        public virtual TaskId TaskId { get; set; }
-    }
-
-    public partial class SchedulerTaskDisabled
-    {
-        public virtual TaskId TaskId { get; set; }
-    }
-
-    public partial class SchedulerTaskEnabled
-    {
-        public virtual TaskId TaskId { get; set; }
-    }
-
-    public partial class SchedulerTaskSaved
-    {
-        public virtual SchedulerTask Task { get; set; }
-    }
-
-    public partial class SchemaCreated
-    {
-        public virtual Schema Schema { get; set; }
-    }
-
-    public partial class SchemaDataCleared
-    {
-        public virtual SchemaId Id { get; set; }
-        public virtual HashSet<IntegrationId> Integrations { get; set; } = [];
-        public virtual Env Env { get; set; }
-    }
-
-    public partial class SchemaDeleted
-    {
-        public virtual SchemaId Id { get; set; }
-        public virtual Env Env { get; set; }
-    }
-
-    public partial class SchemaDraftDiscarded
-    {
-        public virtual SchemaId Id { get; set; }
-        public virtual Env Env { get; set; }
-    }
-
-    public partial class SchemaDraftUpdated
-    {
-        public virtual SchemaId Id { get; set; }
-        public virtual SchemaDraft Draft { get; set; }
-        public virtual Env Env { get; set; }
-    }
-
-    public partial class SchemaMirrored
-    {
-        public virtual Schema Schema { get; set; }
-    }
-
-    public partial class SchemaRenamed
-    {
-        public virtual SchemaId SchemaId { get; set; }
-        public virtual SchemaName NewName { get; set; }
-        public virtual bool RenameUniqueName { get; set; }
-        public virtual Env Env { get; set; }
-    }
-
-    public partial class SchemaSettingsUpdated
-    {
-        public virtual SchemaId Id { get; set; }
-        public virtual SchemaSettings Settings { get; set; }
-        public virtual Env Env { get; set; }
-    }
-
-    public partial class SchemaTriggerDeleted
-        : TriggerByIdEventBase
-    {
-        public virtual SchemaId SchemaId { get; set; }
-        public virtual Env Env { get; set; }
-    }
-
-    public partial class SchemaTriggerDisabled
-        : TriggerByIdEventBase
-    {
-        public virtual SchemaId SchemaId { get; set; }
-        public virtual Env Env { get; set; }
-    }
-
-    public partial class SchemaTriggerEnabled
-        : TriggerByIdEventBase
-    {
-        public virtual SchemaId SchemaId { get; set; }
-        public virtual Env Env { get; set; }
-    }
-
-    public partial class SchemaTriggerSaved
-    {
-        public virtual SchemaTrigger Trigger { get; set; }
-    }
-
-    public partial class SchemaVersionPublished
-    {
-        public virtual SchemaId Id { get; set; }
-        public virtual PublishedSchemaVersion Version { get; set; }
-        public virtual SchemaDiff Diff { get; set; }
-        public virtual Env Env { get; set; }
-    }
-
-    public partial class ServerlessDisabled
-    {
-    }
-
-    public partial class ServerlessEnabled
-    {
-    }
-
-    public partial class SetUserRegistersAsRole
-    {
-        public virtual ProjectId? ProjectId { get; set; }
-        public virtual RoleName Role { get; set; }
-    }
-
-    public partial class SmsIntegrationDeleted
-    {
-        public virtual IntegrationId Id { get; set; }
-        public virtual Env? Env { get; set; }
-    }
-
-    public partial class SmsIntegrationDisabled
-    {
-        public virtual IntegrationId Id { get; set; }
-        public virtual Env? Env { get; set; }
-    }
-
-    public partial class SmsIntegrationEnabled
-    {
-        public virtual IntegrationId Id { get; set; }
-        public virtual Env? Env { get; set; }
-    }
-
-    public partial class SmsIntegrationHumanDeliveryConfirmed
-    {
-        public virtual IntegrationId Id { get; set; }
-        public virtual DateTime ConfirmedAtUtc { get; set; }
-    }
-
-    public partial class SmsIntegrationRenamed
-    {
-        public virtual IntegrationId Id { get; set; }
-        public virtual DisplayName Name { get; set; }
-        public virtual Env? Env { get; set; }
-    }
-
-    public partial class SmsIntegrationSaved
-    {
-        public virtual SmsIntegration Integration { get; set; }
-    }
-
-    public partial class SmsIntegrationSetAsDefault
-    {
-        public virtual Env Env { get; set; }
-        public virtual IntegrationId Id { get; set; }
-    }
-
-    public partial class SmsIntegrationTested
-    {
-        public virtual IntegrationId Id { get; set; }
-        public virtual bool Succeeded { get; set; }
-        public virtual IReadOnlyList<string> ErrorMessages { get; set; }
-        public virtual DateTime TestedAtUtc { get; set; }
-        public virtual Env? Env { get; set; }
-    }
-
-    public partial class SmsServiceDisabled
-    {
-    }
-
-    public partial class SmsServiceEnabled
-    {
-    }
-
-    public partial class SmsServiceEstablished
-    {
-        public virtual HashSet<SmsTemplate>? DefaultTemplates { get; set; }
-    }
-
-    public partial class SmsTemplateArchived
-    {
-        public virtual TemplateId TemplateId { get; set; }
-        public virtual Env? Env { get; set; }
-    }
-
-    public partial class SmsTemplateCreated
-    {
-        public virtual TemplateId TemplateId { get; set; }
-        public virtual DisplayName DisplayName { get; set; }
-        public virtual HashSet<MessageTranslation<SmsMessageContent>> Translations { get; set; } = [];
-        public virtual CommunicationChannel Channel { get; set; }
-        public virtual string? Description { get; set; }
-        public virtual HashSet<Tag>? Tags { get; set; }
-        public virtual Env? Env { get; set; }
-    }
-
-    public partial class SmsTemplateDeleted
-    {
-        public virtual TemplateId TemplateId { get; set; }
-        public virtual Env? Env { get; set; }
-    }
-
-    public partial class SmsTemplateMirrored
-    {
-        public virtual SmsTemplate Template { get; set; }
-    }
-
-    public partial class SmsTemplateUnArchived
-    {
-        public virtual TemplateId TemplateId { get; set; }
-        public virtual Env? Env { get; set; }
-    }
-
-    public partial class SmsTemplateUpdated
-    {
-        public virtual TemplateId TemplateId { get; set; }
-        public virtual DisplayName DisplayName { get; set; }
-        public virtual HashSet<MessageTranslation<SmsMessageContent>> Translations { get; set; } = [];
-        public virtual CommunicationChannel Channel { get; set; }
-        public virtual string? Description { get; set; }
-        public virtual HashSet<Tag>? Tags { get; set; }
-        public virtual Env? Env { get; set; }
-    }
-
-    public partial class SubscriptionCanceled
-    {
-        public virtual PaymentCustomerRef PaymentCustomerRef { get; set; }
-        public virtual string SubscriptionId { get; set; }
-    }
-
-    public partial class SubscriptionChanged
-    {
-        public virtual CodeMashManagedServiceSubscription Subscription { get; set; }
-    }
-
-    public partial class SupportCaseAttachmentLinked
-    {
-        public virtual SupportCaseId CaseId { get; set; }
-        public virtual string AttachmentRef { get; set; }
-        public virtual string? FileName { get; set; }
-        public virtual UtcDateTime LinkedOn { get; set; }
-    }
-
-    public partial class SupportCaseClosed
-    {
-        public virtual SupportCaseId CaseId { get; set; }
-        public virtual string? ClosedBy { get; set; }
-        public virtual UtcDateTime ClosedOn { get; set; }
-        public virtual SupportCaseCloseReason Reason { get; set; }
-    }
-
-    public partial class SupportCaseMessageAppended
-    {
-        public virtual SupportCaseId CaseId { get; set; }
-        public virtual SupportMessageRef Message { get; set; }
-    }
-
-    public partial class SupportCaseOpened
-    {
-        public virtual SupportCaseId CaseId { get; set; }
-        public virtual AccountId AccountId { get; set; }
-        public virtual ProjectId? ProjectId { get; set; }
-        public virtual string? ReporterId { get; set; }
-        public virtual SupportCaseKind Kind { get; set; }
-        public virtual SupportCaseSeverity Severity { get; set; }
-        public virtual string Subject { get; set; }
-        public virtual DeploymentMode DeploymentMode { get; set; }
-        public virtual string? GatewayVersion { get; set; }
-        public virtual string? Region { get; set; }
-        public virtual string? PlanTier { get; set; }
-        public virtual UtcDateTime OpenedOn { get; set; }
-    }
-
-    public partial class SupportCaseReopened
-    {
-        public virtual SupportCaseId CaseId { get; set; }
-        public virtual string Reason { get; set; }
-        public virtual UtcDateTime ReopenedOn { get; set; }
-    }
-
-    public partial class SupportCaseResolved
-    {
-        public virtual SupportCaseId CaseId { get; set; }
-        public virtual CaseResolution Resolution { get; set; }
-        public virtual UtcDateTime ResolvedOn { get; set; }
-    }
-
-    public partial class SupportCaseStatusChanged
-    {
-        public virtual SupportCaseId CaseId { get; set; }
-        public virtual SupportCaseStatus From { get; set; }
-        public virtual SupportCaseStatus To { get; set; }
-        public virtual UtcDateTime ChangedOn { get; set; }
-    }
-
-    public partial class SupportCaseTriaged
-    {
-        public virtual SupportCaseId CaseId { get; set; }
-        public virtual SupportCaseKind Kind { get; set; }
-        public virtual SupportCaseSeverity Severity { get; set; }
-        public virtual string? AffectedModule { get; set; }
-        public virtual string? TriagedBy { get; set; }
-        public virtual UtcDateTime TriagedOn { get; set; }
-    }
-
-    public partial class SupportCaseWaitingReminderSent
-    {
-        public virtual SupportCaseId CaseId { get; set; }
-        public virtual int TierDays { get; set; }
-        public virtual UtcDateTime SentOn { get; set; }
-    }
-
-    public partial class TaxonomyCreated
-    {
-        public virtual Taxonomy Taxonomy { get; set; }
-    }
-
-    public partial class TaxonomyDataCleared
-    {
-        public virtual TaxonomyId TaxonomyId { get; set; }
-        public virtual HashSet<IntegrationId> Integrations { get; set; } = [];
-    }
-
-    public partial class TaxonomyDeleted
-    {
-        public virtual TaxonomyId TaxonomyId { get; set; }
-    }
-
-    public partial class TaxonomyUpdated
-    {
-        public virtual Taxonomy Taxonomy { get; set; }
-    }
-
-    public partial class TriggerByIdEventBase
-    {
-        public virtual TriggerId TriggerId { get; set; }
-    }
-
-    public partial class UsageBillingIngestionFailed
-    {
-        public virtual UsageIngestionFailure Failure { get; set; }
-    }
-
-    public partial class WebhookDestinationDisabled
-    {
-        public virtual IntegrationId IntegrationId { get; set; }
-        public virtual WebhookDestinationId DestinationId { get; set; }
-    }
-
-    public partial class WebhookDestinationEnabled
-    {
-        public virtual IntegrationId IntegrationId { get; set; }
-        public virtual WebhookDestinationId DestinationId { get; set; }
-    }
-
-    public partial class WebhookDestinationRemoved
-    {
-        public virtual IntegrationId IntegrationId { get; set; }
-        public virtual WebhookDestinationId DestinationId { get; set; }
-    }
-
-    public partial class WebhookDestinationSaved
-    {
-        public virtual IntegrationId IntegrationId { get; set; }
-        public virtual WebhookDestination Destination { get; set; }
-    }
-
-    public partial class WebhookIntegrationExtraHeadersChanged
-    {
-        public virtual IntegrationId Id { get; set; }
-        public virtual IReadOnlyDictionary<string, string>? ExtraHeaders { get; set; }
-    }
-
-    public partial class WebhookIntegrationSaved
-    {
-        public virtual WebhookIntegration Integration { get; set; }
-    }
-
-    public partial class WebhookIntegrationSecretsCleared
-    {
-        public virtual IntegrationId Id { get; set; }
-        public virtual Env? Env { get; set; }
-    }
-
-    public partial class WebhookIntegrationSecretsConfigurationFailed
-    {
-        public virtual IntegrationId Id { get; set; }
-        public virtual Env? Env { get; set; }
-    }
-
-    public partial class WebhookIntegrationSecretsConfigured
-    {
-        public virtual IntegrationId Id { get; set; }
-        public virtual Env? Env { get; set; }
-    }
-
-    public partial class LoggingIntegration
-        : Integration
-    {
-        public virtual LoggingProvider Provider { get; set; }
     }
 
     public enum LoggingProvider
@@ -3559,12 +536,6 @@ namespace Norbix.Sdk.Types.Hub;
         InternalKafka,
     }
 
-    public partial class SmsIntegration
-        : Integration
-    {
-        public virtual SmsProvider Provider { get; set; }
-    }
-
     public enum SmsProvider
     {
         Twilio,
@@ -3575,13 +546,6 @@ namespace Norbix.Sdk.Types.Hub;
         Telesign,
         Sinch,
         Fake,
-    }
-
-    public partial class UserMarketingPreferences
-    {
-        public virtual bool BlockAllMarketingMessages { get; set; }
-        public virtual Dictionary<DeliveryChannel, HashSet<Tag>>? BlockedTags { get; set; }
-        public virtual HashSet<MarketingBlockReason>? BlockReasons { get; set; }
     }
 
     [NorbixRoute("/internal/_typegen", "GET")]
@@ -5444,6 +2408,11 @@ namespace Norbix.Sdk.Types.Hub;
     [DataContract]
     public partial class PushDeviceDeliveryTokenDto
     {
+        [DataMember]
+        public virtual string PushDeviceToken { get; set; }
+
+        [DataMember]
+        public virtual PushDeviceDeliveryFamily DeliveryFamily { get; set; }
     }
 
     [DataContract]
@@ -8161,6 +5130,46 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember]
         public virtual DeviceType? DeviceType { get; set; }
+
+        [DataMember]
+        public virtual string? OsName { get; set; }
+
+        [DataMember]
+        public virtual string? OsVersion { get; set; }
+
+        [DataMember]
+        public virtual int? PlatformApiLevel { get; set; }
+    }
+
+    [DataContract]
+    public partial class PushDeviceListProjection
+    {
+        [DataMember]
+        public virtual string Id { get; set; }
+
+        [DataMember]
+        public virtual string UserId { get; set; }
+
+        [DataMember]
+        public virtual string DeviceOs { get; set; }
+
+        [DataMember]
+        public virtual string Token { get; set; }
+
+        [DataMember]
+        public virtual string? Brand { get; set; }
+
+        [DataMember]
+        public virtual string? Manufacturer { get; set; }
+
+        [DataMember]
+        public virtual string? ModelName { get; set; }
+
+        [DataMember]
+        public virtual string? DeviceName { get; set; }
+
+        [DataMember]
+        public virtual string? DeviceType { get; set; }
 
         [DataMember]
         public virtual string? OsName { get; set; }
@@ -14165,6 +11174,11 @@ namespace Norbix.Sdk.Types.Hub;
     public partial class DeleteEmailCampaignRequest
         : CodeMashRequestBase, INorbixRequest<EmptyResponse>
     {
+        [DataMember]
+        public virtual string Id { get; set; }
+
+        [DataMember]
+        public virtual string? DatabaseIntegrationId { get; set; }
     }
 
     public partial class EmailCampaignRequest
@@ -14466,7 +11480,7 @@ namespace Norbix.Sdk.Types.Hub;
     ///<summary>
     ///Get an email campaign message
     ///</summary>
-    [NorbixRoute("/{version}/notifications/emails/campaigns/{campaignId}/messages/{id}", "GET")]
+    [NorbixRoute("/{version}/notifications/emails/campaigns/{campaignId}/messages/{notificationId}", "GET")]
     public partial class GetEmailCampaignMessage
         : CodeMashRequestBase, INorbixRequest<GetEmailCampaignMessageResponse>
     {
@@ -16983,6 +13997,17 @@ namespace Norbix.Sdk.Types.Hub;
     public partial class DeletePushCampaignRequest
         : CodeMashRequestBase, INorbixRequest<EmptyResponse>
     {
+        ///<summary>
+        ///The push campaign id to delete. Get it from get_push_campaigns.
+        ///</summary>
+        [DataMember]
+        public virtual string Id { get; set; }
+
+        ///<summary>
+        ///Optional database integration id; omit to use the project's default.
+        ///</summary>
+        [DataMember]
+        public virtual string? DatabaseIntegrationId { get; set; }
     }
 
     ///<summary>
@@ -17204,12 +14229,23 @@ namespace Norbix.Sdk.Types.Hub;
     public partial class StopPushCampaignRequest
         : CodeMashRequestBase, INorbixRequest<EmptyResponse>
     {
+        ///<summary>
+        ///The campaign id to stop.
+        ///</summary>
+        [DataMember]
+        public virtual string Id { get; set; }
+
+        ///<summary>
+        ///Optional database integration id; omit to use the project's default.
+        ///</summary>
+        [DataMember]
+        public virtual string? DatabaseIntegrationId { get; set; }
     }
 
     ///<summary>
     ///Gets campaign push notification details
     ///</summary>
-    [NorbixRoute("/{version}/notifications/push/campaigns/{campaignId}/messages/{id}", "GET")]
+    [NorbixRoute("/{version}/notifications/push/campaigns/{campaignId}/messages/{notificationId}", "GET")]
     public partial class GetPushCampaignMessage
         : CodeMashRequestBase, INorbixRequest<GetPushCampaignMessageResponse>
     {
@@ -17270,82 +14306,6 @@ namespace Norbix.Sdk.Types.Hub;
     }
 
     ///<summary>
-    ///Registers a device for push notifications
-    ///</summary>
-    [NorbixRoute("/{version}/notifications/push/devices", "POST")]
-    [DataContract]
-    public partial class RegisterDevice
-        : RequestBase, INorbixRequest<IdResponse>, IHasProjectId
-    {
-        ///<summary>
-        ///The device details: OS, token, model, and delivery family.
-        ///</summary>
-        [DataMember]
-        public virtual PushDeviceDto PushDeviceDto { get; set; }
-
-        ///<summary>
-        ///The id of the user this device belongs to.
-        ///</summary>
-        [DataMember]
-        public virtual string UserId { get; set; }
-
-        [DataMember]
-        public virtual string ProjectId { get; set; }
-
-        ///<summary>
-        ///Optional account id to associate with the device.
-        ///</summary>
-        [DataMember]
-        public virtual string? AccountId { get; set; }
-
-        ///<summary>
-        ///Optional database integration id; omit to use the project's default.
-        ///</summary>
-        [DataMember]
-        public virtual string? DatabaseIntegrationId { get; set; }
-    }
-
-    [DataContract]
-    public partial class PushDeviceListProjection
-    {
-        [DataMember]
-        public virtual string Id { get; set; }
-
-        [DataMember]
-        public virtual string UserId { get; set; }
-
-        [DataMember]
-        public virtual string DeviceOs { get; set; }
-
-        [DataMember]
-        public virtual string Token { get; set; }
-
-        [DataMember]
-        public virtual string? Brand { get; set; }
-
-        [DataMember]
-        public virtual string? Manufacturer { get; set; }
-
-        [DataMember]
-        public virtual string? ModelName { get; set; }
-
-        [DataMember]
-        public virtual string? DeviceName { get; set; }
-
-        [DataMember]
-        public virtual string? DeviceType { get; set; }
-
-        [DataMember]
-        public virtual string? OsName { get; set; }
-
-        [DataMember]
-        public virtual string? OsVersion { get; set; }
-
-        [DataMember]
-        public virtual int? PlatformApiLevel { get; set; }
-    }
-
-    ///<summary>
     ///Gets a registered push device
     ///</summary>
     [NorbixRoute("/{version}/notifications/push/devices/{id}", "GET")]
@@ -17402,6 +14362,42 @@ namespace Norbix.Sdk.Types.Hub;
         : ResponseBase
     {
         public virtual PaginatedResponse<PushDeviceListProjection>? List { get; set; }
+    }
+
+    ///<summary>
+    ///Registers a device for push notifications
+    ///</summary>
+    [NorbixRoute("/{version}/notifications/push/devices", "POST")]
+    [DataContract]
+    public partial class RegisterDevice
+        : RequestBase, INorbixRequest<IdResponse>, IHasProjectId
+    {
+        ///<summary>
+        ///The device details: OS, token, model, and delivery family.
+        ///</summary>
+        [DataMember]
+        public virtual PushDeviceDto PushDeviceDto { get; set; }
+
+        ///<summary>
+        ///The id of the user this device belongs to.
+        ///</summary>
+        [DataMember]
+        public virtual string UserId { get; set; }
+
+        [DataMember]
+        public virtual string ProjectId { get; set; }
+
+        ///<summary>
+        ///Optional account id to associate with the device.
+        ///</summary>
+        [DataMember]
+        public virtual string? AccountId { get; set; }
+
+        ///<summary>
+        ///Optional database integration id; omit to use the project's default.
+        ///</summary>
+        [DataMember]
+        public virtual string? DatabaseIntegrationId { get; set; }
     }
 
     public partial class AndroidFirebasePushIntegrationRequest
@@ -18270,7 +15266,7 @@ namespace Norbix.Sdk.Types.Hub;
     ///<summary>
     ///Gets campaign sms message details
     ///</summary>
-    [NorbixRoute("/{version}/notifications/sms/campaigns/{campaignId}/messages/{id}", "GET")]
+    [NorbixRoute("/{version}/notifications/sms/campaigns/{campaignId}/messages/{notificationId}", "GET")]
     public partial class GetSmsCampaignMessage
         : CodeMashRequestBase, INorbixRequest<GetSmsCampaignMessageResponse>
     {
@@ -19111,7 +16107,6 @@ namespace Norbix.Sdk.Types.Hub;
         [DataMember]
         public virtual string? Env { get; set; }
 
-        public virtual Env ResolvedEnv { get; set; }
         ///<summary>
         ///Cursor token — fetch the page AFTER this item.
         ///</summary>
@@ -19129,11 +16124,6 @@ namespace Norbix.Sdk.Types.Hub;
         ///</summary>
         [DataMember]
         public virtual int? PageSize { get; set; }
-
-        ///<summary>
-        ///Paging
-        ///</summary>
-        public virtual PagingArgs? Paging { get; set; }
     }
 
     [DataContract(Namespace="http://codemash.io/types/")]
@@ -19228,12 +16218,6 @@ namespace Norbix.Sdk.Types.Hub;
         Failed,
     }
 
-    public enum CampaignStopReason
-    {
-        UserRequested,
-        ModuleDisabled,
-    }
-
     public enum CollectionEmailCampaignRecipientField
     {
         User,
@@ -19264,82 +16248,6 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual string? Env { get; set; }
     }
 
-    public partial class RecordDeleted
-    {
-        public virtual ProjectId ProjectId { get; set; }
-        public virtual IntegrationId DatabaseIntegrationId { get; set; }
-        public virtual SchemaName SchemaName { get; set; }
-        public virtual string Id { get; set; }
-        public virtual Object Document { get; set; }
-    }
-
-    public partial class RecordInserted
-    {
-        public virtual ProjectId ProjectId { get; set; }
-        public virtual IntegrationId DatabaseIntegrationId { get; set; }
-        public virtual SchemaName SchemaName { get; set; }
-        public virtual string Id { get; set; }
-        public virtual Object Document { get; set; }
-    }
-
-    public partial class RecordReplaced
-    {
-        public virtual ProjectId ProjectId { get; set; }
-        public virtual IntegrationId DatabaseIntegrationId { get; set; }
-        public virtual SchemaName SchemaName { get; set; }
-        public virtual string Id { get; set; }
-        public virtual Object From { get; set; }
-        public virtual Object To { get; set; }
-    }
-
-    public partial class RecordResponsibilityChanged
-    {
-        public virtual ProjectId ProjectId { get; set; }
-        public virtual IntegrationId DatabaseIntegrationId { get; set; }
-        public virtual SchemaName SchemaName { get; set; }
-        public virtual string Id { get; set; }
-        public virtual AuthId FromOwner { get; set; }
-        public virtual AuthId ToOwner { get; set; }
-    }
-
-    public partial class RecordsDeleted
-    {
-        public virtual ProjectId ProjectId { get; set; }
-        public virtual IntegrationId DatabaseIntegrationId { get; set; }
-        public virtual SchemaName SchemaName { get; set; }
-        public virtual long DeletedCount { get; set; }
-        public virtual Object Filter { get; set; }
-    }
-
-    public partial class RecordsInserted
-    {
-        public virtual ProjectId ProjectId { get; set; }
-        public virtual IntegrationId DatabaseIntegrationId { get; set; }
-        public virtual SchemaName SchemaName { get; set; }
-        public virtual IReadOnlyList<string> Ids { get; set; }
-        public virtual IReadOnlyList<Object> Documents { get; set; }
-    }
-
-    public partial class RecordsUpdated
-    {
-        public virtual ProjectId ProjectId { get; set; }
-        public virtual IntegrationId DatabaseIntegrationId { get; set; }
-        public virtual SchemaName SchemaName { get; set; }
-        public virtual long MatchedCount { get; set; }
-        public virtual long ModifiedCount { get; set; }
-        public virtual Object Update { get; set; }
-    }
-
-    public partial class RecordUpdated
-    {
-        public virtual ProjectId ProjectId { get; set; }
-        public virtual IntegrationId DatabaseIntegrationId { get; set; }
-        public virtual SchemaName SchemaName { get; set; }
-        public virtual string Id { get; set; }
-        public virtual Object From { get; set; }
-        public virtual Object To { get; set; }
-    }
-
     public enum SmtpPorts
     {
         Default = 25,
@@ -19354,100 +16262,10 @@ namespace Norbix.Sdk.Types.Hub;
         CrossAccountRole,
     }
 
-    public partial class EmailBatchRegistered
-    {
-        public virtual ProjectId ProjectId { get; set; }
-        public virtual CampaignId CampaignId { get; set; }
-        public virtual CampaignBatchId CampaignBatchId { get; set; }
-        public virtual string? StartingAfter { get; set; }
-    }
-
-    public partial class EmailCampaignCompleted
-    {
-        public virtual ProjectId ProjectId { get; set; }
-        public virtual CampaignId CampaignId { get; set; }
-        public virtual HashSet<ErrorDto>? Errors { get; set; }
-    }
-
-    public partial class EmailCampaignFailed
-    {
-        public virtual ProjectId ProjectId { get; set; }
-        public virtual CampaignId CampaignId { get; set; }
-        public virtual HashSet<ErrorDto> Errors { get; set; } = [];
-    }
-
-    public partial class EmailCampaignStarted
-    {
-        public virtual ProjectId ProjectId { get; set; }
-        public virtual CampaignId CampaignId { get; set; }
-    }
-
-    public partial class EmailCampaignStopped
-    {
-        public virtual ProjectId ProjectId { get; set; }
-        public virtual CampaignId CampaignId { get; set; }
-        public virtual CampaignStopReason? Reason { get; set; }
-    }
-
-    public partial class EmailNotificationClicked
-    {
-        public virtual ProjectId ProjectId { get; set; }
-        public virtual CampaignId CampaignId { get; set; }
-        public virtual CampaignBatchId CampaignBatchId { get; set; }
-        public virtual NotificationId NotificationId { get; set; }
-        public virtual string? SourceId { get; set; }
-    }
-
-    public partial class EmailNotificationRead
-    {
-        public virtual ProjectId ProjectId { get; set; }
-        public virtual CampaignId CampaignId { get; set; }
-        public virtual CampaignBatchId CampaignBatchId { get; set; }
-        public virtual NotificationId NotificationId { get; set; }
-    }
-
-    public partial class EmailDeliveryEventReceived
-    {
-        public virtual ProjectId ProjectId { get; set; }
-        public virtual IntegrationId IntegrationId { get; set; }
-        public virtual EmailAddress Recipient { get; set; }
-        public virtual EmailDeliveryEventType Type { get; set; }
-        public virtual DateTime OccurredAt { get; set; }
-        public virtual string? ProviderMessageId { get; set; }
-        public virtual string? Reason { get; set; }
-    }
-
-    public enum EmailDeliveryEventType
-    {
-        Unknown,
-        Delivered,
-        Open,
-        Click,
-        SoftBounce,
-        HardBounce,
-        Complaint,
-        Unsubscribed,
-    }
-
     public enum MailGunRegion
     {
         Us,
         Eu,
-    }
-
-    public partial class FileDeleted
-    {
-        public virtual ProjectId ProjectId { get; set; }
-        public virtual IntegrationId IntegrationId { get; set; }
-        public virtual string Path { get; set; }
-    }
-
-    public partial class FileUploaded
-    {
-        public virtual ProjectId ProjectId { get; set; }
-        public virtual IntegrationId IntegrationId { get; set; }
-        public virtual FileResourceRef FileRef { get; set; }
-        public virtual bool Verified { get; set; }
     }
 
     public enum AwsS3IntegrationType
@@ -19504,150 +16322,6 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual string? FormattedMessage { get; set; }
     }
 
-    public partial class EmailCampaignTriggered
-    {
-        public virtual ProjectId ProjectId { get; set; }
-        public virtual AccountId AccountId { get; set; }
-        public virtual TriggerId TriggerId { get; set; }
-        public virtual TriggerType TriggerType { get; set; }
-        public virtual string SourceEvent { get; set; }
-        public virtual string? SchemaId { get; set; }
-        public virtual Dictionary<string, string>? TokenMappings { get; set; }
-    }
-
-    public partial class MarketplaceFunctionTriggered
-    {
-        public virtual ProjectId ProjectId { get; set; }
-        public virtual AccountId AccountId { get; set; }
-        public virtual TriggerId TriggerId { get; set; }
-        public virtual TriggerType TriggerType { get; set; }
-        public virtual string SourceEvent { get; set; }
-        public virtual string? SchemaId { get; set; }
-        public virtual string? TargetUserAuthId { get; set; }
-        public virtual string? OldDocumentJson { get; set; }
-        public virtual string? NewDocumentJson { get; set; }
-        public virtual string? Collection { get; set; }
-        public virtual string? CorrelationId { get; set; }
-    }
-
-    public partial class PushCampaignTriggered
-    {
-        public virtual ProjectId ProjectId { get; set; }
-        public virtual AccountId AccountId { get; set; }
-        public virtual TriggerId TriggerId { get; set; }
-        public virtual TriggerType TriggerType { get; set; }
-        public virtual string SourceEvent { get; set; }
-        public virtual string? SchemaId { get; set; }
-        public virtual Dictionary<string, string>? TokenMappings { get; set; }
-    }
-
-    public partial class SmsCampaignTriggered
-    {
-        public virtual ProjectId ProjectId { get; set; }
-        public virtual AccountId AccountId { get; set; }
-        public virtual TriggerId TriggerId { get; set; }
-        public virtual TriggerType TriggerType { get; set; }
-        public virtual string SourceEvent { get; set; }
-        public virtual string? SchemaId { get; set; }
-        public virtual Dictionary<string, string>? TokenMappings { get; set; }
-    }
-
-    public partial class SseCallTriggered
-    {
-        public virtual ProjectId ProjectId { get; set; }
-        public virtual AccountId AccountId { get; set; }
-        public virtual TriggerId TriggerId { get; set; }
-        public virtual TriggerType TriggerType { get; set; }
-        public virtual string SourceEvent { get; set; }
-        public virtual string? TargetUserAuthId { get; set; }
-        public virtual string? SchemaId { get; set; }
-        public virtual Dictionary<string, string>? TokenMappings { get; set; }
-        public virtual string? CorrelationId { get; set; }
-    }
-
-    public partial class EmailVerificationCodeRequested
-        : IPasskeyMessage
-    {
-        public virtual string Email { get; set; }
-        public virtual Guid ProjectId { get; set; }
-        public virtual string Code { get; set; }
-        public virtual DateTime ExpiresAtUtc { get; set; }
-    }
-
-    public partial interface IPasskeyMessage
-    {
-    }
-
-    public partial class MagicLinkRequested
-        : IPasskeyMessage
-    {
-        public virtual string Email { get; set; }
-        public virtual Guid ProjectId { get; set; }
-        public virtual string Token { get; set; }
-        public virtual DateTime ExpiresAtUtc { get; set; }
-    }
-
-    public partial class PasswordChanged
-        : IPasskeyMessage
-    {
-        public virtual string Email { get; set; }
-        public virtual Guid ProjectId { get; set; }
-    }
-
-    public partial class PasswordResetRequested
-        : IPasskeyMessage
-    {
-        public virtual string Email { get; set; }
-        public virtual Guid ProjectId { get; set; }
-        public virtual string Token { get; set; }
-        public virtual DateTime ExpiresAtUtc { get; set; }
-    }
-
-    public partial class PushBatchRegistered
-    {
-        public virtual CampaignId CampaignId { get; set; }
-        public virtual CampaignBatchId CampaignBatchId { get; set; }
-        public virtual string? StartingAfter { get; set; }
-    }
-
-    public partial class PushCampaignCompleted
-    {
-        public virtual CampaignId CampaignId { get; set; }
-        public virtual HashSet<ErrorDto>? Errors { get; set; }
-    }
-
-    public partial class PushCampaignFailed
-    {
-        public virtual CampaignId CampaignId { get; set; }
-        public virtual HashSet<ErrorDto> Errors { get; set; } = [];
-    }
-
-    public partial class PushCampaignStarted
-    {
-        public virtual CampaignId CampaignId { get; set; }
-    }
-
-    public partial class PushCampaignStopped
-    {
-        public virtual CampaignId CampaignId { get; set; }
-        public virtual CampaignStopReason? Reason { get; set; }
-    }
-
-    public partial class PushNotificationClicked
-    {
-        public virtual CampaignId CampaignId { get; set; }
-        public virtual CampaignBatchId CampaignBatchId { get; set; }
-        public virtual NotificationId NotificationId { get; set; }
-        public virtual string? SourceId { get; set; }
-    }
-
-    public partial class PushNotificationRead
-    {
-        public virtual CampaignId CampaignId { get; set; }
-        public virtual CampaignBatchId CampaignBatchId { get; set; }
-        public virtual NotificationId NotificationId { get; set; }
-    }
-
     public partial interface IHasViewId
     {
         string ViewId { get; set; }
@@ -19670,77 +16344,6 @@ namespace Norbix.Sdk.Types.Hub;
         Production,
     }
 
-    public partial class SmsBatchRegistered
-    {
-        public virtual CampaignId CampaignId { get; set; }
-        public virtual CampaignBatchId CampaignBatchId { get; set; }
-        public virtual string? StartingAfter { get; set; }
-    }
-
-    public partial class SmsCampaignCompleted
-    {
-        public virtual CampaignId CampaignId { get; set; }
-        public virtual HashSet<ErrorDto>? Errors { get; set; }
-    }
-
-    public partial class SmsCampaignFailed
-    {
-        public virtual CampaignId CampaignId { get; set; }
-        public virtual HashSet<ErrorDto> Errors { get; set; } = [];
-    }
-
-    public partial class SmsCampaignStarted
-    {
-        public virtual CampaignId CampaignId { get; set; }
-    }
-
-    public partial class SmsCampaignStopped
-    {
-        public virtual CampaignId CampaignId { get; set; }
-        public virtual CampaignStopReason? Reason { get; set; }
-    }
-
-    public partial class SmsNotificationClicked
-    {
-        public virtual CampaignId CampaignId { get; set; }
-        public virtual CampaignBatchId CampaignBatchId { get; set; }
-        public virtual NotificationId NotificationId { get; set; }
-        public virtual string? SourceId { get; set; }
-    }
-
-    public partial class SmsNotificationRead
-    {
-        public virtual CampaignId CampaignId { get; set; }
-        public virtual CampaignBatchId CampaignBatchId { get; set; }
-        public virtual NotificationId NotificationId { get; set; }
-    }
-
-    public partial class AccessInformation
-    {
-        public virtual IpAddress? Ip { get; set; }
-        public virtual UtcDateTime? Date { get; set; }
-        public virtual TimeZone? Zone { get; set; }
-    }
-
-    public partial class Auth
-        : IBindableContract
-    {
-        public virtual AuthId Id { get; set; }
-        public virtual HashSet<RoleName>? Roles { get; set; }
-        public virtual EmailAddress? Email { get; set; }
-        public virtual AuthUserName? UserName { get; set; }
-        public virtual AuthType Type { get; set; }
-        public virtual Registration Registration { get; set; }
-        public virtual Login? Login { get; set; }
-        public virtual UserGeneralInfo? GeneralInfo { get; set; }
-        public virtual AuthStatus Status { get; set; }
-        public virtual UtcDateTime CreatedOn { get; set; }
-        public virtual UtcDateTime ModifiedOn { get; set; }
-        public virtual PushDevices? PushDevices { get; set; }
-        public virtual HashSet<Tag>? Tags { get; set; }
-        public virtual UserRef? UserRef { get; set; }
-    }
-
     public enum AuthStatus
     {
         Registered = 0,
@@ -19757,86 +16360,6 @@ namespace Norbix.Sdk.Types.Hub;
         Male,
         Female,
         Other,
-    }
-
-    public partial class Login
-    {
-        public virtual bool NeedChangePasswordOnNextLogin { get; set; }
-        public virtual AccessInformation? LastAccessInformation { get; set; }
-    }
-
-    public partial class Registration
-    {
-        public virtual AccessInformation RegistrationInformation { get; set; }
-    }
-
-    public partial class UserBlocked
-    {
-        public virtual UserGeneralInfo? User { get; set; }
-        public virtual AuthId AuthId { get; set; }
-    }
-
-    public partial class UserCreated
-    {
-        public virtual UserId UserId { get; set; }
-        public virtual ProjectId ProjectId { get; set; }
-        public virtual AuthId? AuthId { get; set; }
-    }
-
-    public partial class UserDeleted
-    {
-        public virtual UserGeneralInfo? User { get; set; }
-        public virtual AuthId AuthId { get; set; }
-    }
-
-    public partial class UserGeneralInfo
-        : IBindableContract
-    {
-        public virtual Phone? Phone { get; set; }
-        public virtual EmailAddress? PrimaryEmail { get; set; }
-        public virtual DisplayName? DisplayName { get; set; }
-        public virtual FirstName? FirstName { get; set; }
-        public virtual LastName? LastName { get; set; }
-        public virtual FullName? FullName { get; set; }
-        public virtual Address? Address { get; set; }
-        public virtual string? Company { get; set; }
-        public virtual Gender? Gender { get; set; }
-        public virtual UtcDateTime? BirthDate { get; set; }
-        public virtual TimeZone? TimeZone { get; set; }
-        public virtual Language? Language { get; set; }
-        public virtual UserMarketingPreferences? MarketingPreferences { get; set; }
-        public virtual string? Notes { get; set; }
-        public virtual string? ExtraMetadata { get; set; }
-    }
-
-    public partial class UserInvited
-    {
-        public virtual EmailAddress EmailAddress { get; set; }
-    }
-
-    public partial class UserRegistered
-    {
-        public virtual Auth Auth { get; set; }
-        public virtual UserId? LinkToUser { get; set; }
-    }
-
-    public partial class UserUnblocked
-    {
-        public virtual UserGeneralInfo? User { get; set; }
-        public virtual AuthId AuthId { get; set; }
-    }
-
-    public partial class UserUpdated
-    {
-        public virtual AuthId AuthId { get; set; }
-        public virtual UserGeneralInfo From { get; set; }
-        public virtual UserGeneralInfo To { get; set; }
-    }
-
-    public partial class UserVerified
-    {
-        public virtual AuthId AuthId { get; set; }
-        public virtual UserGeneralInfo? User { get; set; }
     }
 
     public partial class CursorArgs

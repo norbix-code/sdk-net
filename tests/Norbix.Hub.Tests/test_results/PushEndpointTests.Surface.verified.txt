@@ -6,7 +6,7 @@
     DELETE /{version}/notifications/push/templates/{Id} -> DeletePushTemplateAsync,
     GET /{version}/notifications/push/campaigns -> GetPushCampaignsAsync,
     GET /{version}/notifications/push/campaigns/{campaignId}/messages -> GetPushCampaignMessagesAsync,
-    GET /{version}/notifications/push/campaigns/{campaignId}/messages/{id} -> GetPushCampaignMessageAsync,
+    GET /{version}/notifications/push/campaigns/{campaignId}/messages/{notificationId} -> GetPushCampaignMessageAsync,
     GET /{version}/notifications/push/campaigns/{id} -> GetPushCampaignAsync,
     GET /{version}/notifications/push/campaigns/{id}/batches -> GetPushCampaignBatchesAsync,
     GET /{version}/notifications/push/campaigns/{id}/batches/{batchId} -> GetPushCampaignBatchNotificationsAsync,
