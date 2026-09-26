@@ -8,7 +8,6 @@
 #pragma warning disable CS0114, CS1570, CS0102, CS0108, CS0618
 
 using System;
-using System.IO;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using Norbix.Sdk.Types;

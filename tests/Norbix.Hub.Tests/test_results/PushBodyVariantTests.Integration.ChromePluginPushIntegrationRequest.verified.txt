@@ -9,7 +9,7 @@
   },
   Body: {
     integration: {
-      provider: 12.0,
+      provider: chromePush,
       extensionId: ext-1,
       vapidPublicKey: pub,
       vapidPrivateKey: priv,

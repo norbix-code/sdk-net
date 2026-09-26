@@ -252,7 +252,7 @@
           isEnabled: true,
           stopOnError: true,
           task: {
-            type: 0.0
+            type: emailCampaign
           },
           env: test-env
         }

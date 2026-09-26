@@ -13,6 +13,7 @@
   <ItemGroup>
     <Compile Remove="Generated/Hub.dtos.cs" />
     <Compile Remove="PushCampaignEndpoints.cs" />
+    <Compile Remove="PushIntegrationEndpoints.cs" />
     <Compile Remove="TaxonomyTreeEndpoints.cs" />
     <Compile Remove="INorbixRequest.cs" />
     <Compile Remove="ResponseStatus.cs" />

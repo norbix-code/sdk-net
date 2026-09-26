@@ -115,7 +115,7 @@
         },
         Body: {
           campaign: {
-            source: 0.0,
+            source: allUsers,
             templateId: Guid_1,
             integrationId: Guid_1,
             validationIntegrationId: Guid_1,
@@ -860,7 +860,7 @@
         Body: {
           integration: {
             integrationId: Guid_1,
-            provider: 0.0,
+            provider: smtp,
             integrationName: test-integrationName,
             isEnabled: true,
             emailAddress: user@example.test,
@@ -1163,7 +1163,7 @@
           templateId: Guid_1,
           fileRef: {
             integrationId: Guid_1,
-            provider: 0.0,
+            provider: local,
             path: test-path,
             publicUrl: https://example.test/publicUrl,
             isPublic: true
@@ -1199,7 +1199,7 @@
         Body: {
           templateName: test-templateName,
           description: test-description,
-          communicationChannel: 0.0,
+          communicationChannel: transactional,
           env: test-env
         }
       },
@@ -1482,7 +1482,7 @@
           viewId: Guid_1,
           templateName: test-templateName,
           description: test-description,
-          communicationChannel: 0.0,
+          communicationChannel: transactional,
           env: test-env
         }
       },
@@ -1644,7 +1644,7 @@
         Body: {
           integration: {
             integrationId: Guid_1,
-            provider: 1.0,
+            provider: zeroBounce,
             integrationName: test-integrationName,
             isEnabled: true
           },
@@ -1805,7 +1805,7 @@
         },
         Body: {
           campaign: {
-            source: 0.0,
+            source: allUsers,
             templateId: Guid_1,
             integrationId: Guid_1,
             language: test-language,
@@ -2334,7 +2334,7 @@
             manufacturer: test-manufacturer,
             modelName: test-modelName,
             deviceName: test-deviceName,
-            deviceType: 0.0
+            deviceType: unknown
           },
           userId: Guid_1,
           accountId: Guid_1,
@@ -2574,7 +2574,7 @@
         Body: {
           integration: {
             integrationId: Guid_1,
-            provider: 0.0,
+            provider: appleApns,
             integrationName: test-integrationName,
             isEnabled: true
           },
@@ -2804,7 +2804,7 @@
         Body: {
           templateName: test-templateName,
           description: test-description,
-          communicationChannel: 0.0,
+          communicationChannel: transactional,
           env: test-env
         }
       },
@@ -3041,7 +3041,7 @@
           viewId: Guid_1,
           templateName: test-templateName,
           description: test-description,
-          communicationChannel: 0.0,
+          communicationChannel: transactional,
           env: test-env
         }
       },
@@ -3167,27 +3167,27 @@
           databaseIntegrationId: Guid_1,
           language: test-language,
           initiatorId: Guid_1,
-          deliveryType: 0.0,
+          deliveryType: allUsers,
           allUsers: {
-            recipientsSourceType: 0.0,
+            recipientsSourceType: allUsers,
             campaignTime: 1.0,
-            respectTimeZoneSettings: 1.0
+            respectTimeZoneSettings: respectToLastLoginZone
           },
           specifiedUsers: {
-            recipientsSourceType: 0.0,
+            recipientsSourceType: allUsers,
             campaignTime: 1.0,
-            respectTimeZoneSettings: 1.0
+            respectTimeZoneSettings: respectToLastLoginZone
           },
           collection: {
-            fieldType: 0.0,
+            fieldType: user,
             schemaName: test-schemaName,
-            recipientsSourceType: 0.0,
+            recipientsSourceType: allUsers,
             campaignTime: 1.0
           },
           phoneNumbers: {
-            recipientsSourceType: 0.0,
+            recipientsSourceType: allUsers,
             campaignTime: 1.0,
-            respectTimeZoneSettings: 1.0
+            respectTimeZoneSettings: respectToLastLoginZone
           },
           env: test-env
         }
@@ -3829,7 +3829,7 @@
         Body: {
           integration: {
             integrationId: Guid_1,
-            provider: 0.0,
+            provider: twilio,
             integrationName: test-integrationName,
             isEnabled: true
           },
@@ -4023,7 +4023,7 @@
         Body: {
           templateName: test-templateName,
           description: test-description,
-          communicationChannel: 0.0,
+          communicationChannel: transactional,
           env: test-env
         }
       },
@@ -4258,7 +4258,7 @@
           viewId: Guid_1,
           templateName: test-templateName,
           description: test-description,
-          communicationChannel: 0.0,
+          communicationChannel: transactional,
           env: test-env
         }
       },

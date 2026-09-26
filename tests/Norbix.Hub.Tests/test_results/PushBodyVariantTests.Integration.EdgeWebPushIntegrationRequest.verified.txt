@@ -9,7 +9,7 @@
   },
   Body: {
     integration: {
-      provider: 6.0,
+      provider: edgeWeb,
       vapidPublicKey: pub,
       vapidPrivateKey: priv,
       subject: mailto:ops@example.test,

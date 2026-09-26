@@ -9,7 +9,7 @@
   },
   Body: {
     integration: {
-      provider: 15.0,
+      provider: fake,
       integrationName: fake,
       isEnabled: true
     }

@@ -771,7 +771,7 @@
         Body: {
           integration: {
             integrationId: Guid_1,
-            provider: 0.0,
+            provider: appleSignIn,
             integrationName: test-integrationName,
             isEnabled: true
           },
@@ -1253,7 +1253,7 @@
           X-CM-ProjectId: test-project
         },
         Body: {
-          triggerType: 0.0,
+          triggerType: membership,
           schemaId: Guid_1,
           env: test-env
         }
@@ -1287,7 +1287,7 @@
           X-CM-ProjectId: test-project
         },
         Body: {
-          triggerType: 0.0,
+          triggerType: membership,
           schemaId: Guid_1,
           env: test-env
         }
@@ -1394,7 +1394,7 @@
         },
         Body: {
           trigger: {
-            type: 0.0,
+            type: membership,
             triggerId: Guid_1,
             name: test-name,
             description: test-description,

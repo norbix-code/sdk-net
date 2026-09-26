@@ -13,7 +13,7 @@
         user-1,
         user-2
       ],
-      source: 1.0,
+      source: specifiedUsers,
       templateId: tpl-1
     }
   }

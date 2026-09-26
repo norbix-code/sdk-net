@@ -8,8 +8,8 @@
   },
   Body: {
     integration: {
-      provider: 0.0,
-      integrationType: 0.0,
+      provider: local,
+      integrationType: iam,
       bucketName: norbix-invoices,
       region: eu-central-1,
       integrationName: Invoices bucket,
