@@ -14611,18 +14611,6 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual string? DeliveryFamily { get; set; }
     }
 
-    [NorbixRoute("/{version}/notifications/push/integrations/app/request", "POST")]
-    public partial class RegisterCodeMashAppPushIntegration
-        : CodeMashRequestBase, INorbixRequest<EmptyResponse>, IHasAccountId
-    {
-        public virtual string AccountId { get; set; }
-        public virtual string UserId { get; set; }
-        public virtual string RequestId { get; set; }
-        public virtual int Pin { get; set; }
-        public virtual DateTime ValidTill { get; set; }
-        public virtual string PublicKey { get; set; }
-    }
-
     ///<summary>
     ///Gets push settings
     ///</summary>

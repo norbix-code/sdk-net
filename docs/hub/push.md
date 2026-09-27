@@ -90,7 +90,6 @@ the gateway writes them.
 |---|---|---|
 | `GetPushIntegrationsAsync` | `GET` | `/notifications/push/integrations` |
 | `SavePushIntegrationAsync` | `POST` | `/notifications/push/integrations` |
-| `RegisterCodeMashAppPushIntegrationAsync` | `POST` | `/notifications/push/integrations/app/request` |
 | `ConfirmPushIntegrationHumanDeliveryAsync` | `POST` | `/notifications/push/integrations/confirm-human-delivery` |
 | `TestPushIntegrationAsync` | `POST` | `/notifications/push/integrations/test` |
 | `DeletePushIntegrationAsync` | `DELETE` | `/notifications/push/integrations/{Id}` |
@@ -202,9 +201,3 @@ send and contacts no push service, so nothing reaches a real device.
 `GetPushCampaignMessageAsync` needs `CampaignId`, `CampaignBatchId` and
 `NotificationId`. The route's last part is filled from `NotificationId` (the
 request's `Id` is the same value), so you only set those three.
-
-## Known gaps
-
-| what | why |
-|---|---|
-| the two managed-app endpoints | `integrations/app/check` and `integrations/test/codemash-app` are commented out on the gateway and are not routed at all, so the SDK has no method for them. |
