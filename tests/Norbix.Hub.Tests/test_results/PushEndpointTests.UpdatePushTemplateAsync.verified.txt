@@ -20,7 +20,7 @@
       viewId: Guid_1,
       templateName: test-templateName,
       description: test-description,
-      communicationChannel: 0.0,
+      communicationChannel: transactional,
       env: test-env
     }
   },

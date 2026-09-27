@@ -15,7 +15,7 @@
       userTags: [
         beta
       ],
-      source: 0.0,
+      source: allUsers,
       templateId: tpl-1
     }
   }

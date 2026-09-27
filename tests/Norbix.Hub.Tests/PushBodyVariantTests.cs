@@ -123,7 +123,6 @@ public sealed class PushBodyVariantTests
                 new AndroidFirebasePushIntegrationRequest
                 {
                     IntegrationName = "firebase",
-                    Provider = PushProvider.AndroidFirebase,
                     ProjectId = "fb-project",
                     ClientEmail = "svc@example.test",
                     ServiceAccountJson = "{}",
@@ -135,7 +134,6 @@ public sealed class PushBodyVariantTests
                 new AppleApnsPushIntegrationRequest
                 {
                     IntegrationName = "apns",
-                    Provider = PushProvider.AppleApns,
                     TeamId = "team-1",
                     AppBundleId = "test.bundle",
                     KeyId = "key-1",
@@ -149,7 +147,6 @@ public sealed class PushBodyVariantTests
                 new ChromePluginPushIntegrationRequest
                 {
                     IntegrationName = "chrome-plugin",
-                    Provider = PushProvider.CodeMashChromePlugin,
                     ExtensionId = "ext-1",
                     VapidPublicKey = "pub",
                     VapidPrivateKey = "priv",
@@ -162,7 +159,6 @@ public sealed class PushBodyVariantTests
                 new ChromeWebPushIntegrationRequest
                 {
                     IntegrationName = "chrome-web",
-                    Provider = PushProvider.ChromeWeb,
                     VapidPublicKey = "pub",
                     VapidPrivateKey = "priv",
                     Subject = "mailto:ops@example.test",
@@ -174,7 +170,6 @@ public sealed class PushBodyVariantTests
                 new EdgeWebPushIntegrationRequest
                 {
                     IntegrationName = "edge-web",
-                    Provider = PushProvider.EdgeWeb,
                     VapidPublicKey = "pub",
                     VapidPrivateKey = "priv",
                     Subject = "mailto:ops@example.test",
@@ -186,7 +181,6 @@ public sealed class PushBodyVariantTests
                 new FirefoxWebPushIntegrationRequest
                 {
                     IntegrationName = "firefox-web",
-                    Provider = PushProvider.FirefoxWeb,
                     VapidPublicKey = "pub",
                     VapidPrivateKey = "priv",
                     Subject = "mailto:ops@example.test",
@@ -198,7 +192,6 @@ public sealed class PushBodyVariantTests
                 new SafariPushIntegrationRequest
                 {
                     IntegrationName = "safari",
-                    Provider = PushProvider.SafariPush,
                     WebsitePushId = "web.test.push",
                     CertificateP12Base64 = "base64",
                     CertificatePassword = "pwd",

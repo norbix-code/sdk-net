@@ -278,7 +278,7 @@
         Body: {
           integration: {
             integrationId: Guid_1,
-            provider: 0.0,
+            provider: awsLambda,
             integrationName: test-integrationName,
             isEnabled: true
           },
@@ -959,9 +959,9 @@
         Body: {
           integration: {
             listingViewId: Guid_1,
-            transport: 0.0,
+            transport: mcp,
             vendor: test-vendor,
-            category: 0.0,
+            category: other,
             description: test-description,
             config: {
               test-key: test-string

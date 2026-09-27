@@ -53,6 +53,10 @@ internal sealed class HttpTransport : INorbixTransport, IDisposable
         PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
         PropertyNameCaseInsensitive = true,
         Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
+        // The gateway writes enums as camelCase names and reads polymorphic
+        // bodies by a string discriminator (`source`, `provider`), so a number
+        // there is rejected. Reading still accepts numbers.
+        Converters = { new JsonStringEnumConverter(JsonNamingPolicy.CamelCase) },
     };
 
     private readonly NorbixClientOptions _options;

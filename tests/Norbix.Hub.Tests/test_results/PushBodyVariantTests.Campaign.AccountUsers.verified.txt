@@ -12,7 +12,7 @@
       userRecipients: [
         account-user-1
       ],
-      source: 4.0,
+      source: accountUsers,
       templateId: tpl-1
     }
   }

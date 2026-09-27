@@ -1,0 +1,178 @@
+﻿{
+  Sent: [
+    {
+      Method: GET,
+      Path: /v2/notifications/push/enable,
+      Headers: {
+        Authorization: Bearer test-bearer,
+        X-CM-AccountId: test-account,
+        X-CM-ProjectId: test-project
+      }
+    },
+    {
+      Method: POST,
+      Path: /v2/notifications/push/integrations,
+      Headers: {
+        Authorization: Bearer test-bearer,
+        Content-Type: application/json; charset=utf-8,
+        X-CM-AccountId: test-account,
+        X-CM-ProjectId: test-project
+      },
+      Body: {
+        integration: {
+          provider: fake,
+          integrationName: fake,
+          isEnabled: true
+        }
+      }
+    },
+    {
+      Method: GET,
+      Path: /v2/notifications/push/integrations/int-fake,
+      Headers: {
+        Authorization: Bearer test-bearer,
+        X-CM-AccountId: test-account,
+        X-CM-ProjectId: test-project
+      }
+    },
+    {
+      Method: PUT,
+      Path: /v2/notifications/push/integrations/int-fake/default,
+      Headers: {
+        Authorization: Bearer test-bearer,
+        X-CM-AccountId: test-account,
+        X-CM-ProjectId: test-project
+      }
+    },
+    {
+      Method: POST,
+      Path: /v2/notifications/push/integrations/test,
+      Headers: {
+        Authorization: Bearer test-bearer,
+        Content-Type: application/json; charset=utf-8,
+        X-CM-AccountId: test-account,
+        X-CM-ProjectId: test-project
+      },
+      Body: {
+        integrationId: int-fake,
+        testToken: fake-device-token,
+        deliveryFamily: ios
+      }
+    },
+    {
+      Method: POST,
+      Path: /v2/notifications/push/integrations/confirm-human-delivery,
+      Headers: {
+        Authorization: Bearer test-bearer,
+        Content-Type: application/json; charset=utf-8,
+        X-CM-AccountId: test-account,
+        X-CM-ProjectId: test-project
+      },
+      Body: {
+        integrationId: int-fake
+      }
+    },
+    {
+      Method: POST,
+      Path: /v2/notifications/push/templates,
+      Headers: {
+        Authorization: Bearer test-bearer,
+        Content-Type: application/json; charset=utf-8,
+        X-CM-AccountId: test-account,
+        X-CM-ProjectId: test-project
+      },
+      Body: {
+        templateName: welcome,
+        communicationChannel: transactional,
+        translations: [
+          {
+            language: en,
+            content: {
+              title: Hi,
+              body: Welcome
+            }
+          }
+        ]
+      }
+    },
+    {
+      Method: POST,
+      Path: /v2/notifications/push/devices,
+      Headers: {
+        Authorization: Bearer test-bearer,
+        Content-Type: application/json; charset=utf-8,
+        X-CM-AccountId: test-account,
+        X-CM-ProjectId: test-project
+      },
+      Body: {
+        pushDeviceDto: {
+          deviceOs: ios,
+          token: fake-device-token,
+          deviceType: phone
+        },
+        userId: user-1,
+        projectId: test-project
+      }
+    },
+    {
+      Method: POST,
+      Path: /v2/notifications/push/campaigns,
+      Headers: {
+        Authorization: Bearer test-bearer,
+        Content-Type: application/json; charset=utf-8,
+        X-CM-AccountId: test-account,
+        X-CM-ProjectId: test-project
+      },
+      Body: {
+        campaign: {
+          devices: [
+            {
+              token: fake-device-token,
+              deliveryFamily: ios
+            }
+          ],
+          source: devices,
+          templateId: tpl-1
+        }
+      }
+    },
+    {
+      Method: GET,
+      Path: /v2/notifications/push/campaigns/cmp-1,
+      Headers: {
+        Authorization: Bearer test-bearer,
+        X-CM-AccountId: test-account,
+        X-CM-ProjectId: test-project
+      }
+    },
+    {
+      Method: GET,
+      Path: /v2/notifications/push/campaigns/cmp-1/stats,
+      Headers: {
+        Authorization: Bearer test-bearer,
+        X-CM-AccountId: test-account,
+        X-CM-ProjectId: test-project
+      }
+    }
+  ],
+  Read: {
+    IntegrationId: int-fake,
+    IntegrationProvider: Fake,
+    TestResults: [
+      {
+        Operation: send,
+        Result: ok
+      }
+    ],
+    TemplateId: tpl-1,
+    DeviceId: dev-1,
+    CampaignId: cmp-1,
+    CampaignStatus: Started,
+    CampaignAudience: Devices,
+    Stats: {
+      Batches: 1,
+      Sent: 1,
+      SuccessRate: 1.0
+    }
+  }
+}

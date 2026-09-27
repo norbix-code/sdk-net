@@ -9,7 +9,7 @@
   },
   Body: {
     integration: {
-      provider: 4.0,
+      provider: chromeWeb,
       vapidPublicKey: pub,
       vapidPrivateKey: priv,
       subject: mailto:ops@example.test,

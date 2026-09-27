@@ -288,7 +288,7 @@ The public endpoint surface is generated from gateway DTOs at compile time. The 
 | `internal` | 1 | Internal type-generation endpoint. |
 | `logs` | 9 | Logging integrations and module settings. |
 | `membership` | 25 | Roles, policies, users, preferences, integrations, triggers. |
-| `notifications` | 68 | Email and push templates, integrations, campaigns, devices, settings. |
+| `notifications` | 68 | Email and push templates, integrations, campaigns, devices, settings. Push: [docs/hub/push.md](./docs/hub/push.md). |
 | `payments` | 16 | Payment integrations, triggers, tests, and module settings. |
 | `scheduler` | 8 | Scheduler module and task management. |
 | `webhooks` | 8 | Webhook integrations, destinations, tests, and module settings. |

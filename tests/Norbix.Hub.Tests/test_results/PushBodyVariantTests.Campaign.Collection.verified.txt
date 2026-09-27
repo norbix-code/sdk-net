@@ -13,14 +13,14 @@
         userId
       ],
       schemaName: subscribers,
-      fieldType: 0.0,
+      fieldType: user,
       roleNames: [
         member
       ],
       languages: [
         en
       ],
-      source: 2.0,
+      source: collection,
       templateId: tpl-1
     }
   }

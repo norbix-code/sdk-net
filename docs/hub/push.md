@@ -24,8 +24,55 @@ await norbix.Notifications.EnablePushAsync();
 var templates = await norbix.Notifications.GetPushTemplatesAsync(new GetPushTemplates());
 ```
 
-Every method is covered by a test in `tests/Norbix.Hub.Tests/PushEndpointTests.cs`
-that snapshots the exact request it sends.
+Tests (all in `tests/Norbix.Hub.Tests/`, none of them contact a push service):
+
+- `PushEndpointTests.cs` — one test per method; snapshots the exact request it sends.
+- `PushBodyVariantTests.cs` — the five campaign audiences and eight provider shapes.
+- `PushFakeFlowTests.cs` — the Fake provider from enable to campaign statistics,
+  with real JSON replies, so reading the answers is tested too.
+
+## Quick start with the Fake provider
+
+The Fake provider accepts a send and never contacts a real push service. Use it
+in tests and local development.
+
+```csharp
+var push = norbix.Notifications;
+
+await push.EnablePushAsync(new EnablePush());
+
+var integration = await push.SavePushIntegrationAsync(new SavePushIntegration
+{
+    Integration = new FakePushIntegrationRequest { IntegrationName = "fake", IsEnabled = true },
+});
+await push.SetPushIntegrationAsDefaultAsync(
+    new SetPushIntegrationAsDefaultRequest { Id = integration!.Id! });
+
+var template = await push.CreatePushTemplateAsync(new CreatePushTemplateRequest
+{
+    TemplateName = "welcome",
+    CommunicationChannel = CommunicationChannel.Transactional,
+    Translations =
+    [
+        new() { Language = "en", Content = new() { Title = "Hi", Body = "Welcome" } },
+    ],
+});
+
+var campaign = await push.CreatePushCampaignAsync(new CreatePushCampaignRequest
+{
+    Campaign = new PushToDevicesRequest
+    {
+        TemplateId = template!.Id!,
+        Devices = [new() { Token = "device-token", DeliveryFamily = PushDeviceDeliveryFamily.Ios }],
+    },
+});
+
+var stats = await push.GetPushCampaignStatisticsAsync(
+    new GetPushCampaignStatistics { Id = campaign!.Id! });
+```
+
+Enums go over the wire as camelCase names (`"fake"`, `"devices"`), the same way
+the gateway writes them.
 
 
 ## Module
@@ -89,6 +136,20 @@ that snapshots the exact request it sends.
 | method | verb | path |
 |---|---|---|
 | `RegisterDeviceAsync` | `POST` | `/notifications/push/devices` |
+| `GetPushDevicesAsync` | `GET` | `/notifications/push/devices` |
+| `GetPushDeviceAsync` | `GET` | `/notifications/push/devices/{id}` |
+
+`GetPushDevicesAsync` lists the devices registered in the project, each with
+the user it belongs to. Narrow it with `UserId`, `DeviceKey` (the provider
+token) or `Platform` (`ios`, `android`, `chrome`, `safari`, `expo`); a word
+outside that list is refused rather than answered with an empty page.
+
+Devices are stored inside their user, so a page is a page of **users** and
+carries every matching device those users hold. Follow `HasMore` rather than
+stopping at the first short page.
+
+`GetPushDeviceAsync` takes one device id and answers with the device and its
+owner.
 
 ## Choosing who a campaign goes to
 
@@ -130,17 +191,20 @@ await norbix.Notifications.CreatePushCampaignAsync(new CreatePushCampaignRequest
 | Firefox web | `FirefoxWebPushIntegrationRequest` |
 | Safari | `SafariPushIntegrationRequest` |
 
+Each request type sets its own `Provider` value, so do not set it yourself.
+(The Chrome extension type sends `chromePush`.)
+
 Use `FakePushIntegrationRequest` in tests and local development. It accepts a
 send and contacts no push service, so nothing reaches a real device.
 
-## Known gaps
+## Reading one campaign message
 
-Three things do not work yet. They are gateway contract problems, not client
-bugs, and each is tracked separately.
+`GetPushCampaignMessageAsync` needs `CampaignId`, `CampaignBatchId` and
+`NotificationId`. The route's last part is filled from `NotificationId` (the
+request's `Id` is the same value), so you only set those three.
+
+## Known gaps
 
 | what | why |
 |---|---|
-| `GetPushCampaignMessageAsync` | the route declares a `{id}` token, but the request type has `CampaignId`, `CampaignBatchId` and `NotificationId` and no `Id`, so the token can never be filled. |
-| `CreatePushCampaignAsync` and `SavePushIntegrationAsync` over the wire | the client writes enum values as numbers, and the server reads the `source` / `provider` discriminator as a string. The request is built correctly but the server rejects it. The same applies to email campaigns, so the fix belongs in the shared transport. |
-| the two managed-app endpoints | `integrations/app/check` and `integrations/test/codemash-app` are commented out on the gateway and are not routed at all. |
-
+| the two managed-app endpoints | `integrations/app/check` and `integrations/test/codemash-app` are commented out on the gateway and are not routed at all, so the SDK has no method for them. |

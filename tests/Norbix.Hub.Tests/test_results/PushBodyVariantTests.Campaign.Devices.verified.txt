@@ -12,10 +12,10 @@
       devices: [
         {
           token: device-token-1,
-          deliveryFamily: 0.0
+          deliveryFamily: ios
         }
       ],
-      source: 3.0,
+      source: devices,
       templateId: tpl-1
     }
   }
