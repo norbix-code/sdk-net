@@ -34,6 +34,15 @@ If you need to add behavior that isn't per-endpoint (e.g. a new auth helper, a t
 - `src/Norbix.Sdk/NorbixClientOptions.cs` — config + env-var loading
 - `src/Norbix.Sdk/Auth/*.cs` — login flow
 
+## Versioning
+
+The major version is frozen at **v3** until the public launch.
+
+- A breaking change is released as a **minor** (for example v3.2.0 → v3.3.0), never as a new major.
+- Write it as `feat(<scope>): <what>` and add a line `Breaking: <what changed and what callers must do>` in plain words, in the pull-request body and in the commit message.
+- Never mark it the conventional-commits way: no `!` in the title (`feat!:`), no BREAKING CHANGE footer. The `PR title` check fails a pull request that does.
+- As a safety net, the release config (`.releaserc.json` → `releaseRules`) maps breaking commits to a minor, so one that slips through still does not bump the major.
+
 ## Conventional commits
 
 Required. The commit type drives the version bump:
@@ -45,7 +54,7 @@ Required. The commit type drives the version bump:
 | `perf:` `refactor:` | patch | |
 | `docs(readme):` | patch | |
 | `chore:` `test:` `ci:` `style:` | none | |
-| any with `!` or `BREAKING CHANGE:` footer | major | `feat!: drop net6.0 support` |
+| breaking: `feat(...)` + `Breaking:` note (see Versioning) | minor | `feat(targets): drop net6.0 support` |
 
 PRs to `main` get a sticky comment from `release-preview.yml` showing the computed next version before you merge.
 

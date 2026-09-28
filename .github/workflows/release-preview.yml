@@ -67,4 +67,4 @@ jobs:
             ```
             </details>
 
-            > _If `next_version` is `none`, your commits don't trigger a release. Use `feat:` for minor, `fix:` / `perf:` for patch, or `feat!:` for major._
+            > _If `next_version` is `none`, your commits don't trigger a release. Use `feat:` for minor (breaking changes too, until launch), `fix:` / `perf:` for patch._
