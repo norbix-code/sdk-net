@@ -1,0 +1,73 @@
+# Pull-request title check — versioning policy until the public launch.
+#
+# The major version is frozen until the public launch: a breaking change is
+# released as a minor. So a pull request must not mark itself as breaking the
+# conventional-commits way. This check fails when:
+#   - the title is not a conventional commit ("type(scope): what"), or
+#   - the title contains "!:" (the breaking marker), or
+#   - the body, or any commit message in the pull request, has a
+#     "BREAKING CHANGE:" / "BREAKING-CHANGE:" footer line.
+# Commits are checked too because pull requests are merged with
+# "Rebase and merge", so each commit message lands on main as it is.
+# Write a breaking change as feat(...) with a "Breaking:" note in plain words.
+# See "Versioning" in the README / CONTRIBUTING.
+
+name: PR title
+
+on:
+  pull_request:
+    types: [opened, edited, reopened, synchronize]
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  pr-title:
+    name: pr-title
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Check title, body and commit messages
+        env:
+          TITLE: ${{ github.event.pull_request.title }}
+          BODY: ${{ github.event.pull_request.body }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          fail=0
+          types='feat|fix|perf|refactor|docs|chore|test|ci|style|build|revert'
+          # A footer as the release tools read it: at the start of a line
+          # (after optional spaces, "*" or ">").
+          footer='^[[:space:]*>]*BREAKING[ -]CHANGE:'
+
+          if [[ "$TITLE" == *'!:'* ]]; then
+            echo "::error::Title has '!:'. The major version is frozen until launch: use feat(...) and write 'Breaking: <what>' in the body."
+            fail=1
+          fi
+          if ! [[ "$TITLE" =~ ^($types)(\([^\)]+\))?!?:\ [^[:space:]] ]]; then
+            echo "::error::Title is not a conventional commit. Use '<type>(<scope>): <what>' with type one of: ${types//|/, }."
+            fail=1
+          fi
+          if printf '%s\n' "$BODY" | grep -Eq "$footer"; then
+            echo "::error::Body has a BREAKING CHANGE footer. Write 'Breaking: <what>' instead."
+            fail=1
+          fi
+
+          gh api "repos/$GH_REPO/pulls/$PR_NUMBER/commits" --paginate \
+            --jq '.[] | .sha[0:8] + " " + (.commit.message | @base64)' > commits.txt
+          while read -r sha msg64; do
+            msg=$(printf '%s' "$msg64" | base64 -d)
+            subject=${msg%%$'\n'*}
+            if [[ "$subject" == *'!:'* ]]; then
+              echo "::error::Commit $sha has '!:' in its subject: $subject"
+              fail=1
+            fi
+            if printf '%s\n' "$msg" | grep -Eq "$footer"; then
+              echo "::error::Commit $sha has a BREAKING CHANGE footer. Reword it to 'Breaking: <what>'."
+              fail=1
+            fi
+          done < commits.txt
+
+          if [ "$fail" -ne 0 ]; then exit 1; fi
+          echo "Title, body and commits follow the versioning policy."
