@@ -7,7 +7,7 @@
 
 Official .NET SDK for [Norbix](https://norbix.ai). There are **two packages**:
 
-- **`Norbix.Api`**: project-scoped data (collections, users, AI chat)
+- **`Norbix.Api`**: project-scoped data (collections, users)
 - **`Norbix.Hub`**: project/account configuration (schemas, integrations, team, billing)
 
 Each package exposes the same ergonomic surface (e.g. `client.Database`, `client.Membership`) but targets only its gateway (API or Hub). Targets .NET 10.
@@ -266,11 +266,10 @@ public sealed class OrdersController(NorbixClient norbix) : ControllerBase
 
 The public endpoint surface is generated from gateway DTOs at compile time. The test snapshots in `tests/Norbix.Sdk.Tests/test_results` verify every generated module by sending a request and deserializing a representative response.
 
-### API — project-scoped data (38 endpoints)
+### API — project-scoped data (37 endpoints)
 
 | Module | Endpoints | Description |
 | --- | ---: | --- |
-| `chat` | 1 | AI chat completion. |
 | `database` | 18 | Collection CRUD, count, distinct, aggregate, saved aggregate execution, taxonomy reads. |
 | `echo` | 1 | Smoke-test echo endpoint. |
 | `membership` | 18 | User CRUD, registration, preferences, roles, and permissions. |
