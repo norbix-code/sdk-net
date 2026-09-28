@@ -1354,6 +1354,54 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual Dictionary<DeliveryChannel, bool> DefaultDelivery { get; set; } = new();
     }
 
+    [DataContract]
+    public partial class AiScopeDto
+    {
+        [DataMember]
+        public virtual string Reach { get; set; }
+
+        [DataMember]
+        public virtual string? ProjectId { get; set; }
+
+        [DataMember]
+        public virtual string Rights { get; set; }
+
+        [DataMember]
+        public virtual List<string> Envs { get; set; } = [];
+    }
+
+    [DataContract]
+    public partial class AiServiceUserDto
+    {
+        [DataMember]
+        public virtual string Id { get; set; }
+
+        [DataMember]
+        public virtual string Name { get; set; }
+
+        [DataMember]
+        public virtual AiScopeDto Scope { get; set; }
+
+        [DataMember]
+        public virtual DateTime CreatedAt { get; set; }
+
+        [DataMember]
+        public virtual List<AiServiceUserKeyDto> Keys { get; set; } = [];
+    }
+
+    [DataContract]
+    public partial class AiServiceUserKeyDto
+    {
+        [DataMember]
+        public virtual string Id { get; set; }
+
+        [DataMember]
+        public virtual string Hint { get; set; }
+
+        [DataMember]
+        public virtual DateTime IssuedAt { get; set; }
+    }
+
     public partial class CodeMashSubscriptionDto
     {
         public virtual string ViewId { get; set; }
@@ -1362,6 +1410,20 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual DateTime IssuedOn { get; set; }
         public virtual bool IsTrial { get; set; }
         public virtual string SubscriptionRefId { get; set; }
+    }
+
+    [DataContract]
+    public partial class CreateAiServiceUserResponse
+        : ResponseBase
+    {
+        [DataMember]
+        public virtual string Id { get; set; }
+
+        [DataMember]
+        public virtual string KeyId { get; set; }
+
+        [DataMember]
+        public virtual string Key { get; set; }
     }
 
     [DataContract]
@@ -1556,6 +1618,14 @@ namespace Norbix.Sdk.Types.Hub;
     }
 
     [DataContract]
+    public partial class ListAiServiceUsersResponse
+        : ResponseBase
+    {
+        [DataMember]
+        public virtual List<AiServiceUserDto> Items { get; set; } = [];
+    }
+
+    [DataContract]
     public partial class ProjectEnvironmentsDto
     {
         [DataMember]
@@ -1611,6 +1681,17 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember]
         public virtual bool WasDryRun { get; set; }
+    }
+
+    [DataContract]
+    public partial class RotateAiServiceUserKeyResponse
+        : ResponseBase
+    {
+        [DataMember]
+        public virtual string KeyId { get; set; }
+
+        [DataMember]
+        public virtual string Key { get; set; }
     }
 
     [DataContract]
@@ -6651,6 +6732,67 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual string? Token { get; set; }
     }
 
+    [NorbixRoute("/{version}/account/ai/service-users", "POST")]
+    public partial class CreateAiServiceUserRequest
+        : RequestBase, INorbixRequest<CreateAiServiceUserResponse>
+    {
+        ///<summary>
+        ///A name people recognise, e.g. "Claude Code on my laptop".
+        ///</summary>
+        public virtual string Name { get; set; }
+
+        ///<summary>
+        ///Reach (account | project + projectId), rights (read | admin), envs (["TEST"] or ["TEST","PROD"]).
+        ///</summary>
+        public virtual AiScopeDto Scope { get; set; }
+    }
+
+    [NorbixRoute("/{version}/account/ai/service-users/{Id}", "DELETE")]
+    public partial class DeleteAiServiceUserRequest
+        : RequestBase, INorbixRequest<EmptyResponse>
+    {
+        ///<summary>
+        ///The service user id (aisu_…).
+        ///</summary>
+        public virtual string Id { get; set; }
+    }
+
+    [NorbixRoute("/{version}/account/ai/service-users", "GET")]
+    public partial class ListAiServiceUsersRequest
+        : RequestBase, INorbixRequest<ListAiServiceUsersResponse>
+    {
+    }
+
+    [NorbixRoute("/{version}/account/ai/service-users/{Id}/keys/{KeyId}", "DELETE")]
+    public partial class RevokeAiServiceUserKeyRequest
+        : RequestBase, INorbixRequest<EmptyResponse>
+    {
+        ///<summary>
+        ///The service user id (aisu_…).
+        ///</summary>
+        public virtual string Id { get; set; }
+
+        ///<summary>
+        ///The key id (aisk_…) to revoke.
+        ///</summary>
+        public virtual string KeyId { get; set; }
+    }
+
+    [NorbixRoute("/{version}/account/ai/service-users/{Id}/keys", "POST")]
+    public partial class RotateAiServiceUserKeyRequest
+        : RequestBase, INorbixRequest<RotateAiServiceUserKeyResponse>
+    {
+        ///<summary>
+        ///The service user id (aisu_…).
+        ///</summary>
+        public virtual string Id { get; set; }
+
+        ///<summary>
+        ///Optional key id (aisk_…) to revoke in the same change — a rotation.
+        ///</summary>
+        public virtual string? RevokeKeyId { get; set; }
+    }
+
     [NorbixRoute("/{version}/account/licensing/status", "GET")]
     public partial class GetInstallationLicenseStatus
         : RequestBase, INorbixRequest<GetInstallationLicenseStatusResponse>
@@ -7447,6 +7589,11 @@ namespace Norbix.Sdk.Types.Hub;
         ///The complete new list of allowed origin URLs, e.g. ["https://app.example.com", "https://example.com"]. An entry with no scheme (e.g. "example.com") defaults to https. Whatever is not in this list stops being allowed.
         ///</summary>
         public virtual HashSet<string>? Origins { get; set; }
+
+        ///<summary>
+        ///Optional. true removes the project's own Admin Portal origin (pr_{projectId}.{admin host}) on purpose. Without it, a list that drops that origin is rejected with CM-ERRORS-PROJECTS-037, because the Norbix-generated end-user portal could no longer call the project's API.
+        ///</summary>
+        public virtual bool? RemoveAdminPortalOrigin { get; set; }
     }
 
     ///<summary>
@@ -7691,6 +7838,12 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual string? GroupTag { get; set; }
     }
 
+    public partial class AgentOnboardingSnippet
+    {
+        public virtual string Client { get; set; }
+        public virtual string Config { get; set; }
+    }
+
     public partial class AiToolManifestItem
     {
         public virtual string Name { get; set; }
@@ -7718,23 +7871,6 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual string SessionId { get; set; }
         public virtual string EntryId { get; set; }
         public virtual Dictionary<string, string>? Answers { get; set; }
-    }
-
-    ///<summary>
-    ///Gets account info.
-    ///</summary>
-    [NorbixRoute("/{version}/account/chat/complete", "POST")]
-    public partial class AskChatRequest
-        : RequestBase, INorbixRequest<AskChatResponse>
-    {
-        public virtual string Prompt { get; set; }
-        public virtual string? Profile { get; set; }
-    }
-
-    public partial class AskChatResponse
-        : ResponseBase
-    {
-        public virtual string? Result { get; set; }
     }
 
     ///<summary>
@@ -7865,6 +8001,27 @@ namespace Norbix.Sdk.Types.Hub;
         : RequestBase, INorbixRequest<EmptyResponse>
     {
         public virtual string NoteId { get; set; }
+    }
+
+    ///<summary>
+    ///Paste-ready prompt and client snippets to connect an AI tool to this installation.
+    ///</summary>
+    [NorbixRoute("/{version}/account/agent/onboarding", "GET")]
+    public partial class GetAgentOnboardingRequest
+        : RequestBase, INorbixRequest<GetAgentOnboardingResponse>
+    {
+    }
+
+    public partial class GetAgentOnboardingResponse
+        : ResponseBase
+    {
+        public virtual string? Prompt { get; set; }
+        public virtual string? HubUrl { get; set; }
+        public virtual string? ApiUrl { get; set; }
+        public virtual string? McpUrl { get; set; }
+        public virtual string? DocsUrl { get; set; }
+        public virtual string? InstallationType { get; set; }
+        public virtual List<AgentOnboardingSnippet>? Snippets { get; set; }
     }
 
     ///<summary>
@@ -11164,6 +11321,12 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember]
         public virtual string? DatabaseIntegrationId { get; set; }
+
+        ///<summary>
+        ///Optional. true sends the campaign now (or at a campaignTime sooner than the review window). Without it, a campaign created by an AI tool must be scheduled at least 24 hours ahead for role-based / all-users / collection audiences and at least 1 hour ahead for direct recipient lists, or it is rejected with CM-ERRORS-CAMPAIGNS-016. Set it only when the user explicitly asked to send now.
+        ///</summary>
+        [DataMember]
+        public virtual bool? SendNow { get; set; }
     }
 
     ///<summary>
@@ -11444,9 +11607,19 @@ namespace Norbix.Sdk.Types.Hub;
         : RequestBase, INorbixRequest<PreviewEmailNotificationResponse>
     {
         ///<summary>
-        ///The opaque, pre-signed preview hash identifying the project and notification to preview.
+        ///The signed preview link hash. With it the preview opens without sign-in: exactly one notification, until the link expires (30 days after sending).
         ///</summary>
         public virtual string Hash { get; set; }
+
+        ///<summary>
+        ///Signed-in preview by id: the project id. With a hash it must match the hash.
+        ///</summary>
+        public virtual string? ProjectId { get; set; }
+
+        ///<summary>
+        ///Signed-in preview by id: the notification id (needs email:read). With a hash it must match the hash.
+        ///</summary>
+        public virtual string? NotificationId { get; set; }
     }
 
     public partial class PreviewEmailNotificationResponse
@@ -13987,6 +14160,12 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember]
         public virtual string? DatabaseIntegrationId { get; set; }
+
+        ///<summary>
+        ///Optional. true sends the campaign now (or at a campaignTime sooner than the review window). Without it, a campaign created by an AI tool must be scheduled at least 24 hours ahead for role-based / all-users / collection audiences and at least 1 hour ahead for direct recipient lists, or it is rejected with CM-ERRORS-CAMPAIGNS-016. Set it only when the user explicitly asked to send now.
+        ///</summary>
+        [DataMember]
+        public virtual bool? SendNow { get; set; }
     }
 
     ///<summary>
@@ -14193,9 +14372,19 @@ namespace Norbix.Sdk.Types.Hub;
         : RequestBase, INorbixRequest<PreviewPushNotificationResponse>
     {
         ///<summary>
-        ///The encrypted preview hash identifying the project and notification.
+        ///The signed preview link hash. With it the preview opens without sign-in: exactly one notification, until the link expires (30 days after sending).
         ///</summary>
         public virtual string Hash { get; set; }
+
+        ///<summary>
+        ///Signed-in preview by id: the project id. With a hash it must match the hash.
+        ///</summary>
+        public virtual string? ProjectId { get; set; }
+
+        ///<summary>
+        ///Signed-in preview by id: the notification id (needs push:read). With a hash it must match the hash.
+        ///</summary>
+        public virtual string? NotificationId { get; set; }
     }
 
     public partial class PreviewPushNotificationResponse
@@ -15024,6 +15213,12 @@ namespace Norbix.Sdk.Types.Hub;
         ///</summary>
         [DataMember]
         public virtual SmsToPhoneNumbersDeliverySettingsDto? PhoneNumbers { get; set; }
+
+        ///<summary>
+        ///Optional. true sends the campaign now (or at a campaignTime sooner than the review window). Without it, a campaign created by an AI tool must be scheduled at least 24 hours ahead for role-based / all-users / collection audiences and at least 1 hour ahead for direct recipient lists, or it is rejected with CM-ERRORS-CAMPAIGNS-016. Set it only when the user explicitly asked to send now.
+        ///</summary>
+        [DataMember]
+        public virtual bool? SendNow { get; set; }
     }
 
     ///<summary>
@@ -15222,9 +15417,19 @@ namespace Norbix.Sdk.Types.Hub;
         : RequestBase, INorbixRequest<PreviewSmsNotificationResponse>
     {
         ///<summary>
-        ///Signed preview hash identifying the notification to render.
+        ///The signed preview link hash. With it the preview opens without sign-in: exactly one notification, until the link expires (30 days after sending).
         ///</summary>
         public virtual string Hash { get; set; }
+
+        ///<summary>
+        ///Signed-in preview by id: the project id. With a hash it must match the hash.
+        ///</summary>
+        public virtual string? ProjectId { get; set; }
+
+        ///<summary>
+        ///Signed-in preview by id: the notification id (needs sms:read). With a hash it must match the hash.
+        ///</summary>
+        public virtual string? NotificationId { get; set; }
     }
 
     public partial class PreviewSmsNotificationResponse
@@ -16031,6 +16236,15 @@ namespace Norbix.Sdk.Types.Hub;
     {
     }
 
+    public partial class EchoAgentDto
+    {
+        public virtual string McpUrl { get; set; }
+        public virtual string? OAuthMetadataUrl { get; set; }
+        public virtual string InstallationType { get; set; }
+        public virtual string OnboardingDocsUrl { get; set; }
+        public virtual string ToolsUrl { get; set; }
+    }
+
     public partial class EchoRegionDto
     {
         public virtual string Code { get; set; }
@@ -16063,6 +16277,7 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual int? GraceDaysLeft { get; set; }
         public virtual string? InstallationDomain { get; set; }
         public virtual string? LicensingDocsUrl { get; set; }
+        public virtual EchoAgentDto? Agent { get; set; }
     }
 
     [NorbixRoute("/{version}/public/projects/{ProjectId}/config", "GET")]

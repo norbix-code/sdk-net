@@ -70,24 +70,6 @@ namespace Norbix.Sdk.Types.Api;
     }
 
     ///<summary>
-    ///AI
-    ///</summary>
-    [NorbixRoute("/{version}/chat/complete", "POST")]
-    [DataContract]
-    public partial class AskChatRequest
-        : CodeMashRequestBase, INorbixRequest<AskChatResponse>
-    {
-        [DataMember]
-        public virtual string Prompt { get; set; }
-    }
-
-    public partial class AskChatResponse
-        : ResponseBase
-    {
-        public virtual string? Result { get; set; }
-    }
-
-    ///<summary>
     ///Database
     ///</summary>
     [NorbixRoute("/{version}/database/collections/{collectionName}/aggregate", "POST")]
@@ -2364,6 +2346,15 @@ namespace Norbix.Sdk.Types.Api;
     {
     }
 
+    public partial class EchoAgentDto
+    {
+        public virtual string McpUrl { get; set; }
+        public virtual string? OAuthMetadataUrl { get; set; }
+        public virtual string InstallationType { get; set; }
+        public virtual string OnboardingDocsUrl { get; set; }
+        public virtual string ToolsUrl { get; set; }
+    }
+
     public partial class EchoRegionDto
     {
         public virtual string Code { get; set; }
@@ -2396,6 +2387,7 @@ namespace Norbix.Sdk.Types.Api;
         public virtual int? GraceDaysLeft { get; set; }
         public virtual string? InstallationDomain { get; set; }
         public virtual string? LicensingDocsUrl { get; set; }
+        public virtual EchoAgentDto? Agent { get; set; }
     }
 
     [NorbixRoute("/{version}/public/projects/{ProjectId}/config", "GET")]

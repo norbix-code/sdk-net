@@ -27,6 +27,7 @@
         campaignTime: 1.0
       },
       databaseIntegrationId: Guid_1,
+      sendNow: true,
       env: test-env
     }
   },

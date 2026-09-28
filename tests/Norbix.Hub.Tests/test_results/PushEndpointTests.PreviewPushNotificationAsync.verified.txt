@@ -10,7 +10,7 @@
   Sent: {
     Method: GET,
     Path: /v2/notifications/push/preview,
-    Query: ?hash=test-hash,
+    Query: ?hash=test-hash&notificationId={guid},
     Headers: {
       Authorization: Bearer test-bearer,
       X-CM-AccountId: test-account,
