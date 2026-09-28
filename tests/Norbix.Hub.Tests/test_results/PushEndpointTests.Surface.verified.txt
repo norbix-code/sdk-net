@@ -1,5 +1,5 @@
 ﻿{
-  Count: 39,
+  Count: 38,
   Endpoints: [
     DELETE /{version}/notifications/push/campaigns/{Id} -> DeletePushCampaignAsync,
     DELETE /{version}/notifications/push/integrations/{Id} -> DeletePushIntegrationAsync,
@@ -28,7 +28,6 @@
     POST /{version}/notifications/push/campaigns/{Id}/stop -> StopPushCampaignAsync,
     POST /{version}/notifications/push/devices -> RegisterDeviceAsync,
     POST /{version}/notifications/push/integrations -> SavePushIntegrationAsync,
-    POST /{version}/notifications/push/integrations/app/request -> RegisterCodeMashAppPushIntegrationAsync,
     POST /{version}/notifications/push/integrations/confirm-human-delivery -> ConfirmPushIntegrationHumanDeliveryAsync,
     POST /{version}/notifications/push/integrations/test -> TestPushIntegrationAsync,
     POST /{version}/notifications/push/templates -> CreatePushTemplateAsync,
