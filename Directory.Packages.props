@@ -17,7 +17,7 @@
     <PackageVersion Include="Microsoft.CodeAnalysis.Analyzers" Version="4.14.0" />
 
     <!-- Test stack: NUnit + Verify + AwesomeAssertions (drop-in for FluentAssertions) -->
-    <PackageVersion Include="NUnit" Version="4.6.1" />
+    <PackageVersion Include="NUnit" Version="5.0.0" />
     <PackageVersion Include="NUnit3TestAdapter" Version="6.3.0" />
     <PackageVersion Include="NUnit.Analyzers" Version="4.15.0" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.10.1" />
