@@ -1,7 +1,7 @@
 ﻿{
   Target: Hub,
   Group: account,
-  Count: 93,
+  Count: 98,
   Endpoints: [
     {
       Target: Hub,
@@ -320,6 +320,165 @@
         Token: test-token,
         Id: Guid_1,
         Status: test-status,
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: account,
+      MethodName: CreateAiServiceUserAsync,
+      RequestType: CreateAiServiceUserRequest,
+      HttpMethod: POST,
+      Path: /{version}/account/ai/service-users,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/account/ai/service-users,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          name: test-name,
+          scope: {
+            reach: test-reach,
+            projectId: Guid_1,
+            rights: test-rights,
+            envs: [
+              test-string
+            ]
+          }
+        }
+      },
+      ResponseType: CreateAiServiceUserResponse,
+      Response: {
+        Id: Guid_1,
+        KeyId: Guid_1,
+        Key: test-key,
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: account,
+      MethodName: DeleteAiServiceUserAsync,
+      RequestType: DeleteAiServiceUserRequest,
+      HttpMethod: DELETE,
+      Path: /{version}/account/ai/service-users/{Id},
+      PathParams: [
+        Id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: DELETE,
+        Path: /v2/account/ai/service-users/{guid},
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: account,
+      MethodName: ListAiServiceUsersAsync,
+      RequestType: ListAiServiceUsersRequest,
+      HttpMethod: GET,
+      Path: /{version}/account/ai/service-users,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/account/ai/service-users,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: ListAiServiceUsersResponse,
+      Response: {
+        Items: [
+          {}
+        ],
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: account,
+      MethodName: RevokeAiServiceUserKeyAsync,
+      RequestType: RevokeAiServiceUserKeyRequest,
+      HttpMethod: DELETE,
+      Path: /{version}/account/ai/service-users/{Id}/keys/{KeyId},
+      PathParams: [
+        Id,
+        KeyId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: DELETE,
+        Path: /v2/account/ai/service-users/{guid}/keys/{guid},
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: account,
+      MethodName: RotateAiServiceUserKeyAsync,
+      RequestType: RotateAiServiceUserKeyRequest,
+      HttpMethod: POST,
+      Path: /{version}/account/ai/service-users/{Id}/keys,
+      PathParams: [
+        Id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/account/ai/service-users/{guid}/keys,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          revokeKeyId: Guid_1
+        }
+      },
+      ResponseType: RotateAiServiceUserKeyResponse,
+      Response: {
+        KeyId: Guid_1,
+        Key: test-key,
         ResponseStatus: {
           IsSuccess: true
         }
@@ -1870,6 +2029,7 @@
           X-CM-ProjectId: test-project
         },
         Body: {
+          removeAdminPortalOrigin: true,
           env: test-env
         }
       },
@@ -2488,37 +2648,6 @@
     {
       Target: Hub,
       Group: account,
-      MethodName: AskChatAsync,
-      RequestType: AskChatRequest,
-      HttpMethod: POST,
-      Path: /{version}/account/chat/complete,
-      IsAccountScoped: false,
-      IsUnauthenticated: false,
-      Sent: {
-        Method: POST,
-        Path: /v2/account/chat/complete,
-        Headers: {
-          Authorization: Bearer test-bearer,
-          Content-Type: application/json; charset=utf-8,
-          X-CM-AccountId: test-account,
-          X-CM-ProjectId: test-project
-        },
-        Body: {
-          prompt: test-prompt,
-          profile: test-profile
-        }
-      },
-      ResponseType: AskChatResponse,
-      Response: {
-        Result: test-result,
-        ResponseStatus: {
-          IsSuccess: true
-        }
-      }
-    },
-    {
-      Target: Hub,
-      Group: account,
       MethodName: ChatAvailabilityAsync,
       RequestType: ChatAvailabilityRequest,
       HttpMethod: GET,
@@ -2690,6 +2819,40 @@
       },
       ResponseType: EmptyResponse,
       Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: account,
+      MethodName: GetAgentOnboardingAsync,
+      RequestType: GetAgentOnboardingRequest,
+      HttpMethod: GET,
+      Path: /{version}/account/agent/onboarding,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/account/agent/onboarding,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: GetAgentOnboardingResponse,
+      Response: {
+        Prompt: test-prompt,
+        HubUrl: https://example.test/hubUrl,
+        ApiUrl: https://example.test/apiUrl,
+        McpUrl: https://example.test/mcpUrl,
+        DocsUrl: https://example.test/docsUrl,
+        InstallationType: test-installationType,
+        Snippets: [
+          {}
+        ],
         ResponseStatus: {
           IsSuccess: true
         }

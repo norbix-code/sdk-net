@@ -124,6 +124,7 @@
             notes: test-notes
           },
           databaseIntegrationId: Guid_1,
+          sendNow: true,
           env: test-env
         }
       },
@@ -411,7 +412,7 @@
       Sent: {
         Method: GET,
         Path: /v2/notifications/email/preview,
-        Query: ?hash=test-hash,
+        Query: ?hash=test-hash&notificationId={guid},
         Headers: {
           Authorization: Bearer test-bearer,
           X-CM-AccountId: test-account,
@@ -1814,6 +1815,7 @@
             campaignTime: 1.0
           },
           databaseIntegrationId: Guid_1,
+          sendNow: true,
           env: test-env
         }
       },
@@ -2102,7 +2104,7 @@
       Sent: {
         Method: GET,
         Path: /v2/notifications/push/preview,
-        Query: ?hash=test-hash,
+        Query: ?hash=test-hash&notificationId={guid},
         Headers: {
           Authorization: Bearer test-bearer,
           X-CM-AccountId: test-account,
@@ -3154,6 +3156,7 @@
             campaignTime: 1.0,
             respectTimeZoneSettings: respectToLastLoginZone
           },
+          sendNow: true,
           env: test-env
         }
       },
@@ -3442,7 +3445,7 @@
       Sent: {
         Method: GET,
         Path: /v2/notifications/sms/preview,
-        Query: ?hash=test-hash,
+        Query: ?hash=test-hash&notificationId={guid},
         Headers: {
           Authorization: Bearer test-bearer,
           X-CM-AccountId: test-account,

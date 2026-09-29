@@ -52,7 +52,14 @@
         LicensingMode: test-licensingMode,
         GraceDaysLeft: 7,
         InstallationDomain: test-installationDomain,
-        LicensingDocsUrl: https://example.test/licensingDocsUrl
+        LicensingDocsUrl: https://example.test/licensingDocsUrl,
+        Agent: {
+          McpUrl: https://example.test/mcpUrl,
+          OAuthMetadataUrl: https://example.test/oAuthMetadataUrl,
+          InstallationType: test-installationType,
+          OnboardingDocsUrl: https://example.test/onboardingDocsUrl,
+          ToolsUrl: https://example.test/toolsUrl
+        }
       }
     }
   ]
