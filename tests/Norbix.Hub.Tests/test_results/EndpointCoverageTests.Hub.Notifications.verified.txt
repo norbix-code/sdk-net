@@ -1,7 +1,7 @@
 ﻿{
   Target: Hub,
   Group: notifications,
-  Count: 122,
+  Count: 123,
   Endpoints: [
     {
       Target: Hub,
@@ -1891,6 +1891,51 @@
           Language: test-language,
           ForceCampaignLanguage: true,
           CampaignProcessingIntegrationId: Guid_1
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: notifications,
+      MethodName: GetPushCampaignAudienceCountAsync,
+      RequestType: GetPushCampaignAudienceCountRequest,
+      HttpMethod: POST,
+      Path: /{version}/notifications/push/campaigns/audience-count,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/notifications/push/campaigns/audience-count,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          campaign: {
+            source: allUsers,
+            templateId: Guid_1,
+            integrationId: Guid_1,
+            language: test-language,
+            initiatorId: Guid_1,
+            notes: test-notes,
+            campaignTime: 1.0
+          },
+          databaseIntegrationId: Guid_1,
+          env: test-env
+        }
+      },
+      ResponseType: GetPushCampaignAudienceCountResponse,
+      Response: {
+        Result: {
+          Devices: 7,
+          Recipients: 7,
+          SkippedUserIds: 7,
+          IsCapped: true
         },
         ResponseStatus: {
           IsSuccess: true

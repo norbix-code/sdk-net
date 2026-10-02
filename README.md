@@ -266,20 +266,21 @@ public sealed class OrdersController(NorbixClient norbix) : ControllerBase
 
 The public endpoint surface is generated from gateway DTOs at compile time. The test snapshots in `tests/Norbix.Sdk.Tests/test_results` verify every generated module by sending a request and deserializing a representative response.
 
-### API — project-scoped data (37 endpoints)
+### API — project-scoped data (97 endpoints)
 
 | Module | Endpoints | Description |
 | --- | ---: | --- |
+| `ai` | 18 | End-user AI chat for a signed-in project user: availability, sessions, entries, feedback, attachments, memory, `StartEndUserChatTurnAsync` (answers at once with a turn id; the answer streams on the user's channel `ai-chat:{projectId}:{authId}`), plus the end-user tools. |
 | `database` | 18 | Collection CRUD, count, distinct, aggregate, saved aggregate execution, taxonomy reads. |
 | `echo` | 1 | Smoke-test echo endpoint. |
 | `membership` | 18 | User CRUD, registration, preferences, roles, and permissions. |
 
-### Hub — project & account configuration (244 endpoints)
+### Hub — project & account configuration (523 endpoints)
 
 | Module | Endpoints | Description |
 | --- | ---: | --- |
-| `account` | 37 | Account profile, status, projects, regions, team invites, billing, verification. |
-| `ai` | 14 | LLM and MCP integration configuration and tests. |
+| `account` | 108 | Account profile, status, projects, regions, team invites, billing, verification; project AI settings and assistants (`GetProjectAiSettingsAsync`, `UpdateProjectAiSettingsAsync`, `CreateProjectAiAssistantAsync`, `UpdateProjectAiAssistantAsync`, `DeleteProjectAiAssistantAsync`), AI wallet usage (`GetProjectAiUsageAsync`), the Admin Portal switch (`SetAdminPortalEnabledAsync`). |
+| `ai` | 20 | LLM, MCP and embedding integration configuration and tests (`SaveEmbeddingIntegrationAsync`, `TestEmbeddingIntegrationAsync`, …); `SetLlmIntegrationAsDefaultAsync`. |
 | `database` | 41 | Schemas, integrations, saved aggregates, taxonomies, triggers, module settings. |
 | `echo` | 1 | Smoke-test echo endpoint. |
 | `email` | 1 | Email helper endpoint. |
@@ -287,10 +288,12 @@ The public endpoint surface is generated from gateway DTOs at compile time. The 
 | `internal` | 1 | Internal type-generation endpoint. |
 | `logs` | 9 | Logging integrations and module settings. |
 | `membership` | 25 | Roles, policies, users, preferences, integrations, triggers. |
-| `notifications` | 68 | Email and push templates, integrations, campaigns, devices, settings. Push: [docs/hub/push.md](./docs/hub/push.md). |
+| `notifications` | 123 | Email and push templates, integrations, campaigns, devices, settings. Push: [docs/hub/push.md](./docs/hub/push.md). |
+| `oauth` | 5 | The gateway's OAuth server routes (register, authorize, token, revoke). |
 | `payments` | 16 | Payment integrations, triggers, tests, and module settings. |
 | `scheduler` | 8 | Scheduler module and task management. |
 | `webhooks` | 8 | Webhook integrations, destinations, tests, and module settings. |
+| `wellKnown` | 2 | OAuth discovery documents under `/.well-known`. |
 
 ## Working with terms
 

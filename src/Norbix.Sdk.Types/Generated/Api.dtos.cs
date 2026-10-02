@@ -8,6 +8,8 @@
 #pragma warning disable CS0114, CS1570, CS0102, CS0108, CS0618
 
 using System;
+using System.Collections;
+using System.IO;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using Norbix.Sdk.Types;
@@ -67,6 +69,321 @@ namespace Norbix.Sdk.Types.Api;
         Schema,
         Files,
         Payments,
+    }
+
+    ///<summary>
+    ///Archives or unarchives one of the caller's own AI chats.
+    ///</summary>
+    [NorbixRoute("/{version}/ai/chat/sessions/{SessionId}/archive", "PUT")]
+    public partial class ArchiveEndUserChatSessionRequest
+        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
+    {
+        public virtual string SessionId { get; set; }
+        public virtual bool Archived { get; set; }
+    }
+
+    ///<summary>
+    ///Opens a new AI chat for the caller.
+    ///</summary>
+    [NorbixRoute("/{version}/ai/chat/sessions", "POST")]
+    public partial class CreateEndUserChatSessionRequest
+        : CodeMashRequestBase, INorbixRequest<IdResponse>
+    {
+        public virtual string? AssistantId { get; set; }
+        public virtual string? Title { get; set; }
+    }
+
+    ///<summary>
+    ///Removes a file from one of the caller's own AI chats.
+    ///</summary>
+    [NorbixRoute("/{version}/ai/chat/attachments/{AttachmentId}", "DELETE")]
+    public partial class DeleteEndUserChatAttachmentRequest
+        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
+    {
+        public virtual string AttachmentId { get; set; }
+    }
+
+    ///<summary>
+    ///Deletes one of the caller's own AI chats.
+    ///</summary>
+    [NorbixRoute("/{version}/ai/chat/sessions/{SessionId}", "DELETE")]
+    public partial class DeleteEndUserChatSessionRequest
+        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
+    {
+        public virtual string SessionId { get; set; }
+    }
+
+    public partial class EndUserAiTool
+    {
+        public virtual string Name { get; set; }
+        public virtual string Description { get; set; }
+        public virtual List<string> Toolsets { get; set; } = [];
+        public virtual bool RequiresConfirmation { get; set; }
+        public virtual List<EndUserAiToolParameter> Parameters { get; set; } = [];
+    }
+
+    public partial class EndUserAiToolParameter
+    {
+        public virtual string Name { get; set; }
+        public virtual string Type { get; set; }
+        public virtual bool Required { get; set; }
+        public virtual string? Description { get; set; }
+    }
+
+    public partial class EndUserChatAssistant
+    {
+        public virtual string Id { get; set; }
+        public virtual string Name { get; set; }
+        public virtual string? WelcomeMessage { get; set; }
+        public virtual bool IsDefault { get; set; }
+        public virtual bool MemoryEnabled { get; set; }
+    }
+
+    public partial class EndUserChatAttachment
+    {
+        public virtual string Id { get; set; }
+        public virtual string SessionId { get; set; }
+        public virtual string FileName { get; set; }
+        public virtual string ContentType { get; set; }
+        public virtual string Kind { get; set; }
+        public virtual long Size { get; set; }
+        public virtual string? Summary { get; set; }
+        public virtual DateTime CreatedAtUtc { get; set; }
+    }
+
+    public partial class EndUserChatMemoryNote
+    {
+        public virtual string Id { get; set; }
+        public virtual string SessionId { get; set; }
+        public virtual string Kind { get; set; }
+        public virtual string Text { get; set; }
+        public virtual DateTime CreatedAtUtc { get; set; }
+    }
+
+    public partial class EndUserChatSession
+    {
+        public virtual string Id { get; set; }
+        public virtual string? AssistantId { get; set; }
+        public virtual string? Title { get; set; }
+        public virtual bool IsPinned { get; set; }
+        public virtual bool IsArchived { get; set; }
+        public virtual long LastSeq { get; set; }
+        public virtual DateTime CreatedAtUtc { get; set; }
+        public virtual DateTime UpdatedAtUtc { get; set; }
+    }
+
+    ///<summary>
+    ///Forgets one thing the AI chat remembers about the caller.
+    ///</summary>
+    [NorbixRoute("/{version}/ai/chat/memory/{NoteId}", "DELETE")]
+    public partial class ForgetEndUserChatMemoryRequest
+        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
+    {
+        public virtual string NoteId { get; set; }
+    }
+
+    ///<summary>
+    ///Lists the AI tools a project user may use: only their own data (own:* toolsets).
+    ///</summary>
+    [NorbixRoute("/{version}/ai/tools", "GET")]
+    public partial class GetEndUserAiToolsRequest
+        : RequestBase, INorbixRequest<GetEndUserAiToolsResponse>
+    {
+    }
+
+    public partial class GetEndUserAiToolsResponse
+        : ResponseBase
+    {
+        public virtual List<EndUserAiTool>? Tools { get; set; }
+    }
+
+    ///<summary>
+    ///Whether the AI chat can run for the caller, and which assistants it offers.
+    ///</summary>
+    [NorbixRoute("/{version}/ai/chat/availability", "GET")]
+    public partial class GetEndUserChatAvailabilityRequest
+        : CodeMashRequestBase, INorbixRequest<GetEndUserChatAvailabilityResponse>
+    {
+    }
+
+    public partial class GetEndUserChatAvailabilityResponse
+        : ResponseBase
+    {
+        public virtual bool Enabled { get; set; }
+        public virtual bool Available { get; set; }
+        public virtual string? Reason { get; set; }
+        public virtual string? DefaultAssistantId { get; set; }
+        public virtual List<EndUserChatAssistant> Assistants { get; set; } = [];
+    }
+
+    ///<summary>
+    ///Returns a page of one of the caller's own AI chat transcripts.
+    ///</summary>
+    [NorbixRoute("/{version}/ai/chat/sessions/{SessionId}/entries", "GET")]
+    public partial class GetEndUserChatEntriesRequest
+        : CodeMashRequestBase, INorbixRequest<GetEndUserChatEntriesResponse>
+    {
+        public virtual string SessionId { get; set; }
+        public virtual long? AfterSeq { get; set; }
+        public virtual int? Take { get; set; }
+    }
+
+    public partial class GetEndUserChatEntriesResponse
+        : ResponseBase
+    {
+        public virtual string? SessionId { get; set; }
+        public virtual List<AiChatEntryWireDto> Entries { get; set; } = [];
+        public virtual long LastSeq { get; set; }
+        public virtual bool HasMore { get; set; }
+    }
+
+    ///<summary>
+    ///Returns one of the caller's own AI chats.
+    ///</summary>
+    [NorbixRoute("/{version}/ai/chat/sessions/{SessionId}", "GET")]
+    public partial class GetEndUserChatSessionRequest
+        : CodeMashRequestBase, INorbixRequest<GetEndUserChatSessionResponse>
+    {
+        public virtual string SessionId { get; set; }
+    }
+
+    public partial class GetEndUserChatSessionResponse
+        : ResponseBase
+    {
+        public virtual EndUserChatSession? Session { get; set; }
+    }
+
+    ///<summary>
+    ///Invokes one own-scope AI tool as the calling project user.
+    ///</summary>
+    [NorbixRoute("/{version}/ai/tools/{ToolName}", "POST")]
+    public partial class InvokeEndUserAiToolRequest
+        : RequestBase, INorbixRequest<InvokeEndUserAiToolResponse>
+    {
+        public virtual string ToolName { get; set; }
+        public virtual string? ArgumentsJson { get; set; }
+    }
+
+    public partial class InvokeEndUserAiToolResponse
+        : ResponseBase
+    {
+        public virtual string? Result { get; set; }
+    }
+
+    ///<summary>
+    ///Lists the files in one of the caller's own AI chats.
+    ///</summary>
+    [NorbixRoute("/{version}/ai/chat/sessions/{SessionId}/attachments", "GET")]
+    public partial class ListEndUserChatAttachmentsRequest
+        : CodeMashRequestBase, INorbixRequest<ListEndUserChatAttachmentsResponse>
+    {
+        public virtual string SessionId { get; set; }
+    }
+
+    public partial class ListEndUserChatAttachmentsResponse
+        : ResponseBase
+    {
+        public virtual List<EndUserChatAttachment> Attachments { get; set; } = [];
+    }
+
+    ///<summary>
+    ///Lists what the AI chat remembers about the caller.
+    ///</summary>
+    [NorbixRoute("/{version}/ai/chat/memory", "GET")]
+    public partial class ListEndUserChatMemoryRequest
+        : CodeMashRequestBase, INorbixRequest<ListEndUserChatMemoryResponse>
+    {
+        public virtual int? Take { get; set; }
+    }
+
+    public partial class ListEndUserChatMemoryResponse
+        : ResponseBase
+    {
+        public virtual List<EndUserChatMemoryNote> Notes { get; set; } = [];
+    }
+
+    ///<summary>
+    ///Lists the caller's own AI chats.
+    ///</summary>
+    [NorbixRoute("/{version}/ai/chat/sessions", "GET")]
+    public partial class ListEndUserChatSessionsRequest
+        : CodeMashRequestBase, INorbixRequest<ListEndUserChatSessionsResponse>
+    {
+        public virtual int? Take { get; set; }
+        public virtual bool IncludeArchived { get; set; }
+    }
+
+    public partial class ListEndUserChatSessionsResponse
+        : ResponseBase
+    {
+        public virtual List<EndUserChatSession> Sessions { get; set; } = [];
+    }
+
+    ///<summary>
+    ///Pins or unpins one of the caller's own AI chats.
+    ///</summary>
+    [NorbixRoute("/{version}/ai/chat/sessions/{SessionId}/pin", "PUT")]
+    public partial class PinEndUserChatSessionRequest
+        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
+    {
+        public virtual string SessionId { get; set; }
+        public virtual bool Pinned { get; set; }
+    }
+
+    ///<summary>
+    ///Renames one of the caller's own AI chats.
+    ///</summary>
+    [NorbixRoute("/{version}/ai/chat/sessions/{SessionId}", "PATCH")]
+    public partial class RenameEndUserChatSessionRequest
+        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
+    {
+        public virtual string SessionId { get; set; }
+        public virtual string? Title { get; set; }
+    }
+
+    ///<summary>
+    ///Likes, dislikes or clears one message of the caller's own AI chat.
+    ///</summary>
+    [NorbixRoute("/{version}/ai/chat/sessions/{SessionId}/entries/{EntryId}/feedback", "PUT")]
+    public partial class SetEndUserChatEntryFeedbackRequest
+        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
+    {
+        public virtual string SessionId { get; set; }
+        public virtual string EntryId { get; set; }
+        public virtual string? Feedback { get; set; }
+    }
+
+    ///<summary>
+    ///Sends a message to the AI chat; the answer streams on the caller's channel.
+    ///</summary>
+    [NorbixRoute("/{version}/ai/chat/turn", "POST")]
+    public partial class StartEndUserChatTurnRequest
+        : CodeMashRequestBase, INorbixRequest<StartEndUserChatTurnResponse>
+    {
+        public virtual string? SessionId { get; set; }
+        public virtual string? AssistantId { get; set; }
+        public virtual string Message { get; set; }
+    }
+
+    public partial class StartEndUserChatTurnResponse
+        : ResponseBase
+    {
+        public virtual string? TurnId { get; set; }
+        public virtual string? SessionId { get; set; }
+        public virtual string? Channel { get; set; }
+    }
+
+    ///<summary>
+    ///Adds a file to one of the caller's own AI chats.
+    ///</summary>
+    [NorbixRoute("/{version}/ai/chat/sessions/{SessionId}/attachments", "POST")]
+    public partial class UploadEndUserChatAttachmentRequest
+        : CodeMashRequestBase, INorbixRequest<IdResponse>
+    {
+        public virtual string SessionId { get; set; }
+        public virtual string FileName { get; set; }
+        public virtual string ContentType { get; set; }
+        public virtual string Base64Content { get; set; }
     }
 
     ///<summary>
@@ -1759,6 +2076,19 @@ namespace Norbix.Sdk.Types.Api;
         string? Env { get; set; }
     }
 
+    public partial class PublicAiAssistantDto
+    {
+        public virtual string Id { get; set; }
+        public virtual string Name { get; set; }
+        public virtual string? Welcome { get; set; }
+    }
+
+    public partial class PublicAiChatDto
+    {
+        public virtual bool Enabled { get; set; }
+        public virtual List<PublicAiAssistantDto> Assistants { get; set; } = [];
+    }
+
     public partial class PublicAuthDto
     {
         public virtual List<string> SocialProviders { get; set; } = [];
@@ -1817,6 +2147,7 @@ namespace Norbix.Sdk.Types.Api;
         public virtual bool AdminPortalEnabled { get; set; }
         public virtual PublicBrandDto? Branding { get; set; }
         public virtual PublicAuthDto Auth { get; set; }
+        public virtual PublicAiChatDto AiChat { get; set; }
     }
 
     [DataContract]
@@ -1842,6 +2173,19 @@ namespace Norbix.Sdk.Types.Api;
 
         [DataMember(Name="cap")]
         public virtual int ProjectsCap { get; set; }
+    }
+
+    public partial class AiChatEntryWireDto
+    {
+        public virtual string Kind { get; set; }
+        public virtual string Id { get; set; }
+        public virtual long Seq { get; set; }
+        public virtual DateTime AtUtc { get; set; }
+        public virtual string? RefEntryId { get; set; }
+        public virtual string? WorkItemId { get; set; }
+        public virtual string? Feedback { get; set; }
+        public virtual DateTime? FeedbackAtUtc { get; set; }
+        public virtual string? FeedbackByUserAuthId { get; set; }
     }
 
     public partial interface IHasProjectId
