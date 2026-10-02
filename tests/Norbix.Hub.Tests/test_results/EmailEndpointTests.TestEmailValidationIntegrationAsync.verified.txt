@@ -1,0 +1,33 @@
+﻿{
+  Target: Hub,
+  Group: notifications,
+  MethodName: TestEmailValidationIntegrationAsync,
+  RequestType: TestEmailValidationIntegration,
+  HttpMethod: POST,
+  Path: /{version}/notifications/email/validation/integrations/test,
+  IsAccountScoped: false,
+  IsUnauthenticated: false,
+  Sent: {
+    Method: POST,
+    Path: /v2/notifications/email/validation/integrations/test,
+    Headers: {
+      Authorization: Bearer test-bearer,
+      Content-Type: application/json; charset=utf-8,
+      X-CM-AccountId: test-account,
+      X-CM-ProjectId: test-project
+    },
+    Body: {
+      integrationId: Guid_1,
+      env: test-env
+    }
+  },
+  ResponseType: TestEmailValidationIntegrationResponse,
+  Response: {
+    Items: [
+      {}
+    ],
+    ResponseStatus: {
+      IsSuccess: true
+    }
+  }
+}

@@ -1,0 +1,39 @@
+﻿{
+  Target: Hub,
+  Group: notifications,
+  MethodName: SaveEmailIntegrationAsync,
+  RequestType: SaveEmailIntegration,
+  HttpMethod: POST,
+  Path: /{version}/notifications/email/integrations,
+  IsAccountScoped: false,
+  IsUnauthenticated: false,
+  Sent: {
+    Method: POST,
+    Path: /v2/notifications/email/integrations,
+    Headers: {
+      Authorization: Bearer test-bearer,
+      Content-Type: application/json; charset=utf-8,
+      X-CM-AccountId: test-account,
+      X-CM-ProjectId: test-project
+    },
+    Body: {
+      integration: {
+        integrationId: Guid_1,
+        provider: smtp,
+        integrationName: test-integrationName,
+        isEnabled: true,
+        emailAddress: user@example.test,
+        emailSenderName: user@example.test
+      },
+      env: test-env
+    }
+  },
+  ResponseType: IdResponse,
+  Response: {
+    Id: Guid_1,
+    Status: test-status,
+    ResponseStatus: {
+      IsSuccess: true
+    }
+  }
+}

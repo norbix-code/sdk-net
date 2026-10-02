@@ -1,0 +1,33 @@
+﻿{
+  Target: Hub,
+  Group: notifications,
+  MethodName: GetEmailSignatureAsync,
+  RequestType: GetEmailSignature,
+  HttpMethod: GET,
+  Path: /{version}/notifications/email/signatures/{id},
+  PathParams: [
+    id
+  ],
+  IsAccountScoped: false,
+  IsUnauthenticated: false,
+  Sent: {
+    Method: GET,
+    Path: /v2/notifications/email/signatures/{guid},
+    Query: ?env=test-env,
+    Headers: {
+      Authorization: Bearer test-bearer,
+      X-CM-AccountId: test-account,
+      X-CM-ProjectId: test-project
+    }
+  },
+  ResponseType: GetEmailSignatureResponse,
+  Response: {
+    Item: {
+      ViewId: Guid_1,
+      DisplayName: test-displayName
+    },
+    ResponseStatus: {
+      IsSuccess: true
+    }
+  }
+}

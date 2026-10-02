@@ -1,0 +1,39 @@
+﻿{
+  Target: Hub,
+  Group: notifications,
+  MethodName: GetEmailIntegrationAsync,
+  RequestType: GetEmailIntegration,
+  HttpMethod: GET,
+  Path: /{version}/notifications/email/integrations/{id},
+  PathParams: [
+    id
+  ],
+  IsAccountScoped: false,
+  IsUnauthenticated: false,
+  Sent: {
+    Method: GET,
+    Path: /v2/notifications/email/integrations/{guid},
+    Query: ?env=test-env,
+    Headers: {
+      Authorization: Bearer test-bearer,
+      X-CM-AccountId: test-account,
+      X-CM-ProjectId: test-project
+    }
+  },
+  ResponseType: GetEmailIntegrationResponse,
+  Response: {
+    Item: {
+      EmailAddress: user@example.test,
+      EmailSenderName: user@example.test,
+      ViewId: Guid_1,
+      IntegrationName: test-integrationName,
+      IsEnabled: true,
+      Env: test-env,
+      LastIntegrationTestAtUtc: DateTime_1,
+      RequiresHumanDeliveryConfirmation: false
+    },
+    ResponseStatus: {
+      IsSuccess: true
+    }
+  }
+}
