@@ -1,8 +1,41 @@
 ﻿{
   Target: Hub,
   Group: email,
-  Count: 1,
+  Count: 2,
   Endpoints: [
+    {
+      Target: Hub,
+      Group: email,
+      MethodName: GetEmailPreferencesByLinkAsync,
+      RequestType: GetEmailPreferencesByLinkRequest,
+      HttpMethod: GET,
+      Path: /{version}/email/preferences,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/email/preferences,
+        Query: ?token=test-token,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: GetEmailPreferencesByLinkResponse,
+      Response: {
+        Item: {
+          EmailAddress: user@example.test,
+          UnsubscribedFromMarketing: true,
+          BlockReasons: [
+            test-string
+          ]
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
     {
       Target: Hub,
       Group: email,

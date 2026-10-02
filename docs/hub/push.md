@@ -122,7 +122,6 @@ the gateway writes them.
 | `DeletePushCampaignAsync` | `DELETE` | `/notifications/push/campaigns/{Id}` |
 | `StopPushCampaignAsync` | `POST` | `/notifications/push/campaigns/{Id}/stop` |
 | `GetPushCampaignMessagesAsync` | `GET` | `/notifications/push/campaigns/{campaignId}/messages` |
-| `GetPushCampaignMessageAsync` | `GET` | `/notifications/push/campaigns/{campaignId}/messages/{id}` |
 | `GetPushCampaignAsync` | `GET` | `/notifications/push/campaigns/{id}` |
 | `GetPushCampaignBatchesAsync` | `GET` | `/notifications/push/campaigns/{id}/batches` |
 | `GetPushCampaignBatchNotificationsAsync` | `GET` | `/notifications/push/campaigns/{id}/batches/{batchId}` |
@@ -198,6 +197,7 @@ send and contacts no push service, so nothing reaches a real device.
 
 ## Reading one campaign message
 
-`GetPushCampaignMessageAsync` needs `CampaignId`, `CampaignBatchId` and
-`NotificationId`. The route's last part is filled from `NotificationId` (the
-request's `Id` is the same value), so you only set those three.
+Use `GetPushCampaignBatchNotificationAsync` with `Id` (the campaign id),
+`BatchId` and `NotificationId`. The older `GetPushCampaignMessageAsync`
+(`/notifications/push/campaigns/{campaignId}/messages/{notificationId}`) was
+removed together with its gateway route.
