@@ -1,0 +1,16 @@
+﻿{
+  Base: SmsIntegrationRequest,
+  ProviderRequestTypes: [
+    (none — only the base request exists)
+  ],
+  ProvidersTheGatewayKnows: [
+    Twilio,
+    Vonage,
+    Plivo,
+    Telnyx,
+    Bird,
+    Telesign,
+    Sinch,
+    Fake
+  ]
+}

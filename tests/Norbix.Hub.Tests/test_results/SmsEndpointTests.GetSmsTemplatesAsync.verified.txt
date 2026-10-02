@@ -1,0 +1,37 @@
+﻿{
+  Target: Hub,
+  Group: notifications,
+  MethodName: GetSmsTemplatesAsync,
+  RequestType: GetSmsTemplates,
+  HttpMethod: GET,
+  Path: /{version}/notifications/sms/templates,
+  IsAccountScoped: false,
+  IsUnauthenticated: false,
+  Sent: {
+    Method: GET,
+    Path: /v2/notifications/sms/templates,
+    Query: ?showArchived=True&templateId={guid}&env=test-env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1,
+    Headers: {
+      Authorization: Bearer test-bearer,
+      X-CM-AccountId: test-account,
+      X-CM-ProjectId: test-project
+    }
+  },
+  ResponseType: GetSmsTemplatesResponse,
+  Response: {
+    List: {
+      Items: [
+        {
+          IsActive: false
+        }
+      ],
+      HasMore: false,
+      HasPrevious: false,
+      StartingAfter: cursor-start,
+      EndingBefore: cursor-end
+    },
+    ResponseStatus: {
+      IsSuccess: true
+    }
+  }
+}

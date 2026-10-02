@@ -1,0 +1,58 @@
+﻿{
+  Target: Hub,
+  Group: notifications,
+  MethodName: CreateSmsCampaignAsync,
+  RequestType: CreateSmsCampaignRequest,
+  HttpMethod: POST,
+  Path: /{version}/notifications/sms/campaigns,
+  IsAccountScoped: false,
+  IsUnauthenticated: false,
+  Sent: {
+    Method: POST,
+    Path: /v2/notifications/sms/campaigns,
+    Headers: {
+      Authorization: Bearer test-bearer,
+      Content-Type: application/json; charset=utf-8,
+      X-CM-AccountId: test-account,
+      X-CM-ProjectId: test-project
+    },
+    Body: {
+      templateId: Guid_1,
+      databaseIntegrationId: Guid_1,
+      language: test-language,
+      initiatorId: Guid_1,
+      deliveryType: allUsers,
+      allUsers: {
+        recipientsSourceType: allUsers,
+        campaignTime: 1.0,
+        respectTimeZoneSettings: respectToLastLoginZone
+      },
+      specifiedUsers: {
+        recipientsSourceType: allUsers,
+        campaignTime: 1.0,
+        respectTimeZoneSettings: respectToLastLoginZone
+      },
+      collection: {
+        fieldType: user,
+        schemaName: test-schemaName,
+        recipientsSourceType: allUsers,
+        campaignTime: 1.0
+      },
+      phoneNumbers: {
+        recipientsSourceType: allUsers,
+        campaignTime: 1.0,
+        respectTimeZoneSettings: respectToLastLoginZone
+      },
+      sendNow: true,
+      env: test-env
+    }
+  },
+  ResponseType: IdResponse,
+  Response: {
+    Id: Guid_1,
+    Status: test-status,
+    ResponseStatus: {
+      IsSuccess: true
+    }
+  }
+}

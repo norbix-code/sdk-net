@@ -1,0 +1,26 @@
+﻿{
+  Target: Hub,
+  Group: notifications,
+  MethodName: DisableSmsAsync,
+  RequestType: DisableSms,
+  HttpMethod: GET,
+  Path: /{version}/notifications/sms/disable,
+  IsAccountScoped: false,
+  IsUnauthenticated: false,
+  Sent: {
+    Method: GET,
+    Path: /v2/notifications/sms/disable,
+    Query: ?env=test-env,
+    Headers: {
+      Authorization: Bearer test-bearer,
+      X-CM-AccountId: test-account,
+      X-CM-ProjectId: test-project
+    }
+  },
+  ResponseType: EmptyResponse,
+  Response: {
+    ResponseStatus: {
+      IsSuccess: true
+    }
+  }
+}
