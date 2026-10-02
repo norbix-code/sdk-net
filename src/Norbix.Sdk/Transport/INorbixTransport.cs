@@ -42,4 +42,11 @@ internal enum NorbixScope
     Account,
     Public,
     Unauthenticated,
+
+    /// <summary>
+    /// Auth is sent when the client has a token and never required: a public
+    /// link route (signed unsubscribe link, signed preview link). Without a
+    /// token the request goes out with no Authorization header.
+    /// </summary>
+    Optional,
 }

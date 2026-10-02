@@ -21,6 +21,7 @@ public sealed class EndpointSourceGenerator : IIncrementalGenerator
     private const string RequestInterfaceFullName = "Norbix.Sdk.Types.INorbixRequest`1";
     private const string AccountScopedInterfaceFullName = "Norbix.Sdk.Types.INorbixAccountScoped";
     private const string UnauthenticatedInterfaceFullName = "Norbix.Sdk.Types.INorbixUnauthenticated";
+    private const string OptionalAuthInterfaceFullName = "Norbix.Sdk.Types.INorbixOptionalAuth";
 
     private static DiagnosticDescriptor BothTargetsNotSupportedDescriptor { get; } =
         new DiagnosticDescriptor(
@@ -125,7 +126,8 @@ public sealed class EndpointSourceGenerator : IIncrementalGenerator
             responseType,
             isAccountScoped,
             ns,
-            ImplementsInterface(symbol, UnauthenticatedInterfaceFullName)
+            ImplementsInterface(symbol, UnauthenticatedInterfaceFullName),
+            ImplementsInterface(symbol, OptionalAuthInterfaceFullName)
         );
     }
 
@@ -233,7 +235,8 @@ public sealed class EndpointSourceGenerator : IIncrementalGenerator
             ImplementsInterface(symbol, AccountScopedInterfaceFullName)
                 || symbol.GetMembers("AccountId").Any(),
             ResolveTargetNamespace(symbol),
-            ImplementsInterface(symbol, UnauthenticatedInterfaceFullName)
+            ImplementsInterface(symbol, UnauthenticatedInterfaceFullName),
+            ImplementsInterface(symbol, OptionalAuthInterfaceFullName)
         );
     }
 
@@ -596,11 +599,14 @@ public sealed partial class NorbixClient
     {
         // A DTO can say so itself (INorbixUnauthenticated) — that is how a
         // public file link is declared. The /auth path check stays for the
-        // login routes, which pre-date the marker.
+        // login routes, which pre-date the marker. INorbixOptionalAuth marks a
+        // public route that answers JSON (a signed unsubscribe link): the
+        // token goes along when there is one, and nothing is demanded.
         return ep.IsUnauthenticated
                 || route.Path == "/auth"
                 || route.Path.StartsWith("/auth/", StringComparison.Ordinal)
                 ? "Unauthenticated"
+            : ep.IsOptionalAuth ? "Optional"
             : ep.IsAccountScoped ? "Account"
             : "Project";
     }
@@ -704,7 +710,8 @@ public sealed partial class NorbixClient
             string responseType,
             bool isAccountScoped,
             EndpointTarget target,
-            bool isUnauthenticated = false
+            bool isUnauthenticated = false,
+            bool isOptionalAuth = false
         )
         {
             ClassName = className;
@@ -714,6 +721,7 @@ public sealed partial class NorbixClient
             IsAccountScoped = isAccountScoped;
             Target = target;
             IsUnauthenticated = isUnauthenticated;
+            IsOptionalAuth = isOptionalAuth;
         }
 
         public string ClassName { get; }
@@ -725,5 +733,11 @@ public sealed partial class NorbixClient
 
         /// <summary>The DTO carries INorbixUnauthenticated: send no Authorization header.</summary>
         public bool IsUnauthenticated { get; }
+
+        /// <summary>
+        /// The DTO carries INorbixOptionalAuth: send the token when the client
+        /// has one, and send the request without one when it has none.
+        /// </summary>
+        public bool IsOptionalAuth { get; }
     }
 }

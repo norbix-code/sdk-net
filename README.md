@@ -283,7 +283,7 @@ The public endpoint surface is generated from gateway DTOs at compile time. The 
 | `ai` | 20 | LLM, MCP and embedding integration configuration and tests (`SaveEmbeddingIntegrationAsync`, `TestEmbeddingIntegrationAsync`, …); `SetLlmIntegrationAsDefaultAsync`. |
 | `database` | 41 | Schemas, integrations, saved aggregates, taxonomies, triggers, module settings. |
 | `echo` | 1 | Smoke-test echo endpoint. |
-| `email` | 2 | Public e-mail link endpoints: `OneClickUnsubscribeAsync` and `GetEmailPreferencesByLinkAsync` (reads the marketing preferences behind a signed unsubscribe link; pass the link's `Token`). |
+| `email` | 2 | Public e-mail link endpoints: `OneClickUnsubscribeAsync` and `GetEmailPreferencesByLinkAsync` (reads the marketing preferences behind a signed unsubscribe link; pass the link's `Token`). Both are public links: they work on a client with no API key (the key is sent only when there is one), like the three `Preview*NotificationAsync` methods. |
 | `files` | 22 | File storage integrations, triggers, public links, and module settings. |
 | `internal` | 1 | Internal type-generation endpoint. |
 | `logs` | 9 | Logging integrations and module settings. |

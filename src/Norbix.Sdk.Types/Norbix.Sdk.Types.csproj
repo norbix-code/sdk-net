@@ -19,6 +19,7 @@
     <Compile Remove="ResponseStatus.cs" />
     <Compile Remove="NorbixRouteAttribute.cs" />
     <Compile Remove="INorbixUnauthenticated.cs" />
+    <Compile Remove="INorbixOptionalAuth.cs" />
   </ItemGroup>
 
   <ItemGroup>

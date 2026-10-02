@@ -12301,7 +12301,7 @@ namespace Norbix.Sdk.Types.Hub;
     ///</summary>
     [NorbixRoute("/{version}/notifications/email/preview", "GET")]
     public partial class PreviewEmailNotification
-        : RequestBase, INorbixRequest<PreviewEmailNotificationResponse>
+        : RequestBase, INorbixRequest<PreviewEmailNotificationResponse>, INorbixOptionalAuth
     {
         ///<summary>
         ///The signed preview link hash. With it the preview opens without sign-in: exactly one notification, until the link expires (30 days after sending).
@@ -12991,7 +12991,7 @@ namespace Norbix.Sdk.Types.Hub;
     [NorbixRoute("/{version}/email/preferences", "GET")]
     [DataContract]
     public partial class GetEmailPreferencesByLinkRequest
-        : RequestBase, INorbixRequest<GetEmailPreferencesByLinkResponse>
+        : RequestBase, INorbixRequest<GetEmailPreferencesByLinkResponse>, INorbixOptionalAuth
     {
         ///<summary>
         ///The signed unsubscribe link token from the e-mail's Preferences or Unsubscribe link.
@@ -13012,7 +13012,7 @@ namespace Norbix.Sdk.Types.Hub;
     [NorbixRoute("/{version}/email/one-click-unsubscribe", "POST")]
     [DataContract]
     public partial class OneClickUnsubscribeRequest
-        : RequestBase, INorbixRequest<EmptyResponse>
+        : RequestBase, INorbixRequest<EmptyResponse>, INorbixOptionalAuth
     {
         ///<summary>
         ///Encrypted unsubscribe token. The campaign batcher embedded this value in the List-Unsubscribe header.
@@ -15087,7 +15087,7 @@ namespace Norbix.Sdk.Types.Hub;
     ///</summary>
     [NorbixRoute("/{version}/notifications/push/preview", "GET")]
     public partial class PreviewPushNotification
-        : RequestBase, INorbixRequest<PreviewPushNotificationResponse>
+        : RequestBase, INorbixRequest<PreviewPushNotificationResponse>, INorbixOptionalAuth
     {
         ///<summary>
         ///The signed preview link hash. With it the preview opens without sign-in: exactly one notification, until the link expires (30 days after sending).
@@ -16098,7 +16098,7 @@ namespace Norbix.Sdk.Types.Hub;
     ///</summary>
     [NorbixRoute("/{version}/notifications/sms/preview", "GET")]
     public partial class PreviewSmsNotification
-        : RequestBase, INorbixRequest<PreviewSmsNotificationResponse>
+        : RequestBase, INorbixRequest<PreviewSmsNotificationResponse>, INorbixOptionalAuth
     {
         ///<summary>
         ///The signed preview link hash. With it the preview opens without sign-in: exactly one notification, until the link expires (30 days after sending).
