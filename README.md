@@ -220,6 +220,8 @@ await client.Account.UpdateProjectRegionsAsync(new UpdateProjectRegions
 
 `ProjectDto` (returned by `client.Account.GetProjectAsync(...)`) exposes the same shape as `PrimaryRegion` / `AdditionalRegions` (`ProjectRegionDto`).
 
+Every other project setting (name, CORS, languages, admin URL, legal, Admin Portal, AI) is on [docs/hub/project.md](./docs/hub/project.md).
+
 ## Project vs Account Scope
 
 - `ProjectId` is required. The SDK works at project scope by default.
@@ -274,13 +276,14 @@ The public endpoint surface is generated from gateway DTOs at compile time. The 
 | `database` | 18 | Collection CRUD, count, distinct, aggregate, saved aggregate execution, taxonomy reads. |
 | `echo` | 1 | Smoke-test echo endpoint. |
 | `membership` | 18 | User CRUD, registration, preferences, roles, and permissions. |
+| `public` | 2 | The project's public config and legal documents, read by the Admin Portal before sign-in (`GetPublicProjectConfigAsync`, `GetPublicProjectLegalAsync`). See [docs/hub/project.md](./docs/hub/project.md#public-config-and-legal-no-sign-in). |
 
 ### Hub — project & account configuration (523 endpoints)
 
 | Module | Endpoints | Description |
 | --- | ---: | --- |
-| `account` | 108 | Account profile, status, projects, regions, team invites, billing, verification; project AI settings and assistants (`GetProjectAiSettingsAsync`, `UpdateProjectAiSettingsAsync`, `CreateProjectAiAssistantAsync`, `UpdateProjectAiAssistantAsync`, `DeleteProjectAiAssistantAsync`), AI wallet usage (`GetProjectAiUsageAsync`), the Admin Portal switch (`SetAdminPortalEnabledAsync`). |
-| `ai` | 20 | LLM, MCP and embedding integration configuration and tests (`SaveEmbeddingIntegrationAsync`, `TestEmbeddingIntegrationAsync`, …); `SetLlmIntegrationAsDefaultAsync`. |
+| `account` | 108 | Account profile, status, projects, regions, team invites, billing, verification; project AI settings and assistants (`GetProjectAiSettingsAsync`, `UpdateProjectAiSettingsAsync`, `CreateProjectAiAssistantAsync`, `UpdateProjectAiAssistantAsync`, `DeleteProjectAiAssistantAsync`), AI wallet usage (`GetProjectAiUsageAsync`), the Admin Portal switch (`SetAdminPortalEnabledAsync`). Project settings, CORS, admin portal, legal, AI service users: [docs/hub/project.md](./docs/hub/project.md). |
+| `ai` | 20 | LLM, MCP and embedding integration configuration and tests (`SaveEmbeddingIntegrationAsync`, `TestEmbeddingIntegrationAsync`, …); `SetLlmIntegrationAsDefaultAsync`. LLM and MCP: [docs/hub/project.md](./docs/hub/project.md#llm-integrations). |
 | `database` | 41 | Schemas, integrations, saved aggregates, taxonomies, triggers, module settings. |
 | `echo` | 1 | Smoke-test echo endpoint. |
 | `email` | 2 | Public e-mail link endpoints: `OneClickUnsubscribeAsync` and `GetEmailPreferencesByLinkAsync` (reads the marketing preferences behind a signed unsubscribe link; pass the link's `Token`). Both are public links: they work on a client with no API key (the key is sent only when there is one), like the three `Preview*NotificationAsync` methods. |
