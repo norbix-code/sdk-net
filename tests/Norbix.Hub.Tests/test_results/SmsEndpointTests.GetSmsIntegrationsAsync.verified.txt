@@ -1,0 +1,39 @@
+﻿{
+  Target: Hub,
+  Group: notifications,
+  MethodName: GetSmsIntegrationsAsync,
+  RequestType: GetSmsIntegrations,
+  HttpMethod: GET,
+  Path: /{version}/notifications/sms/integrations,
+  IsAccountScoped: false,
+  IsUnauthenticated: false,
+  Sent: {
+    Method: GET,
+    Path: /v2/notifications/sms/integrations,
+    Query: ?env=test-env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1,
+    Headers: {
+      Authorization: Bearer test-bearer,
+      X-CM-AccountId: test-account,
+      X-CM-ProjectId: test-project
+    }
+  },
+  ResponseType: GetSmsIntegrationsResponse,
+  Response: {
+    DefaultIntegrationId: Guid_1,
+    List: {
+      Items: [
+        {
+          IsEnabled: false,
+          RequiresHumanDeliveryConfirmation: false
+        }
+      ],
+      HasMore: false,
+      HasPrevious: false,
+      StartingAfter: cursor-start,
+      EndingBefore: cursor-end
+    },
+    ResponseStatus: {
+      IsSuccess: true
+    }
+  }
+}

@@ -1,0 +1,34 @@
+﻿{
+  Target: Hub,
+  Group: notifications,
+  MethodName: TestSmsIntegrationAsync,
+  RequestType: TestSmsIntegration,
+  HttpMethod: POST,
+  Path: /{version}/notifications/sms/integrations/test,
+  IsAccountScoped: false,
+  IsUnauthenticated: false,
+  Sent: {
+    Method: POST,
+    Path: /v2/notifications/sms/integrations/test,
+    Headers: {
+      Authorization: Bearer test-bearer,
+      Content-Type: application/json; charset=utf-8,
+      X-CM-AccountId: test-account,
+      X-CM-ProjectId: test-project
+    },
+    Body: {
+      integrationId: Guid_1,
+      to: test-to,
+      env: test-env
+    }
+  },
+  ResponseType: TestSmsIntegrationResponse,
+  Response: {
+    Items: [
+      {}
+    ],
+    ResponseStatus: {
+      IsSuccess: true
+    }
+  }
+}

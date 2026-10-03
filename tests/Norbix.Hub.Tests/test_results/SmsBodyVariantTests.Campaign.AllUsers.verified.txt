@@ -1,0 +1,24 @@
+﻿{
+  Method: POST,
+  Path: /v2/notifications/sms/campaigns,
+  Headers: {
+    Authorization: Bearer test-bearer,
+    Content-Type: application/json; charset=utf-8,
+    X-CM-AccountId: test-account,
+    X-CM-ProjectId: test-project
+  },
+  Body: {
+    templateId: tpl-1,
+    deliveryType: allUsers,
+    allUsers: {
+      rolesNames: [
+        authenticated
+      ],
+      userTags: [
+        beta
+      ],
+      recipientsSourceType: allUsers,
+      campaignTime: 1800000000.0
+    }
+  }
+}

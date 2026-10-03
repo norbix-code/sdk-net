@@ -1,0 +1,34 @@
+﻿{
+  Target: Hub,
+  Group: notifications,
+  MethodName: GetSmsMessageContentTokensAsync,
+  RequestType: GetSmsMessageContentTokens,
+  HttpMethod: GET,
+  Path: /{version}/notifications/sms/templates/{id}/tokens,
+  PathParams: [
+    id
+  ],
+  IsAccountScoped: false,
+  IsUnauthenticated: false,
+  Sent: {
+    Method: GET,
+    Path: /v2/notifications/sms/templates/{guid}/tokens,
+    Query: ?env=test-env,
+    Headers: {
+      Authorization: Bearer test-bearer,
+      X-CM-AccountId: test-account,
+      X-CM-ProjectId: test-project
+    }
+  },
+  ResponseType: GetSmsMessageContentTokensResponse,
+  Response: {
+    Tokens: {
+      sample-key: [
+        test-string
+      ]
+    },
+    ResponseStatus: {
+      IsSuccess: true
+    }
+  }
+}

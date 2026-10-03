@@ -1,0 +1,27 @@
+﻿{
+  Target: Hub,
+  Group: notifications,
+  MethodName: PreviewSmsNotificationAsync,
+  RequestType: PreviewSmsNotification,
+  HttpMethod: GET,
+  Path: /{version}/notifications/sms/preview,
+  IsAccountScoped: false,
+  IsUnauthenticated: false,
+  Sent: {
+    Method: GET,
+    Path: /v2/notifications/sms/preview,
+    Query: ?hash=test-hash&notificationId={guid},
+    Headers: {
+      Authorization: Bearer test-bearer,
+      X-CM-AccountId: test-account,
+      X-CM-ProjectId: test-project
+    }
+  },
+  ResponseType: PreviewSmsNotificationResponse,
+  Response: {
+    Body: test-body,
+    ResponseStatus: {
+      IsSuccess: true
+    }
+  }
+}

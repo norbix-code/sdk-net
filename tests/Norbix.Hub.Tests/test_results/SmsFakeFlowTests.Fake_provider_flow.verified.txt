@@ -1,0 +1,235 @@
+﻿{
+  Sent: [
+    {
+      Method: GET,
+      Path: /v2/notifications/sms/enable,
+      Headers: {
+        Authorization: Bearer test-bearer,
+        X-CM-AccountId: test-account,
+        X-CM-ProjectId: test-project
+      }
+    },
+    {
+      Method: POST,
+      Path: /v2/notifications/sms/integrations,
+      Headers: {
+        Authorization: Bearer test-bearer,
+        Content-Type: application/json; charset=utf-8,
+        X-CM-AccountId: test-account,
+        X-CM-ProjectId: test-project
+      },
+      Body: {
+        integration: {
+          provider: fake,
+          isEnabled: false
+        }
+      }
+    },
+    {
+      Method: GET,
+      Path: /v2/notifications/sms/integrations/int-fake,
+      Headers: {
+        Authorization: Bearer test-bearer,
+        X-CM-AccountId: test-account,
+        X-CM-ProjectId: test-project
+      }
+    },
+    {
+      Method: PUT,
+      Path: /v2/notifications/sms/integrations/int-fake/default,
+      Headers: {
+        Authorization: Bearer test-bearer,
+        X-CM-AccountId: test-account,
+        X-CM-ProjectId: test-project
+      }
+    },
+    {
+      Method: POST,
+      Path: /v2/notifications/sms/integrations/test,
+      Headers: {
+        Authorization: Bearer test-bearer,
+        Content-Type: application/json; charset=utf-8,
+        X-CM-AccountId: test-account,
+        X-CM-ProjectId: test-project
+      },
+      Body: {
+        integrationId: int-fake,
+        to: +37060000000
+      }
+    },
+    {
+      Method: POST,
+      Path: /v2/notifications/sms/integrations/confirm-human-delivery,
+      Headers: {
+        Authorization: Bearer test-bearer,
+        Content-Type: application/json; charset=utf-8,
+        X-CM-AccountId: test-account,
+        X-CM-ProjectId: test-project
+      },
+      Body: {
+        integrationId: int-fake
+      }
+    },
+    {
+      Method: POST,
+      Path: /v2/notifications/sms/templates,
+      Headers: {
+        Authorization: Bearer test-bearer,
+        Content-Type: application/json; charset=utf-8,
+        X-CM-AccountId: test-account,
+        X-CM-ProjectId: test-project
+      },
+      Body: {
+        templateName: welcome,
+        communicationChannel: transactional,
+        translations: [
+          {
+            language: en,
+            content: {
+              subject: Welcome,
+              body: Hi @Model.FirstName, your code is @Model.Code
+            }
+          }
+        ]
+      }
+    },
+    {
+      Method: GET,
+      Path: /v2/notifications/sms/templates/tpl-1/tokens,
+      Headers: {
+        Authorization: Bearer test-bearer,
+        X-CM-AccountId: test-account,
+        X-CM-ProjectId: test-project
+      }
+    },
+    {
+      Method: POST,
+      Path: /v2/notifications/sms/templates/render,
+      Headers: {
+        Authorization: Bearer test-bearer,
+        Content-Type: application/json; charset=utf-8,
+        X-CM-AccountId: test-account,
+        X-CM-ProjectId: test-project
+      },
+      Body: {
+        code: Hi @Model.FirstName, your code is @Model.Code,
+        tokens: [
+          {
+            key: FirstName,
+            value: Ada,
+            resolver: notSet
+          },
+          {
+            key: Code,
+            value: 4242,
+            resolver: notSet
+          }
+        ],
+        isForPreview: true
+      }
+    },
+    {
+      Method: POST,
+      Path: /v2/notifications/sms/campaigns,
+      Headers: {
+        Authorization: Bearer test-bearer,
+        Content-Type: application/json; charset=utf-8,
+        X-CM-AccountId: test-account,
+        X-CM-ProjectId: test-project
+      },
+      Body: {
+        templateId: tpl-1,
+        deliveryType: phoneNumbers,
+        phoneNumbers: {
+          phoneNumbers: [
+            +37060000000
+          ],
+          recipientsSourceType: phoneNumbers,
+          mappedTokens: [
+            {
+              key: Code,
+              value: 4242,
+              resolver: notSet
+            }
+          ]
+        }
+      }
+    },
+    {
+      Method: GET,
+      Path: /v2/notifications/sms/campaigns/cmp-1,
+      Headers: {
+        Authorization: Bearer test-bearer,
+        X-CM-AccountId: test-account,
+        X-CM-ProjectId: test-project
+      }
+    },
+    {
+      Method: GET,
+      Path: /v2/notifications/sms/campaigns/cmp-1/messages,
+      Query: ?campaignBatchId=batch-1,
+      Headers: {
+        Authorization: Bearer test-bearer,
+        X-CM-AccountId: test-account,
+        X-CM-ProjectId: test-project
+      }
+    },
+    {
+      Method: GET,
+      Path: /v2/notifications/sms/campaigns/cmp-1/messages/msg-1,
+      Query: ?campaignBatchId=batch-1,
+      Headers: {
+        Authorization: Bearer test-bearer,
+        X-CM-AccountId: test-account,
+        X-CM-ProjectId: test-project
+      }
+    },
+    {
+      Method: GET,
+      Path: /v2/notifications/sms/campaigns/cmp-1/stats,
+      Headers: {
+        Authorization: Bearer test-bearer,
+        X-CM-AccountId: test-account,
+        X-CM-ProjectId: test-project
+      }
+    },
+    {
+      Method: POST,
+      Path: /v2/notifications/sms/campaigns/cmp-1/stop,
+      Headers: {
+        Authorization: Bearer test-bearer,
+        X-CM-AccountId: test-account,
+        X-CM-ProjectId: test-project
+      }
+    }
+  ],
+  Read: {
+    IntegrationId: int-fake,
+    IntegrationProvider: Fake,
+    IntegrationName: Test Me,
+    TestResults: [
+      {
+        Operation: send,
+        Result: ok
+      }
+    ],
+    TemplateId: tpl-1,
+    TemplateTokens: {
+      en: [
+        FirstName,
+        Code
+      ]
+    },
+    RenderedText: Hi Ada, your code is 4242,
+    CampaignId: cmp-1,
+    CampaignStatus: Started,
+    CampaignAudience: PhoneNumbers,
+    MessageCount: 1,
+    MessageBody: Hi Ada, your code is 4242,
+    Stats: {
+      Batches: 1,
+      Sent: 1,
+      SuccessRate: 1.0
+    }
+  }
+}
