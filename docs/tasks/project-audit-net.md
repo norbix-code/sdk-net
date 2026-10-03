@@ -15,7 +15,7 @@ the account AI chat, billing).
 2. test(docs): compile every C# example of the page in a scratch console project against `Norbix.Hub` (and `Norbix.Api` for the public reads) — done, no repo change: `~/scratch/project-rr-net/snippets/{hub,api}`, 13 Hub blocks + 1 Api block, both build with 0 warnings / 0 errors. The repo has no doc-snippet test (see Findings #4)
 3. docs(readme): link the page from the README module table and the regions section — done, commit 463eb65 (also a new `public` row in the API module table)
 4. checks: `dotnet build` + `dotnet test` of the solution — done: build 0 warnings / 0 errors; Norbix.Sdk.Tests 61/61, Norbix.Hub.Tests 194/194
-5. push + pull request — todo
+5. push + pull request — done, https://github.com/norbix-code/sdk-net/pull/70 (not merged). Opened with the `Domantas` gh account: the active `codemash-io` account has only READ on this repo
 
 ## Changes
 
