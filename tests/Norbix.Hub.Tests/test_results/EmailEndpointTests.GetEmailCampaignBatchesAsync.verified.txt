@@ -1,0 +1,38 @@
+﻿{
+  Target: Hub,
+  Group: notifications,
+  MethodName: GetEmailCampaignBatchesAsync,
+  RequestType: GetEmailCampaignBatches,
+  HttpMethod: GET,
+  Path: /{version}/notifications/email/campaigns/{id}/batches,
+  PathParams: [
+    id
+  ],
+  IsAccountScoped: false,
+  IsUnauthenticated: false,
+  Sent: {
+    Method: GET,
+    Path: /v2/notifications/email/campaigns/{guid}/batches,
+    Query: ?databaseIntegrationId={guid}&batchId={guid}&emailAddress=user%40example.test&env=test-env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1,
+    Headers: {
+      Authorization: Bearer test-bearer,
+      X-CM-AccountId: test-account,
+      X-CM-ProjectId: test-project
+    }
+  },
+  ResponseType: GetEmailCampaignBatchesResponse,
+  Response: {
+    List: {
+      Items: [
+        {}
+      ],
+      HasMore: false,
+      HasPrevious: false,
+      StartingAfter: cursor-start,
+      EndingBefore: cursor-end
+    },
+    ResponseStatus: {
+      IsSuccess: true
+    }
+  }
+}

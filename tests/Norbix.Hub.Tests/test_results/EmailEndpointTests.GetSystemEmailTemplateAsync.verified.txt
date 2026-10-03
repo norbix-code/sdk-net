@@ -1,0 +1,36 @@
+﻿{
+  Target: Hub,
+  Group: notifications,
+  MethodName: GetSystemEmailTemplateAsync,
+  RequestType: GetSystemEmailTemplate,
+  HttpMethod: GET,
+  Path: /{version}/notifications/email/system-templates/{id},
+  PathParams: [
+    id
+  ],
+  IsAccountScoped: false,
+  IsUnauthenticated: false,
+  Sent: {
+    Method: GET,
+    Path: /v2/notifications/email/system-templates/{guid},
+    Query: ?env=test-env,
+    Headers: {
+      Authorization: Bearer test-bearer,
+      X-CM-AccountId: test-account,
+      X-CM-ProjectId: test-project
+    }
+  },
+  ResponseType: GetSystemEmailTemplateResponse,
+  Response: {
+    Item: {
+      ImagePreview: test-imagePreview,
+      SystemGroup: test-systemGroup,
+      ForTrigger: Membership,
+      HiddenSystemEmailTemplate: true,
+      IsActive: false
+    },
+    ResponseStatus: {
+      IsSuccess: true
+    }
+  }
+}

@@ -95,7 +95,19 @@ internal sealed class HttpTransport : INorbixTransport, IDisposable
         using var request = new HttpRequestMessage(new HttpMethod(spec.Method), url);
         var started = System.Diagnostics.Stopwatch.GetTimestamp();
 
-        if (spec.Scope != NorbixScope.Unauthenticated)
+        if (spec.Scope == NorbixScope.Optional)
+        {
+            // Public link routes: the link itself is the key. Send a token
+            // when there is one (a signed-in caller), never demand one.
+            var optionalToken = !string.IsNullOrEmpty(_options.BearerToken)
+                ? _options.BearerToken
+                : _options.ApiKey;
+            if (!string.IsNullOrEmpty(optionalToken))
+            {
+                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", optionalToken);
+            }
+        }
+        else if (spec.Scope != NorbixScope.Unauthenticated)
         {
             var token = !string.IsNullOrEmpty(_options.BearerToken)
                 ? _options.BearerToken

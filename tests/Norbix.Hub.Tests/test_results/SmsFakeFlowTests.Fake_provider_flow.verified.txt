@@ -176,8 +176,7 @@
     },
     {
       Method: GET,
-      Path: /v2/notifications/sms/campaigns/cmp-1/messages/msg-1,
-      Query: ?campaignBatchId=batch-1,
+      Path: /v2/notifications/sms/campaigns/cmp-1/batches/batch-1/msg-1,
       Headers: {
         Authorization: Bearer test-bearer,
         X-CM-AccountId: test-account,

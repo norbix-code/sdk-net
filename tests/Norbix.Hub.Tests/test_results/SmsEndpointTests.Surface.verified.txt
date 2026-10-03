@@ -1,12 +1,11 @@
 ﻿{
-  Count: 35,
+  Count: 34,
   Endpoints: [
     DELETE /{version}/notifications/sms/campaigns/{id} -> DeleteSmsCampaignAsync,
     DELETE /{version}/notifications/sms/integrations/{Id} -> DeleteSmsIntegrationAsync,
     DELETE /{version}/notifications/sms/templates/{Id} -> DeleteSmsTemplateAsync,
     GET /{version}/notifications/sms/campaigns -> GetSmsCampaignsAsync,
     GET /{version}/notifications/sms/campaigns/{campaignId}/messages -> GetSmsCampaignMessagesAsync,
-    GET /{version}/notifications/sms/campaigns/{campaignId}/messages/{notificationId} -> GetSmsCampaignMessageAsync,
     GET /{version}/notifications/sms/campaigns/{id} -> GetSmsCampaignAsync,
     GET /{version}/notifications/sms/campaigns/{id}/batches -> GetSmsCampaignBatchesAsync,
     GET /{version}/notifications/sms/campaigns/{id}/batches/{batchId} -> GetSmsCampaignBatchNotificationsAsync,

@@ -12301,7 +12301,7 @@ namespace Norbix.Sdk.Types.Hub;
     ///</summary>
     [NorbixRoute("/{version}/notifications/email/preview", "GET")]
     public partial class PreviewEmailNotification
-        : RequestBase, INorbixRequest<PreviewEmailNotificationResponse>
+        : RequestBase, INorbixRequest<PreviewEmailNotificationResponse>, INorbixOptionalAuth
     {
         ///<summary>
         ///The signed preview link hash. With it the preview opens without sign-in: exactly one notification, until the link expires (30 days after sending).
@@ -12345,40 +12345,6 @@ namespace Norbix.Sdk.Types.Hub;
         ///</summary>
         [DataMember]
         public virtual string? DatabaseIntegrationId { get; set; }
-    }
-
-    ///<summary>
-    ///Get an email campaign message
-    ///</summary>
-    [NorbixRoute("/{version}/notifications/emails/campaigns/{campaignId}/messages/{notificationId}", "GET")]
-    public partial class GetEmailCampaignMessage
-        : CodeMashRequestBase, INorbixRequest<GetEmailCampaignMessageResponse>
-    {
-        ///<summary>
-        ///The email campaign id. Get it from get_all_email_campaigns.
-        ///</summary>
-        public virtual string CampaignId { get; set; }
-
-        ///<summary>
-        ///The campaign batch id. Get it from get_email_campaign_batches.
-        ///</summary>
-        public virtual string CampaignBatchId { get; set; }
-
-        ///<summary>
-        ///The notification (message) id to fetch. Get it from get_email_campaign_messages.
-        ///</summary>
-        public virtual string NotificationId { get; set; }
-
-        ///<summary>
-        ///Optional. Omit to use the project default database integration (resolved per environment).
-        ///</summary>
-        public virtual string? DatabaseIntegrationId { get; set; }
-    }
-
-    public partial class GetEmailCampaignMessageResponse
-        : ResponseBase
-    {
-        public virtual EmailCampaignBatchNotificationDto? EmailMessageEntity { get; set; }
     }
 
     ///<summary>
@@ -12978,6 +12944,13 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual string Id { get; set; }
     }
 
+    public partial class EmailLinkPreferencesDto
+    {
+        public virtual string? EmailAddress { get; set; }
+        public virtual bool UnsubscribedFromMarketing { get; set; }
+        public virtual List<string> BlockReasons { get; set; } = [];
+    }
+
     ///<summary>
     ///Get an email footer
     ///</summary>
@@ -13013,12 +12986,33 @@ namespace Norbix.Sdk.Types.Hub;
     }
 
     ///<summary>
+    ///Read the marketing e-mail preferences of the person a signed unsubscribe link belongs to. No sign-in: the link is the key.
+    ///</summary>
+    [NorbixRoute("/{version}/email/preferences", "GET")]
+    [DataContract]
+    public partial class GetEmailPreferencesByLinkRequest
+        : RequestBase, INorbixRequest<GetEmailPreferencesByLinkResponse>, INorbixOptionalAuth
+    {
+        ///<summary>
+        ///The signed unsubscribe link token from the e-mail's Preferences or Unsubscribe link.
+        ///</summary>
+        [DataMember]
+        public virtual string Token { get; set; }
+    }
+
+    public partial class GetEmailPreferencesByLinkResponse
+        : ResponseBase
+    {
+        public virtual EmailLinkPreferencesDto? Item { get; set; }
+    }
+
+    ///<summary>
     ///This endpoint implements the RFC 8058 one-click unsubscribe flow used by mailbox providers.
     ///</summary>
     [NorbixRoute("/{version}/email/one-click-unsubscribe", "POST")]
     [DataContract]
     public partial class OneClickUnsubscribeRequest
-        : RequestBase, INorbixRequest<EmptyResponse>
+        : RequestBase, INorbixRequest<EmptyResponse>, INorbixOptionalAuth
     {
         ///<summary>
         ///Encrypted unsubscribe token. The campaign batcher embedded this value in the List-Unsubscribe header.
@@ -15093,7 +15087,7 @@ namespace Norbix.Sdk.Types.Hub;
     ///</summary>
     [NorbixRoute("/{version}/notifications/push/preview", "GET")]
     public partial class PreviewPushNotification
-        : RequestBase, INorbixRequest<PreviewPushNotificationResponse>
+        : RequestBase, INorbixRequest<PreviewPushNotificationResponse>, INorbixOptionalAuth
     {
         ///<summary>
         ///The signed preview link hash. With it the preview opens without sign-in: exactly one notification, until the link expires (30 days after sending).
@@ -15153,40 +15147,6 @@ namespace Norbix.Sdk.Types.Hub;
         ///</summary>
         [DataMember]
         public virtual string? DatabaseIntegrationId { get; set; }
-    }
-
-    ///<summary>
-    ///Gets campaign push notification details
-    ///</summary>
-    [NorbixRoute("/{version}/notifications/push/campaigns/{campaignId}/messages/{notificationId}", "GET")]
-    public partial class GetPushCampaignMessage
-        : CodeMashRequestBase, INorbixRequest<GetPushCampaignMessageResponse>
-    {
-        ///<summary>
-        ///The push campaign id. Get it from get_push_campaigns.
-        ///</summary>
-        public virtual string CampaignId { get; set; }
-
-        ///<summary>
-        ///The batch id. Get it from get_push_campaign_batches.
-        ///</summary>
-        public virtual string CampaignBatchId { get; set; }
-
-        ///<summary>
-        ///The notification id within the batch.
-        ///</summary>
-        public virtual string NotificationId { get; set; }
-
-        ///<summary>
-        ///Optional database integration id; omit to use the project's default.
-        ///</summary>
-        public virtual string? DatabaseIntegrationId { get; set; }
-    }
-
-    public partial class GetPushCampaignMessageResponse
-        : ResponseBase
-    {
-        public virtual PushCampaignBatchNotificationDto? PushMessageEntity { get; set; }
     }
 
     ///<summary>
@@ -16138,7 +16098,7 @@ namespace Norbix.Sdk.Types.Hub;
     ///</summary>
     [NorbixRoute("/{version}/notifications/sms/preview", "GET")]
     public partial class PreviewSmsNotification
-        : RequestBase, INorbixRequest<PreviewSmsNotificationResponse>
+        : RequestBase, INorbixRequest<PreviewSmsNotificationResponse>, INorbixOptionalAuth
     {
         ///<summary>
         ///The signed preview link hash. With it the preview opens without sign-in: exactly one notification, until the link expires (30 days after sending).
@@ -16178,40 +16138,6 @@ namespace Norbix.Sdk.Types.Hub;
         ///Optional. Omit to use the project default database integration (resolved per environment).
         ///</summary>
         public virtual string? DatabaseIntegrationId { get; set; }
-    }
-
-    ///<summary>
-    ///Gets campaign sms message details
-    ///</summary>
-    [NorbixRoute("/{version}/notifications/sms/campaigns/{campaignId}/messages/{notificationId}", "GET")]
-    public partial class GetSmsCampaignMessage
-        : CodeMashRequestBase, INorbixRequest<GetSmsCampaignMessageResponse>
-    {
-        ///<summary>
-        ///The campaign id. Get it from get_sms_campaigns.
-        ///</summary>
-        public virtual string CampaignId { get; set; }
-
-        ///<summary>
-        ///The campaign batch id. Get it from get_sms_campaign_batches.
-        ///</summary>
-        public virtual string CampaignBatchId { get; set; }
-
-        ///<summary>
-        ///The notification (message) id. Get it from get_sms_campaign_messages.
-        ///</summary>
-        public virtual string NotificationId { get; set; }
-
-        ///<summary>
-        ///Optional. Omit to use the project default database integration (resolved per environment).
-        ///</summary>
-        public virtual string? DatabaseIntegrationId { get; set; }
-    }
-
-    public partial class GetSmsCampaignMessageResponse
-        : ResponseBase
-    {
-        public virtual SmsCampaignBatchNotificationDto? SmsMessageEntity { get; set; }
     }
 
     ///<summary>

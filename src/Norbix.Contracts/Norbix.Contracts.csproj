@@ -11,6 +11,7 @@
     <Compile Include="..\Norbix.Sdk.Types\ResponseStatus.cs" Link="ResponseStatus.cs" />
     <Compile Include="..\Norbix.Sdk.Types\NorbixRouteAttribute.cs" Link="NorbixRouteAttribute.cs" />
     <Compile Include="..\Norbix.Sdk.Types\INorbixUnauthenticated.cs" Link="INorbixUnauthenticated.cs" />
+    <Compile Include="..\Norbix.Sdk.Types\INorbixOptionalAuth.cs" Link="INorbixOptionalAuth.cs" />
   </ItemGroup>
 
 </Project>

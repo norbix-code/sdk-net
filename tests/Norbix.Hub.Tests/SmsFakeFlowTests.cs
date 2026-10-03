@@ -187,7 +187,7 @@ public sealed class SmsFakeFlowTests
         fixture.RespondNext(
             new
             {
-                smsMessageEntity = new
+                campaignNotification = new
                 {
                     campaignId = first.CampaignId,
                     batchId = first.BatchId,
@@ -197,11 +197,11 @@ public sealed class SmsFakeFlowTests
                 },
             }
         );
-        var message = await sms.GetSmsCampaignMessageAsync(
-            new GetSmsCampaignMessage
+        var message = await sms.GetSmsCampaignBatchNotificationAsync(
+            new GetSmsCampaignBatchNotification
             {
-                CampaignId = first.CampaignId,
-                CampaignBatchId = first.BatchId,
+                Id = first.CampaignId,
+                BatchId = first.BatchId,
                 NotificationId = first.NotificationId,
             }
         );
@@ -236,8 +236,8 @@ public sealed class SmsFakeFlowTests
                     CampaignStatus = read!.SmsCampaign!.Status!.Status,
                     CampaignAudience = read.SmsCampaign.Recipients.RecipientsSourceType,
                     MessageCount = messages.List.Items.Count,
-                    MessageBody = message!.SmsMessageEntity!.Body,
-                    MessageStatus = message.SmsMessageEntity.StatusHistory.Single().Status,
+                    MessageBody = message!.CampaignNotification!.Body,
+                    MessageStatus = message.CampaignNotification.StatusHistory.Single().Status,
                     stats!.Stats,
                 },
             },

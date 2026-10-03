@@ -1,0 +1,29 @@
+﻿{
+  Target: Hub,
+  Group: notifications,
+  MethodName: DeleteEmailCampaignAsync,
+  RequestType: DeleteEmailCampaignRequest,
+  HttpMethod: DELETE,
+  Path: /{version}/notifications/email/campaigns/{Id},
+  PathParams: [
+    Id
+  ],
+  IsAccountScoped: false,
+  IsUnauthenticated: false,
+  Sent: {
+    Method: DELETE,
+    Path: /v2/notifications/email/campaigns/{guid},
+    Query: ?databaseIntegrationId={guid}&env=test-env,
+    Headers: {
+      Authorization: Bearer test-bearer,
+      X-CM-AccountId: test-account,
+      X-CM-ProjectId: test-project
+    }
+  },
+  ResponseType: EmptyResponse,
+  Response: {
+    ResponseStatus: {
+      IsSuccess: true
+    }
+  }
+}

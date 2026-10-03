@@ -1,0 +1,9 @@
+﻿{
+  Method: GET,
+  Path: /v2/email/preferences,
+  Query: ?token=signed-link-abc,
+  Headers: {
+    Authorization: Bearer test-api-key,
+    X-CM-ProjectId: test-project
+  }
+}

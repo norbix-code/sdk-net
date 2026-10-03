@@ -1,0 +1,37 @@
+﻿{
+  Target: Hub,
+  Group: notifications,
+  MethodName: SaveEmailValidationIntegrationAsync,
+  RequestType: SaveEmailValidationIntegration,
+  HttpMethod: POST,
+  Path: /{version}/notifications/email/validation/integrations,
+  IsAccountScoped: false,
+  IsUnauthenticated: false,
+  Sent: {
+    Method: POST,
+    Path: /v2/notifications/email/validation/integrations,
+    Headers: {
+      Authorization: Bearer test-bearer,
+      Content-Type: application/json; charset=utf-8,
+      X-CM-AccountId: test-account,
+      X-CM-ProjectId: test-project
+    },
+    Body: {
+      integration: {
+        integrationId: Guid_1,
+        provider: zeroBounce,
+        integrationName: test-integrationName,
+        isEnabled: true
+      },
+      env: test-env
+    }
+  },
+  ResponseType: IdResponse,
+  Response: {
+    Id: Guid_1,
+    Status: test-status,
+    ResponseStatus: {
+      IsSuccess: true
+    }
+  }
+}

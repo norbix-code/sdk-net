@@ -1,29 +1,30 @@
 ﻿{
   Target: Hub,
   Group: notifications,
-  MethodName: GetSmsCampaignMessageAsync,
-  RequestType: GetSmsCampaignMessage,
+  MethodName: GetEmailCampaignBatchNotificationAsync,
+  RequestType: GetEmailCampaignBatchNotification,
   HttpMethod: GET,
-  Path: /{version}/notifications/sms/campaigns/{campaignId}/messages/{notificationId},
+  Path: /{version}/notifications/email/campaigns/{id}/batches/{batchId}/{notificationId},
   PathParams: [
-    campaignId,
+    id,
+    batchId,
     notificationId
   ],
   IsAccountScoped: false,
   IsUnauthenticated: false,
   Sent: {
     Method: GET,
-    Path: /v2/notifications/sms/campaigns/{guid}/messages/{guid},
-    Query: ?campaignBatchId={guid}&databaseIntegrationId={guid}&env=test-env,
+    Path: /v2/notifications/email/campaigns/{guid}/batches/{guid}/{guid},
+    Query: ?databaseIntegrationId={guid}&env=test-env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1,
     Headers: {
       Authorization: Bearer test-bearer,
       X-CM-AccountId: test-account,
       X-CM-ProjectId: test-project
     }
   },
-  ResponseType: GetSmsCampaignMessageResponse,
+  ResponseType: GetEmailCampaignBatchNotificationResponse,
   Response: {
-    SmsMessageEntity: {
+    CampaignNotification: {
       Recipients: {
         HasMore: false
       },

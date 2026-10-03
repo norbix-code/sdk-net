@@ -28,7 +28,7 @@ var templates = await norbix.Notifications.GetSmsTemplatesAsync(new GetSmsTempla
 Tests (all in `tests/Norbix.Hub.Tests/`, none of them contact an SMS service):
 
 - `SmsEndpointTests.cs` — one test per method; snapshots the exact request it sends,
-  plus a guard on the size of the SMS surface (35 endpoints).
+  plus a guard on the size of the SMS surface (34 endpoints).
 - `SmsBodyVariantTests.cs` — the four campaign audiences and the Fake provider shape.
 - `SmsFakeFlowTests.cs` — the Fake provider from enable to campaign statistics,
   with real JSON replies, so reading the answers is tested too.
@@ -194,18 +194,21 @@ contacts no SMS service, so nothing reaches a real phone.
 
 ## Reading one campaign message
 
-`GetSmsCampaignMessageAsync` answers with the rendered message that went to
-one recipient. It takes the campaign id, the batch id (from
+`GetSmsCampaignBatchNotificationAsync` answers with the rendered message that
+went to one recipient. It takes the campaign id (`Id`), the batch id (from
 `GetSmsCampaignBatchesAsync`) and the notification id (from
 `GetSmsCampaignMessagesAsync`):
 
 ```csharp
-var message = await norbix.Notifications.GetSmsCampaignMessageAsync(new GetSmsCampaignMessage
+var message = await norbix.Notifications.GetSmsCampaignBatchNotificationAsync(new GetSmsCampaignBatchNotification
 {
-    CampaignId = campaign.Id!,
-    CampaignBatchId = batch.BatchId,
+    Id = campaign.Id!,
+    BatchId = batch.BatchId,
     NotificationId = notification.NotificationId,
 });
 
-Console.WriteLine(message!.SmsMessageEntity!.Body); // the text as it was sent
+Console.WriteLine(message!.CampaignNotification!.Body); // the text as it was sent
 ```
+
+The older `GetSmsCampaignMessageAsync` (`…/campaigns/{campaignId}/messages/{notificationId}`)
+was removed together with its gateway route.

@@ -1,0 +1,33 @@
+﻿{
+  Target: Hub,
+  Group: notifications,
+  MethodName: StopEmailCampaignAsync,
+  RequestType: StopEmailCampaignRequest,
+  HttpMethod: POST,
+  Path: /{version}/notifications/email/campaigns/{Id}/stop,
+  PathParams: [
+    Id
+  ],
+  IsAccountScoped: false,
+  IsUnauthenticated: false,
+  Sent: {
+    Method: POST,
+    Path: /v2/notifications/email/campaigns/{guid}/stop,
+    Headers: {
+      Authorization: Bearer test-bearer,
+      Content-Type: application/json; charset=utf-8,
+      X-CM-AccountId: test-account,
+      X-CM-ProjectId: test-project
+    },
+    Body: {
+      databaseIntegrationId: Guid_1,
+      env: test-env
+    }
+  },
+  ResponseType: EmptyResponse,
+  Response: {
+    ResponseStatus: {
+      IsSuccess: true
+    }
+  }
+}

@@ -1,0 +1,38 @@
+﻿{
+  Target: Hub,
+  Group: notifications,
+  MethodName: GetSystemEmailTemplatesAsync,
+  RequestType: GetSystemEmailTemplates,
+  HttpMethod: GET,
+  Path: /{version}/notifications/email/system-templates,
+  IsAccountScoped: false,
+  IsUnauthenticated: false,
+  Sent: {
+    Method: GET,
+    Path: /v2/notifications/email/system-templates,
+    Query: ?communicationChannel=Transactional&forTrigger=Membership&env=test-env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1,
+    Headers: {
+      Authorization: Bearer test-bearer,
+      X-CM-AccountId: test-account,
+      X-CM-ProjectId: test-project
+    }
+  },
+  ResponseType: GetSystemEmailTemplatesResponse,
+  Response: {
+    List: {
+      Items: [
+        {
+          HasAttachments: false,
+          IsActive: false
+        }
+      ],
+      HasMore: false,
+      HasPrevious: false,
+      StartingAfter: cursor-start,
+      EndingBefore: cursor-end
+    },
+    ResponseStatus: {
+      IsSuccess: true
+    }
+  }
+}
