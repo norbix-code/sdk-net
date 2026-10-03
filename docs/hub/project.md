@@ -189,6 +189,27 @@ await norbix.Account.UpdateProjectExposeLegalAsync(
     new UpdateProjectExposeLegal { ProjectId = projectId, Exposed = true });
 ```
 
+## What the public Admin Portal config shows
+
+| method | verb | path |
+|---|---|---|
+| `UpdateProjectExposeBrandAsync` | `PATCH` | `/account/projects/{projectId}/settings/brand/expose` |
+| `UpdateProjectExposeAuthAsync` | `PATCH` | `/account/projects/{projectId}/settings/auth/expose` |
+
+The public config ([Public config and legal](#public-config-and-legal-no-sign-in))
+returns the brand (name, colors, logo, icon) by default and hides the sign-in
+methods (email / phone / username) and the password policy. Social providers and
+the passkey yes/no are always returned. Two switches change that:
+
+```csharp
+// Hide the brand from the public config.
+await norbix.Account.UpdateProjectExposeBrandAsync(
+    new UpdateProjectExposeBrand { ProjectId = projectId, Exposed = false });
+// Show the sign-in methods and the password policy.
+await norbix.Account.UpdateProjectExposeAuthAsync(
+    new UpdateProjectExposeAuth { ProjectId = projectId, Exposed = true });
+```
+
 ## Admin Portal
 
 | method | verb | path |

@@ -8037,6 +8037,32 @@ namespace Norbix.Sdk.Types.Hub;
     }
 
     ///<summary>
+    ///Sets whether the project's sign-in methods and password policy are returned by the public Admin Portal config
+    ///</summary>
+    [NorbixRoute("/{version}/account/projects/{projectId}/settings/auth/expose", "PATCH")]
+    public partial class UpdateProjectExposeAuth
+        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
+    {
+        ///<summary>
+        ///True to return sign-in methods and password policy in the public Admin Portal config, false to hide them.
+        ///</summary>
+        public virtual bool Exposed { get; set; }
+    }
+
+    ///<summary>
+    ///Sets whether the project's brand is returned by the public Admin Portal config
+    ///</summary>
+    [NorbixRoute("/{version}/account/projects/{projectId}/settings/brand/expose", "PATCH")]
+    public partial class UpdateProjectExposeBrand
+        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
+    {
+        ///<summary>
+        ///True to return the brand in the public Admin Portal config, false to hide it.
+        ///</summary>
+        public virtual bool Exposed { get; set; }
+    }
+
+    ///<summary>
     ///Sets whether the project's legal documents are publicly readable via the Admin Portal
     ///</summary>
     [NorbixRoute("/{version}/account/projects/{projectId}/settings/legal/expose", "PATCH")]

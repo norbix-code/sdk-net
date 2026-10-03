@@ -1,7 +1,7 @@
 ﻿{
   Target: Hub,
   Group: account,
-  Count: 108,
+  Count: 110,
   Endpoints: [
     {
       Target: Hub,
@@ -2371,6 +2371,72 @@
         },
         Body: {
           description: test-description,
+          env: test-env
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: account,
+      MethodName: UpdateProjectExposeAuthAsync,
+      RequestType: UpdateProjectExposeAuth,
+      HttpMethod: PATCH,
+      Path: /{version}/account/projects/{projectId}/settings/auth/expose,
+      PathParams: [
+        projectId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: PATCH,
+        Path: /v2/account/projects/{guid}/settings/auth/expose,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          exposed: true,
+          env: test-env
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: account,
+      MethodName: UpdateProjectExposeBrandAsync,
+      RequestType: UpdateProjectExposeBrand,
+      HttpMethod: PATCH,
+      Path: /{version}/account/projects/{projectId}/settings/brand/expose,
+      PathParams: [
+        projectId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: PATCH,
+        Path: /v2/account/projects/{guid}/settings/brand/expose,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          exposed: true,
           env: test-env
         }
       },

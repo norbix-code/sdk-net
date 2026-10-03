@@ -16,6 +16,7 @@ the account AI chat, billing).
 3. docs(readme): link the page from the README module table and the regions section — done, commit 463eb65 (also a new `public` row in the API module table)
 4. checks: `dotnet build` + `dotnet test` of the solution — done: build 0 warnings / 0 errors; Norbix.Sdk.Tests 61/61, Norbix.Hub.Tests 194/194
 5. push + pull request — done, https://github.com/norbix-code/sdk-net/pull/70 (not merged). Opened with the `Domantas` gh account: the active `codemash-io` account has only READ on this repo
+6. feat(project): expose brand and expose auth switches (item B3b; gateway routes from item B1, `UpdateExposure.cs`) — `UpdateProjectExposeBrand` / `UpdateProjectExposeAuth` request DTOs added to `Generated/Hub.dtos.cs` by hand in the exact generated shape (mirrors `UpdateProjectExposeLegal`; the source generator builds `UpdateProjectExposeBrandAsync` / `UpdateProjectExposeAuthAsync`), Account coverage snapshot 108 → 110, docs section — done: build 0 errors; Norbix.Sdk.Tests 61/61, Norbix.Hub.Tests 194/194. Regenerating was not possible offline: the documented path (`sdks/typegen`: `core/fetch_contract.py` → `languages/csharp/generate.py`) reads a running gateway, and the saved `core/contract.json` is from 2026-09-04, older than this file
 
 ## Changes
 
@@ -23,6 +24,9 @@ the account AI chat, billing).
 | ---- | ------------ | ----------- |
 | `docs/hub/project.md` | new page: 14 sections, every Project call with verb, path, C# example | 1 |
 | `README.md` | links from the Hub `account` / `ai` rows and the project regions section; new API `public` row | 3 |
+| `src/Norbix.Sdk.Types/Generated/Hub.dtos.cs` | `UpdateProjectExposeAuth`, `UpdateProjectExposeBrand` request DTOs (hand-added, generated shape) | 6 |
+| `tests/Norbix.Hub.Tests/test_results/EndpointCoverageTests.Hub.Account.verified.txt` | 2 new endpoint entries, count 108 → 110 | 6 |
+| `docs/hub/project.md` | section "What the public Admin Portal config shows" | 6 |
 | `docs/tasks/project-audit-net.md` | this file | all |
 
 ## Findings
@@ -32,6 +36,7 @@ the account AI chat, billing).
 3. docs(readme): the API module table says 97 endpoints but lists 55 and had no `files` / `public` row; the Hub table has no `public`, `projects`, `licensing`, `support`, `compliance`, `diagnostics`, `resources`, `code` rows. Added `public` only; rest left open.
 4. test(docs): no test compiles the C# blocks of `README.md` / `docs/**`. Checked by hand in a scratch project this time; a snippet test would keep them true. Left open.
 5. docs(readme): the README CI badge points at `norbix-dev/norbix-net`; the remote is `norbix-code/sdk-net`. Left open.
+6. types(project): `UpdateProjectExposeBrand` / `UpdateProjectExposeAuth` were added by hand to `src/Norbix.Sdk.Types/Generated/Hub.dtos.cs` ("do not edit by hand") — regenerate later from a gateway that has item B1 (`sdks/typegen` fetch + csharp generate + sync); the next regeneration should give the same two classes. Not as companions in a separate file: `PushCampaignEndpoints.cs` notes such companions collide with the generated partial after a regeneration. Left open.
 
 ## Rejected / moved out
 
