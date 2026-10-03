@@ -1,0 +1,598 @@
+﻿{
+  Target: Api,
+  Group: ai,
+  Count: 18,
+  Endpoints: [
+    {
+      Target: Api,
+      Group: ai,
+      MethodName: ArchiveEndUserChatSessionAsync,
+      RequestType: ArchiveEndUserChatSessionRequest,
+      HttpMethod: PUT,
+      Path: /{version}/ai/chat/sessions/{SessionId}/archive,
+      PathParams: [
+        SessionId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: PUT,
+        Path: /v2/ai/chat/sessions/{guid}/archive,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          archived: true,
+          env: test-env
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: ai,
+      MethodName: CreateEndUserChatSessionAsync,
+      RequestType: CreateEndUserChatSessionRequest,
+      HttpMethod: POST,
+      Path: /{version}/ai/chat/sessions,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/ai/chat/sessions,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          assistantId: Guid_1,
+          title: test-title,
+          env: test-env
+        }
+      },
+      ResponseType: IdResponse,
+      Response: {
+        Id: Guid_1,
+        Status: test-status,
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: ai,
+      MethodName: DeleteEndUserChatAttachmentAsync,
+      RequestType: DeleteEndUserChatAttachmentRequest,
+      HttpMethod: DELETE,
+      Path: /{version}/ai/chat/attachments/{AttachmentId},
+      PathParams: [
+        AttachmentId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: DELETE,
+        Path: /v2/ai/chat/attachments/{guid},
+        Query: ?env=test-env,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: ai,
+      MethodName: DeleteEndUserChatSessionAsync,
+      RequestType: DeleteEndUserChatSessionRequest,
+      HttpMethod: DELETE,
+      Path: /{version}/ai/chat/sessions/{SessionId},
+      PathParams: [
+        SessionId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: DELETE,
+        Path: /v2/ai/chat/sessions/{guid},
+        Query: ?env=test-env,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: ai,
+      MethodName: ForgetEndUserChatMemoryAsync,
+      RequestType: ForgetEndUserChatMemoryRequest,
+      HttpMethod: DELETE,
+      Path: /{version}/ai/chat/memory/{NoteId},
+      PathParams: [
+        NoteId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: DELETE,
+        Path: /v2/ai/chat/memory/{guid},
+        Query: ?env=test-env,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: ai,
+      MethodName: GetEndUserAiToolsAsync,
+      RequestType: GetEndUserAiToolsRequest,
+      HttpMethod: GET,
+      Path: /{version}/ai/tools,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/ai/tools,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: GetEndUserAiToolsResponse,
+      Response: {
+        Tools: [
+          {
+            RequiresConfirmation: false
+          }
+        ],
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: ai,
+      MethodName: GetEndUserChatAvailabilityAsync,
+      RequestType: GetEndUserChatAvailabilityRequest,
+      HttpMethod: GET,
+      Path: /{version}/ai/chat/availability,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/ai/chat/availability,
+        Query: ?env=test-env,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: GetEndUserChatAvailabilityResponse,
+      Response: {
+        Enabled: true,
+        Available: true,
+        Reason: test-reason,
+        DefaultAssistantId: Guid_1,
+        Assistants: [
+          {
+            IsDefault: false,
+            MemoryEnabled: false
+          }
+        ],
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: ai,
+      MethodName: GetEndUserChatEntriesAsync,
+      RequestType: GetEndUserChatEntriesRequest,
+      HttpMethod: GET,
+      Path: /{version}/ai/chat/sessions/{SessionId}/entries,
+      PathParams: [
+        SessionId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/ai/chat/sessions/{guid}/entries,
+        Query: ?afterSeq=1&take=1&env=test-env,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: GetEndUserChatEntriesResponse,
+      Response: {
+        SessionId: Guid_1,
+        Entries: [
+          {}
+        ],
+        LastSeq: 42,
+        HasMore: true,
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: ai,
+      MethodName: GetEndUserChatSessionAsync,
+      RequestType: GetEndUserChatSessionRequest,
+      HttpMethod: GET,
+      Path: /{version}/ai/chat/sessions/{SessionId},
+      PathParams: [
+        SessionId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/ai/chat/sessions/{guid},
+        Query: ?env=test-env,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: GetEndUserChatSessionResponse,
+      Response: {
+        Session: {
+          Id: Guid_1,
+          AssistantId: Guid_1,
+          Title: test-title,
+          IsPinned: true,
+          IsArchived: true,
+          LastSeq: 42,
+          CreatedAtUtc: DateTime_1,
+          UpdatedAtUtc: DateTime_1
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: ai,
+      MethodName: InvokeEndUserAiToolAsync,
+      RequestType: InvokeEndUserAiToolRequest,
+      HttpMethod: POST,
+      Path: /{version}/ai/tools/{ToolName},
+      PathParams: [
+        ToolName
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/ai/tools/test-toolName,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          argumentsJson: test-argumentsJson
+        }
+      },
+      ResponseType: InvokeEndUserAiToolResponse,
+      Response: {
+        Result: test-result,
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: ai,
+      MethodName: ListEndUserChatAttachmentsAsync,
+      RequestType: ListEndUserChatAttachmentsRequest,
+      HttpMethod: GET,
+      Path: /{version}/ai/chat/sessions/{SessionId}/attachments,
+      PathParams: [
+        SessionId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/ai/chat/sessions/{guid}/attachments,
+        Query: ?env=test-env,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: ListEndUserChatAttachmentsResponse,
+      Response: {
+        Attachments: [
+          {}
+        ],
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: ai,
+      MethodName: ListEndUserChatMemoryAsync,
+      RequestType: ListEndUserChatMemoryRequest,
+      HttpMethod: GET,
+      Path: /{version}/ai/chat/memory,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/ai/chat/memory,
+        Query: ?take=1&env=test-env,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: ListEndUserChatMemoryResponse,
+      Response: {
+        Notes: [
+          {}
+        ],
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: ai,
+      MethodName: ListEndUserChatSessionsAsync,
+      RequestType: ListEndUserChatSessionsRequest,
+      HttpMethod: GET,
+      Path: /{version}/ai/chat/sessions,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/ai/chat/sessions,
+        Query: ?take=1&includeArchived=True&env=test-env,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: ListEndUserChatSessionsResponse,
+      Response: {
+        Sessions: [
+          {
+            IsPinned: false,
+            IsArchived: false
+          }
+        ],
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: ai,
+      MethodName: PinEndUserChatSessionAsync,
+      RequestType: PinEndUserChatSessionRequest,
+      HttpMethod: PUT,
+      Path: /{version}/ai/chat/sessions/{SessionId}/pin,
+      PathParams: [
+        SessionId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: PUT,
+        Path: /v2/ai/chat/sessions/{guid}/pin,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          pinned: true,
+          env: test-env
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: ai,
+      MethodName: RenameEndUserChatSessionAsync,
+      RequestType: RenameEndUserChatSessionRequest,
+      HttpMethod: PATCH,
+      Path: /{version}/ai/chat/sessions/{SessionId},
+      PathParams: [
+        SessionId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: PATCH,
+        Path: /v2/ai/chat/sessions/{guid},
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          title: test-title,
+          env: test-env
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: ai,
+      MethodName: SetEndUserChatEntryFeedbackAsync,
+      RequestType: SetEndUserChatEntryFeedbackRequest,
+      HttpMethod: PUT,
+      Path: /{version}/ai/chat/sessions/{SessionId}/entries/{EntryId}/feedback,
+      PathParams: [
+        SessionId,
+        EntryId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: PUT,
+        Path: /v2/ai/chat/sessions/{guid}/entries/{guid}/feedback,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          feedback: test-feedback,
+          env: test-env
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: ai,
+      MethodName: StartEndUserChatTurnAsync,
+      RequestType: StartEndUserChatTurnRequest,
+      HttpMethod: POST,
+      Path: /{version}/ai/chat/turn,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/ai/chat/turn,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          sessionId: Guid_1,
+          assistantId: Guid_1,
+          message: test-message,
+          env: test-env
+        }
+      },
+      ResponseType: StartEndUserChatTurnResponse,
+      Response: {
+        TurnId: Guid_1,
+        SessionId: Guid_1,
+        Channel: test-channel,
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: ai,
+      MethodName: UploadEndUserChatAttachmentAsync,
+      RequestType: UploadEndUserChatAttachmentRequest,
+      HttpMethod: POST,
+      Path: /{version}/ai/chat/sessions/{SessionId}/attachments,
+      PathParams: [
+        SessionId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/ai/chat/sessions/{guid}/attachments,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          fileName: test-fileName,
+          contentType: test-contentType,
+          base64Content: test-base64Content,
+          env: test-env
+        }
+      },
+      ResponseType: IdResponse,
+      Response: {
+        Id: Guid_1,
+        Status: test-status,
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    }
+  ]
+}

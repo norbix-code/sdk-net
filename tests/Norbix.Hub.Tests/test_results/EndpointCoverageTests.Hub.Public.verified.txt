@@ -44,6 +44,12 @@
             test-string
           ],
           PasswordPolicy: {}
+        },
+        AiChat: {
+          Enabled: true,
+          Assistants: [
+            {}
+          ]
         }
       }
     },

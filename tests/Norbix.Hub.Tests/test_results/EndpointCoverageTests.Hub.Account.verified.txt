@@ -1,7 +1,7 @@
 ﻿{
   Target: Hub,
   Group: account,
-  Count: 98,
+  Count: 108,
   Endpoints: [
     {
       Target: Hub,
@@ -1846,6 +1846,84 @@
     {
       Target: Hub,
       Group: account,
+      MethodName: CreateProjectAiAssistantAsync,
+      RequestType: CreateProjectAiAssistant,
+      HttpMethod: POST,
+      Path: /{version}/account/projects/{projectId}/ai/assistants,
+      PathParams: [
+        projectId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/account/projects/{guid}/ai/assistants,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          name: test-name,
+          welcomeMessage: test-welcomeMessage,
+          systemPrompt: test-systemPrompt,
+          toolsets: [
+            test-string
+          ],
+          llmIntegrationId: Guid_1,
+          model: test-model,
+          memoryEnabled: true,
+          ragSourceIds: [
+            test-string
+          ],
+          planId: Guid_1,
+          isDefault: true,
+          env: test-env
+        }
+      },
+      ResponseType: IdResponse,
+      Response: {
+        Id: Guid_1,
+        Status: test-status,
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: account,
+      MethodName: DeleteProjectAiAssistantAsync,
+      RequestType: DeleteProjectAiAssistant,
+      HttpMethod: DELETE,
+      Path: /{version}/account/projects/{projectId}/ai/assistants/{assistantId},
+      PathParams: [
+        projectId,
+        assistantId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: DELETE,
+        Path: /v2/account/projects/{guid}/ai/assistants/{guid},
+        Query: ?env=test-env,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: account,
       MethodName: DisableProjectAsync,
       RequestType: DisableProject,
       HttpMethod: PATCH,
@@ -1944,6 +2022,121 @@
     {
       Target: Hub,
       Group: account,
+      MethodName: GetProjectAiSettingsAsync,
+      RequestType: GetProjectAiSettings,
+      HttpMethod: GET,
+      Path: /{version}/account/projects/{projectId}/ai/settings,
+      PathParams: [
+        projectId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/account/projects/{guid}/ai/settings,
+        Query: ?env=test-env,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: GetProjectAiSettingsResponse,
+      Response: {
+        Result: {
+          Enabled: true,
+          DefaultLlmIntegrationId: Guid_1,
+          DefaultModel: test-defaultModel,
+          Assistants: [
+            {
+              MemoryEnabled: false,
+              IsDefault: false
+            }
+          ]
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: account,
+      MethodName: GetProjectAiUsageAsync,
+      RequestType: GetProjectAiUsage,
+      HttpMethod: GET,
+      Path: /{version}/account/projects/{projectId}/ai/usage,
+      PathParams: [
+        projectId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/account/projects/{guid}/ai/usage,
+        Query: ?top=1&env=test-env,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: GetProjectAiUsageResponse,
+      Response: {
+        Result: {
+          Period: test-period,
+          Totals: {},
+          Assistants: [
+            {}
+          ],
+          TopUsers: [
+            {}
+          ],
+          Models: [
+            {}
+          ]
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: account,
+      MethodName: SetAdminPortalEnabledAsync,
+      RequestType: SetAdminPortalEnabledRequest,
+      HttpMethod: PUT,
+      Path: /{version}/account/projects/{projectId}/admin-portal/enabled,
+      PathParams: [
+        projectId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: PUT,
+        Path: /v2/account/projects/{guid}/admin-portal/enabled,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          enabled: true,
+          env: test-env
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: account,
       MethodName: UpdateProjectAccentColorAsync,
       RequestType: UpdateProjectAccentColor,
       HttpMethod: PATCH,
@@ -1997,6 +2190,88 @@
         },
         Body: {
           url: https://example.test/url,
+          env: test-env
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: account,
+      MethodName: UpdateProjectAiAssistantAsync,
+      RequestType: UpdateProjectAiAssistant,
+      HttpMethod: PUT,
+      Path: /{version}/account/projects/{projectId}/ai/assistants/{assistantId},
+      PathParams: [
+        projectId,
+        assistantId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: PUT,
+        Path: /v2/account/projects/{guid}/ai/assistants/{guid},
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          name: test-name,
+          welcomeMessage: test-welcomeMessage,
+          systemPrompt: test-systemPrompt,
+          toolsets: [
+            test-string
+          ],
+          llmIntegrationId: Guid_1,
+          model: test-model,
+          memoryEnabled: true,
+          ragSourceIds: [
+            test-string
+          ],
+          planId: Guid_1,
+          isDefault: true,
+          env: test-env
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: account,
+      MethodName: UpdateProjectAiSettingsAsync,
+      RequestType: UpdateProjectAiSettings,
+      HttpMethod: PUT,
+      Path: /{version}/account/projects/{projectId}/ai/settings,
+      PathParams: [
+        projectId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: PUT,
+        Path: /v2/account/projects/{guid}/ai/settings,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          enabled: true,
+          defaultLlmIntegrationId: Guid_1,
+          defaultModel: test-defaultModel,
           env: test-env
         }
       },
@@ -3036,12 +3311,112 @@
         Path: /v2/account/mcp,
         Headers: {
           Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
           X-CM-AccountId: test-account,
           X-CM-ProjectId: test-project
+        },
+        Body: {
+          toolsets: test-toolsets
         }
       },
       ResponseType: String,
       Response: test-response
+    },
+    {
+      Target: Hub,
+      Group: account,
+      MethodName: RenderTemplatePreviewAsync,
+      RequestType: RenderTemplatePreviewRequest,
+      HttpMethod: POST,
+      Path: /{version}/account/ai/templates/render-preview,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/account/ai/templates/render-preview,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          env: test-env,
+          channel: test-channel,
+          templateId: Guid_1,
+          body: test-body,
+          subject: test-subject,
+          sampleData: test-sampleData
+        }
+      },
+      ResponseType: RenderTemplatePreviewResponse,
+      Response: {
+        Preview: {
+          Channel: test-channel,
+          Ok: true,
+          Parts: [
+            {}
+          ],
+          Errors: [
+            test-string
+          ]
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: account,
+      MethodName: ScaffoldProjectAsync,
+      RequestType: ScaffoldProjectRequest,
+      HttpMethod: POST,
+      Path: /{version}/account/ai/scaffold,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/account/ai/scaffold,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          spec: test-spec,
+          mode: test-mode,
+          env: test-env
+        }
+      },
+      ResponseType: ScaffoldProjectResponse,
+      Response: {
+        Mode: test-mode,
+        Env: test-env,
+        Valid: true,
+        Plan: [
+          {}
+        ],
+        Defaults: [
+          test-string
+        ],
+        Issues: [
+          {}
+        ],
+        Report: {
+          Completed: true,
+          ProjectId: Guid_1,
+          ProjectUrl: https://example.test/projectUrl,
+          Summary: test-summary,
+          Steps: [
+            {}
+          ]
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
     },
     {
       Target: Hub,
@@ -3243,6 +3618,42 @@
       Response: {
         Id: Guid_1,
         SessionId: Guid_1,
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: account,
+      MethodName: ValidateSchemaAsync,
+      RequestType: ValidateSchemaRequest,
+      HttpMethod: POST,
+      Path: /{version}/account/ai/schemas/validate,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/account/ai/schemas/validate,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          schemaJson: test-schemaJson
+        }
+      },
+      ResponseType: ValidateSchemaResponse,
+      Response: {
+        Valid: true,
+        Issues: [
+          {}
+        ],
+        Collections: [
+          test-string
+        ],
         ResponseStatus: {
           IsSuccess: true
         }

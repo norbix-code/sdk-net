@@ -1,0 +1,51 @@
+﻿{
+  Target: Hub,
+  Group: well_known,
+  Count: 2,
+  Endpoints: [
+    {
+      Target: Hub,
+      Group: well_known,
+      MethodName: OAuthAuthorizationServerMetadataAsync,
+      RequestType: OAuthAuthorizationServerMetadataRequest,
+      HttpMethod: GET,
+      Path: /.well-known/oauth-authorization-server,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /.well-known/oauth-authorization-server,
+        Query: ?path=test-path,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: String,
+      Response: test-response
+    },
+    {
+      Target: Hub,
+      Group: well_known,
+      MethodName: OAuthProtectedResourceMetadataAsync,
+      RequestType: OAuthProtectedResourceMetadataRequest,
+      HttpMethod: GET,
+      Path: /.well-known/oauth-protected-resource,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /.well-known/oauth-protected-resource,
+        Query: ?path=test-path,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: String,
+      Response: test-response
+    }
+  ]
+}

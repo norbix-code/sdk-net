@@ -9,11 +9,46 @@
 
 using System;
 using System.IO;
+using System.Collections;
+using System.Text.Json.Nodes;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using Norbix.Sdk.Types;
 
 namespace Norbix.Sdk.Types.Hub;
+
+    public partial class TemplatePreview
+    {
+        public virtual string Channel { get; set; }
+        public virtual bool Ok { get; set; }
+        public virtual IReadOnlyList<TemplatePreviewPartResult> Parts { get; set; }
+        public virtual IReadOnlyList<string> Errors { get; set; }
+    }
+
+    public partial class TemplatePreviewPartResult
+    {
+        public virtual string Name { get; set; }
+        public virtual string? Rendered { get; set; }
+        public virtual IReadOnlyList<string> Errors { get; set; }
+    }
+
+    public partial class ScaffoldIssue
+    {
+        public virtual string Where { get; set; }
+        public virtual string Code { get; set; }
+        public virtual string Message { get; set; }
+    }
+
+    public partial class ScaffoldStep
+    {
+        public virtual int Order { get; set; }
+        public virtual string Kind { get; set; }
+        public virtual string Title { get; set; }
+        public virtual string Tool { get; set; }
+        public virtual JsonObject Arguments { get; set; }
+        public virtual string? CheckTool { get; set; }
+        public virtual string? TemplateRef { get; set; }
+    }
 
     public partial class RenderPushResponse
         : ResponseBase
@@ -40,6 +75,11 @@ namespace Norbix.Sdk.Types.Hub;
         InActive = 16,
         Blocked = 32,
         Unregistered = 64,
+    }
+
+    public partial class AggregateId
+    {
+        public virtual Guid Value { get; set; }
     }
 
     public enum AuthType
@@ -191,7 +231,16 @@ namespace Norbix.Sdk.Types.Hub;
     {
     }
 
+    public partial interface IHasDomainEntityId
+    {
+    }
+
     public partial interface IHasRazorTemplateCode
+    {
+    }
+
+    public partial class IntegrationId
+        : AggregateId, IHasDomainEntityId
     {
     }
 
@@ -277,6 +326,11 @@ namespace Norbix.Sdk.Types.Hub;
     {
         Allow,
         Deny,
+    }
+
+    public partial class ProjectId
+        : AggregateId, IHasDomainEntityId
+    {
     }
 
     public enum ProjectStatus
@@ -423,6 +477,11 @@ namespace Norbix.Sdk.Types.Hub;
         Creative,
     }
 
+    public partial class TaxonomyId
+        : AggregateId, IHasDomainEntityId
+    {
+    }
+
     public enum TokenMappingResolverType
     {
         NotSet,
@@ -459,6 +518,12 @@ namespace Norbix.Sdk.Types.Hub;
         Schema,
         Files,
         Payments,
+    }
+
+    public enum EmbeddingProvider
+    {
+        Voyage,
+        OpenAI,
     }
 
     public enum LlmProvider
@@ -866,13 +931,84 @@ namespace Norbix.Sdk.Types.Hub;
     }
 
     [DataContract]
+    public partial class AiAssistantDto
+    {
+        [DataMember]
+        public virtual string Id { get; set; }
+
+        [DataMember]
+        public virtual string Name { get; set; }
+
+        [DataMember]
+        public virtual string? WelcomeMessage { get; set; }
+
+        [DataMember]
+        public virtual string? SystemPrompt { get; set; }
+
+        [DataMember]
+        public virtual List<string> Toolsets { get; set; } = [];
+
+        [DataMember]
+        public virtual string? LlmIntegrationId { get; set; }
+
+        [DataMember]
+        public virtual string? Model { get; set; }
+
+        [DataMember]
+        public virtual bool MemoryEnabled { get; set; }
+
+        [DataMember]
+        public virtual List<string> RagSourceIds { get; set; } = [];
+
+        [DataMember]
+        public virtual string? PlanId { get; set; }
+
+        [DataMember]
+        public virtual bool IsDefault { get; set; }
+    }
+
+    [DataContract]
     public partial class AiDto
     {
         [DataMember]
         public virtual bool IsEnabled { get; set; }
 
         [DataMember]
+        public virtual Dictionary<string, string> DefaultIntegrationViewIds { get; set; } = new();
+
+        [DataMember]
         public virtual string? DefaultIntegrationViewId { get; set; }
+    }
+
+    [DataContract]
+    public partial class AiUsageGroupDto
+    {
+        [DataMember]
+        public virtual string Id { get; set; }
+
+        [DataMember]
+        public virtual long LlmInputTokens { get; set; }
+
+        [DataMember]
+        public virtual long LlmOutputTokens { get; set; }
+
+        [DataMember]
+        public virtual long EmbeddingTokens { get; set; }
+
+        [DataMember]
+        public virtual long RerankCalls { get; set; }
+
+        [DataMember]
+        public virtual long TotalTokens { get; set; }
+
+        [DataMember]
+        public virtual long ChargeableTokens { get; set; }
+
+        [DataMember]
+        public virtual long ChargeableRerankCalls { get; set; }
+
+        [DataMember]
+        public virtual long Credits { get; set; }
     }
 
     [DataContract]
@@ -1028,6 +1164,41 @@ namespace Norbix.Sdk.Types.Hub;
     }
 
     [DataContract]
+    public partial class ProjectAiSettingsDto
+    {
+        [DataMember]
+        public virtual bool Enabled { get; set; }
+
+        [DataMember]
+        public virtual string? DefaultLlmIntegrationId { get; set; }
+
+        [DataMember]
+        public virtual string? DefaultModel { get; set; }
+
+        [DataMember]
+        public virtual List<AiAssistantDto> Assistants { get; set; } = [];
+    }
+
+    [DataContract]
+    public partial class ProjectAiUsageDto
+    {
+        [DataMember]
+        public virtual string Period { get; set; }
+
+        [DataMember]
+        public virtual AiUsageGroupDto Totals { get; set; }
+
+        [DataMember]
+        public virtual List<AiUsageGroupDto> Assistants { get; set; } = [];
+
+        [DataMember]
+        public virtual List<AiUsageGroupDto> TopUsers { get; set; } = [];
+
+        [DataMember]
+        public virtual List<AiUsageGroupDto> Models { get; set; } = [];
+    }
+
+    [DataContract]
     public partial class ProjectBrandDto
     {
         [DataMember]
@@ -1127,6 +1298,9 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember]
         public virtual bool ExposeLegalToAdminPortal { get; set; }
+
+        [DataMember]
+        public virtual ProjectAiSettingsDto? AiChat { get; set; }
 
         [DataMember]
         public virtual string? LegalTermsMarkdown { get; set; }
@@ -1248,6 +1422,19 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual string? Name { get; set; }
     }
 
+    public partial class PublicAiAssistantDto
+    {
+        public virtual string Id { get; set; }
+        public virtual string Name { get; set; }
+        public virtual string? Welcome { get; set; }
+    }
+
+    public partial class PublicAiChatDto
+    {
+        public virtual bool Enabled { get; set; }
+        public virtual List<PublicAiAssistantDto> Assistants { get; set; } = [];
+    }
+
     public partial class PublicAuthDto
     {
         public virtual List<string> SocialProviders { get; set; } = [];
@@ -1306,6 +1493,7 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual bool AdminPortalEnabled { get; set; }
         public virtual PublicBrandDto? Branding { get; set; }
         public virtual PublicAuthDto Auth { get; set; }
+        public virtual PublicAiChatDto AiChat { get; set; }
     }
 
     [DataContract]
@@ -2441,6 +2629,22 @@ namespace Norbix.Sdk.Types.Hub;
     }
 
     [DataContract]
+    public partial class PushAudienceCountDto
+    {
+        [DataMember]
+        public virtual int Devices { get; set; }
+
+        [DataMember]
+        public virtual int Recipients { get; set; }
+
+        [DataMember]
+        public virtual int SkippedUserIds { get; set; }
+
+        [DataMember]
+        public virtual bool IsCapped { get; set; }
+    }
+
+    [DataContract]
     public partial class PushCampaignBatchDto
         : CampaignBatchDto
     {
@@ -2537,6 +2741,9 @@ namespace Norbix.Sdk.Types.Hub;
     {
         [DataMember]
         public virtual HashSet<string> Recipients { get; set; } = [];
+
+        [DataMember]
+        public virtual HashSet<PushDeviceDeliveryFamily>? Platforms { get; set; }
     }
 
     [DataContract]
@@ -2548,6 +2755,9 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember]
         public virtual HashSet<string>? UserTags { get; set; }
+
+        [DataMember]
+        public virtual HashSet<PushDeviceDeliveryFamily>? Platforms { get; set; }
     }
 
     [DataContract]
@@ -4842,6 +5052,25 @@ namespace Norbix.Sdk.Types.Hub;
     {
     }
 
+    public partial class EmbeddingIntegrationDto
+        : IntegrationDto
+    {
+        public virtual EmbeddingProvider Provider { get; set; }
+        public virtual string Model { get; set; }
+        public virtual int Dimension { get; set; }
+        public virtual string? BaseUrl { get; set; }
+        public virtual bool IsConfigured { get; set; }
+    }
+
+    public partial class EmbeddingIntegrationListProjection
+        : IntegrationListProjection
+    {
+        public virtual EmbeddingProvider EmbeddingProvider { get; set; }
+        public virtual string Model { get; set; }
+        public virtual int Dimension { get; set; }
+        public virtual bool IsConfigured { get; set; }
+    }
+
     public partial class GoogleCalendarMcpIntegrationDto
         : McpIntegrationDto
     {
@@ -4870,6 +5099,8 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual string? DefaultModel { get; set; }
         public virtual bool IsConfigured { get; set; }
         public virtual bool IsSystemOwned { get; set; }
+        public virtual bool IsDefault { get; set; }
+        public virtual List<LlmModelOptionDto> Models { get; set; } = [];
     }
 
     public partial class LlmIntegrationListProjection
@@ -4878,6 +5109,16 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual LlmProvider LlmProvider { get; set; }
         public virtual string? BaseUrl { get; set; }
         public virtual string? DefaultModel { get; set; }
+        public virtual bool IsDefault { get; set; }
+        public virtual List<LlmModelOptionDto> Models { get; set; } = [];
+    }
+
+    public partial class LlmModelOptionDto
+    {
+        public virtual string Id { get; set; }
+        public virtual string DisplayName { get; set; }
+        public virtual decimal InputCreditRate { get; set; }
+        public virtual decimal OutputCreditRate { get; set; }
     }
 
     public partial class McpIntegrationDto
@@ -5714,6 +5955,20 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember]
         public virtual decimal? Score { get; set; }
+    }
+
+    [DataContract]
+    public partial class TestEmbeddingIntegrationResponse
+        : ResponseBase
+    {
+        [DataMember]
+        public virtual int? Dimension { get; set; }
+
+        [DataMember]
+        public virtual long? LatencyMs { get; set; }
+
+        [DataMember]
+        public virtual int? TotalTokens { get; set; }
     }
 
     [DataContract]
@@ -7526,6 +7781,28 @@ namespace Norbix.Sdk.Types.Hub;
     }
 
     ///<summary>
+    ///Adds an end-user AI assistant to the project
+    ///</summary>
+    [NorbixRoute("/{version}/account/projects/{projectId}/ai/assistants", "POST")]
+    public partial class CreateProjectAiAssistant
+        : ProjectAiAssistantRequestBase, INorbixRequest<IdResponse>
+    {
+    }
+
+    ///<summary>
+    ///Removes an end-user AI assistant from the project
+    ///</summary>
+    [NorbixRoute("/{version}/account/projects/{projectId}/ai/assistants/{assistantId}", "DELETE")]
+    public partial class DeleteProjectAiAssistant
+        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
+    {
+        ///<summary>
+        ///Id of the assistant (ast_…).
+        ///</summary>
+        public virtual string AssistantId { get; set; }
+    }
+
+    ///<summary>
     ///Disables project
     ///</summary>
     [NorbixRoute("/{version}/account/projects/{projectId}/disable", "PATCH")]
@@ -7553,6 +7830,107 @@ namespace Norbix.Sdk.Types.Hub;
     }
 
     ///<summary>
+    ///Reads the project's AI chat settings for end users: on/off, default LLM and assistants
+    ///</summary>
+    [NorbixRoute("/{version}/account/projects/{projectId}/ai/settings", "GET")]
+    public partial class GetProjectAiSettings
+        : CodeMashRequestBase, INorbixRequest<GetProjectAiSettingsResponse>
+    {
+    }
+
+    public partial class GetProjectAiSettingsResponse
+        : ResponseBase
+    {
+        public virtual ProjectAiSettingsDto? Result { get; set; }
+    }
+
+    ///<summary>
+    ///Reads the project's AI usage this month: totals, per assistant, top users and per model
+    ///</summary>
+    [NorbixRoute("/{version}/account/projects/{projectId}/ai/usage", "GET")]
+    public partial class GetProjectAiUsage
+        : CodeMashRequestBase, INorbixRequest<GetProjectAiUsageResponse>
+    {
+        ///<summary>
+        ///How many users to list, biggest first. 1–100, default 10.
+        ///</summary>
+        public virtual int? Top { get; set; }
+    }
+
+    public partial class GetProjectAiUsageResponse
+        : ResponseBase
+    {
+        public virtual ProjectAiUsageDto? Result { get; set; }
+    }
+
+    public partial class ProjectAiAssistantRequestBase
+        : CodeMashRequestBase
+    {
+        ///<summary>
+        ///Name shown to end users. Required, at most 100 characters, unique in the project.
+        ///</summary>
+        public virtual string? Name { get; set; }
+
+        ///<summary>
+        ///First message end users see. Public. At most 2 000 characters.
+        ///</summary>
+        public virtual string? WelcomeMessage { get; set; }
+
+        ///<summary>
+        ///Instructions for the model. Never shown to end users. At most 20 000 characters.
+        ///</summary>
+        public virtual string? SystemPrompt { get; set; }
+
+        ///<summary>
+        ///Own-scope toolsets the assistant may use: own:records (the user's own database records), own:profile (their profile), own:preferences (their marketing preferences). Any other name is refused.
+        ///</summary>
+        public virtual List<string>? Toolsets { get; set; }
+
+        ///<summary>
+        ///The assistant's own LLM integration id (int_…). Empty = the project's default LLM.
+        ///</summary>
+        public virtual string? LlmIntegrationId { get; set; }
+
+        ///<summary>
+        ///Model name. Empty = the integration's default model.
+        ///</summary>
+        public virtual string? Model { get; set; }
+
+        ///<summary>
+        ///True to let the assistant remember facts about the end user across chats.
+        ///</summary>
+        public virtual bool MemoryEnabled { get; set; }
+
+        ///<summary>
+        ///RAG source ids. Not available yet — must be empty.
+        ///</summary>
+        public virtual List<string>? RagSourceIds { get; set; }
+
+        ///<summary>
+        ///AI plan (quota) id. Optional.
+        ///</summary>
+        public virtual string? PlanId { get; set; }
+
+        ///<summary>
+        ///True to make this the project's default assistant; the previous default stops being default.
+        ///</summary>
+        public virtual bool IsDefault { get; set; }
+    }
+
+    ///<summary>
+    ///Turns the project's managed Admin Portal on or off
+    ///</summary>
+    [NorbixRoute("/{version}/account/projects/{projectId}/admin-portal/enabled", "PUT")]
+    public partial class SetAdminPortalEnabledRequest
+        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
+    {
+        ///<summary>
+        ///true turns the managed Admin Portal on; false turns it off.
+        ///</summary>
+        public virtual bool Enabled { get; set; }
+    }
+
+    ///<summary>
     ///Updates project accent color
     ///</summary>
     [NorbixRoute("/{version}/account/projects/{projectId}/settings/accent-color", "PATCH")]
@@ -7576,6 +7954,42 @@ namespace Norbix.Sdk.Types.Hub;
         ///Custom admin-portal URL to use instead of the canonical address. Null/empty restores the canonical pr_{id}.admin.{host} address.
         ///</summary>
         public virtual string? Url { get; set; }
+    }
+
+    ///<summary>
+    ///Updates an end-user AI assistant of the project (full replace)
+    ///</summary>
+    [NorbixRoute("/{version}/account/projects/{projectId}/ai/assistants/{assistantId}", "PUT")]
+    public partial class UpdateProjectAiAssistant
+        : ProjectAiAssistantRequestBase, INorbixRequest<EmptyResponse>
+    {
+        ///<summary>
+        ///Id of the assistant (ast_…).
+        ///</summary>
+        public virtual string AssistantId { get; set; }
+    }
+
+    ///<summary>
+    ///Saves the project's AI chat settings: on/off and the default LLM
+    ///</summary>
+    [NorbixRoute("/{version}/account/projects/{projectId}/ai/settings", "PUT")]
+    public partial class UpdateProjectAiSettings
+        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
+    {
+        ///<summary>
+        ///True to show end-user AI chat in the Admin Portal, false to hide it.
+        ///</summary>
+        public virtual bool Enabled { get; set; }
+
+        ///<summary>
+        ///Default LLM integration id (int_…) for assistants without their own. Empty clears it.
+        ///</summary>
+        public virtual string? DefaultLlmIntegrationId { get; set; }
+
+        ///<summary>
+        ///Model of the default LLM. Empty = the integration's default model.
+        ///</summary>
+        public virtual string? DefaultModel { get; set; }
     }
 
     ///<summary>
@@ -7842,6 +8256,7 @@ namespace Norbix.Sdk.Types.Hub;
     {
         public virtual string Client { get; set; }
         public virtual string Config { get; set; }
+        public virtual string Auth { get; set; }
     }
 
     public partial class AiToolManifestItem
@@ -8189,14 +8604,115 @@ namespace Norbix.Sdk.Types.Hub;
     }
 
     ///<summary>
-    ///MCP server endpoint — JSON-RPC 2.0 over HTTP POST exposing the AI tool catalog.
+    ///MCP server endpoint (Streamable HTTP): JSON-RPC 2.0 over POST, server stream over GET, session end over DELETE.
     ///</summary>
     [NorbixRoute("/{version}/account/mcp", "POST")]
+    [NorbixRoute("/{version}/account/mcp", "GET")]
+    [NorbixRoute("/{version}/account/mcp", "DELETE")]
     public partial class McpRequest
         : INorbixRequest<string>
     {
         public virtual string? Version { get; set; }
+        public virtual string? Toolsets { get; set; }
         public virtual Stream RequestStream { get; set; }
+    }
+
+    ///<summary>
+    ///Renders an email, push or SMS template with sample data.
+    ///</summary>
+    [NorbixRoute("/{version}/account/ai/templates/render-preview", "POST")]
+    public partial class RenderTemplatePreviewRequest
+        : RequestBase, INorbixRequest<RenderTemplatePreviewResponse>, IHasEnv
+    {
+        ///<summary>
+        ///The project of templateId. Not needed to render a body.
+        ///</summary>
+        public virtual string ProjectId { get; set; }
+
+        public virtual string? Env { get; set; }
+        ///<summary>
+        ///email | push | sms
+        ///</summary>
+        public virtual string Channel { get; set; }
+
+        ///<summary>
+        ///An existing template id (tmpl_…). Needs projectId. Leave empty to render body instead.
+        ///</summary>
+        public virtual string? TemplateId { get; set; }
+
+        ///<summary>
+        ///Razor template text to render when there is no templateId.
+        ///</summary>
+        public virtual string? Body { get; set; }
+
+        ///<summary>
+        ///Email subject / push title / SMS subject to render with body. Optional.
+        ///</summary>
+        public virtual string? Subject { get; set; }
+
+        ///<summary>
+        ///Sample data as a JSON object, read by the template as @Model.
+        ///</summary>
+        public virtual string? SampleData { get; set; }
+    }
+
+    public partial class RenderTemplatePreviewResponse
+        : ResponseBase
+    {
+        public virtual TemplatePreview? Preview { get; set; }
+    }
+
+    public partial class ScaffoldApplyReport
+    {
+        public virtual bool Completed { get; set; }
+        public virtual string? ProjectId { get; set; }
+        public virtual string? ProjectUrl { get; set; }
+        public virtual string? Summary { get; set; }
+        public virtual List<ScaffoldStepReportWithLink> Steps { get; set; } = [];
+    }
+
+    ///<summary>
+    ///Plans (preview) or builds (apply) a whole project from one spec.
+    ///</summary>
+    [NorbixRoute("/{version}/account/ai/scaffold", "POST")]
+    public partial class ScaffoldProjectRequest
+        : RequestBase, INorbixRequest<ScaffoldProjectResponse>
+    {
+        ///<summary>
+        ///The project spec (a JSON object) — see the tool description.
+        ///</summary>
+        public virtual string Spec { get; set; }
+
+        ///<summary>
+        ///'preview' (writes nothing) or 'apply' (builds the project).
+        ///</summary>
+        public virtual string Mode { get; set; }
+
+        public virtual string? Env { get; set; }
+    }
+
+    public partial class ScaffoldProjectResponse
+        : ResponseBase
+    {
+        public virtual string? Mode { get; set; }
+        public virtual string? Env { get; set; }
+        public virtual bool Valid { get; set; }
+        public virtual List<ScaffoldStep>? Plan { get; set; }
+        public virtual List<string>? Defaults { get; set; }
+        public virtual List<ScaffoldIssue>? Issues { get; set; }
+        public virtual ScaffoldApplyReport? Report { get; set; }
+    }
+
+    public partial class ScaffoldStepReportWithLink
+    {
+        public virtual int Order { get; set; }
+        public virtual string Title { get; set; }
+        public virtual string Tool { get; set; }
+        public virtual string Status { get; set; }
+        public virtual string? Id { get; set; }
+        public virtual string? DashboardUrl { get; set; }
+        public virtual string? Note { get; set; }
+        public virtual IReadOnlyList<string>? Errors { get; set; }
     }
 
     ///<summary>
@@ -8279,6 +8795,27 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual string? SessionId { get; set; }
     }
 
+    ///<summary>
+    ///Validates a collection schema without saving it.
+    ///</summary>
+    [NorbixRoute("/{version}/account/ai/schemas/validate", "POST")]
+    public partial class ValidateSchemaRequest
+        : RequestBase, INorbixRequest<ValidateSchemaResponse>
+    {
+        ///<summary>
+        ///The schema as JSON — see the tool description.
+        ///</summary>
+        public virtual string SchemaJson { get; set; }
+    }
+
+    public partial class ValidateSchemaResponse
+        : ResponseBase
+    {
+        public virtual bool Valid { get; set; }
+        public virtual List<ScaffoldIssue>? Issues { get; set; }
+        public virtual List<string>? Collections { get; set; }
+    }
+
     public partial class AnthropicLlmIntegrationRequest
         : LlmIntegrationRequest, ILlmApiKeyRequest
     {
@@ -8293,6 +8830,16 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual McpTransport Transport { get; set; }
         public virtual string ServerUrl { get; set; }
         public virtual string ApiKey { get; set; }
+    }
+
+    [NorbixRoute("/{version}/ai/integrations/embeddings/{Id}", "DELETE")]
+    public partial class DeleteEmbeddingIntegrationRequest
+        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
+    {
+        ///<summary>
+        ///Id of the embedding integration to delete.
+        ///</summary>
+        public virtual string Id { get; set; }
     }
 
     [NorbixRoute("/{version}/ai/integrations/llms/{Id}", "DELETE")]
@@ -8335,6 +8882,18 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual string Id { get; set; }
     }
 
+    public partial class EmbeddingIntegrationRequest
+    {
+        public virtual string? IntegrationId { get; set; }
+        public virtual EmbeddingProvider Provider { get; set; }
+        public virtual string IntegrationName { get; set; }
+        public virtual bool IsEnabled { get; set; }
+        public virtual string? Endpoint { get; set; }
+        public virtual string Model { get; set; }
+        public virtual int Dimension { get; set; }
+        public virtual string ApiKey { get; set; }
+    }
+
     [NorbixRoute("/{version}/ai/integrations/llms/{Id}/enable", "PUT")]
     public partial class EnableLlmIntegrationRequest
         : CodeMashRequestBase, INorbixRequest<EmptyResponse>
@@ -8353,6 +8912,34 @@ namespace Norbix.Sdk.Types.Hub;
         ///Id of the MCP integration to enable.
         ///</summary>
         public virtual string Id { get; set; }
+    }
+
+    [NorbixRoute("/{version}/ai/integrations/embeddings/{Id}", "GET")]
+    public partial class GetEmbeddingIntegration
+        : CodeMashRequestBase, INorbixRequest<GetEmbeddingIntegrationResponse>
+    {
+        ///<summary>
+        ///Id of the embedding integration to fetch.
+        ///</summary>
+        public virtual string Id { get; set; }
+    }
+
+    public partial class GetEmbeddingIntegrationResponse
+        : ResponseBase
+    {
+        public virtual EmbeddingIntegrationDto? Item { get; set; }
+    }
+
+    [NorbixRoute("/{version}/ai/integrations/embeddings", "GET")]
+    public partial class GetEmbeddingIntegrations
+        : CodeMashListPaginationRequestBase, INorbixRequest<GetEmbeddingIntegrationsResponse>
+    {
+    }
+
+    public partial class GetEmbeddingIntegrationsResponse
+        : ResponseBase
+    {
+        public virtual PaginatedResponse<EmbeddingIntegrationListProjection>? List { get; set; }
     }
 
     [NorbixRoute("/{version}/ai/integrations/llms/{id}", "GET")]
@@ -8456,6 +9043,14 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual bool IsEnabled { get; set; }
         public virtual string? Endpoint { get; set; }
         public virtual string? DefaultModel { get; set; }
+        public virtual bool IsDefault { get; set; }
+        public virtual List<LlmModelOptionRequest>? Models { get; set; }
+    }
+
+    public partial class LlmModelOptionRequest
+    {
+        public virtual string Id { get; set; }
+        public virtual string? DisplayName { get; set; }
     }
 
     public partial class McpIntegrationRequest
@@ -8528,6 +9123,15 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual string Headless { get; set; }
     }
 
+    [NorbixRoute("/{version}/ai/integrations/embeddings", "POST")]
+    [DataContract]
+    public partial class SaveEmbeddingIntegration
+        : CodeMashRequestBase, INorbixRequest<IdResponse>
+    {
+        [DataMember(Name="integration")]
+        public virtual EmbeddingIntegrationRequest Integration { get; set; }
+    }
+
     [NorbixRoute("/{version}/ai/integrations/llms/", "POST")]
     [DataContract]
     public partial class SaveLlmIntegration
@@ -8546,6 +9150,16 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual McpIntegrationRequest Integration { get; set; }
     }
 
+    [NorbixRoute("/{version}/ai/integrations/llms/{Id}/default", "PUT")]
+    public partial class SetLlmIntegrationAsDefaultRequest
+        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
+    {
+        ///<summary>
+        ///Id of the LLM integration to make the default.
+        ///</summary>
+        public virtual string Id { get; set; }
+    }
+
     public partial class StripeMcpIntegrationRequest
         : McpIntegrationRequest
     {
@@ -8553,6 +9167,16 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual McpTransport Transport { get; set; }
         public virtual string ServerUrl { get; set; }
         public virtual string ApiKey { get; set; }
+    }
+
+    [NorbixRoute("/{version}/ai/integrations/embeddings/{Id}/test", "POST")]
+    public partial class TestEmbeddingIntegration
+        : CodeMashRequestBase, INorbixRequest<TestEmbeddingIntegrationResponse>
+    {
+        ///<summary>
+        ///Id of the embedding integration to test.
+        ///</summary>
+        public virtual string Id { get; set; }
     }
 
     [NorbixRoute("/{version}/ai/integrations/llms/test", "POST")]
@@ -8573,6 +9197,79 @@ namespace Norbix.Sdk.Types.Hub;
         ///Id of the MCP integration to test.
         ///</summary>
         public virtual string IntegrationId { get; set; }
+    }
+
+    ///<summary>
+    ///OAuth authorization-server metadata (RFC 8414).
+    ///</summary>
+    [NorbixRoute("/.well-known/oauth-authorization-server", "GET")]
+    [NorbixRoute("/.well-known/oauth-authorization-server/{Path*}", "GET")]
+    public partial class OAuthAuthorizationServerMetadataRequest
+        : INorbixRequest<string>
+    {
+        public virtual string? Path { get; set; }
+    }
+
+    ///<summary>
+    ///OAuth authorization endpoint: the person's decision from the consent page.
+    ///</summary>
+    [NorbixRoute("/{version}/oauth/authorize", "POST")]
+    public partial class OAuthAuthorizeDecisionRequest
+        : INorbixRequest<string>
+    {
+        public virtual string? Version { get; set; }
+    }
+
+    ///<summary>
+    ///OAuth authorization endpoint: sign-in hint or the consent page (HTML).
+    ///</summary>
+    [NorbixRoute("/{version}/oauth/authorize", "GET")]
+    public partial class OAuthAuthorizeRequest
+        : INorbixRequest<string>
+    {
+        public virtual string? Version { get; set; }
+    }
+
+    ///<summary>
+    ///OAuth protected-resource metadata (RFC 9728) for the Hub MCP endpoint.
+    ///</summary>
+    [NorbixRoute("/.well-known/oauth-protected-resource", "GET")]
+    [NorbixRoute("/.well-known/oauth-protected-resource/{Path*}", "GET")]
+    public partial class OAuthProtectedResourceMetadataRequest
+        : INorbixRequest<string>
+    {
+        public virtual string? Path { get; set; }
+    }
+
+    ///<summary>
+    ///Registers an MCP client for OAuth (RFC 7591). Public clients only: PKCE, no secret.
+    ///</summary>
+    [NorbixRoute("/{version}/oauth/register", "POST")]
+    public partial class OAuthRegisterRequest
+        : INorbixRequest<string>
+    {
+        public virtual string? Version { get; set; }
+        public virtual Stream RequestStream { get; set; }
+    }
+
+    ///<summary>
+    ///OAuth token revocation (RFC 7009): revokes the grant behind a refresh or access token.
+    ///</summary>
+    [NorbixRoute("/{version}/oauth/revoke", "POST")]
+    public partial class OAuthRevokeRequest
+        : INorbixRequest<string>
+    {
+        public virtual string? Version { get; set; }
+    }
+
+    ///<summary>
+    ///OAuth token endpoint: authorization code (PKCE S256) or refresh token → access token.
+    ///</summary>
+    [NorbixRoute("/{version}/oauth/token", "POST")]
+    public partial class OAuthTokenRequest
+        : INorbixRequest<string>
+    {
+        public virtual string? Version { get; set; }
     }
 
     [NorbixRoute("/{version}/code/disable", "GET")]
@@ -14208,6 +14905,33 @@ namespace Norbix.Sdk.Types.Hub;
     }
 
     ///<summary>
+    ///Count the devices a push campaign audience would reach
+    ///</summary>
+    [NorbixRoute("/{version}/notifications/push/campaigns/audience-count", "POST")]
+    [DataContract]
+    public partial class GetPushCampaignAudienceCountRequest
+        : CodeMashRequestBase, INorbixRequest<GetPushCampaignAudienceCountResponse>
+    {
+        ///<summary>
+        ///The audience, in the same shape as CreatePushCampaignRequest.campaign. Template and send options are ignored.
+        ///</summary>
+        [DataMember]
+        public virtual PushCampaignRequest Campaign { get; set; }
+
+        ///<summary>
+        ///Optional. When omitted, the default database integration for the request's environment is used.
+        ///</summary>
+        [DataMember]
+        public virtual string? DatabaseIntegrationId { get; set; }
+    }
+
+    public partial class GetPushCampaignAudienceCountResponse
+        : ResponseBase
+    {
+        public virtual PushAudienceCountDto? Result { get; set; }
+    }
+
+    ///<summary>
     ///Gets push campaign batches
     ///</summary>
     [NorbixRoute("/{version}/notifications/push/campaigns/{id}/batches", "GET")]
@@ -14537,7 +15261,7 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual string? DeviceKey { get; set; }
 
         ///<summary>
-        ///Optional: only devices of this platform — ios, android, chrome, safari or expo.
+        ///Optional: only devices of this platform — ios, android, chrome or safari.
         ///</summary>
         public virtual string? Platform { get; set; }
 
@@ -14794,7 +15518,7 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual string? TestToken { get; set; }
 
         ///<summary>
-        ///Optional delivery family for the test token (e.g. Ios, Android, Chrome, Safari, Expo). Requires TestToken when set.
+        ///Optional delivery family for the test token (ios, android, chrome or safari). Requires TestToken when set.
         ///</summary>
         [DataMember]
         public virtual string? DeliveryFamily { get; set; }
@@ -16449,6 +17173,43 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual string AccountId { get; set; }
         public virtual string DatabaseIntegrationId { get; set; }
         public virtual string? Env { get; set; }
+    }
+
+    public partial class TermDeleted
+    {
+        public virtual ProjectId ProjectId { get; set; }
+        public virtual IntegrationId DatabaseIntegrationId { get; set; }
+        public virtual TaxonomyId TaxonomyId { get; set; }
+        public virtual string Id { get; set; }
+        public virtual Object Document { get; set; }
+    }
+
+    public partial class TermInserted
+    {
+        public virtual ProjectId ProjectId { get; set; }
+        public virtual IntegrationId DatabaseIntegrationId { get; set; }
+        public virtual TaxonomyId TaxonomyId { get; set; }
+        public virtual string Id { get; set; }
+        public virtual Object Document { get; set; }
+    }
+
+    public partial class TermsDeleted
+    {
+        public virtual ProjectId ProjectId { get; set; }
+        public virtual IntegrationId DatabaseIntegrationId { get; set; }
+        public virtual TaxonomyId TaxonomyId { get; set; }
+        public virtual long DeletedCount { get; set; }
+        public virtual Object Filter { get; set; }
+    }
+
+    public partial class TermUpdated
+    {
+        public virtual ProjectId ProjectId { get; set; }
+        public virtual IntegrationId DatabaseIntegrationId { get; set; }
+        public virtual TaxonomyId TaxonomyId { get; set; }
+        public virtual string Id { get; set; }
+        public virtual Object From { get; set; }
+        public virtual Object To { get; set; }
     }
 
     public enum SmtpPorts

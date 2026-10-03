@@ -1,0 +1,112 @@
+﻿{
+  Target: Hub,
+  Group: oauth,
+  Count: 5,
+  Endpoints: [
+    {
+      Target: Hub,
+      Group: oauth,
+      MethodName: OAuthAuthorizeDecisionAsync,
+      RequestType: OAuthAuthorizeDecisionRequest,
+      HttpMethod: POST,
+      Path: /{version}/oauth/authorize,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/oauth/authorize,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: String,
+      Response: test-response
+    },
+    {
+      Target: Hub,
+      Group: oauth,
+      MethodName: OAuthAuthorizeAsync,
+      RequestType: OAuthAuthorizeRequest,
+      HttpMethod: GET,
+      Path: /{version}/oauth/authorize,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/oauth/authorize,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: String,
+      Response: test-response
+    },
+    {
+      Target: Hub,
+      Group: oauth,
+      MethodName: OAuthRegisterAsync,
+      RequestType: OAuthRegisterRequest,
+      HttpMethod: POST,
+      Path: /{version}/oauth/register,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/oauth/register,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: String,
+      Response: test-response
+    },
+    {
+      Target: Hub,
+      Group: oauth,
+      MethodName: OAuthRevokeAsync,
+      RequestType: OAuthRevokeRequest,
+      HttpMethod: POST,
+      Path: /{version}/oauth/revoke,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/oauth/revoke,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: String,
+      Response: test-response
+    },
+    {
+      Target: Hub,
+      Group: oauth,
+      MethodName: OAuthTokenAsync,
+      RequestType: OAuthTokenRequest,
+      HttpMethod: POST,
+      Path: /{version}/oauth/token,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/oauth/token,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: String,
+      Response: test-response
+    }
+  ]
+}

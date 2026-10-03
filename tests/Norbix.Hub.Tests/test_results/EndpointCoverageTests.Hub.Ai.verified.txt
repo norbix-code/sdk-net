@@ -1,8 +1,37 @@
 ﻿{
   Target: Hub,
   Group: ai,
-  Count: 14,
+  Count: 20,
   Endpoints: [
+    {
+      Target: Hub,
+      Group: ai,
+      MethodName: DeleteEmbeddingIntegrationAsync,
+      RequestType: DeleteEmbeddingIntegrationRequest,
+      HttpMethod: DELETE,
+      Path: /{version}/ai/integrations/embeddings/{Id},
+      PathParams: [
+        Id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: DELETE,
+        Path: /v2/ai/integrations/embeddings/{guid},
+        Query: ?env=test-env,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
     {
       Target: Hub,
       Group: ai,
@@ -192,6 +221,84 @@
     {
       Target: Hub,
       Group: ai,
+      MethodName: GetEmbeddingIntegrationAsync,
+      RequestType: GetEmbeddingIntegration,
+      HttpMethod: GET,
+      Path: /{version}/ai/integrations/embeddings/{Id},
+      PathParams: [
+        Id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/ai/integrations/embeddings/{guid},
+        Query: ?env=test-env,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: GetEmbeddingIntegrationResponse,
+      Response: {
+        Item: {
+          Model: test-model,
+          Dimension: 7,
+          BaseUrl: https://example.test/baseUrl,
+          IsConfigured: true,
+          ViewId: Guid_1,
+          IntegrationName: test-integrationName,
+          IsEnabled: true,
+          RequiresHumanDeliveryConfirmation: false
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: ai,
+      MethodName: GetEmbeddingIntegrationsAsync,
+      RequestType: GetEmbeddingIntegrations,
+      HttpMethod: GET,
+      Path: /{version}/ai/integrations/embeddings,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/ai/integrations/embeddings,
+        Query: ?env=test-env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: GetEmbeddingIntegrationsResponse,
+      Response: {
+        List: {
+          Items: [
+            {
+              IsConfigured: false,
+              IsEnabled: false,
+              RequiresHumanDeliveryConfirmation: false
+            }
+          ],
+          HasMore: false,
+          HasPrevious: false,
+          StartingAfter: cursor-start,
+          EndingBefore: cursor-end
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: ai,
       MethodName: GetLlmIntegrationAsync,
       RequestType: GetLlmIntegration,
       HttpMethod: GET,
@@ -218,9 +325,12 @@
           DefaultModel: test-defaultModel,
           IsConfigured: true,
           IsSystemOwned: true,
+          IsDefault: true,
+          Models: [
+            {}
+          ],
           ViewId: Guid_1,
-          IntegrationName: test-integrationName,
-          IsEnabled: true,
+          IsEnabled: false,
           RequiresHumanDeliveryConfirmation: false
         },
         ResponseStatus: {
@@ -253,6 +363,7 @@
         List: {
           Items: [
             {
+              IsDefault: false,
               IsEnabled: false,
               RequiresHumanDeliveryConfirmation: false
             }
@@ -350,6 +461,47 @@
     {
       Target: Hub,
       Group: ai,
+      MethodName: SaveEmbeddingIntegrationAsync,
+      RequestType: SaveEmbeddingIntegration,
+      HttpMethod: POST,
+      Path: /{version}/ai/integrations/embeddings,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/ai/integrations/embeddings,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          integration: {
+            integrationId: Guid_1,
+            provider: voyage,
+            integrationName: test-integrationName,
+            isEnabled: true,
+            endpoint: test-endpoint,
+            model: test-model,
+            dimension: 1.0,
+            apiKey: test-apiKey
+          },
+          env: test-env
+        }
+      },
+      ResponseType: IdResponse,
+      Response: {
+        Id: Guid_1,
+        Status: test-status,
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: ai,
       MethodName: SaveLlmIntegrationAsync,
       RequestType: SaveLlmIntegration,
       HttpMethod: POST,
@@ -372,7 +524,11 @@
             integrationName: test-integrationName,
             isEnabled: true,
             endpoint: test-endpoint,
-            defaultModel: test-defaultModel
+            defaultModel: test-defaultModel,
+            isDefault: true,
+            models: [
+              null
+            ]
           },
           env: test-env
         }
@@ -422,6 +578,73 @@
       Response: {
         Id: Guid_1,
         Status: test-status,
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: ai,
+      MethodName: SetLlmIntegrationAsDefaultAsync,
+      RequestType: SetLlmIntegrationAsDefaultRequest,
+      HttpMethod: PUT,
+      Path: /{version}/ai/integrations/llms/{Id}/default,
+      PathParams: [
+        Id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: PUT,
+        Path: /v2/ai/integrations/llms/{guid}/default,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          env: test-env
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: ai,
+      MethodName: TestEmbeddingIntegrationAsync,
+      RequestType: TestEmbeddingIntegration,
+      HttpMethod: POST,
+      Path: /{version}/ai/integrations/embeddings/{Id}/test,
+      PathParams: [
+        Id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/ai/integrations/embeddings/{guid}/test,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          env: test-env
+        }
+      },
+      ResponseType: TestEmbeddingIntegrationResponse,
+      Response: {
+        Dimension: 7,
+        LatencyMs: 42,
+        TotalTokens: 7,
         ResponseStatus: {
           IsSuccess: true
         }
