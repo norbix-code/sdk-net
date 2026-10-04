@@ -8,18 +8,21 @@
       Group: scheduler,
       MethodName: DisableSchedulerAsync,
       RequestType: DisableScheduler,
-      HttpMethod: GET,
+      HttpMethod: PUT,
       Path: /{version}/scheduler/disable,
       IsAccountScoped: false,
       IsUnauthenticated: false,
       Sent: {
-        Method: GET,
+        Method: PUT,
         Path: /v2/scheduler/disable,
-        Query: ?env=test-env,
         Headers: {
           Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
           X-CM-AccountId: test-account,
           X-CM-ProjectId: test-project
+        },
+        Body: {
+          env: test-env
         }
       },
       ResponseType: EmptyResponse,
@@ -34,18 +37,21 @@
       Group: scheduler,
       MethodName: EnableSchedulerAsync,
       RequestType: EnableScheduler,
-      HttpMethod: GET,
+      HttpMethod: PUT,
       Path: /{version}/scheduler/enable,
       IsAccountScoped: false,
       IsUnauthenticated: false,
       Sent: {
-        Method: GET,
+        Method: PUT,
         Path: /v2/scheduler/enable,
-        Query: ?env=test-env,
         Headers: {
           Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
           X-CM-AccountId: test-account,
           X-CM-ProjectId: test-project
+        },
+        Body: {
+          env: test-env
         }
       },
       ResponseType: EmptyResponse,

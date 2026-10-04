@@ -1,8 +1,35 @@
 ﻿{
   Target: Hub,
   Group: public,
-  Count: 2,
+  Count: 3,
   Endpoints: [
+    {
+      Target: Hub,
+      Group: public,
+      MethodName: GetPublicProjectBrandAssetAsync,
+      RequestType: GetPublicProjectBrandAsset,
+      HttpMethod: GET,
+      Path: /{version}/public/projects/{ProjectId}/brand/{Kind},
+      PathParams: [
+        ProjectId,
+        Kind
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: true,
+      Sent: {
+        Method: GET,
+        Path: /v2/public/projects/{guid}/brand/test-kind,
+        Query: ?v=test-v,
+        Headers: {
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: Byte[],
+      Response: {
+        BinaryLength: 49
+      }
+    },
     {
       Target: Hub,
       Group: public,

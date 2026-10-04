@@ -1,7 +1,7 @@
 ﻿{
   Target: Hub,
   Group: account,
-  Count: 110,
+  Count: 116,
   Endpoints: [
     {
       Target: Hub,
@@ -1846,6 +1846,48 @@
     {
       Target: Hub,
       Group: account,
+      MethodName: CreateAiCreditPackCheckoutAsync,
+      RequestType: CreateAiCreditPackCheckoutRequest,
+      HttpMethod: POST,
+      Path: /{version}/account/projects/{projectId}/ai/credits/checkout,
+      PathParams: [
+        projectId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/account/projects/{guid}/ai/credits/checkout,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          pack: test-pack,
+          returnUrl: https://example.test/returnUrl,
+          env: test-env
+        }
+      },
+      ResponseType: CreateAiCreditPackCheckoutResponse,
+      Response: {
+        Result: {
+          Url: https://example.test/url,
+          SessionId: Guid_1,
+          Pack: test-pack,
+          Credits: 42,
+          PriceEuroCents: 42,
+          PurchaseId: Guid_1
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: account,
       MethodName: CreateProjectAiAssistantAsync,
       RequestType: CreateProjectAiAssistant,
       HttpMethod: POST,
@@ -1877,6 +1919,7 @@
           ragSourceIds: [
             test-string
           ],
+          weakMatchThreshold: 1.5,
           planId: Guid_1,
           isDefault: true,
           env: test-env
@@ -2022,6 +2065,44 @@
     {
       Target: Hub,
       Group: account,
+      MethodName: GetProjectAiPlansAsync,
+      RequestType: GetProjectAiPlans,
+      HttpMethod: GET,
+      Path: /{version}/account/projects/{projectId}/ai/plans,
+      PathParams: [
+        projectId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/account/projects/{guid}/ai/plans,
+        Query: ?env=test-env,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: GetProjectAiPlansResponse,
+      Response: {
+        Result: {
+          Plans: [
+            {}
+          ],
+          Roles: [
+            {}
+          ],
+          DefaultPlanId: Guid_1
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: account,
       MethodName: GetProjectAiSettingsAsync,
       RequestType: GetProjectAiSettings,
       HttpMethod: GET,
@@ -2052,7 +2133,15 @@
               MemoryEnabled: false,
               IsDefault: false
             }
-          ]
+          ],
+          EmbedFiles: true,
+          Plans: [
+            {}
+          ],
+          PlanRoleAssignments: [
+            {}
+          ],
+          DefaultPlanId: Guid_1
         },
         ResponseStatus: {
           IsSuccess: true
@@ -2093,6 +2182,41 @@
             {}
           ],
           Models: [
+            {}
+          ],
+          Wallet: {}
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: account,
+      MethodName: GetProjectAiUserPlansAsync,
+      RequestType: GetProjectAiUserPlans,
+      HttpMethod: GET,
+      Path: /{version}/account/projects/{projectId}/ai/plans/users,
+      PathParams: [
+        projectId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/account/projects/{guid}/ai/plans/users,
+        Query: ?env=test-env,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: GetProjectAiUserPlansResponse,
+      Response: {
+        Result: {
+          Users: [
             {}
           ]
         },
@@ -2235,6 +2359,7 @@
           ragSourceIds: [
             test-string
           ],
+          weakMatchThreshold: 1.5,
           planId: Guid_1,
           isDefault: true,
           env: test-env
@@ -2242,6 +2367,113 @@
       },
       ResponseType: EmptyResponse,
       Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: account,
+      MethodName: UpdateProjectAiKnowledgeAsync,
+      RequestType: UpdateProjectAiKnowledge,
+      HttpMethod: PUT,
+      Path: /{version}/account/projects/{projectId}/ai/knowledge,
+      PathParams: [
+        projectId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: PUT,
+        Path: /v2/account/projects/{guid}/ai/knowledge,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          embedFiles: true,
+          env: test-env
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: account,
+      MethodName: UpdateProjectAiPlanAssignmentsAsync,
+      RequestType: UpdateProjectAiPlanAssignments,
+      HttpMethod: PUT,
+      Path: /{version}/account/projects/{projectId}/ai/plans/assignments,
+      PathParams: [
+        projectId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: PUT,
+        Path: /v2/account/projects/{guid}/ai/plans/assignments,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          roles: [
+            null
+          ],
+          defaultPlanId: Guid_1,
+          env: test-env
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: account,
+      MethodName: UpdateProjectAiPlansAsync,
+      RequestType: UpdateProjectAiPlans,
+      HttpMethod: PUT,
+      Path: /{version}/account/projects/{projectId}/ai/plans,
+      PathParams: [
+        projectId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: PUT,
+        Path: /v2/account/projects/{guid}/ai/plans,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          plans: [
+            null
+          ],
+          env: test-env
+        }
+      },
+      ResponseType: UpdateProjectAiPlansResponse,
+      Response: {
+        PlanIds: [
+          test-string
+        ],
         ResponseStatus: {
           IsSuccess: true
         }

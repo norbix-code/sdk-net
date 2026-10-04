@@ -69,6 +69,7 @@ namespace Norbix.Sdk.Types.Api;
         Schema,
         Files,
         Payments,
+        Ai,
     }
 
     ///<summary>
@@ -160,6 +161,19 @@ namespace Norbix.Sdk.Types.Api;
         public virtual DateTime CreatedAtUtc { get; set; }
     }
 
+    public partial class EndUserChatPlan
+    {
+        public virtual string Id { get; set; }
+        public virtual string Name { get; set; }
+        public virtual string QuotaUnit { get; set; }
+        public virtual long MonthlyQuota { get; set; }
+        public virtual long Used { get; set; }
+        public virtual long Remaining { get; set; }
+        public virtual bool Attachments { get; set; }
+        public virtual bool Rag { get; set; }
+        public virtual bool Memory { get; set; }
+    }
+
     public partial class EndUserChatSession
     {
         public virtual string Id { get; set; }
@@ -214,6 +228,7 @@ namespace Norbix.Sdk.Types.Api;
         public virtual string? Reason { get; set; }
         public virtual string? DefaultAssistantId { get; set; }
         public virtual List<EndUserChatAssistant> Assistants { get; set; } = [];
+        public virtual EndUserChatPlan? Plan { get; set; }
     }
 
     ///<summary>
@@ -1077,7 +1092,7 @@ namespace Norbix.Sdk.Types.Api;
     [NorbixRoute("/{version}/files/{filesIntegrationId}/content", "PUT")]
     [DataContract]
     public partial class PutFileContentRequest
-        : RequestBase, INorbixRequest<EmptyResponse>
+        : RequestBase, INorbixRequest<EmptyResponse>, INorbixOptionalAuth
     {
         [DataMember]
         public virtual string FilesIntegrationId { get; set; }
@@ -1134,7 +1149,7 @@ namespace Norbix.Sdk.Types.Api;
     [NorbixRoute("/{version}/membership/userauth/email/confirm-verification", "POST")]
     [DataContract]
     public partial class ConfirmEmailVerificationRequest
-        : CodeMashRequestBase, INorbixRequest<PasskeyVerificationTokenResponse>
+        : CodeMashRequestBase, INorbixRequest<PasskeyVerificationTokenResponse>, INorbixOptionalAuth
     {
         [DataMember]
         public virtual string Email { get; set; }
@@ -1149,7 +1164,7 @@ namespace Norbix.Sdk.Types.Api;
     [NorbixRoute("/{version}/membership/userauth/recovery/magic-link/consume", "POST")]
     [DataContract]
     public partial class ConsumeMagicLinkRequest
-        : CodeMashRequestBase, INorbixRequest<PasskeyRecoveryResponse>
+        : CodeMashRequestBase, INorbixRequest<PasskeyRecoveryResponse>, INorbixOptionalAuth
     {
         [DataMember]
         public virtual string Token { get; set; }
@@ -1161,7 +1176,7 @@ namespace Norbix.Sdk.Types.Api;
     [NorbixRoute("/{version}/membership/userauth/has-passkey", "POST")]
     [DataContract]
     public partial class HasPasskeyRequest
-        : CodeMashRequestBase, INorbixRequest<PasskeyOkResponse>
+        : CodeMashRequestBase, INorbixRequest<PasskeyOkResponse>, INorbixOptionalAuth
     {
         [DataMember]
         public virtual string Email { get; set; }
@@ -1187,7 +1202,7 @@ namespace Norbix.Sdk.Types.Api;
     [NorbixRoute("/{version}/membership/userauth/passkey/authentication-options", "POST")]
     [DataContract]
     public partial class PasskeyAuthenticationOptionsRequest
-        : CodeMashRequestBase, INorbixRequest<PasskeyCeremonyOptionsResponse>, IPasskeyCeremonyRequest
+        : CodeMashRequestBase, INorbixRequest<PasskeyCeremonyOptionsResponse>, IPasskeyCeremonyRequest, INorbixOptionalAuth
     {
         [DataMember]
         public virtual string Email { get; set; }
@@ -1230,7 +1245,7 @@ namespace Norbix.Sdk.Types.Api;
     [NorbixRoute("/{version}/membership/userauth/logout", "POST")]
     [DataContract]
     public partial class PasskeyLogoutRequest
-        : CodeMashRequestBase, INorbixRequest<PasskeyOkResponse>
+        : CodeMashRequestBase, INorbixRequest<PasskeyOkResponse>, INorbixOptionalAuth
     {
         [DataMember]
         public virtual string? RefreshToken { get; set; }
@@ -1256,7 +1271,7 @@ namespace Norbix.Sdk.Types.Api;
     [NorbixRoute("/{version}/membership/userauth/passkey/registration-options", "POST")]
     [DataContract]
     public partial class PasskeyRegistrationOptionsRequest
-        : CodeMashRequestBase, INorbixRequest<PasskeyCeremonyOptionsResponse>, IPasskeyCeremonyRequest
+        : CodeMashRequestBase, INorbixRequest<PasskeyCeremonyOptionsResponse>, IPasskeyCeremonyRequest, INorbixOptionalAuth
     {
         [DataMember]
         public virtual string VerificationToken { get; set; }
@@ -1274,7 +1289,7 @@ namespace Norbix.Sdk.Types.Api;
     [NorbixRoute("/{version}/membership/userauth/token/refresh", "POST")]
     [DataContract]
     public partial class RefreshPasskeyTokenRequest
-        : CodeMashRequestBase, INorbixRequest<PasskeyAuthTokensResponse>
+        : CodeMashRequestBase, INorbixRequest<PasskeyAuthTokensResponse>, INorbixOptionalAuth
     {
         [DataMember]
         public virtual string? RefreshToken { get; set; }
@@ -1307,7 +1322,7 @@ namespace Norbix.Sdk.Types.Api;
     [NorbixRoute("/{version}/membership/userauth/recovery/magic-link/request", "POST")]
     [DataContract]
     public partial class RequestMagicLinkRequest
-        : CodeMashRequestBase, INorbixRequest<PasskeyOkResponse>
+        : CodeMashRequestBase, INorbixRequest<PasskeyOkResponse>, INorbixOptionalAuth
     {
         [DataMember]
         public virtual string Email { get; set; }
@@ -1334,7 +1349,7 @@ namespace Norbix.Sdk.Types.Api;
     [NorbixRoute("/{version}/membership/userauth/email/start-verification", "POST")]
     [DataContract]
     public partial class StartEmailVerificationRequest
-        : CodeMashRequestBase, INorbixRequest<PasskeyOkResponse>
+        : CodeMashRequestBase, INorbixRequest<PasskeyOkResponse>, INorbixOptionalAuth
     {
         [DataMember]
         public virtual string Email { get; set; }
@@ -1346,7 +1361,7 @@ namespace Norbix.Sdk.Types.Api;
     [NorbixRoute("/{version}/membership/userauth/recovery/use-code", "POST")]
     [DataContract]
     public partial class UseRecoveryCodeRequest
-        : CodeMashRequestBase, INorbixRequest<PasskeyRecoveryResponse>
+        : CodeMashRequestBase, INorbixRequest<PasskeyRecoveryResponse>, INorbixOptionalAuth
     {
         [DataMember]
         public virtual string Email { get; set; }
@@ -1361,7 +1376,7 @@ namespace Norbix.Sdk.Types.Api;
     [NorbixRoute("/{version}/membership/userauth/passkey/verify-authentication", "POST")]
     [DataContract]
     public partial class VerifyPasskeyAuthenticationRequest
-        : CodeMashRequestBase, INorbixRequest<PasskeyAuthTokensResponse>, IPasskeyCeremonyRequest
+        : CodeMashRequestBase, INorbixRequest<PasskeyAuthTokensResponse>, IPasskeyCeremonyRequest, INorbixOptionalAuth
     {
         [DataMember]
         public virtual string CeremonyId { get; set; }
@@ -1376,7 +1391,7 @@ namespace Norbix.Sdk.Types.Api;
     [NorbixRoute("/{version}/membership/userauth/passkey/verify-registration", "POST")]
     [DataContract]
     public partial class VerifyPasskeyRegistrationRequest
-        : CodeMashRequestBase, INorbixRequest<PasskeyAuthTokensResponse>, IPasskeyCeremonyRequest
+        : CodeMashRequestBase, INorbixRequest<PasskeyAuthTokensResponse>, IPasskeyCeremonyRequest, INorbixOptionalAuth
     {
         [DataMember]
         public virtual string VerificationToken { get; set; }
@@ -1424,7 +1439,7 @@ namespace Norbix.Sdk.Types.Api;
     [NorbixRoute("/{version}/membership/userauth/password/reset/confirm", "POST")]
     [DataContract]
     public partial class ConfirmPasswordResetRequest
-        : CodeMashRequestBase, INorbixRequest<PasskeyOkResponse>
+        : CodeMashRequestBase, INorbixRequest<PasskeyOkResponse>, INorbixOptionalAuth
     {
         ///<summary>
         ///One-time reset token from the email link.
@@ -1451,7 +1466,7 @@ namespace Norbix.Sdk.Types.Api;
     [NorbixRoute("/{version}/membership/userauth/password/reset/request", "POST")]
     [DataContract]
     public partial class RequestPasswordResetRequest
-        : CodeMashRequestBase, INorbixRequest<PasskeyOkResponse>
+        : CodeMashRequestBase, INorbixRequest<PasskeyOkResponse>, INorbixOptionalAuth
     {
         ///<summary>
         ///Email address to send the reset link to.
@@ -2328,7 +2343,25 @@ namespace Norbix.Sdk.Types.Api;
         public virtual SchemaSettingsDto? Settings { get; set; }
 
         [DataMember]
+        public virtual SchemaEmbedSettingsDto? Embed { get; set; }
+
+        [DataMember]
         public virtual HashSet<TriggerDto>? Triggers { get; set; }
+    }
+
+    public partial class SchemaEmbedSettingsDto
+    {
+        [DataMember]
+        public virtual bool Enabled { get; set; }
+
+        [DataMember]
+        public virtual List<string> Fields { get; set; } = [];
+
+        [DataMember]
+        public virtual string? EmbeddingIntegrationId { get; set; }
+
+        [DataMember]
+        public virtual bool PerUser { get; set; }
     }
 
     public partial class SchemaListProjection
@@ -2686,7 +2719,7 @@ namespace Norbix.Sdk.Types.Api;
 
     [NorbixRoute("/{version}/echo", "GET")]
     public partial class Echo
-        : RequestBase, INorbixRequest<EchoResponse>
+        : RequestBase, INorbixRequest<EchoResponse>, INorbixOptionalAuth
     {
     }
 
@@ -2734,16 +2767,25 @@ namespace Norbix.Sdk.Types.Api;
         public virtual EchoAgentDto? Agent { get; set; }
     }
 
+    [NorbixRoute("/{version}/public/projects/{ProjectId}/brand/{Kind}", "GET")]
+    public partial class GetPublicProjectBrandAsset
+        : RequestBase, INorbixRequest<byte[]>, INorbixUnauthenticated
+    {
+        public virtual string? ProjectId { get; set; }
+        public virtual string? Kind { get; set; }
+        public virtual string? V { get; set; }
+    }
+
     [NorbixRoute("/{version}/public/projects/{ProjectId}/config", "GET")]
     public partial class GetPublicProjectConfig
-        : RequestBase, INorbixRequest<PublicProjectConfigDto>
+        : RequestBase, INorbixRequest<PublicProjectConfigDto>, INorbixOptionalAuth
     {
         public virtual string? ProjectId { get; set; }
     }
 
     [NorbixRoute("/{version}/public/projects/{ProjectId}/legal/{Kind}", "GET")]
     public partial class GetPublicProjectLegal
-        : RequestBase, INorbixRequest<PublicLegalDocumentDto>
+        : RequestBase, INorbixRequest<PublicLegalDocumentDto>, INorbixOptionalAuth
     {
         public virtual string? ProjectId { get; set; }
         public virtual string? Kind { get; set; }

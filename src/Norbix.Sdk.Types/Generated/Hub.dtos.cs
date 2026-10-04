@@ -82,6 +82,14 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual Guid Value { get; set; }
     }
 
+    public enum AiTriggerType
+    {
+        OnCreditsWarning,
+        OnCreditsExhausted,
+        OnQuotaWarning,
+        OnQuotaExhausted,
+    }
+
     public enum AuthType
     {
         Service,
@@ -518,6 +526,7 @@ namespace Norbix.Sdk.Types.Hub;
         Schema,
         Files,
         Payments,
+        Ai,
     }
 
     public enum EmbeddingProvider
@@ -573,6 +582,13 @@ namespace Norbix.Sdk.Types.Hub;
         Stdio,
     }
 
+    public enum AiPlanQuotaUnit
+    {
+        None,
+        Credits,
+        Tokens,
+    }
+
     public enum LoggingProvider
     {
         Console,
@@ -615,6 +631,7 @@ namespace Norbix.Sdk.Types.Hub;
 
     [NorbixRoute("/internal/_typegen", "GET")]
     public partial class InternalsTypeGen
+        : INorbixOptionalAuth
     {
         public virtual SmtpEmailIntegrationRequest? Typegen_0_SmtpEmailIntegrationRequest { get; set; }
         public virtual AwsSesEmailIntegrationRequest? Typegen_1_AwsSesEmailIntegrationRequest { get; set; }
@@ -808,6 +825,7 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual WebhookIntegrationDto? Typegen_192_WebhookIntegrationDto { get; set; }
         public virtual WebhookDestinationDto? Typegen_193_WebhookDestinationDto { get; set; }
         public virtual SchedulerTaskDto? Typegen_194_SchedulerTaskDto { get; set; }
+        public virtual EmailCampaignSchedulerTaskRequest? Typegen_249_EmailCampaignSchedulerTaskRequest { get; set; }
         public virtual MongoDbAggregateDto? Typegen_195_MongoDbAggregateDto { get; set; }
         public virtual MarketplaceIntegrationDto? Typegen_196_MarketplaceIntegrationDto { get; set; }
         public virtual MarketplaceFunctionDto? Typegen_197_MarketplaceFunctionDto { get; set; }
@@ -961,10 +979,35 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual List<string> RagSourceIds { get; set; } = [];
 
         [DataMember]
+        public virtual double? WeakMatchThreshold { get; set; }
+
+        [DataMember]
         public virtual string? PlanId { get; set; }
 
         [DataMember]
         public virtual bool IsDefault { get; set; }
+    }
+
+    [DataContract]
+    public partial class AiCreditPackCheckoutDto
+    {
+        [DataMember]
+        public virtual string Url { get; set; }
+
+        [DataMember]
+        public virtual string SessionId { get; set; }
+
+        [DataMember]
+        public virtual string Pack { get; set; }
+
+        [DataMember]
+        public virtual long Credits { get; set; }
+
+        [DataMember]
+        public virtual long PriceEuroCents { get; set; }
+
+        [DataMember]
+        public virtual string PurchaseId { get; set; }
     }
 
     [DataContract]
@@ -978,6 +1021,67 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember]
         public virtual string? DefaultIntegrationViewId { get; set; }
+    }
+
+    [DataContract]
+    public partial class AiPlanDto
+    {
+        [DataMember]
+        public virtual string? Id { get; set; }
+
+        [DataMember]
+        public virtual string Name { get; set; }
+
+        [DataMember]
+        public virtual List<string> AllowedAssistantIds { get; set; } = [];
+
+        [DataMember]
+        public virtual List<AiPlanModelDto> AllowedModels { get; set; } = [];
+
+        [DataMember]
+        public virtual AiPlanQuotaUnit QuotaUnit { get; set; }
+
+        [DataMember]
+        public virtual long MonthlyQuota { get; set; }
+
+        [DataMember]
+        public virtual AiPlanFeaturesDto Features { get; set; }
+
+        [DataMember]
+        public virtual string? QuotaReachedMessage { get; set; }
+    }
+
+    [DataContract]
+    public partial class AiPlanFeaturesDto
+    {
+        [DataMember]
+        public virtual bool Attachments { get; set; }
+
+        [DataMember]
+        public virtual bool Rag { get; set; }
+
+        [DataMember]
+        public virtual bool Memory { get; set; }
+    }
+
+    [DataContract]
+    public partial class AiPlanModelDto
+    {
+        [DataMember]
+        public virtual string LlmIntegrationId { get; set; }
+
+        [DataMember]
+        public virtual string? Model { get; set; }
+    }
+
+    [DataContract]
+    public partial class AiPlanRoleAssignmentDto
+    {
+        [DataMember]
+        public virtual string RoleId { get; set; }
+
+        [DataMember]
+        public virtual string PlanId { get; set; }
     }
 
     [DataContract]
@@ -1009,6 +1113,48 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember]
         public virtual long Credits { get; set; }
+    }
+
+    [DataContract]
+    public partial class AiUserPlanAssignmentDto
+    {
+        [DataMember]
+        public virtual string UserId { get; set; }
+
+        [DataMember]
+        public virtual string PlanId { get; set; }
+    }
+
+    [DataContract]
+    public partial class AiUserPlansDto
+    {
+        [DataMember]
+        public virtual List<AiUserPlanAssignmentDto> Users { get; set; } = [];
+    }
+
+    [DataContract]
+    public partial class AiWalletLineDto
+    {
+        [DataMember]
+        public virtual string Kind { get; set; }
+
+        [DataMember]
+        public virtual long Credits { get; set; }
+
+        [DataMember]
+        public virtual string? Reference { get; set; }
+
+        [DataMember]
+        public virtual long PurchasedBalance { get; set; }
+
+        [DataMember]
+        public virtual long? IncludedUsed { get; set; }
+
+        [DataMember]
+        public virtual long? PurchasedUsed { get; set; }
+
+        [DataMember]
+        public virtual DateTime AtUtc { get; set; }
     }
 
     [DataContract]
@@ -1164,6 +1310,19 @@ namespace Norbix.Sdk.Types.Hub;
     }
 
     [DataContract]
+    public partial class ProjectAiPlansDto
+    {
+        [DataMember]
+        public virtual List<AiPlanDto> Plans { get; set; } = [];
+
+        [DataMember]
+        public virtual List<AiPlanRoleAssignmentDto> Roles { get; set; } = [];
+
+        [DataMember]
+        public virtual string? DefaultPlanId { get; set; }
+    }
+
+    [DataContract]
     public partial class ProjectAiSettingsDto
     {
         [DataMember]
@@ -1177,6 +1336,18 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember]
         public virtual List<AiAssistantDto> Assistants { get; set; } = [];
+
+        [DataMember]
+        public virtual bool EmbedFiles { get; set; }
+
+        [DataMember]
+        public virtual List<AiPlanDto> Plans { get; set; } = [];
+
+        [DataMember]
+        public virtual List<AiPlanRoleAssignmentDto> PlanRoleAssignments { get; set; } = [];
+
+        [DataMember]
+        public virtual string? DefaultPlanId { get; set; }
     }
 
     [DataContract]
@@ -1196,6 +1367,34 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember]
         public virtual List<AiUsageGroupDto> Models { get; set; } = [];
+
+        [DataMember]
+        public virtual ProjectAiWalletDto Wallet { get; set; }
+    }
+
+    [DataContract]
+    public partial class ProjectAiWalletDto
+    {
+        [DataMember]
+        public virtual string Period { get; set; }
+
+        [DataMember]
+        public virtual long IncludedCredits { get; set; }
+
+        [DataMember]
+        public virtual long PurchasedCredits { get; set; }
+
+        [DataMember]
+        public virtual long ConsumedCredits { get; set; }
+
+        [DataMember]
+        public virtual long RemainingCredits { get; set; }
+
+        [DataMember]
+        public virtual string Status { get; set; }
+
+        [DataMember]
+        public virtual List<AiWalletLineDto> Lines { get; set; } = [];
     }
 
     [DataContract]
@@ -1968,6 +2167,11 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual string? ArtifactId { get; set; }
         public virtual string? Label { get; set; }
         public virtual int? Step { get; set; }
+        public virtual int? Number { get; set; }
+        public virtual string? SourceKind { get; set; }
+        public virtual string? SourceId { get; set; }
+        public virtual double? Score { get; set; }
+        public virtual bool? Cited { get; set; }
     }
 
     public partial class AiChatEntryWireDto
@@ -3903,7 +4107,25 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual SchemaSettingsDto? Settings { get; set; }
 
         [DataMember]
+        public virtual SchemaEmbedSettingsDto? Embed { get; set; }
+
+        [DataMember]
         public virtual HashSet<TriggerDto>? Triggers { get; set; }
+    }
+
+    public partial class SchemaEmbedSettingsDto
+    {
+        [DataMember]
+        public virtual bool Enabled { get; set; }
+
+        [DataMember]
+        public virtual List<string> Fields { get; set; } = [];
+
+        [DataMember]
+        public virtual string? EmbeddingIntegrationId { get; set; }
+
+        [DataMember]
+        public virtual bool PerUser { get; set; }
     }
 
     public partial class SchemaListColumnDto
@@ -6497,6 +6719,22 @@ namespace Norbix.Sdk.Types.Hub;
     }
 
     [DataContract]
+    public partial class AiTriggerDto
+        : TriggerDto
+    {
+        [DataMember]
+        public virtual AiTriggerType When { get; set; }
+    }
+
+    [DataContract]
+    public partial class AiTriggerProjectionList
+        : TriggerProjectionList
+    {
+        [DataMember]
+        public virtual AiTriggerType Type { get; set; }
+    }
+
+    [DataContract]
     public partial class FilesTriggerDto
         : TriggerDto
     {
@@ -6820,7 +7058,7 @@ namespace Norbix.Sdk.Types.Hub;
 
     [NorbixRoute("/{version}/account/team/member", "POST")]
     public partial class CreateTeamMemberFromInvitation
-        : RequestBase, INorbixRequest<CreateTeamMemberFromInvitationResponse>
+        : RequestBase, INorbixRequest<CreateTeamMemberFromInvitationResponse>, INorbixOptionalAuth
     {
         ///<summary>
         ///Display name of the account holder
@@ -6950,7 +7188,7 @@ namespace Norbix.Sdk.Types.Hub;
 
     [NorbixRoute("/{version}/account/verify", "GET")]
     public partial class VerifyAccount
-        : RequestBase, INorbixRequest<EmptyResponse>, IHasAccountId
+        : RequestBase, INorbixRequest<EmptyResponse>, IHasAccountId, INorbixOptionalAuth
     {
         public virtual string Token { get; set; }
         public virtual string AccountId { get; set; }
@@ -6961,7 +7199,7 @@ namespace Norbix.Sdk.Types.Hub;
     ///</summary>
     [NorbixRoute("/{version}/account", "POST")]
     public partial class CreateAccount
-        : RequestBase, INorbixRequest<CreateAccountResponse>
+        : RequestBase, INorbixRequest<CreateAccountResponse>, INorbixOptionalAuth
     {
         ///<summary>
         ///Display name of the account holder
@@ -7100,7 +7338,7 @@ namespace Norbix.Sdk.Types.Hub;
 
     [NorbixRoute("/{version}/licensing/heartbeat", "POST")]
     public partial class PostLicenseHeartbeat
-        : RequestBase, INorbixRequest<PostLicenseHeartbeatResponse>
+        : RequestBase, INorbixRequest<PostLicenseHeartbeatResponse>, INorbixOptionalAuth
     {
         public virtual string? License { get; set; }
         public virtual string? LicenseAccountId { get; set; }
@@ -7133,7 +7371,7 @@ namespace Norbix.Sdk.Types.Hub;
     [NorbixRoute("/{version}/account/userauth/email/confirm-verification", "POST")]
     [DataContract]
     public partial class AccountConfirmEmailVerificationRequest
-        : RequestBase, INorbixRequest<AccountPasskeyVerificationTokenResponse>
+        : RequestBase, INorbixRequest<AccountPasskeyVerificationTokenResponse>, INorbixOptionalAuth
     {
         [DataMember]
         public virtual string Email { get; set; }
@@ -7145,7 +7383,7 @@ namespace Norbix.Sdk.Types.Hub;
     [NorbixRoute("/{version}/account/userauth/has-passkey", "POST")]
     [DataContract]
     public partial class AccountHasPasskeyRequest
-        : RequestBase, INorbixRequest<AccountPasskeyOkResponse>
+        : RequestBase, INorbixRequest<AccountPasskeyOkResponse>, INorbixOptionalAuth
     {
         [DataMember]
         public virtual string Email { get; set; }
@@ -7154,7 +7392,7 @@ namespace Norbix.Sdk.Types.Hub;
     [NorbixRoute("/{version}/account/userauth/passkey/authentication-options", "POST")]
     [DataContract]
     public partial class AccountPasskeyAuthenticationOptionsRequest
-        : RequestBase, INorbixRequest<AccountPasskeyCeremonyOptionsResponse>
+        : RequestBase, INorbixRequest<AccountPasskeyCeremonyOptionsResponse>, INorbixOptionalAuth
     {
         [DataMember]
         public virtual string Email { get; set; }
@@ -7212,7 +7450,7 @@ namespace Norbix.Sdk.Types.Hub;
     [NorbixRoute("/{version}/account/userauth/passkey/registration-options", "POST")]
     [DataContract]
     public partial class AccountPasskeyRegistrationOptionsRequest
-        : RequestBase, INorbixRequest<AccountPasskeyCeremonyOptionsResponse>
+        : RequestBase, INorbixRequest<AccountPasskeyCeremonyOptionsResponse>, INorbixOptionalAuth
     {
         [DataMember]
         public virtual string VerificationToken { get; set; }
@@ -7227,7 +7465,7 @@ namespace Norbix.Sdk.Types.Hub;
     [NorbixRoute("/{version}/account/userauth/email/start-verification", "POST")]
     [DataContract]
     public partial class AccountStartEmailVerificationRequest
-        : RequestBase, INorbixRequest<AccountPasskeyOkResponse>
+        : RequestBase, INorbixRequest<AccountPasskeyOkResponse>, INorbixOptionalAuth
     {
         [DataMember]
         public virtual string Email { get; set; }
@@ -7236,7 +7474,7 @@ namespace Norbix.Sdk.Types.Hub;
     [NorbixRoute("/{version}/account/userauth/passkey/verify-authentication", "POST")]
     [DataContract]
     public partial class AccountVerifyPasskeyAuthenticationRequest
-        : RequestBase, INorbixRequest<AccountPasskeyAuthTokensResponse>
+        : RequestBase, INorbixRequest<AccountPasskeyAuthTokensResponse>, INorbixOptionalAuth
     {
         [DataMember]
         public virtual string CeremonyId { get; set; }
@@ -7263,7 +7501,7 @@ namespace Norbix.Sdk.Types.Hub;
     [NorbixRoute("/{version}/account/userauth/passkey/verify-registration", "POST")]
     [DataContract]
     public partial class AccountVerifyPasskeyRegistrationRequest
-        : RequestBase, INorbixRequest<AccountPasskeyAuthTokensResponse>
+        : RequestBase, INorbixRequest<AccountPasskeyAuthTokensResponse>, INorbixOptionalAuth
     {
         [DataMember]
         public virtual string VerificationToken { get; set; }
@@ -7332,7 +7570,7 @@ namespace Norbix.Sdk.Types.Hub;
 
     [NorbixRoute("/{version}/account/team/member/password", "POST")]
     public partial class ChangeTeamMemberPassword
-        : RequestBase, INorbixRequest<IdResponse>
+        : RequestBase, INorbixRequest<IdResponse>, INorbixOptionalAuth
     {
         public virtual string Email { get; set; }
         public virtual string CurrentPassword { get; set; }
@@ -7453,7 +7691,7 @@ namespace Norbix.Sdk.Types.Hub;
 
     [NorbixRoute("/{version}/account/team/password-policy", "GET")]
     public partial class GetAccountPasswordPolicy
-        : RequestBase, INorbixRequest<GetAccountPasswordPolicyResponse>
+        : RequestBase, INorbixRequest<GetAccountPasswordPolicyResponse>, INorbixOptionalAuth
     {
     }
 
@@ -7626,7 +7864,7 @@ namespace Norbix.Sdk.Types.Hub;
     ///</summary>
     [NorbixRoute("/{version}/account/regions", "GET")]
     public partial class GetAccountRegions
-        : RequestBase, INorbixRequest<GetAccountRegionsResponse>
+        : RequestBase, INorbixRequest<GetAccountRegionsResponse>, INorbixOptionalAuth
     {
     }
 
@@ -7781,6 +8019,30 @@ namespace Norbix.Sdk.Types.Hub;
     }
 
     ///<summary>
+    ///Creates a Stripe Checkout session for one AI credit pack of the project and returns its URL
+    ///</summary>
+    [NorbixRoute("/{version}/account/projects/{projectId}/ai/credits/checkout", "POST")]
+    public partial class CreateAiCreditPackCheckoutRequest
+        : CodeMashRequestBase, INorbixRequest<CreateAiCreditPackCheckoutResponse>
+    {
+        ///<summary>
+        ///The pack to buy: pack-10 (€10 = 1 000 credits), pack-50 (€50 = 5 000), pack-200 (€200 = 20 000). Net prices; 1 credit = €0.01.
+        ///</summary>
+        public virtual string Pack { get; set; }
+
+        ///<summary>
+        ///Dashboard path the browser returns to after Stripe (aiCredits=paid or aiCredits=cancelled is added). Default: the dashboard root.
+        ///</summary>
+        public virtual string? ReturnUrl { get; set; }
+    }
+
+    public partial class CreateAiCreditPackCheckoutResponse
+        : ResponseBase
+    {
+        public virtual AiCreditPackCheckoutDto? Result { get; set; }
+    }
+
+    ///<summary>
     ///Adds an end-user AI assistant to the project
     ///</summary>
     [NorbixRoute("/{version}/account/projects/{projectId}/ai/assistants", "POST")]
@@ -7830,6 +8092,21 @@ namespace Norbix.Sdk.Types.Hub;
     }
 
     ///<summary>
+    ///Reads the project's end-user AI plans, the role → plan map and the default plan
+    ///</summary>
+    [NorbixRoute("/{version}/account/projects/{projectId}/ai/plans", "GET")]
+    public partial class GetProjectAiPlans
+        : CodeMashRequestBase, INorbixRequest<GetProjectAiPlansResponse>
+    {
+    }
+
+    public partial class GetProjectAiPlansResponse
+        : ResponseBase
+    {
+        public virtual ProjectAiPlansDto? Result { get; set; }
+    }
+
+    ///<summary>
     ///Reads the project's AI chat settings for end users: on/off, default LLM and assistants
     ///</summary>
     [NorbixRoute("/{version}/account/projects/{projectId}/ai/settings", "GET")]
@@ -7845,7 +8122,7 @@ namespace Norbix.Sdk.Types.Hub;
     }
 
     ///<summary>
-    ///Reads the project's AI usage this month: totals, per assistant, top users and per model
+    ///Reads the project's AI usage this month: totals, per assistant, top users, per model, and the credit wallet
     ///</summary>
     [NorbixRoute("/{version}/account/projects/{projectId}/ai/usage", "GET")]
     public partial class GetProjectAiUsage
@@ -7861,6 +8138,21 @@ namespace Norbix.Sdk.Types.Hub;
         : ResponseBase
     {
         public virtual ProjectAiUsageDto? Result { get; set; }
+    }
+
+    ///<summary>
+    ///Lists the users that have their own end-user AI plan
+    ///</summary>
+    [NorbixRoute("/{version}/account/projects/{projectId}/ai/plans/users", "GET")]
+    public partial class GetProjectAiUserPlans
+        : CodeMashRequestBase, INorbixRequest<GetProjectAiUserPlansResponse>
+    {
+    }
+
+    public partial class GetProjectAiUserPlansResponse
+        : ResponseBase
+    {
+        public virtual AiUserPlansDto? Result { get; set; }
     }
 
     public partial class ProjectAiAssistantRequestBase
@@ -7882,7 +8174,7 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual string? SystemPrompt { get; set; }
 
         ///<summary>
-        ///Own-scope toolsets the assistant may use: own:records (the user's own database records), own:profile (their profile), own:preferences (their marketing preferences). Any other name is refused.
+        ///Own-scope toolsets the assistant may use: own:records (the user's own database records), own:profile (their profile), own:preferences (their marketing preferences), own:knowledge (search_knowledge — the user's own and the project-wide knowledge). Any other name is refused.
         ///</summary>
         public virtual List<string>? Toolsets { get; set; }
 
@@ -7902,9 +8194,14 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual bool MemoryEnabled { get; set; }
 
         ///<summary>
-        ///RAG source ids. Not available yet — must be empty.
+        ///Knowledge the assistant retrieves from before each answer and cites as [n]: record (records of schemas with embed on), file (uploaded files, when the project embeds them), message (the user's earlier chats, assistants with memory). Empty = no automatic retrieval.
         ///</summary>
         public virtual List<string>? RagSourceIds { get; set; }
+
+        ///<summary>
+        ///Best relevance (0–1) below which the answer says the knowledge does not match strongly. Empty = 0.5; 0 = never.
+        ///</summary>
+        public virtual double? WeakMatchThreshold { get; set; }
 
         ///<summary>
         ///AI plan (quota) id. Optional.
@@ -7967,6 +8264,56 @@ namespace Norbix.Sdk.Types.Hub;
         ///Id of the assistant (ast_…).
         ///</summary>
         public virtual string AssistantId { get; set; }
+    }
+
+    ///<summary>
+    ///Saves the project's AI knowledge switches: embed uploaded files
+    ///</summary>
+    [NorbixRoute("/{version}/account/projects/{projectId}/ai/knowledge", "PUT")]
+    public partial class UpdateProjectAiKnowledge
+        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
+    {
+        ///<summary>
+        ///True to put uploaded text files into the project's AI knowledge, false to stop.
+        ///</summary>
+        public virtual bool EmbedFiles { get; set; }
+    }
+
+    ///<summary>
+    ///Saves which end-user AI plan each project role gets, and the default plan
+    ///</summary>
+    [NorbixRoute("/{version}/account/projects/{projectId}/ai/plans/assignments", "PUT")]
+    public partial class UpdateProjectAiPlanAssignments
+        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
+    {
+        ///<summary>
+        ///Role → plan rows, in order; the first row whose role the user has wins.
+        ///</summary>
+        public virtual List<AiPlanRoleAssignmentDto>? Roles { get; set; }
+
+        ///<summary>
+        ///Plan id (aip_…) of users with no per-user plan and no mapped role. Empty = no default.
+        ///</summary>
+        public virtual string? DefaultPlanId { get; set; }
+    }
+
+    ///<summary>
+    ///Saves the project's end-user AI plans (the whole list)
+    ///</summary>
+    [NorbixRoute("/{version}/account/projects/{projectId}/ai/plans", "PUT")]
+    public partial class UpdateProjectAiPlans
+        : CodeMashRequestBase, INorbixRequest<UpdateProjectAiPlansResponse>
+    {
+        ///<summary>
+        ///The complete list of plans (full replace).
+        ///</summary>
+        public virtual List<AiPlanDto>? Plans { get; set; }
+    }
+
+    public partial class UpdateProjectAiPlansResponse
+        : ResponseBase
+    {
+        public virtual List<string> PlanIds { get; set; } = [];
     }
 
     ///<summary>
@@ -9231,7 +9578,7 @@ namespace Norbix.Sdk.Types.Hub;
     [NorbixRoute("/.well-known/oauth-authorization-server", "GET")]
     [NorbixRoute("/.well-known/oauth-authorization-server/{Path*}", "GET")]
     public partial class OAuthAuthorizationServerMetadataRequest
-        : INorbixRequest<string>
+        : INorbixRequest<string>, INorbixOptionalAuth
     {
         public virtual string? Path { get; set; }
     }
@@ -9241,7 +9588,7 @@ namespace Norbix.Sdk.Types.Hub;
     ///</summary>
     [NorbixRoute("/{version}/oauth/authorize", "POST")]
     public partial class OAuthAuthorizeDecisionRequest
-        : INorbixRequest<string>
+        : INorbixRequest<string>, INorbixOptionalAuth
     {
         public virtual string? Version { get; set; }
     }
@@ -9251,7 +9598,7 @@ namespace Norbix.Sdk.Types.Hub;
     ///</summary>
     [NorbixRoute("/{version}/oauth/authorize", "GET")]
     public partial class OAuthAuthorizeRequest
-        : INorbixRequest<string>
+        : INorbixRequest<string>, INorbixOptionalAuth
     {
         public virtual string? Version { get; set; }
     }
@@ -9262,7 +9609,7 @@ namespace Norbix.Sdk.Types.Hub;
     [NorbixRoute("/.well-known/oauth-protected-resource", "GET")]
     [NorbixRoute("/.well-known/oauth-protected-resource/{Path*}", "GET")]
     public partial class OAuthProtectedResourceMetadataRequest
-        : INorbixRequest<string>
+        : INorbixRequest<string>, INorbixOptionalAuth
     {
         public virtual string? Path { get; set; }
     }
@@ -9272,7 +9619,7 @@ namespace Norbix.Sdk.Types.Hub;
     ///</summary>
     [NorbixRoute("/{version}/oauth/register", "POST")]
     public partial class OAuthRegisterRequest
-        : INorbixRequest<string>
+        : INorbixRequest<string>, INorbixOptionalAuth
     {
         public virtual string? Version { get; set; }
         public virtual Stream RequestStream { get; set; }
@@ -9283,7 +9630,7 @@ namespace Norbix.Sdk.Types.Hub;
     ///</summary>
     [NorbixRoute("/{version}/oauth/revoke", "POST")]
     public partial class OAuthRevokeRequest
-        : INorbixRequest<string>
+        : INorbixRequest<string>, INorbixOptionalAuth
     {
         public virtual string? Version { get; set; }
     }
@@ -9293,9 +9640,67 @@ namespace Norbix.Sdk.Types.Hub;
     ///</summary>
     [NorbixRoute("/{version}/oauth/token", "POST")]
     public partial class OAuthTokenRequest
-        : INorbixRequest<string>
+        : INorbixRequest<string>, INorbixOptionalAuth
     {
         public virtual string? Version { get; set; }
+    }
+
+    ///<summary>
+    ///Delete a trigger on an AI project event
+    ///</summary>
+    [NorbixRoute("/{version}/ai/triggers/{triggerId}", "DELETE")]
+    [DataContract]
+    public partial class DeleteAiProjectTrigger
+        : DeleteTrigger, INorbixRequest<EmptyResponse>
+    {
+    }
+
+    ///<summary>
+    ///Disable a trigger on an AI project event
+    ///</summary>
+    [NorbixRoute("/{version}/ai/triggers/{triggerId}/disable", "PATCH")]
+    [DataContract]
+    public partial class DisableAiProjectTrigger
+        : DisableTrigger, INorbixRequest<EmptyResponse>
+    {
+    }
+
+    ///<summary>
+    ///Enable a trigger on an AI project event
+    ///</summary>
+    [NorbixRoute("/{version}/ai/triggers/{triggerId}/enable", "PATCH")]
+    [DataContract]
+    public partial class EnableAiProjectTrigger
+        : EnableTrigger, INorbixRequest<EmptyResponse>
+    {
+    }
+
+    ///<summary>
+    ///Gets one trigger on an AI project event
+    ///</summary>
+    [NorbixRoute("/{version}/ai/triggers/{id}", "GET")]
+    public partial class GetAiProjectTrigger
+        : GetTrigger, INorbixRequest<GetAiTriggerResponse>
+    {
+    }
+
+    ///<summary>
+    ///Gets the triggers on AI project events
+    ///</summary>
+    [NorbixRoute("/{version}/ai/triggers", "GET")]
+    public partial class GetAiProjectTriggers
+        : GetTriggers, INorbixRequest<GetAiTriggersResponse>
+    {
+    }
+
+    ///<summary>
+    ///Save a trigger on an AI project event
+    ///</summary>
+    [NorbixRoute("/{version}/ai/triggers", "POST")]
+    [DataContract]
+    public partial class SaveAiProjectTrigger
+        : SaveTrigger, INorbixRequest<IdResponse>
+    {
     }
 
     [NorbixRoute("/{version}/code/disable", "GET")]
@@ -10090,6 +10495,29 @@ namespace Norbix.Sdk.Types.Hub;
         ///The contact ids (ct_…) to merge into the survivor and archive. At least one.
         ///</summary>
         public virtual string[] MergedIds { get; set; } = [];
+    }
+
+    ///<summary>
+    ///Sets or removes one user's own end-user AI plan
+    ///</summary>
+    [NorbixRoute("/{version}/membership/users/{userId}/ai-plan", "PUT")]
+    public partial class SetUserAiPlan
+        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
+    {
+        ///<summary>
+        ///The human user id (ct_…).
+        ///</summary>
+        public virtual string UserId { get; set; }
+
+        ///<summary>
+        ///The plan id (aip_…). Empty removes the user's own plan.
+        ///</summary>
+        public virtual string? PlanId { get; set; }
+
+        ///<summary>
+        ///Database integration id. Optional — defaults to the request environment's default integration.
+        ///</summary>
+        public virtual string? DatabaseIntegrationId { get; set; }
     }
 
     ///<summary>
@@ -11465,6 +11893,27 @@ namespace Norbix.Sdk.Types.Hub;
     }
 
     ///<summary>
+    ///Saves a database schema's embed setting: which records go into the project's AI knowledge
+    ///</summary>
+    [NorbixRoute("/{version}/database/schemas/{Id}/embed", "PUT")]
+    [DataContract]
+    public partial class UpdateDatabaseSchemaEmbedRequest
+        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
+    {
+        ///<summary>
+        ///Schema id whose embed setting to save, from get_database_schemas.
+        ///</summary>
+        [DataMember]
+        public virtual string Id { get; set; }
+
+        ///<summary>
+        ///The complete embed setting (full replace): enabled, fields, embeddingIntegrationId (empty = the project's default), perUser.
+        ///</summary>
+        [DataMember]
+        public virtual SchemaEmbedSettingsDto Embed { get; set; }
+    }
+
+    ///<summary>
     ///Updates database schema records-list display settings
     ///</summary>
     [NorbixRoute("/{version}/database/schemas/{Id}/list-settings", "PUT")]
@@ -12046,7 +12495,7 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual string? DatabaseIntegrationId { get; set; }
 
         ///<summary>
-        ///Optional. true sends the campaign now (or at a campaignTime sooner than the review window). Without it, a campaign created by an AI tool must be scheduled at least 24 hours ahead for role-based / all-users / collection audiences and at least 1 hour ahead for direct recipient lists, or it is rejected with CM-ERRORS-CAMPAIGNS-016. Set it only when the user explicitly asked to send now.
+        ///Optional. true sends the campaign now (or at a campaignTime sooner than the review window). Without it, a campaign created by an AI tool must be scheduled at least 24 hours ahead for role-based / all-users / collection audiences and at least 1 hour ahead for direct recipient lists, or it is rejected with CM-ERRORS-CAMPAIGNS-017. Set it only when the user explicitly asked to send now.
         ///</summary>
         [DataMember]
         public virtual bool? SendNow { get; set; }
@@ -14879,7 +15328,7 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual string? DatabaseIntegrationId { get; set; }
 
         ///<summary>
-        ///Optional. true sends the campaign now (or at a campaignTime sooner than the review window). Without it, a campaign created by an AI tool must be scheduled at least 24 hours ahead for role-based / all-users / collection audiences and at least 1 hour ahead for direct recipient lists, or it is rejected with CM-ERRORS-CAMPAIGNS-016. Set it only when the user explicitly asked to send now.
+        ///Optional. true sends the campaign now (or at a campaignTime sooner than the review window). Without it, a campaign created by an AI tool must be scheduled at least 24 hours ahead for role-based / all-users / collection audiences and at least 1 hour ahead for direct recipient lists, or it is rejected with CM-ERRORS-CAMPAIGNS-017. Set it only when the user explicitly asked to send now.
         ///</summary>
         [DataMember]
         public virtual bool? SendNow { get; set; }
@@ -15730,13 +16179,13 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual IReadOnlyList<ResolvedResourceEntry> Resolved { get; set; }
     }
 
-    [NorbixRoute("/{version}/scheduler/disable", "GET")]
+    [NorbixRoute("/{version}/scheduler/disable", "PUT")]
     public partial class DisableScheduler
         : CodeMashRequestBase, INorbixRequest<EmptyResponse>
     {
     }
 
-    [NorbixRoute("/{version}/scheduler/enable", "GET")]
+    [NorbixRoute("/{version}/scheduler/enable", "PUT")]
     public partial class EnableScheduler
         : CodeMashRequestBase, INorbixRequest<EmptyResponse>
     {
@@ -15754,6 +16203,14 @@ namespace Norbix.Sdk.Types.Hub;
         : CodeMashRequestBase, INorbixRequest<EmptyResponse>
     {
         public virtual string Id { get; set; }
+    }
+
+    public partial class EmailCampaignSchedulerTaskRequest
+        : SchedulerTaskRequest
+    {
+        public virtual SchedulerTaskType Type { get; set; }
+        public virtual EmailCampaignRequest? Campaign { get; set; }
+        public virtual string? DatabaseIntegrationId { get; set; }
     }
 
     [NorbixRoute("/{version}/scheduler/tasks/{Id}/enable", "PUT")]
@@ -15925,7 +16382,7 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual SmsToPhoneNumbersDeliverySettingsDto? PhoneNumbers { get; set; }
 
         ///<summary>
-        ///Optional. true sends the campaign now (or at a campaignTime sooner than the review window). Without it, a campaign created by an AI tool must be scheduled at least 24 hours ahead for role-based / all-users / collection audiences and at least 1 hour ahead for direct recipient lists, or it is rejected with CM-ERRORS-CAMPAIGNS-016. Set it only when the user explicitly asked to send now.
+        ///Optional. true sends the campaign now (or at a campaignTime sooner than the review window). Without it, a campaign created by an AI tool must be scheduled at least 24 hours ahead for role-based / all-users / collection audiences and at least 1 hour ahead for direct recipient lists, or it is rejected with CM-ERRORS-CAMPAIGNS-017. Set it only when the user explicitly asked to send now.
         ///</summary>
         [DataMember]
         public virtual bool? SendNow { get; set; }
@@ -16657,6 +17114,18 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual string? Folder { get; set; }
     }
 
+    public partial class GetAiTriggerResponse
+        : GetTriggerResponse
+    {
+        public virtual AiTriggerDto? Trigger { get; set; }
+    }
+
+    public partial class GetAiTriggersResponse
+        : GetTriggersResponse
+    {
+        public virtual PaginatedResponse<AiTriggerProjectionList>? List { get; set; }
+    }
+
     public partial class GetFilesTriggerResponse
         : GetTriggerResponse
     {
@@ -16850,7 +17319,7 @@ namespace Norbix.Sdk.Types.Hub;
 
     [NorbixRoute("/{version}/webhooks/{source}/{integrationInstanceId}", "POST")]
     public partial class ReceiveWebhook
-        : INorbixRequest<object>
+        : INorbixRequest<object>, INorbixOptionalAuth
     {
         public virtual string Source { get; set; }
         public virtual string IntegrationInstanceId { get; set; }
@@ -16906,9 +17375,25 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual Dictionary<string, string>? ExtraHeaders { get; set; }
     }
 
+    public partial class IngestSourceMessage
+    {
+        public virtual string ProjectId { get; set; }
+        public virtual string? Env { get; set; }
+        public virtual string? OwnerAuthId { get; set; }
+        public virtual string SourceKind { get; set; }
+        public virtual string SourceId { get; set; }
+        public virtual string? Title { get; set; }
+        public virtual string? ContentType { get; set; }
+        public virtual string? Content { get; set; }
+        public virtual string? EmbeddingIntegrationId { get; set; }
+        public virtual bool Removed { get; set; }
+        public virtual Dictionary<string, string>? Metadata { get; set; }
+        public virtual bool OwnerRequired { get; set; }
+    }
+
     [NorbixRoute("/{version}/echo", "GET")]
     public partial class Echo
-        : RequestBase, INorbixRequest<EchoResponse>
+        : RequestBase, INorbixRequest<EchoResponse>, INorbixOptionalAuth
     {
     }
 
@@ -16956,16 +17441,25 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual EchoAgentDto? Agent { get; set; }
     }
 
+    [NorbixRoute("/{version}/public/projects/{ProjectId}/brand/{Kind}", "GET")]
+    public partial class GetPublicProjectBrandAsset
+        : RequestBase, INorbixRequest<byte[]>, INorbixUnauthenticated
+    {
+        public virtual string? ProjectId { get; set; }
+        public virtual string? Kind { get; set; }
+        public virtual string? V { get; set; }
+    }
+
     [NorbixRoute("/{version}/public/projects/{ProjectId}/config", "GET")]
     public partial class GetPublicProjectConfig
-        : RequestBase, INorbixRequest<PublicProjectConfigDto>
+        : RequestBase, INorbixRequest<PublicProjectConfigDto>, INorbixOptionalAuth
     {
         public virtual string? ProjectId { get; set; }
     }
 
     [NorbixRoute("/{version}/public/projects/{ProjectId}/legal/{Kind}", "GET")]
     public partial class GetPublicProjectLegal
-        : RequestBase, INorbixRequest<PublicLegalDocumentDto>
+        : RequestBase, INorbixRequest<PublicLegalDocumentDto>, INorbixOptionalAuth
     {
         public virtual string? ProjectId { get; set; }
         public virtual string? Kind { get; set; }

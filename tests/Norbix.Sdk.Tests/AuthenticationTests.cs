@@ -59,7 +59,10 @@ public sealed class AuthenticationTests
 
         try
         {
-            await fixture.Client.Echo.EchoAsync(new Norbix.Sdk.Types.Api.Echo());
+            // Echo is optional-auth now (it sends a token only when there is
+            // one), so it no longer proves the guard. Count needs a token.
+            await fixture.Client.Database.CountAsync(
+                new Norbix.Sdk.Types.Api.CountRequest { CollectionName = "c" });
             await Verifier.Verify(new { Threw = false }, VerifyConfig.VerifySettings);
         }
         catch (NorbixException ex)
