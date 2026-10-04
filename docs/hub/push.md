@@ -63,6 +63,7 @@ var campaign = await push.CreatePushCampaignAsync(new CreatePushCampaignRequest
     Campaign = new PushToDevicesRequest
     {
         TemplateId = template!.Id!,
+        IntegrationId = integration.Id!, // required: the push provider to send through
         Devices = [new() { Token = "device-token", DeliveryFamily = PushDeviceDeliveryFamily.Ios }],
     },
 });
@@ -155,6 +156,9 @@ owner.
 the shape from the `source` field, so use the matching request type rather than
 `PushCampaignRequest` itself:
 
+Every shape also needs `IntegrationId`: the id of the push provider integration
+the campaign sends through. The server rejects a campaign without it.
+
 | audience | request type | key fields |
 |---|---|---|
 | everyone in the project | `PushToAllUsersRequest` | `RolesNames`, `UserTags` (both optional filters) |
@@ -169,6 +173,7 @@ await norbix.Notifications.CreatePushCampaignAsync(new CreatePushCampaignRequest
     Campaign = new PushToAllUsersRequest
     {
         TemplateId = "tpl_123",
+        IntegrationId = "push_integration_id", // required, from GetPushIntegrationsAsync
         UserTags = ["beta"],
     },
 });
