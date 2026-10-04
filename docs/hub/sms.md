@@ -64,6 +64,7 @@ var template = await sms.CreateSmsTemplateAsync(new CreateSmsTemplateRequest
 var campaign = await sms.CreateSmsCampaignAsync(new CreateSmsCampaignRequest
 {
     TemplateId = template!.Id!,
+    IntegrationId = integration.Id!, // required: the SMS provider to send through
     DeliveryType = SmsCampaignRecipientsSourceTypes.PhoneNumbers,
     PhoneNumbers = new SmsToPhoneNumbersDeliverySettingsDto
     {
@@ -150,6 +151,12 @@ next batch; `DeleteSmsCampaignAsync` removes a campaign that has not started.
 that matches it. Set `RecipientsSourceType` inside that object to the same
 value — it is the discriminator the server reads.
 
+`IntegrationId` is required: the id of the SMS provider integration the
+campaign sends through (the project default unless you want another one). It
+sits on the request itself, next to `TemplateId` — not to be confused with
+`DatabaseIntegrationId`, which only picks the database for a `Collection`
+audience. The server rejects a campaign without it.
+
 | audience | `DeliveryType` | settings object | key fields |
 |---|---|---|---|
 | everyone in the project | `AllUsers` | `AllUsers` (`SmsToAllUsersDeliverySettingsDto`) | `RolesNames`, `UserTags` (both optional filters) |
@@ -165,6 +172,7 @@ provide.
 await norbix.Notifications.CreateSmsCampaignAsync(new CreateSmsCampaignRequest
 {
     TemplateId = "tpl_123",
+    IntegrationId = "sms_integration_id", // required, from GetSmsIntegrationsAsync
     DeliveryType = SmsCampaignRecipientsSourceTypes.AllUsers,
     AllUsers = new SmsToAllUsersDeliverySettingsDto
     {

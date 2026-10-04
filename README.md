@@ -282,7 +282,7 @@ The public endpoint surface is generated from gateway DTOs at compile time. The 
 
 | Module | Endpoints | Description |
 | --- | ---: | --- |
-| `account` | 108 | Account profile, status, projects, regions, team invites, billing, verification; project AI settings and assistants (`GetProjectAiSettingsAsync`, `UpdateProjectAiSettingsAsync`, `CreateProjectAiAssistantAsync`, `UpdateProjectAiAssistantAsync`, `DeleteProjectAiAssistantAsync`), AI wallet usage (`GetProjectAiUsageAsync`), the Admin Portal switch (`SetAdminPortalEnabledAsync`). Project settings, CORS, admin portal, legal, AI service users: [docs/hub/project.md](./docs/hub/project.md). |
+| `account` | 108 | Account profile, status, projects, regions, team invites, billing, verification; project AI settings and assistants (`GetProjectAiSettingsAsync`, `UpdateProjectAiSettingsAsync`, `CreateProjectAiAssistantAsync`, `UpdateProjectAiAssistantAsync`, `DeleteProjectAiAssistantAsync`), AI wallet usage (`GetProjectAiUsageAsync`), the Admin Portal switch (`SetAdminPortalEnabledAsync`), `CheckProjectLanguagesAsync` (which email, push and SMS templates miss a proposed project language — call it before changing the languages). Project settings, CORS, admin portal, legal, AI service users: [docs/hub/project.md](./docs/hub/project.md). |
 | `ai` | 20 | LLM, MCP and embedding integration configuration and tests (`SaveEmbeddingIntegrationAsync`, `TestEmbeddingIntegrationAsync`, …); `SetLlmIntegrationAsDefaultAsync`. LLM and MCP: [docs/hub/project.md](./docs/hub/project.md#llm-integrations). |
 | `database` | 41 | Schemas, integrations, saved aggregates, taxonomies, triggers, module settings. |
 | `echo` | 1 | Smoke-test echo endpoint. |
@@ -295,6 +295,7 @@ The public endpoint surface is generated from gateway DTOs at compile time. The 
 | `oauth` | 5 | The gateway's OAuth server routes (register, authorize, token, revoke). |
 | `payments` | 16 | Payment integrations, triggers, tests, and module settings. |
 | `scheduler` | 8 | Scheduler module on / off (`EnableSchedulerAsync`, `DisableSchedulerAsync` — `PUT`) and cron tasks: list, read, save, enable, disable, delete. Only email campaign tasks today (`EmailCampaignSchedulerTaskRequest`). Every method and a typed save example: [docs/hub/scheduler.md](./docs/hub/scheduler.md). |
+| `triggers` | 1 | `GetTriggersNeedingAttentionAsync` — triggers of one type (`TriggerType`) whose last run needs attention, with the reason and the time. |
 | `webhooks` | 8 | Webhook integrations, destinations, tests, and module settings. |
 | `wellKnown` | 2 | OAuth discovery documents under `/.well-known`. |
 
