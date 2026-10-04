@@ -59,6 +59,17 @@ internal sealed class HttpTransport : INorbixTransport, IDisposable
         Converters = { new JsonStringEnumConverter(JsonNamingPolicy.CamelCase) },
     };
 
+    // Request bodies only: nested DTOs are written as their runtime type, so a
+    // polymorphic child (a scheduler task, an email campaign audience) keeps
+    // its own fields. Responses are read with JsonOptions, unchanged.
+    private static readonly JsonSerializerOptions BodyJsonOptions = new(JsonOptions)
+    {
+        TypeInfoResolver = new System.Text.Json.Serialization.Metadata.DefaultJsonTypeInfoResolver
+        {
+            Modifiers = { RuntimeTypeProperties.Modify },
+        },
+    };
+
     private readonly NorbixClientOptions _options;
     private readonly HttpClient _http;
     private readonly bool _ownsHttpClient;
@@ -505,7 +516,7 @@ internal sealed class HttpTransport : INorbixTransport, IDisposable
             if (v is null) continue;
             dict[JsonNamingPolicy.CamelCase.ConvertName(prop.Name)] = v;
         }
-        return dict.Count == 0 ? null : JsonSerializer.Serialize(dict, JsonOptions);
+        return dict.Count == 0 ? null : JsonSerializer.Serialize(dict, BodyJsonOptions);
     }
 
     private static readonly System.Collections.Concurrent.ConcurrentDictionary<Type, IReadOnlyDictionary<string, PropertyInfo>> PropertyCache = new();
