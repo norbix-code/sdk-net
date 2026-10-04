@@ -217,6 +217,17 @@
             MemoryEnabled: false
           }
         ],
+        Plan: {
+          Id: Guid_1,
+          Name: test-name,
+          QuotaUnit: test-quotaUnit,
+          MonthlyQuota: 42,
+          Used: 42,
+          Remaining: 42,
+          Attachments: true,
+          Rag: true,
+          Memory: false
+        },
         ResponseStatus: {
           IsSuccess: true
         }

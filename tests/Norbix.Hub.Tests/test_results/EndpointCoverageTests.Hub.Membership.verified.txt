@@ -1,7 +1,7 @@
 ﻿{
   Target: Hub,
   Group: membership,
-  Count: 44,
+  Count: 45,
   Endpoints: [
     {
       Target: Hub,
@@ -158,6 +158,40 @@
           mergedIds: [
             test-string
           ],
+          env: test-env
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: membership,
+      MethodName: SetUserAiPlanAsync,
+      RequestType: SetUserAiPlan,
+      HttpMethod: PUT,
+      Path: /{version}/membership/users/{userId}/ai-plan,
+      PathParams: [
+        userId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: PUT,
+        Path: /v2/membership/users/{guid}/ai-plan,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          planId: Guid_1,
+          databaseIntegrationId: Guid_1,
           env: test-env
         }
       },

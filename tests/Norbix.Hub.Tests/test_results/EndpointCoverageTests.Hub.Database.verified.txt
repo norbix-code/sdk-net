@@ -1,7 +1,7 @@
 ﻿{
   Target: Hub,
   Group: database,
-  Count: 72,
+  Count: 73,
   Endpoints: [
     {
       Target: Hub,
@@ -1824,6 +1824,46 @@
         Body: {
           dataSchema: test-dataSchema,
           visualSchema: test-visualSchema,
+          env: test-env
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: database,
+      MethodName: UpdateDatabaseSchemaEmbedAsync,
+      RequestType: UpdateDatabaseSchemaEmbedRequest,
+      HttpMethod: PUT,
+      Path: /{version}/database/schemas/{Id}/embed,
+      PathParams: [
+        Id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: PUT,
+        Path: /v2/database/schemas/{guid}/embed,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          embed: {
+            enabled: true,
+            fields: [
+              test-string
+            ],
+            embeddingIntegrationId: Guid_1,
+            perUser: true
+          },
           env: test-env
         }
       },
