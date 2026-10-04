@@ -90,6 +90,28 @@ namespace Norbix.Sdk.Types.Hub;
         OnQuotaExhausted,
     }
 
+    [Flags]
+    public enum ApplicationModule
+    {
+        Account = 0,
+        Membership = 1,
+        Database = 2,
+        Files = 4,
+        Code = 8,
+        Email = 16,
+        Push = 32,
+        Payment = 64,
+        Scheduler = 128,
+        Logging = 256,
+        ServerEvents = 512,
+        Ai = 1024,
+        Sms = 2048,
+        Project = 4096,
+        Compliance = 8192,
+        Contacts = 16384,
+        Marketplace = 32768,
+    }
+
     public enum AuthType
     {
         Service,
@@ -6019,6 +6041,22 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual DateTime ReceivedOn { get; set; }
     }
 
+    [DataContract]
+    public partial class TemplateLanguageGapDto
+    {
+        [DataMember]
+        public virtual ApplicationModule Module { get; set; }
+
+        [DataMember]
+        public virtual string TemplateId { get; set; }
+
+        [DataMember]
+        public virtual string TemplateName { get; set; }
+
+        [DataMember]
+        public virtual List<string> MissingLanguages { get; set; } = [];
+    }
+
     public enum ResolvedRefStatus
     {
         [EnumMember(Value="ok")]
@@ -6580,6 +6618,8 @@ namespace Norbix.Sdk.Types.Hub;
     public partial class PushTemplateListProjection
         : TemplateListProjection
     {
+        [DataMember]
+        public virtual HashSet<string> Languages { get; set; } = [];
     }
 
     [DataContract]
@@ -6616,6 +6656,8 @@ namespace Norbix.Sdk.Types.Hub;
     public partial class SmsTemplateListProjection
         : TemplateListProjection
     {
+        [DataMember]
+        public virtual HashSet<string> Languages { get; set; } = [];
     }
 
     [DataContract]
@@ -6880,6 +6922,12 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember]
         public virtual EmailCampaignDeliverySettingsDto DeliverySettings { get; set; }
+
+        [DataMember]
+        public virtual string? Language { get; set; }
+
+        [DataMember]
+        public virtual string? InitiatorId { get; set; }
     }
 
     [DataContract]
@@ -6902,6 +6950,12 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember]
         public virtual PushCampaignDeliverySettingsDto DeliverySettings { get; set; }
+
+        [DataMember]
+        public virtual string? Language { get; set; }
+
+        [DataMember]
+        public virtual string? InitiatorId { get; set; }
     }
 
     [DataContract]
@@ -6913,6 +6967,12 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember]
         public virtual SmsCampaignDeliverySettingsDto DeliverySettings { get; set; }
+
+        [DataMember]
+        public virtual string? Language { get; set; }
+
+        [DataMember]
+        public virtual string? InitiatorId { get; set; }
     }
 
     [DataContract]
@@ -6929,6 +6989,22 @@ namespace Norbix.Sdk.Types.Hub;
     {
         [DataMember]
         public virtual WebhookDeliverySettingsDto? DeliverySettings { get; set; }
+    }
+
+    [DataContract]
+    public partial class TriggerAttentionDto
+    {
+        [DataMember]
+        public virtual string TriggerId { get; set; }
+
+        [DataMember]
+        public virtual TriggerType TriggerType { get; set; }
+
+        [DataMember]
+        public virtual string Reason { get; set; }
+
+        [DataMember]
+        public virtual DateTime AtUtc { get; set; }
     }
 
     [DataContract]
@@ -8016,6 +8092,35 @@ namespace Norbix.Sdk.Types.Hub;
         ///Id of the existing AuthType.Service user to assign as the project's Admin Portal service user.
         ///</summary>
         public virtual string ServiceUserId { get; set; }
+    }
+
+    ///<summary>
+    ///Checks which templates miss a (proposed) project language
+    ///</summary>
+    [NorbixRoute("/{version}/account/projects/{projectId}/settings/languages/check", "POST")]
+    [DataContract]
+    public partial class CheckProjectLanguages
+        : CodeMashRequestBase, INorbixRequest<CheckProjectLanguagesResponse>
+    {
+        ///<summary>
+        ///Proposed default language code. Omit to use the current one.
+        ///</summary>
+        [DataMember]
+        public virtual string? DefaultLanguage { get; set; }
+
+        ///<summary>
+        ///Proposed complete language list. Omit to use the current one.
+        ///</summary>
+        [DataMember]
+        public virtual HashSet<string>? Languages { get; set; }
+    }
+
+    [DataContract]
+    public partial class CheckProjectLanguagesResponse
+        : ResponseBase
+    {
+        [DataMember]
+        public virtual List<TemplateLanguageGapDto> Templates { get; set; } = [];
     }
 
     ///<summary>
@@ -16346,6 +16451,12 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual string? DatabaseIntegrationId { get; set; }
 
         ///<summary>
+        ///SMS provider integration id the campaign sends through — pick one with get_sms_integrations (the project default unless the user named another). Required; never invent it.
+        ///</summary>
+        [DataMember]
+        public virtual string IntegrationId { get; set; }
+
+        ///<summary>
         ///Optional language code forcing one template translation for every recipient.
         ///</summary>
         [DataMember]
@@ -17194,6 +17305,29 @@ namespace Norbix.Sdk.Types.Hub;
     {
         [DataMember]
         public virtual string? SchemaId { get; set; }
+    }
+
+    ///<summary>
+    ///Get triggers that need attention
+    ///</summary>
+    [NorbixRoute("/{version}/triggers/attention", "GET")]
+    [DataContract]
+    public partial class GetTriggersNeedingAttention
+        : CodeMashRequestBase, INorbixRequest<GetTriggersNeedingAttentionResponse>
+    {
+        ///<summary>
+        ///Which triggers: Membership, Schema, Files, Payments or Ai.
+        ///</summary>
+        [DataMember]
+        public virtual TriggerType TriggerType { get; set; }
+    }
+
+    [DataContract]
+    public partial class GetTriggersNeedingAttentionResponse
+        : ResponseBase
+    {
+        [DataMember]
+        public virtual List<TriggerAttentionDto> Items { get; set; } = [];
     }
 
     [DataContract]

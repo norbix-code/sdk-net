@@ -19,6 +19,7 @@
     Body: {
       templateId: Guid_1,
       databaseIntegrationId: Guid_1,
+      integrationId: Guid_1,
       language: test-language,
       initiatorId: Guid_1,
       deliveryType: allUsers,
