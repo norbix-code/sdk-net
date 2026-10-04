@@ -51,6 +51,7 @@ public sealed class SmsBodyVariantTests
             new CreateSmsCampaignRequest
             {
                 TemplateId = "tpl-1",
+                IntegrationId = "sms-int-1",
                 DeliveryType = SmsCampaignRecipientsSourceTypes.AllUsers,
                 AllUsers = new SmsToAllUsersDeliverySettingsDto
                 {
@@ -66,6 +67,7 @@ public sealed class SmsBodyVariantTests
             new CreateSmsCampaignRequest
             {
                 TemplateId = "tpl-1",
+                IntegrationId = "sms-int-1",
                 DeliveryType = SmsCampaignRecipientsSourceTypes.SpecifiedUsers,
                 SpecifiedUsers = new SmsToUsersDeliverySettingsDto
                 {
@@ -80,6 +82,7 @@ public sealed class SmsBodyVariantTests
             new CreateSmsCampaignRequest
             {
                 TemplateId = "tpl-1",
+                IntegrationId = "sms-int-1",
                 DeliveryType = SmsCampaignRecipientsSourceTypes.PhoneNumbers,
                 PhoneNumbers = new SmsToPhoneNumbersDeliverySettingsDto
                 {
@@ -94,6 +97,7 @@ public sealed class SmsBodyVariantTests
             new CreateSmsCampaignRequest
             {
                 TemplateId = "tpl-1",
+                IntegrationId = "sms-int-1",
                 DeliveryType = SmsCampaignRecipientsSourceTypes.Collection,
                 Collection = new SmsToCollectionRecordsDeliverySettingsDto
                 {

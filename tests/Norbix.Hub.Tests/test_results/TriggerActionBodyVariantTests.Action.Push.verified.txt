@@ -1,0 +1,28 @@
+﻿{
+  Method: POST,
+  Path: /v2/membership/triggers,
+  Headers: {
+    Authorization: Bearer test-bearer,
+    Content-Type: application/json; charset=utf-8,
+    X-CM-AccountId: test-account,
+    X-CM-ProjectId: test-project
+  },
+  Body: {
+    trigger: {
+      type: membership,
+      when: onRegistered,
+      name: Welcome message,
+      isEnabled: true,
+      action: {
+        templateId: tpl-welcome,
+        deliverySettings: {
+          recipientsSourceType: allUsers
+        },
+        language: lt,
+        initiatorId: usr_service_1,
+        type: push,
+        integrationId: push-int-1
+      }
+    }
+  }
+}

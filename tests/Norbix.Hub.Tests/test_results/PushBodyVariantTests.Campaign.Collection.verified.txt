@@ -21,7 +21,8 @@
         en
       ],
       source: collection,
-      templateId: tpl-1
+      templateId: tpl-1,
+      integrationId: push-int-1
     }
   }
 }

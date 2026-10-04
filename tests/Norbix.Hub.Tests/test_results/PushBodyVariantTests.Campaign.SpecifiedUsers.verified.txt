@@ -14,7 +14,8 @@
         user-2
       ],
       source: specifiedUsers,
-      templateId: tpl-1
+      templateId: tpl-1,
+      integrationId: push-int-1
     }
   }
 }

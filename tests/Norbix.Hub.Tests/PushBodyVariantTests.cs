@@ -44,6 +44,7 @@ public sealed class PushBodyVariantTests
                 new PushToAllUsersRequest
                 {
                     TemplateId = "tpl-1",
+                    IntegrationId = "push-int-1",
                     RolesNames = new HashSet<string> { "admin" },
                     UserTags = new HashSet<string> { "beta" },
                 }
@@ -54,6 +55,7 @@ public sealed class PushBodyVariantTests
                 new PushToUsersRequest
                 {
                     TemplateId = "tpl-1",
+                    IntegrationId = "push-int-1",
                     UserRecipients = new HashSet<string> { "user-1", "user-2" },
                 }
         ).SetName("SpecifiedUsers");
@@ -63,6 +65,7 @@ public sealed class PushBodyVariantTests
                 new PushToAccountUsersRequest
                 {
                     TemplateId = "tpl-1",
+                    IntegrationId = "push-int-1",
                     UserRecipients = new HashSet<string> { "account-user-1" },
                 }
         ).SetName("AccountUsers");
@@ -72,6 +75,7 @@ public sealed class PushBodyVariantTests
                 new PushToCollectionRecordsRequest
                 {
                     TemplateId = "tpl-1",
+                    IntegrationId = "push-int-1",
                     SchemaName = "subscribers",
                     Fields = new HashSet<string> { "userId" },
                     FieldType = CollectionEmailCampaignRecipientField.User,
@@ -85,6 +89,7 @@ public sealed class PushBodyVariantTests
                 new PushToDevicesRequest
                 {
                     TemplateId = "tpl-1",
+                    IntegrationId = "push-int-1",
                     Devices = new HashSet<PushDeviceDeliveryTokenRequest>
                     {
                         new()
