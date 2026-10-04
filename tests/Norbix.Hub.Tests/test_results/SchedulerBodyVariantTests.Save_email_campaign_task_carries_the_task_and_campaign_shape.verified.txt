@@ -1,0 +1,31 @@
+﻿{
+  Method: POST,
+  Path: /v2/scheduler/tasks,
+  Headers: {
+    Authorization: Bearer test-bearer,
+    Content-Type: application/json; charset=utf-8,
+    X-CM-AccountId: test-account,
+    X-CM-ProjectId: test-project
+  },
+  Body: {
+    name: Weekly digest,
+    description: Every Monday 08:00 UTC,
+    cron: 0 8 * * 1,
+    initiatorUserId: usr_service_1,
+    isEnabled: true,
+    stopOnError: false,
+    task: {
+      type: emailCampaign,
+      campaign: {
+        source: allUsers,
+        rolesNames: [
+          subscriber
+        ],
+        userTags: [
+          weekly
+        ],
+        templateId: tpl_weekly_digest
+      }
+    }
+  }
+}
