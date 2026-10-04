@@ -9,6 +9,7 @@
   },
   Body: {
     templateId: tpl-1,
+    integrationId: sms-int-1,
     deliveryType: specifiedUsers,
     specifiedUsers: {
       recipients: [
