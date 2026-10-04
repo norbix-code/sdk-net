@@ -1,0 +1,36 @@
+﻿{
+  Target: Hub,
+  Group: triggers,
+  Count: 1,
+  Endpoints: [
+    {
+      Target: Hub,
+      Group: triggers,
+      MethodName: GetTriggersNeedingAttentionAsync,
+      RequestType: GetTriggersNeedingAttention,
+      HttpMethod: GET,
+      Path: /{version}/triggers/attention,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/triggers/attention,
+        Query: ?triggerType=Membership&env=test-env,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: GetTriggersNeedingAttentionResponse,
+      Response: {
+        Items: [
+          {}
+        ],
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    }
+  ]
+}
