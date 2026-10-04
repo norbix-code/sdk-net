@@ -294,7 +294,7 @@ The public endpoint surface is generated from gateway DTOs at compile time. The 
 | `notifications` | 123 | Email, push and SMS templates, integrations, campaigns, devices, settings. Push: [docs/hub/push.md](./docs/hub/push.md). SMS: [docs/hub/sms.md](./docs/hub/sms.md). |
 | `oauth` | 5 | The gateway's OAuth server routes (register, authorize, token, revoke). |
 | `payments` | 16 | Payment integrations, triggers, tests, and module settings. |
-| `scheduler` | 8 | Scheduler module and task management. |
+| `scheduler` | 8 | Scheduler module on / off (`EnableSchedulerAsync`, `DisableSchedulerAsync` — `PUT`) and cron tasks: list, read, save, enable, disable, delete. Only email campaign tasks today (`EmailCampaignSchedulerTaskRequest`). Every method and a typed save example: [docs/hub/scheduler.md](./docs/hub/scheduler.md). |
 | `webhooks` | 8 | Webhook integrations, destinations, tests, and module settings. |
 | `wellKnown` | 2 | OAuth discovery documents under `/.well-known`. |
 
