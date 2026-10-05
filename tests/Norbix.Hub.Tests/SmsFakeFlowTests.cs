@@ -93,7 +93,6 @@ public sealed class SmsFakeFlowTests
                         Language = "en",
                         Content = new SmsMessageContentDto
                         {
-                            Subject = "Welcome",
                             Body = "Hi @Model.FirstName, your code is @Model.Code",
                         },
                     },

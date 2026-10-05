@@ -33,6 +33,11 @@
         campaignTime: 1.0,
         respectTimeZoneSettings: respectToLastLoginZone
       },
+      accountUsers: {
+        recipientsSourceType: allUsers,
+        campaignTime: 1.0,
+        respectTimeZoneSettings: respectToLastLoginZone
+      },
       collection: {
         fieldType: user,
         schemaName: test-schemaName,

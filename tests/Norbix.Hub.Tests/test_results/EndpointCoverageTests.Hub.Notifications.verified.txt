@@ -272,6 +272,7 @@
       ResponseType: GetEmailCampaignBatchNotificationResponse,
       Response: {
         CampaignNotification: {
+          Subject: test-subject,
           Recipients: {
             HasMore: false
           },
@@ -280,7 +281,6 @@
           BatchId: Guid_1,
           NotificationId: Guid_1,
           RefNotificationId: Guid_1,
-          Subject: test-subject,
           Body: test-body
         },
         ResponseStatus: {
@@ -1965,6 +1965,7 @@
       ResponseType: GetPushCampaignBatchNotificationResponse,
       Response: {
         CampaignNotification: {
+          Subject: test-subject,
           Recipients: {
             HasMore: false
           },
@@ -1973,7 +1974,6 @@
           BatchId: Guid_1,
           NotificationId: Guid_1,
           RefNotificationId: Guid_1,
-          Subject: test-subject,
           Body: test-body
         },
         ResponseStatus: {
@@ -3107,6 +3107,11 @@
             campaignTime: 1.0,
             respectTimeZoneSettings: respectToLastLoginZone
           },
+          accountUsers: {
+            recipientsSourceType: allUsers,
+            campaignTime: 1.0,
+            respectTimeZoneSettings: respectToLastLoginZone
+          },
           collection: {
             fieldType: user,
             schemaName: test-schemaName,
@@ -3189,6 +3194,7 @@
           Template: {
             IsActive: false
           },
+          CreatedById: Guid_1,
           ViewId: Guid_1,
           CreatedOn: DateTime_1,
           Language: test-language,
@@ -3273,8 +3279,10 @@
           BatchId: Guid_1,
           NotificationId: Guid_1,
           RefNotificationId: Guid_1,
-          Subject: test-subject,
-          Body: test-body
+          Body: test-body,
+          Model: {
+            sample-key: test-string
+          }
         },
         ResponseStatus: {
           IsSuccess: true
@@ -3335,7 +3343,7 @@
       Sent: {
         Method: GET,
         Path: /v2/notifications/sms/campaigns,
-        Query: ?databaseIntegrationId={guid}&templateId={guid}&from=1&to=1&env=test-env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1,
+        Query: ?databaseIntegrationId={guid}&campaignId={guid}&templateId={guid}&from=1&to=1&env=test-env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1,
         Headers: {
           Authorization: Bearer test-bearer,
           X-CM-AccountId: test-account,

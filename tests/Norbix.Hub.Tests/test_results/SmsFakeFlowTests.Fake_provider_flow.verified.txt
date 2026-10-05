@@ -86,7 +86,6 @@
           {
             language: en,
             content: {
-              subject: Welcome,
               body: Hi @Model.FirstName, your code is @Model.Code
             }
           }
