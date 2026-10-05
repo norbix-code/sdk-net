@@ -46,12 +46,11 @@
       HttpMethod: POST,
       Path: /{version}/account/team/member,
       IsAccountScoped: false,
-      IsUnauthenticated: false,
+      IsUnauthenticated: true,
       Sent: {
         Method: POST,
         Path: /v2/account/team/member,
         Headers: {
-          Authorization: Bearer test-bearer,
           Content-Type: application/json; charset=utf-8,
           X-CM-AccountId: test-account,
           X-CM-ProjectId: test-project
@@ -272,14 +271,13 @@
       RequestType: VerifyAccount,
       HttpMethod: GET,
       Path: /{version}/account/verify,
-      IsAccountScoped: true,
-      IsUnauthenticated: false,
+      IsAccountScoped: false,
+      IsUnauthenticated: true,
       Sent: {
         Method: GET,
         Path: /v2/account/verify,
         Query: ?token=test-token&accountId={guid},
         Headers: {
-          Authorization: Bearer test-bearer,
           X-CM-AccountId: test-account,
           X-CM-ProjectId: test-project
         }
@@ -299,12 +297,11 @@
       HttpMethod: POST,
       Path: /{version}/account,
       IsAccountScoped: false,
-      IsUnauthenticated: false,
+      IsUnauthenticated: true,
       Sent: {
         Method: POST,
         Path: /v2/account,
         Headers: {
-          Authorization: Bearer test-bearer,
           Content-Type: application/json; charset=utf-8,
           X-CM-AccountId: test-account,
           X-CM-ProjectId: test-project
@@ -1582,12 +1579,11 @@
       HttpMethod: GET,
       Path: /{version}/account/regions,
       IsAccountScoped: false,
-      IsUnauthenticated: false,
+      IsUnauthenticated: true,
       Sent: {
         Method: GET,
         Path: /v2/account/regions,
         Headers: {
-          Authorization: Bearer test-bearer,
           X-CM-AccountId: test-account,
           X-CM-ProjectId: test-project
         }
