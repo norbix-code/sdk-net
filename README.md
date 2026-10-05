@@ -313,6 +313,78 @@ carries its `Env`. The paging cursors (`StartingAfter` / `EndingBefore`) are now
 schema view ids (`sch_…`), so a cursor saved from an older gateway no longer
 matches.
 
+### Database writes, triggers and taxonomies (gateway 2026-10-05)
+
+**Update many / delete many need `AllRecords` to touch every record.** An empty
+filter `{}` matches the whole collection, so the gateway refuses it unless the
+request says so:
+
+```csharp
+// Api
+await client.Database.UpdateManyAsync(new UpdateManyRequest
+{
+    CollectionName = "orders",
+    Filter = "{}",
+    AllRecords = true,                       // without it: CM-ERRORS-DATABASE-037
+    Update = "{\"status\":\"archived\"}",
+});
+
+// Hub (dashboard)
+await hub.Database.DeleteManyRecordsAsync(new DeleteManyRecords
+{
+    CollectionName = "orders",
+    Filter = "{}",
+    AllRecords = true,
+});
+```
+
+A missing filter on update many counts as `{}`. Callers with only "own" rights
+(create as user, update own, delete own) may now call insert / update / delete
+many; those calls touch only the caller's own records.
+
+**What else changed for callers:**
+
+- `TaxonomyListProjection.DependencyNames` is gone. Read `DependencyRefs`
+  instead: one `TaxonomyRef { Id, Name }` per entry of `Dependencies`, in the
+  same order. A dependency that no longer exists keeps its place with
+  `Name = null`.
+- `RenameDatabaseSchemaRequest.RenameUniqueName` is gone. A rename to a name
+  another schema in the same environment already uses is always refused
+  (`CM-ERRORS-SCHEMA-002`).
+- Schema triggers are per environment. `SchemaTriggerDto` and the
+  `GetSchemaTriggersAsync` rows carry `Env`; the list shows only the request
+  environment (`PROD` when none is sent); enable / disable / delete act on the
+  copy in the request environment. `SchemaTriggerDto.SchemaId` now holds the
+  owning schema id (`sch_…`) — it used to hold the trigger's own id.
+- A saved aggregate (`MongoDbAggregateDto`) lists the collections its pipeline
+  joins in `JoinedCollections`. Deleting a schema that a saved aggregate joins
+  is refused (`CM-ERRORS-SCHEMA-018`, the blocking aggregates are in its
+  metadata `BlockerAggregateNames`).
+- `TestDatabaseAggregateAsync` (Hub) needs create or update rights on the
+  aggregate, not only read.
+- Update, replace and change-owner no longer match soft-deleted records: such a
+  record is "not found", and update many skips it.
+- `ChangeResponsibilityAsync` (Api) and `ChangeRecordResponsibilityAsync` (Hub) refuse a new owner who is not a user of the
+  project in the request environment (`CM-ERRORS-MEMBERSHIP-USERS-012`).
+- `GetDatabaseTaxonomyTreeAsync` with `IncludeTerms = true` now fails when the
+  term read fails (it used to return the taxonomies without terms).
+
+**Error codes you may now see** (they arrive on `NorbixException.ErrorCode`):
+
+| Code | When |
+| --- | --- |
+| `CM-ERRORS-DATABASE-031` | `FindTermsAsync` / `FindTermsChildrenAsync` filter uses `$where`, `$function` or `$accumulator`. |
+| `CM-ERRORS-DATABASE-035` | An update one / update many body contains `$` operators (`$inc`, `$set`, …). Send the fields to set; the server applies them with `$set`. |
+| `CM-ERRORS-DATABASE-036` | Invalid record document on insert one / insert many / replace one (insert many says which `Index`). Before this it was `-005` "Invalid filter document". |
+| `CM-ERRORS-DATABASE-037` | Empty filter `{}` on update many / delete many without `AllRecords = true`. |
+| `CM-ERRORS-MEMBERSHIP-USERS-012` | Change owner to a user who is not in the project (request environment). |
+| `CM-ERRORS-SCHEMA-002` | Rename to a name another schema in the same environment uses. |
+| `CM-ERRORS-SCHEMA-018` | Delete a schema that a saved aggregate starts on or joins. |
+| `CM-ERRORS-TAXONOMIES-005` | A taxonomy name longer than 40 characters on a term read. |
+| `CM-ERRORS-TAXONOMIES-010` | The taxonomy name is unknown (term tree, merged tree). |
+| `CM-ERRORS-TAXONOMIES-011` | The term tree has more than 5000 terms (whole taxonomy, merged tree, `IncludeTerms`). |
+| `CM-ERRORS-TRIGGERS-002` | Schema trigger not found in the request environment, or a save that moves an existing trigger id to another schema. |
+
 ## Working with terms
 
 A **taxonomy** is a named tree of **terms** (labels). A term can have one parent (a clean hierarchy) or several parents (the same item under many categories). Pick the call that matches what you want:
