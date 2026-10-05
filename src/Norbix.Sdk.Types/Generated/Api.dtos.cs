@@ -489,6 +489,9 @@ namespace Norbix.Sdk.Types.Api;
 
         [DataMember]
         public virtual string Filter { get; set; }
+
+        [DataMember]
+        public virtual bool? AllRecords { get; set; }
     }
 
     ///<summary>
@@ -723,6 +726,9 @@ namespace Norbix.Sdk.Types.Api;
 
         [DataMember]
         public virtual string Filter { get; set; }
+
+        [DataMember]
+        public virtual bool? AllRecords { get; set; }
 
         [DataMember]
         public virtual string Update { get; set; }
