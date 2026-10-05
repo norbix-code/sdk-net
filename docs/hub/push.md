@@ -80,9 +80,9 @@ the gateway writes them.
 
 | method | verb | path |
 |---|---|---|
-| `DisablePushAsync` | `GET` | `/notifications/push/disable` |
+| `DisablePushAsync` | `PUT` | `/notifications/push/disable` |
 | `GetPushDisableDependenciesAsync` | `GET` | `/notifications/push/disable-dependencies` |
-| `EnablePushAsync` | `GET` | `/notifications/push/enable` |
+| `EnablePushAsync` | `PUT` | `/notifications/push/enable` |
 | `GetPushSettingsAsync` | `GET` | `/notifications/push/settings` |
 
 ## Integrations
