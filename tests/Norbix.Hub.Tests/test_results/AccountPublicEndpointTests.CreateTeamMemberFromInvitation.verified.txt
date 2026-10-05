@@ -1,0 +1,24 @@
+﻿{
+  Client: {
+    ApiKey: (none),
+    BearerToken: (none),
+    AccountId: (none)
+  },
+  Catalog: {
+    IsAccountScoped: false,
+    IsUnauthenticated: true
+  },
+  Sent: {
+    Method: POST,
+    Path: /v2/account/team/member,
+    Headers: {
+      Content-Type: application/json; charset=utf-8,
+      X-CM-ProjectId: test-project
+    },
+    Body: {
+      displayName: Ada,
+      token: invite-token-1,
+      password: pa55-word
+    }
+  }
+}

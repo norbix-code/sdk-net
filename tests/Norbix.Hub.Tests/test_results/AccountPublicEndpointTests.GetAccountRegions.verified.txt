@@ -1,0 +1,18 @@
+﻿{
+  Client: {
+    ApiKey: (none),
+    BearerToken: (none),
+    AccountId: (none)
+  },
+  Catalog: {
+    IsAccountScoped: false,
+    IsUnauthenticated: true
+  },
+  Sent: {
+    Method: GET,
+    Path: /v2/account/regions,
+    Headers: {
+      X-CM-ProjectId: test-project
+    }
+  }
+}
