@@ -1,7 +1,7 @@
 ﻿{
   Sent: [
     {
-      Method: GET,
+      Method: PUT,
       Path: /v2/notifications/sms/enable,
       Headers: {
         Authorization: Bearer test-bearer,

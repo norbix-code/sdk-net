@@ -8,18 +8,21 @@
       Group: logs,
       MethodName: DisableLoggingAsync,
       RequestType: DisableLogging,
-      HttpMethod: GET,
+      HttpMethod: PUT,
       Path: /{version}/logs/disable,
       IsAccountScoped: false,
       IsUnauthenticated: false,
       Sent: {
-        Method: GET,
+        Method: PUT,
         Path: /v2/logs/disable,
-        Query: ?env=test-env,
         Headers: {
           Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
           X-CM-AccountId: test-account,
           X-CM-ProjectId: test-project
+        },
+        Body: {
+          env: test-env
         }
       },
       ResponseType: EmptyResponse,
@@ -34,18 +37,22 @@
       Group: logs,
       MethodName: EnableLoggingAsync,
       RequestType: EnableLogging,
-      HttpMethod: GET,
+      HttpMethod: PUT,
       Path: /{version}/logs/enable,
       IsAccountScoped: false,
       IsUnauthenticated: false,
       Sent: {
-        Method: GET,
+        Method: PUT,
         Path: /v2/logs/enable,
-        Query: ?createNorbixLogging=True&env=test-env,
         Headers: {
           Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
           X-CM-AccountId: test-account,
           X-CM-ProjectId: test-project
+        },
+        Body: {
+          createNorbixLogging: true,
+          env: test-env
         }
       },
       ResponseType: EmptyResponse,

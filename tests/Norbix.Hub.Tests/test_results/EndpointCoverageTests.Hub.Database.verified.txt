@@ -8,18 +8,21 @@
       Group: database,
       MethodName: DisableDatabaseAsync,
       RequestType: DisableDatabase,
-      HttpMethod: GET,
+      HttpMethod: PUT,
       Path: /{version}/database/disable,
       IsAccountScoped: false,
       IsUnauthenticated: false,
       Sent: {
-        Method: GET,
+        Method: PUT,
         Path: /v2/database/disable,
-        Query: ?env=test-env,
         Headers: {
           Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
           X-CM-AccountId: test-account,
           X-CM-ProjectId: test-project
+        },
+        Body: {
+          env: test-env
         }
       },
       ResponseType: EmptyResponse,
@@ -34,18 +37,21 @@
       Group: database,
       MethodName: EnableDatabaseAsync,
       RequestType: EnableDatabase,
-      HttpMethod: GET,
+      HttpMethod: PUT,
       Path: /{version}/database/enable,
       IsAccountScoped: false,
       IsUnauthenticated: false,
       Sent: {
-        Method: GET,
+        Method: PUT,
         Path: /v2/database/enable,
-        Query: ?env=test-env,
         Headers: {
           Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
           X-CM-AccountId: test-account,
           X-CM-ProjectId: test-project
+        },
+        Body: {
+          env: test-env
         }
       },
       ResponseType: EmptyResponse,

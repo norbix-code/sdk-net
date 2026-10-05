@@ -8,18 +8,21 @@
       Group: notifications,
       MethodName: DisableEmailAsync,
       RequestType: DisableEmail,
-      HttpMethod: GET,
+      HttpMethod: PUT,
       Path: /{version}/notifications/email/disable,
       IsAccountScoped: false,
       IsUnauthenticated: false,
       Sent: {
-        Method: GET,
+        Method: PUT,
         Path: /v2/notifications/email/disable,
-        Query: ?env=test-env,
         Headers: {
           Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
           X-CM-AccountId: test-account,
           X-CM-ProjectId: test-project
+        },
+        Body: {
+          env: test-env
         }
       },
       ResponseType: EmptyResponse,
@@ -34,18 +37,21 @@
       Group: notifications,
       MethodName: EnableEmailAsync,
       RequestType: EnableEmail,
-      HttpMethod: GET,
+      HttpMethod: PUT,
       Path: /{version}/notifications/email/enable,
       IsAccountScoped: false,
       IsUnauthenticated: false,
       Sent: {
-        Method: GET,
+        Method: PUT,
         Path: /v2/notifications/email/enable,
-        Query: ?env=test-env,
         Headers: {
           Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
           X-CM-AccountId: test-account,
           X-CM-ProjectId: test-project
+        },
+        Body: {
+          env: test-env
         }
       },
       ResponseType: EmptyResponse,
@@ -1657,18 +1663,21 @@
       Group: notifications,
       MethodName: DisablePushAsync,
       RequestType: DisablePush,
-      HttpMethod: GET,
+      HttpMethod: PUT,
       Path: /{version}/notifications/push/disable,
       IsAccountScoped: false,
       IsUnauthenticated: false,
       Sent: {
-        Method: GET,
+        Method: PUT,
         Path: /v2/notifications/push/disable,
-        Query: ?env=test-env,
         Headers: {
           Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
           X-CM-AccountId: test-account,
           X-CM-ProjectId: test-project
+        },
+        Body: {
+          env: test-env
         }
       },
       ResponseType: EmptyResponse,
@@ -1683,18 +1692,21 @@
       Group: notifications,
       MethodName: EnablePushAsync,
       RequestType: EnablePush,
-      HttpMethod: GET,
+      HttpMethod: PUT,
       Path: /{version}/notifications/push/enable,
       IsAccountScoped: false,
       IsUnauthenticated: false,
       Sent: {
-        Method: GET,
+        Method: PUT,
         Path: /v2/notifications/push/enable,
-        Query: ?env=test-env,
         Headers: {
           Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
           X-CM-AccountId: test-account,
           X-CM-ProjectId: test-project
+        },
+        Body: {
+          env: test-env
         }
       },
       ResponseType: EmptyResponse,
@@ -2985,18 +2997,21 @@
       Group: notifications,
       MethodName: DisableSmsAsync,
       RequestType: DisableSms,
-      HttpMethod: GET,
+      HttpMethod: PUT,
       Path: /{version}/notifications/sms/disable,
       IsAccountScoped: false,
       IsUnauthenticated: false,
       Sent: {
-        Method: GET,
+        Method: PUT,
         Path: /v2/notifications/sms/disable,
-        Query: ?env=test-env,
         Headers: {
           Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
           X-CM-AccountId: test-account,
           X-CM-ProjectId: test-project
+        },
+        Body: {
+          env: test-env
         }
       },
       ResponseType: EmptyResponse,
@@ -3011,18 +3026,21 @@
       Group: notifications,
       MethodName: EnableSmsAsync,
       RequestType: EnableSms,
-      HttpMethod: GET,
+      HttpMethod: PUT,
       Path: /{version}/notifications/sms/enable,
       IsAccountScoped: false,
       IsUnauthenticated: false,
       Sent: {
-        Method: GET,
+        Method: PUT,
         Path: /v2/notifications/sms/enable,
-        Query: ?env=test-env,
         Headers: {
           Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
           X-CM-AccountId: test-account,
           X-CM-ProjectId: test-project
+        },
+        Body: {
+          env: test-env
         }
       },
       ResponseType: EmptyResponse,
@@ -3194,7 +3212,6 @@
           Template: {
             IsActive: false
           },
-          CreatedById: Guid_1,
           ViewId: Guid_1,
           CreatedOn: DateTime_1,
           Language: test-language,

@@ -3,18 +3,21 @@
   Group: notifications,
   MethodName: EnableEmailAsync,
   RequestType: EnableEmail,
-  HttpMethod: GET,
+  HttpMethod: PUT,
   Path: /{version}/notifications/email/enable,
   IsAccountScoped: false,
   IsUnauthenticated: false,
   Sent: {
-    Method: GET,
+    Method: PUT,
     Path: /v2/notifications/email/enable,
-    Query: ?env=test-env,
     Headers: {
       Authorization: Bearer test-bearer,
+      Content-Type: application/json; charset=utf-8,
       X-CM-AccountId: test-account,
       X-CM-ProjectId: test-project
+    },
+    Body: {
+      env: test-env
     }
   },
   ResponseType: EmptyResponse,

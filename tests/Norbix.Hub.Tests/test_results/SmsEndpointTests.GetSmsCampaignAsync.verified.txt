@@ -27,7 +27,6 @@
       Template: {
         IsActive: false
       },
-      CreatedById: Guid_1,
       ViewId: Guid_1,
       CreatedOn: DateTime_1,
       Language: test-language,
