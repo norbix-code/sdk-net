@@ -29,7 +29,8 @@ Tests (all in `tests/Norbix.Hub.Tests/`, none of them contact an SMS service):
 
 - `SmsEndpointTests.cs` — one test per method; snapshots the exact request it sends,
   plus a guard on the size of the SMS surface (34 endpoints).
-- `SmsBodyVariantTests.cs` — the four campaign audiences and the Fake provider shape.
+- `SmsBodyVariantTests.cs` — the five campaign audiences, the campaign id filter and the
+  Fake provider shape.
 - `SmsFakeFlowTests.cs` — the Fake provider from enable to campaign statistics,
   with real JSON replies, so reading the answers is tested too.
 
@@ -57,7 +58,7 @@ var template = await sms.CreateSmsTemplateAsync(new CreateSmsTemplateRequest
     CommunicationChannel = CommunicationChannel.Transactional,
     Translations =
     [
-        new() { Language = "en", Content = new() { Subject = "Hi", Body = "Hi @Model.FirstName" } },
+        new() { Language = "en", Content = new() { Body = "Hi @Model.FirstName" } },
     ],
 });
 
@@ -133,7 +134,6 @@ lists the tokens a saved template uses, per translation.
 | `DeleteSmsCampaignAsync` | `DELETE` | `/notifications/sms/campaigns/{id}` |
 | `StopSmsCampaignAsync` | `POST` | `/notifications/sms/campaigns/{Id}/stop` |
 | `GetSmsCampaignMessagesAsync` | `GET` | `/notifications/sms/campaigns/{campaignId}/messages` |
-| `GetSmsCampaignMessageAsync` | `GET` | `/notifications/sms/campaigns/{campaignId}/messages/{notificationId}` |
 | `GetSmsCampaignAsync` | `GET` | `/notifications/sms/campaigns/{id}` |
 | `GetSmsCampaignBatchesAsync` | `GET` | `/notifications/sms/campaigns/{id}/batches` |
 | `GetSmsCampaignBatchNotificationsAsync` | `GET` | `/notifications/sms/campaigns/{id}/batches/{batchId}` |
@@ -141,8 +141,8 @@ lists the tokens a saved template uses, per translation.
 | `GetSmsCampaignStatisticsAsync` | `GET` | `/notifications/sms/campaigns/{id}/stats` |
 | `PreviewSmsNotificationAsync` | `GET` | `/notifications/sms/preview` |
 
-`GetSmsCampaignsAsync` narrows the list with `TemplateId`, `From` and `To`
-(unix seconds, UTC). `StopSmsCampaignAsync` stops a running campaign at its
+`GetSmsCampaignsAsync` narrows the list with `CampaignId` (only that one
+campaign), `TemplateId`, `From` and `To` (unix seconds, UTC). `StopSmsCampaignAsync` stops a running campaign at its
 next batch; `DeleteSmsCampaignAsync` removes a campaign that has not started.
 
 ## Choosing who a campaign goes to
@@ -161,8 +161,15 @@ audience. The server rejects a campaign without it.
 |---|---|---|---|
 | everyone in the project | `AllUsers` | `AllUsers` (`SmsToAllUsersDeliverySettingsDto`) | `RolesNames`, `UserTags` (both optional filters) |
 | a named list of project users | `SpecifiedUsers` | `SpecifiedUsers` (`SmsToUsersDeliverySettingsDto`) | `Recipients` |
+| the account owner and team members | `AccountUsers` | `AccountUsers` (`SmsToAccountUsersDeliverySettingsDto`) | `Recipients` (account user ids) |
 | raw phone numbers | `PhoneNumbers` | `PhoneNumbers` (`SmsToPhoneNumbersDeliverySettingsDto`) | `PhoneNumbers` (international format) |
 | rows of a database collection | `Collection` | `Collection` (`SmsToCollectionRecordsDeliverySettingsDto`) | `SchemaName`, `Fields`, `FieldType` |
+
+Account users get the SMS on the phone number they saved for themselves with
+`norbix.Account.UpdateMyAccountUserPhoneAsync(new UpdateMyAccountUserPhone {
+Phone = "+37060000000" })` (E.164 format; an empty value clears it).
+`GetMyAccountUserProfileAsync` reads it back. Members without a phone are
+skipped.
 
 Every settings object also takes `CampaignTime` (unix seconds, UTC; omit to
 send now) and `MappedTokens` for template tokens the recipient does not
