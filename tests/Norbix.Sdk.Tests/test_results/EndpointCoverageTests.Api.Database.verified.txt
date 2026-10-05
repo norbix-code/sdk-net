@@ -122,7 +122,7 @@
       Sent: {
         Method: DELETE,
         Path: /v2/database/collections/test-collectionName/many,
-        Query: ?databaseIntegrationId={guid}&filter=test-filter&env=test-env,
+        Query: ?databaseIntegrationId={guid}&filter=test-filter&allRecords=True&env=test-env,
         Headers: {
           Authorization: Bearer test-bearer,
           X-CM-AccountId: test-account,
@@ -484,6 +484,7 @@
         Body: {
           databaseIntegrationId: Guid_1,
           filter: test-filter,
+          allRecords: true,
           update: test-update,
           env: test-env
         }

@@ -1742,6 +1742,9 @@
           IntegrationsSeeded: [
             {}
           ],
+          IntegrationsToProvision: [
+            {}
+          ],
           IntegrationsSkipped: [
             {}
           ],
@@ -1790,6 +1793,9 @@
             {}
           ],
           IntegrationsSeeded: [
+            {}
+          ],
+          IntegrationsToProvision: [
             {}
           ],
           IntegrationsSkipped: [

@@ -77,11 +77,6 @@ namespace Norbix.Sdk.Types.Hub;
         Unregistered = 64,
     }
 
-    public partial class AggregateId
-    {
-        public virtual Guid Value { get; set; }
-    }
-
     public enum AiTriggerType
     {
         OnCreditsWarning,
@@ -261,16 +256,7 @@ namespace Norbix.Sdk.Types.Hub;
     {
     }
 
-    public partial interface IHasDomainEntityId
-    {
-    }
-
     public partial interface IHasRazorTemplateCode
-    {
-    }
-
-    public partial class IntegrationId
-        : AggregateId, IHasDomainEntityId
     {
     }
 
@@ -356,11 +342,6 @@ namespace Norbix.Sdk.Types.Hub;
     {
         Allow,
         Deny,
-    }
-
-    public partial class ProjectId
-        : AggregateId, IHasDomainEntityId
-    {
     }
 
     public enum ProjectStatus
@@ -505,11 +486,6 @@ namespace Norbix.Sdk.Types.Hub;
         Text,
         Branded,
         Creative,
-    }
-
-    public partial class TaxonomyId
-        : AggregateId, IHasDomainEntityId
-    {
     }
 
     public enum TokenMappingResolverType
@@ -2081,6 +2057,9 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember]
         public virtual List<PromotionItemDto> IntegrationsSeeded { get; set; } = [];
+
+        [DataMember]
+        public virtual List<PromotionItemDto> IntegrationsToProvision { get; set; } = [];
 
         [DataMember]
         public virtual List<PromotionItemDto> IntegrationsSkipped { get; set; } = [];
@@ -3783,6 +3762,9 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember]
         public virtual string Pipeline { get; set; }
+
+        [DataMember]
+        public virtual List<string>? JoinedCollections { get; set; }
     }
 
     public partial class MongoDbAggregateListProjection
@@ -3904,6 +3886,7 @@ namespace Norbix.Sdk.Types.Hub;
         : IntegrationDto
     {
         public virtual DatabaseProvider Provider { get; set; }
+        public virtual bool IsSystemOwned { get; set; }
     }
 
     public partial class DatabaseIntegrationListProjection
@@ -3911,6 +3894,9 @@ namespace Norbix.Sdk.Types.Hub;
     {
         [DataMember]
         public virtual DatabaseProvider Provider { get; set; }
+
+        [DataMember]
+        public virtual string? Env { get; set; }
     }
 
     [DataContract]
@@ -4359,7 +4345,16 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual string? ParentName { get; set; }
 
         [DataMember]
-        public virtual List<string>? DependencyNames { get; set; }
+        public virtual List<TaxonomyRef>? DependencyRefs { get; set; }
+    }
+
+    public partial class TaxonomyRef
+    {
+        [DataMember]
+        public virtual string Id { get; set; }
+
+        [DataMember]
+        public virtual string? Name { get; set; }
     }
 
     public partial class TaxonomyTreeDto
@@ -6355,6 +6350,9 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual bool StopOnError { get; set; }
 
         [DataMember]
+        public virtual string? Env { get; set; }
+
+        [DataMember]
         public virtual long? CreatedAtUnix { get; set; }
 
         [DataMember]
@@ -6767,6 +6765,9 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember]
         public virtual HashSet<string>? Tags { get; set; }
+
+        [DataMember]
+        public virtual string? Env { get; set; }
     }
 
     [DataContract]
@@ -6790,6 +6791,9 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember]
         public virtual HashSet<string>? Tags { get; set; }
+
+        [DataMember]
+        public virtual string? Env { get; set; }
     }
 
     [DataContract]
@@ -6889,6 +6893,9 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember]
         public virtual string? ConfigurationCode { get; set; }
+
+        [DataMember]
+        public virtual string? Env { get; set; }
     }
 
     [DataContract]
@@ -6897,6 +6904,9 @@ namespace Norbix.Sdk.Types.Hub;
     {
         [DataMember]
         public virtual SchemaTriggerType Type { get; set; }
+
+        [DataMember]
+        public virtual string? Env { get; set; }
     }
 
     [DataContract]
@@ -11390,9 +11400,14 @@ namespace Norbix.Sdk.Types.Hub;
 
         public virtual string? DatabaseIntegrationId { get; set; }
         ///<summary>
-        ///The match filter as a MongoDB extended-JSON document. Required.
+        ///The match filter as a MongoDB extended-JSON document. Required. An empty object ({}) matches every record and is refused unless AllRecords is true.
         ///</summary>
         public virtual string Filter { get; set; }
+
+        ///<summary>
+        ///Set to true to delete EVERY record of the collection with an empty filter ({}). Without it an empty filter is refused (CM-ERRORS-DATABASE-037).
+        ///</summary>
+        public virtual bool? AllRecords { get; set; }
     }
 
     ///<summary>
@@ -11657,9 +11672,14 @@ namespace Norbix.Sdk.Types.Hub;
 
         public virtual string? DatabaseIntegrationId { get; set; }
         ///<summary>
-        ///The match filter as a MongoDB extended-JSON document. Empty object means match all.
+        ///The match filter as a MongoDB extended-JSON document. An empty object ({}) matches every record and is refused unless AllRecords is true.
         ///</summary>
         public virtual string Filter { get; set; }
+
+        ///<summary>
+        ///Set to true to update EVERY record of the collection with an empty filter ({}). Without it an empty filter is refused (CM-ERRORS-DATABASE-037).
+        ///</summary>
+        public virtual bool? AllRecords { get; set; }
 
         ///<summary>
         ///The partial update document (applied with $set), as MongoDB extended-JSON.
@@ -11995,12 +12015,6 @@ namespace Norbix.Sdk.Types.Hub;
         ///</summary>
         [DataMember]
         public virtual string Title { get; set; }
-
-        ///<summary>
-        ///When true (default), rejects the rename if another schema already owns the derived slug. Leave true unless explicitly asked to bypass the uniqueness check.
-        ///</summary>
-        [DataMember]
-        public virtual bool RenameUniqueName { get; set; }
     }
 
     [NorbixRoute("/{version}/database/schemas", "POST")]
@@ -12060,7 +12074,7 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual string? DataSchema { get; set; }
 
         ///<summary>
-        ///Raw JSON string matching the Norbix UI/visual meta-schema (https://norbix.ai/schemas/ui/v1.json) for the draft's record form.
+        ///OPTIONAL raw JSON string matching the Norbix UI/visual meta-schema (https://norbix.ai/schemas/ui/v1.json) for the draft's record form. If omitted or invalid, the backend auto-generates a flat-list form from the data schema.
         ///</summary>
         [DataMember]
         public virtual string? VisualSchema { get; set; }
@@ -12213,7 +12227,7 @@ namespace Norbix.Sdk.Types.Hub;
         : CodeMashRequestBase, INorbixRequest<IdResponse>
     {
         ///<summary>
-        ///Empty to create a new taxonomy; set to an existing taxonomy id (from get_database_taxonomies) to update it.
+        ///Empty to create a new taxonomy; set to an existing taxonomy id (from get_database_taxonomies) to update it. An update replaces the whole taxonomy: send every field you want to keep (parentId, dependencies, description, schemas).
         ///</summary>
         [DataMember]
         public virtual string? ViewId { get; set; }
@@ -12781,7 +12795,7 @@ namespace Norbix.Sdk.Types.Hub;
         : CodeMashListPaginationRequestBase, INorbixRequest<GetEmailCampaignBatchesResponse>
     {
         ///<summary>
-        ///The email campaign id to list batches for. Get it from get_all_email_campaigns.
+        ///The email campaign id to list batches for. Get it from get_email_campaigns.
         ///</summary>
         public virtual string Id { get; set; }
 
@@ -12815,7 +12829,7 @@ namespace Norbix.Sdk.Types.Hub;
         : CodeMashListPaginationRequestBase, INorbixRequest<GetEmailCampaignBatchNotificationResponse>
     {
         ///<summary>
-        ///The email campaign id. Get it from get_all_email_campaigns.
+        ///The email campaign id. Get it from get_email_campaigns.
         ///</summary>
         public virtual string Id { get; set; }
 
@@ -12849,7 +12863,7 @@ namespace Norbix.Sdk.Types.Hub;
         : CodeMashListPaginationRequestBase, INorbixRequest<GetEmailCampaignBatchNotificationsResponse>
     {
         ///<summary>
-        ///The email campaign id. Get it from get_all_email_campaigns.
+        ///The email campaign id. Get it from get_email_campaigns.
         ///</summary>
         public virtual string Id { get; set; }
 
@@ -12929,7 +12943,7 @@ namespace Norbix.Sdk.Types.Hub;
         : CodeMashRequestBase, INorbixRequest<GetEmailCampaignStatisticsResponse>
     {
         ///<summary>
-        ///The email campaign id to get statistics for. Get it from get_all_email_campaigns.
+        ///The email campaign id to get statistics for. Get it from get_email_campaigns.
         ///</summary>
         public virtual string Id { get; set; }
 
@@ -13004,7 +13018,7 @@ namespace Norbix.Sdk.Types.Hub;
         : CodeMashListPaginationRequestBase, INorbixRequest<GetEmailCampaignMessagesResponse>
     {
         ///<summary>
-        ///The email campaign id. Get it from get_all_email_campaigns.
+        ///The email campaign id. Get it from get_email_campaigns.
         ///</summary>
         public virtual string CampaignId { get; set; }
 
@@ -17605,22 +17619,6 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual Dictionary<string, string>? ExtraHeaders { get; set; }
     }
 
-    public partial class IngestSourceMessage
-    {
-        public virtual string ProjectId { get; set; }
-        public virtual string? Env { get; set; }
-        public virtual string? OwnerAuthId { get; set; }
-        public virtual string SourceKind { get; set; }
-        public virtual string SourceId { get; set; }
-        public virtual string? Title { get; set; }
-        public virtual string? ContentType { get; set; }
-        public virtual string? Content { get; set; }
-        public virtual string? EmbeddingIntegrationId { get; set; }
-        public virtual bool Removed { get; set; }
-        public virtual Dictionary<string, string>? Metadata { get; set; }
-        public virtual bool OwnerRequired { get; set; }
-    }
-
     [NorbixRoute("/{version}/echo", "GET")]
     public partial class Echo
         : RequestBase, INorbixRequest<EchoResponse>, INorbixOptionalAuth
@@ -17840,52 +17838,6 @@ namespace Norbix.Sdk.Types.Hub;
     {
         Iam,
         CrossAccountRole,
-    }
-
-    public partial class ProcessCollectionImport
-    {
-        public virtual string ImportId { get; set; }
-        public virtual string ProjectId { get; set; }
-        public virtual string AccountId { get; set; }
-        public virtual string DatabaseIntegrationId { get; set; }
-        public virtual string? Env { get; set; }
-    }
-
-    public partial class TermDeleted
-    {
-        public virtual ProjectId ProjectId { get; set; }
-        public virtual IntegrationId DatabaseIntegrationId { get; set; }
-        public virtual TaxonomyId TaxonomyId { get; set; }
-        public virtual string Id { get; set; }
-        public virtual Object Document { get; set; }
-    }
-
-    public partial class TermInserted
-    {
-        public virtual ProjectId ProjectId { get; set; }
-        public virtual IntegrationId DatabaseIntegrationId { get; set; }
-        public virtual TaxonomyId TaxonomyId { get; set; }
-        public virtual string Id { get; set; }
-        public virtual Object Document { get; set; }
-    }
-
-    public partial class TermsDeleted
-    {
-        public virtual ProjectId ProjectId { get; set; }
-        public virtual IntegrationId DatabaseIntegrationId { get; set; }
-        public virtual TaxonomyId TaxonomyId { get; set; }
-        public virtual long DeletedCount { get; set; }
-        public virtual Object Filter { get; set; }
-    }
-
-    public partial class TermUpdated
-    {
-        public virtual ProjectId ProjectId { get; set; }
-        public virtual IntegrationId DatabaseIntegrationId { get; set; }
-        public virtual TaxonomyId TaxonomyId { get; set; }
-        public virtual string Id { get; set; }
-        public virtual Object From { get; set; }
-        public virtual Object To { get; set; }
     }
 
     public enum SmtpPorts
