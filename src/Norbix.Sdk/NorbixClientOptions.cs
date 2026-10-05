@@ -31,8 +31,9 @@ public sealed class NorbixClientOptions
     public string? ProjectId { get; set; }
 
     /// <summary>
-    /// Optional account ID. Required for Hub account-scoped endpoints
-    /// (team invite, billing portal, account verify). <c>NORBIX_ACCOUNT_ID</c>.
+    /// Optional account ID. Required for account-scoped endpoints.
+    /// <c>NORBIX_ACCOUNT_ID</c>. Account verify takes the account id in its
+    /// request instead.
     /// </summary>
     public string? AccountId { get; set; }
 

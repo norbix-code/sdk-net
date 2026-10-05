@@ -139,7 +139,7 @@ await norbix.Account.UpdateProjectDefaultLanguageAsync(
 
 | method | verb | path |
 |---|---|---|
-| `GetAccountRegionsAsync` | `GET` | `/account/regions` |
+| `GetAccountRegionsAsync` | `GET` | `/account/regions` (no token, no `AccountId`: sent with no `Authorization` header) |
 | `UpdateProjectRegionsAsync` | `PATCH` | `/account/projects/{projectId}/settings/regions` |
 
 ```csharp
