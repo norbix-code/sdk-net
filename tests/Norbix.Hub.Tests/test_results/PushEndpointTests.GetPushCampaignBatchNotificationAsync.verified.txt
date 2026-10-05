@@ -25,6 +25,7 @@
   ResponseType: GetPushCampaignBatchNotificationResponse,
   Response: {
     CampaignNotification: {
+      Subject: test-subject,
       Recipients: {
         HasMore: false
       },
@@ -33,7 +34,6 @@
       BatchId: Guid_1,
       NotificationId: Guid_1,
       RefNotificationId: Guid_1,
-      Subject: test-subject,
       Body: test-body
     },
     ResponseStatus: {

@@ -10,7 +10,7 @@
   Sent: {
     Method: GET,
     Path: /v2/notifications/sms/campaigns,
-    Query: ?databaseIntegrationId={guid}&templateId={guid}&from=1&to=1&env=test-env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1,
+    Query: ?databaseIntegrationId={guid}&campaignId={guid}&templateId={guid}&from=1&to=1&env=test-env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1,
     Headers: {
       Authorization: Bearer test-bearer,
       X-CM-AccountId: test-account,

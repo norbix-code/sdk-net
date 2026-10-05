@@ -757,6 +757,7 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual PushToDevicesDeliverySettingsDto? Typegen_98_PushToDevicesDeliverySettingsDto { get; set; }
         public virtual SmsToAllUsersDeliverySettingsDto? Typegen_99_SmsToAllUsersDeliverySettingsDto { get; set; }
         public virtual SmsToUsersDeliverySettingsDto? Typegen_100_SmsToUsersDeliverySettingsDto { get; set; }
+        public virtual SmsToAccountUsersDeliverySettingsDto? Typegen_249_SmsToAccountUsersDeliverySettingsDto { get; set; }
         public virtual SmsToCollectionRecordsDeliverySettingsDto? Typegen_101_SmsToCollectionRecordsDeliverySettingsDto { get; set; }
         public virtual SmsToPhoneNumbersDeliverySettingsDto? Typegen_102_SmsToPhoneNumbersDeliverySettingsDto { get; set; }
         public virtual OpenAiLlmIntegrationDto? Typegen_103_OpenAiLlmIntegrationDto { get; set; }
@@ -2569,9 +2570,6 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual string? RefNotificationId { get; set; }
 
         [DataMember]
-        public virtual string? Subject { get; set; }
-
-        [DataMember]
         public virtual string? Body { get; set; }
 
         [DataMember]
@@ -2657,6 +2655,9 @@ namespace Norbix.Sdk.Types.Hub;
     public partial class EmailCampaignBatchNotificationDto
         : CampaignBatchNotificationDto
     {
+        [DataMember]
+        public virtual string? Subject { get; set; }
+
         [DataMember]
         public virtual EmailRecipientsDto Recipients { get; set; }
 
@@ -2883,6 +2884,9 @@ namespace Norbix.Sdk.Types.Hub;
         : CampaignBatchNotificationDto
     {
         [DataMember]
+        public virtual string? Subject { get; set; }
+
+        [DataMember]
         public virtual PushRecipientsDto Recipients { get; set; }
 
         [DataMember]
@@ -3066,6 +3070,9 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember]
         public virtual SmsTemplateDto Template { get; set; }
+
+        [DataMember]
+        public virtual string? CreatedById { get; set; }
     }
 
     [DataContract]
@@ -3101,6 +3108,14 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember]
         public virtual bool HasMore { get; set; }
+    }
+
+    [DataContract]
+    public partial class SmsToAccountUsersDeliverySettingsDto
+        : SmsCampaignDeliverySettingsDto
+    {
+        [DataMember]
+        public virtual HashSet<string> Recipients { get; set; } = [];
     }
 
     [DataContract]
@@ -6627,9 +6642,6 @@ namespace Norbix.Sdk.Types.Hub;
         : IHasRazorTemplateCode
     {
         [DataMember]
-        public virtual string Subject { get; set; }
-
-        [DataMember]
         public virtual string Body { get; set; }
     }
 
@@ -7444,6 +7456,30 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual LicenseDomainVerificationChallengeDto? Challenge { get; set; }
     }
 
+    [NorbixRoute("/{version}/account/me", "GET")]
+    public partial class GetMyAccountUserProfile
+        : RequestBase, INorbixRequest<GetMyAccountUserProfileResponse>
+    {
+    }
+
+    public partial class GetMyAccountUserProfileResponse
+        : ResponseBase
+    {
+        public virtual AuthDto? Item { get; set; }
+    }
+
+    [NorbixRoute("/{version}/account/me/phone", "PUT")]
+    [DataContract]
+    public partial class UpdateMyAccountUserPhone
+        : RequestBase, INorbixRequest<EmptyResponse>
+    {
+        ///<summary>
+        ///Your phone number in E.164 format (+ and the country code, then digits, e.g. +37060000000). Empty clears it. Used by "Account users" SMS campaigns.
+        ///</summary>
+        [DataMember]
+        public virtual string? Phone { get; set; }
+    }
+
     [NorbixRoute("/{version}/account/userauth/email/confirm-verification", "POST")]
     [DataContract]
     public partial class AccountConfirmEmailVerificationRequest
@@ -7756,7 +7792,20 @@ namespace Norbix.Sdk.Types.Hub;
         ///</summary>
         public virtual HashSet<string>? RoleNames { get; set; }
 
-        public virtual PagingArgs? PagingArgs { get; set; }
+        ///<summary>
+        ///Cursor token — fetch the page AFTER this member (the list's startingAfter).
+        ///</summary>
+        public virtual string? StartingAfter { get; set; }
+
+        ///<summary>
+        ///Cursor token — fetch the page BEFORE this member.
+        ///</summary>
+        public virtual string? EndingBefore { get; set; }
+
+        ///<summary>
+        ///Members per page (default 20).
+        ///</summary>
+        public virtual int? PageSize { get; set; }
     }
 
     public partial class GetAccountCollaboratorsResponse
@@ -16483,6 +16532,12 @@ namespace Norbix.Sdk.Types.Hub;
         [DataMember]
         public virtual SmsToUsersDeliverySettingsDto? SpecifiedUsers { get; set; }
 
+        ///<summary>
+        ///For deliveryType 'AccountUsers'. JSON object: {"recipientsSourceType":"AccountUsers","recipients":[<account owner / team member ids>],"campaignTime":<unix seconds UTC>}. Members without a phone number are skipped.
+        ///</summary>
+        [DataMember]
+        public virtual SmsToAccountUsersDeliverySettingsDto? AccountUsers { get; set; }
+
         [DataMember]
         public virtual SmsToCollectionRecordsDeliverySettingsDto? Collection { get; set; }
 
@@ -16640,6 +16695,11 @@ namespace Norbix.Sdk.Types.Hub;
         ///Optional. Omit to use the project default database integration (resolved per environment).
         ///</summary>
         public virtual string? DatabaseIntegrationId { get; set; }
+
+        ///<summary>
+        ///Optional: return only the campaign with this id.
+        ///</summary>
+        public virtual string? CampaignId { get; set; }
 
         ///<summary>
         ///Optional: only campaigns built on this SMS template id.

@@ -33,8 +33,10 @@
       BatchId: Guid_1,
       NotificationId: Guid_1,
       RefNotificationId: Guid_1,
-      Subject: test-subject,
-      Body: test-body
+      Body: test-body,
+      Model: {
+        sample-key: test-string
+      }
     },
     ResponseStatus: {
       IsSuccess: true

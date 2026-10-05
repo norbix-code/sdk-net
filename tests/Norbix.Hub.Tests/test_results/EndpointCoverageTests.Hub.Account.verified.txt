@@ -1,7 +1,7 @@
 ﻿{
   Target: Hub,
   Group: account,
-  Count: 117,
+  Count: 119,
   Endpoints: [
     {
       Target: Hub,
@@ -575,6 +575,72 @@
         }
       },
       ResponseType: GetLicensesResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: account,
+      MethodName: GetMyAccountUserProfileAsync,
+      RequestType: GetMyAccountUserProfile,
+      HttpMethod: GET,
+      Path: /{version}/account/me,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/account/me,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: GetMyAccountUserProfileResponse,
+      Response: {
+        Item: {
+          Id: Guid_1,
+          Email: user@example.test,
+          UserName: test-userName,
+          Registration: {},
+          Login: {
+            NeedChangePasswordOnNextLogin: false
+          },
+          GeneralInfo: {
+            BlockAllMarketingMessages: false
+          }
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: account,
+      MethodName: UpdateMyAccountUserPhoneAsync,
+      RequestType: UpdateMyAccountUserPhone,
+      HttpMethod: PUT,
+      Path: /{version}/account/me/phone,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: PUT,
+        Path: /v2/account/me/phone,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          phone: test-phone
+        }
+      },
+      ResponseType: EmptyResponse,
       Response: {
         ResponseStatus: {
           IsSuccess: true
@@ -1161,7 +1227,7 @@
       Sent: {
         Method: GET,
         Path: /v2/account/collaborators,
-        Query: ?includeAccountOwner=True&userShouldHavePushDevice=True&pagingArgs=Norbix.Sdk.Types.Hub.PagingArgs,
+        Query: ?includeAccountOwner=True&userShouldHavePushDevice=True&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1,
         Headers: {
           Authorization: Bearer test-bearer,
           X-CM-AccountId: test-account,
