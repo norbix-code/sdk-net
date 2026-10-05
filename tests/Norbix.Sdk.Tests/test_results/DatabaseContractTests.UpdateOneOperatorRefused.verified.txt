@@ -1,0 +1,5 @@
+﻿{
+  HttpStatus: 400,
+  ErrorCode: CM-ERRORS-DATABASE-035,
+  Message: The update document must not contain $ operators.
+}

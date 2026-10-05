@@ -1,0 +1,31 @@
+﻿{
+  Sent: {
+    Method: GET,
+    Path: /v2/database/taxonomies,
+    Headers: {
+      Authorization: Bearer test-bearer,
+      X-CM-AccountId: test-account,
+      X-CM-ProjectId: test-project
+    }
+  },
+  Taxonomies: [
+    {
+      ViewId: tax-colors,
+      TaxonomyName: Colors,
+      TaxonomySlug: colors,
+      Dependencies: [
+        tax-sizes,
+        tax-gone
+      ],
+      DependencyRefs: [
+        {
+          Id: tax-sizes,
+          Name: Sizes
+        },
+        {
+          Id: tax-gone
+        }
+      ]
+    }
+  ]
+}

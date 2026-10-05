@@ -1,0 +1,18 @@
+﻿{
+  Sent: {
+    Method: GET,
+    Path: /v2/database/schemas/triggers,
+    Query: ?env=test,
+    Headers: {
+      Authorization: Bearer test-bearer,
+      X-CM-AccountId: test-account,
+      X-CM-ProjectId: test-project
+    }
+  },
+  Rows: [
+    {
+      ViewId: trg_1,
+      Env: test
+    }
+  ]
+}

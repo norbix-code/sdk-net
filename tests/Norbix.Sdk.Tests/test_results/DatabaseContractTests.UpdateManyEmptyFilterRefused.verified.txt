@@ -1,0 +1,18 @@
+﻿{
+  Sent: {
+    Method: PUT,
+    Path: /v2/database/collections/orders/many,
+    Headers: {
+      Authorization: Bearer test-api-key,
+      Content-Type: application/json; charset=utf-8,
+      X-CM-ProjectId: test-project
+    },
+    Body: {
+      filter: {},
+      update: {"status":"archived"}
+    }
+  },
+  HttpStatus: 400,
+  ErrorCode: CM-ERRORS-DATABASE-037,
+  Message: An empty filter matches every record. Set allRecords to true to confirm.
+}

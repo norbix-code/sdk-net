@@ -1,0 +1,13 @@
+﻿{
+  Method: PUT,
+  Path: /v2/database/schemas/sch_orders/rename,
+  Headers: {
+    Authorization: Bearer test-bearer,
+    Content-Type: application/json; charset=utf-8,
+    X-CM-AccountId: test-account,
+    X-CM-ProjectId: test-project
+  },
+  Body: {
+    title: Customer Orders
+  }
+}
