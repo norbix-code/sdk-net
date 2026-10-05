@@ -1,0 +1,10 @@
+﻿{
+  Method: GET,
+  Path: /v2/notifications/sms/campaigns,
+  Query: ?campaignId=camp-1&pageSize=10,
+  Headers: {
+    Authorization: Bearer test-bearer,
+    X-CM-AccountId: test-account,
+    X-CM-ProjectId: test-project
+  }
+}

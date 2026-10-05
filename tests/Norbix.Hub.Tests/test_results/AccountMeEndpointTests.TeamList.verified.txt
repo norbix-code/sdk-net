@@ -1,0 +1,9 @@
+﻿{
+  Method: GET,
+  Path: /v2/account/collaborators,
+  Query: ?includeAccountOwner=False&userShouldHavePushDevice=False&projectId=proj-1&startingAfter=member-20&pageSize=50,
+  Headers: {
+    Authorization: Bearer test-bearer,
+    X-CM-ProjectId: test-project
+  }
+}

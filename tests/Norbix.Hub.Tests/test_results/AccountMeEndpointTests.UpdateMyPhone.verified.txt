@@ -1,0 +1,12 @@
+﻿{
+  Method: PUT,
+  Path: /v2/account/me/phone,
+  Headers: {
+    Authorization: Bearer test-bearer,
+    Content-Type: application/json; charset=utf-8,
+    X-CM-ProjectId: test-project
+  },
+  Body: {
+    phone: +37060000000
+  }
+}
