@@ -1,0 +1,5 @@
+﻿{
+  HttpStatus: 400,
+  ErrorCode: CM-ERRORS-DATABASE-036,
+  Message: Invalid record document
+}

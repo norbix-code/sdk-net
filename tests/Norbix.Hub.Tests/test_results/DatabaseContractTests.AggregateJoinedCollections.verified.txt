@@ -1,0 +1,15 @@
+﻿{
+  Sent: {
+    Method: GET,
+    Path: /v2/database/aggregates/agg_1,
+    Query: ?schemaId=sch_orders,
+    Headers: {
+      Authorization: Bearer test-bearer,
+      X-CM-AccountId: test-account,
+      X-CM-ProjectId: test-project
+    }
+  },
+  JoinedCollections: [
+    customers
+  ]
+}

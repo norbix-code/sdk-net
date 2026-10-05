@@ -1,0 +1,15 @@
+﻿{
+  Sent: {
+    Method: DELETE,
+    Path: /v2/database/collections/orders/many,
+    Query: ?filter=%7b%7d,
+    Headers: {
+      Authorization: Bearer test-bearer,
+      X-CM-AccountId: test-account,
+      X-CM-ProjectId: test-project
+    }
+  },
+  HttpStatus: 400,
+  ErrorCode: CM-ERRORS-DATABASE-037,
+  Message: An empty filter matches every record. Set allRecords to true to confirm.
+}

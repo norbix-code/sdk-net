@@ -1,0 +1,9 @@
+﻿{
+  Method: DELETE,
+  Path: /v2/database/collections/orders/many,
+  Query: ?filter=%7b%7d&allRecords=True,
+  Headers: {
+    Authorization: Bearer test-api-key,
+    X-CM-ProjectId: test-project
+  }
+}
