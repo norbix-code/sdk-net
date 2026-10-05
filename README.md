@@ -186,7 +186,7 @@ foreach (var region in echo!.Regions ?? [])
 }
 ```
 
-With the `Norbix.Hub` package, the account module lists the regions available to your account:
+With the `Norbix.Hub` package, the account module lists the regions available to your account (no token needed — the sign-up form calls it before there is a session):
 
 ```csharp
 using Norbix.Sdk.Types.Hub;
@@ -225,7 +225,8 @@ Every other project setting (name, CORS, languages, admin URL, legal, Admin Port
 ## Project vs Account Scope
 
 - `ProjectId` is required. The SDK works at project scope by default.
-- `AccountId` is optional. When set, account-scoped Hub endpoints (team invite, billing portal, account verify) become callable. Calling them without `AccountId` throws `NORBIX_ACCOUNT_SCOPE_REQUIRED` before the request leaves your machine.
+- `AccountId` is optional. When set, account-scoped endpoints become callable. Calling one without `AccountId` throws `NORBIX_ACCOUNT_SCOPE_REQUIRED` before the request leaves your machine.
+- Four account calls need no token and no `AccountId`, and are always sent with no `Authorization` header: `CreateAccountAsync` (sign-up), `CreateTeamMemberFromInvitationAsync` (join a team from an invitation), `GetAccountRegionsAsync` and `VerifyAccountAsync`. `VerifyAccountAsync` takes the account id once, in the request (`new VerifyAccount { AccountId = ..., Token = ... }`), and sends it in the query.
 
 ## Integration Guides
 
