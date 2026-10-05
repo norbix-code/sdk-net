@@ -278,11 +278,11 @@ The public endpoint surface is generated from gateway DTOs at compile time. The 
 | `membership` | 18 | User CRUD, registration, preferences, roles, and permissions. |
 | `public` | 2 | The project's public config and legal documents, read by the Admin Portal before sign-in (`GetPublicProjectConfigAsync`, `GetPublicProjectLegalAsync`). See [docs/hub/project.md](./docs/hub/project.md#public-config-and-legal-no-sign-in). |
 
-### Hub — project & account configuration (523 endpoints)
+### Hub — project & account configuration (525 endpoints)
 
 | Module | Endpoints | Description |
 | --- | ---: | --- |
-| `account` | 108 | Account profile, status, projects, regions, team invites, billing, verification; project AI settings and assistants (`GetProjectAiSettingsAsync`, `UpdateProjectAiSettingsAsync`, `CreateProjectAiAssistantAsync`, `UpdateProjectAiAssistantAsync`, `DeleteProjectAiAssistantAsync`), AI wallet usage (`GetProjectAiUsageAsync`), the Admin Portal switch (`SetAdminPortalEnabledAsync`), `CheckProjectLanguagesAsync` (which email, push and SMS templates miss a proposed project language — call it before changing the languages). Project settings, CORS, admin portal, legal, AI service users: [docs/hub/project.md](./docs/hub/project.md). |
+| `account` | 110 | Account profile, status, projects, regions, team invites, billing, verification; your own account user (`GetMyAccountUserProfileAsync`, `UpdateMyAccountUserPhoneAsync` — the phone "Account users" SMS campaigns send to); the team list (`GetAccountCollaboratorsAsync`: flat `PageSize` / `StartingAfter` / `EndingBefore`, optional `ProjectId`); project AI settings and assistants (`GetProjectAiSettingsAsync`, `UpdateProjectAiSettingsAsync`, `CreateProjectAiAssistantAsync`, `UpdateProjectAiAssistantAsync`, `DeleteProjectAiAssistantAsync`), AI wallet usage (`GetProjectAiUsageAsync`), the Admin Portal switch (`SetAdminPortalEnabledAsync`), `CheckProjectLanguagesAsync` (which email, push and SMS templates miss a proposed project language — call it before changing the languages). Project settings, CORS, admin portal, legal, AI service users: [docs/hub/project.md](./docs/hub/project.md). |
 | `ai` | 20 | LLM, MCP and embedding integration configuration and tests (`SaveEmbeddingIntegrationAsync`, `TestEmbeddingIntegrationAsync`, …); `SetLlmIntegrationAsDefaultAsync`. LLM and MCP: [docs/hub/project.md](./docs/hub/project.md#llm-integrations). |
 | `database` | 41 | Schemas, integrations, saved aggregates, taxonomies, triggers, module settings. |
 | `echo` | 1 | Smoke-test echo endpoint. |
