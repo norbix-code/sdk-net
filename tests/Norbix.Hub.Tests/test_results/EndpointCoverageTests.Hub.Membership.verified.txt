@@ -351,18 +351,21 @@
       Group: membership,
       MethodName: DisableMembershipAsync,
       RequestType: DisableMembership,
-      HttpMethod: GET,
+      HttpMethod: PUT,
       Path: /{version}/membership/disable,
       IsAccountScoped: false,
       IsUnauthenticated: false,
       Sent: {
-        Method: GET,
+        Method: PUT,
         Path: /v2/membership/disable,
-        Query: ?env=test-env,
         Headers: {
           Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
           X-CM-AccountId: test-account,
           X-CM-ProjectId: test-project
+        },
+        Body: {
+          env: test-env
         }
       },
       ResponseType: EmptyResponse,
@@ -377,18 +380,21 @@
       Group: membership,
       MethodName: EnableMembershipAsync,
       RequestType: EnableMembership,
-      HttpMethod: GET,
+      HttpMethod: PUT,
       Path: /{version}/membership/enable,
       IsAccountScoped: false,
       IsUnauthenticated: false,
       Sent: {
-        Method: GET,
+        Method: PUT,
         Path: /v2/membership/enable,
-        Query: ?env=test-env,
         Headers: {
           Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
           X-CM-AccountId: test-account,
           X-CM-ProjectId: test-project
+        },
+        Body: {
+          env: test-env
         }
       },
       ResponseType: EmptyResponse,

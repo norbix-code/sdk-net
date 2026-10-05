@@ -8,18 +8,21 @@
       Group: code,
       MethodName: DisableCodeAsync,
       RequestType: DisableCode,
-      HttpMethod: GET,
+      HttpMethod: PUT,
       Path: /{version}/code/disable,
       IsAccountScoped: false,
       IsUnauthenticated: false,
       Sent: {
-        Method: GET,
+        Method: PUT,
         Path: /v2/code/disable,
-        Query: ?env=test-env,
         Headers: {
           Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
           X-CM-AccountId: test-account,
           X-CM-ProjectId: test-project
+        },
+        Body: {
+          env: test-env
         }
       },
       ResponseType: EmptyResponse,
@@ -34,18 +37,21 @@
       Group: code,
       MethodName: EnableCodeAsync,
       RequestType: EnableCode,
-      HttpMethod: GET,
+      HttpMethod: PUT,
       Path: /{version}/code/enable,
       IsAccountScoped: false,
       IsUnauthenticated: false,
       Sent: {
-        Method: GET,
+        Method: PUT,
         Path: /v2/code/enable,
-        Query: ?env=test-env,
         Headers: {
           Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
           X-CM-AccountId: test-account,
           X-CM-ProjectId: test-project
+        },
+        Body: {
+          env: test-env
         }
       },
       ResponseType: EmptyResponse,

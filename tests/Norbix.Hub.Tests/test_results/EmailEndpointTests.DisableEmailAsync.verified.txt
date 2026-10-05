@@ -3,18 +3,21 @@
   Group: notifications,
   MethodName: DisableEmailAsync,
   RequestType: DisableEmail,
-  HttpMethod: GET,
+  HttpMethod: PUT,
   Path: /{version}/notifications/email/disable,
   IsAccountScoped: false,
   IsUnauthenticated: false,
   Sent: {
-    Method: GET,
+    Method: PUT,
     Path: /v2/notifications/email/disable,
-    Query: ?env=test-env,
     Headers: {
       Authorization: Bearer test-bearer,
+      Content-Type: application/json; charset=utf-8,
       X-CM-AccountId: test-account,
       X-CM-ProjectId: test-project
+    },
+    Body: {
+      env: test-env
     }
   },
   ResponseType: EmptyResponse,

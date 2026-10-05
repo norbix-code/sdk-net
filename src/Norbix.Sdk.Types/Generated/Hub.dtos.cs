@@ -849,6 +849,8 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual WebhookDestinationDto? Typegen_193_WebhookDestinationDto { get; set; }
         public virtual SchedulerTaskDto? Typegen_194_SchedulerTaskDto { get; set; }
         public virtual EmailCampaignSchedulerTaskRequest? Typegen_249_EmailCampaignSchedulerTaskRequest { get; set; }
+        public virtual SmsCampaignSchedulerTaskRequest? Typegen_250_SmsCampaignSchedulerTaskRequest { get; set; }
+        public virtual PushCampaignSchedulerTaskRequest? Typegen_251_PushCampaignSchedulerTaskRequest { get; set; }
         public virtual MongoDbAggregateDto? Typegen_195_MongoDbAggregateDto { get; set; }
         public virtual MarketplaceIntegrationDto? Typegen_196_MarketplaceIntegrationDto { get; set; }
         public virtual MarketplaceFunctionDto? Typegen_197_MarketplaceFunctionDto { get; set; }
@@ -2614,6 +2616,12 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual string? Notes { get; set; }
 
         [DataMember]
+        public virtual string? CreatedById { get; set; }
+
+        [DataMember]
+        public virtual string? TimeZoneId { get; set; }
+
+        [DataMember]
         public virtual string UserId { get; set; }
 
         [DataMember]
@@ -3070,9 +3078,6 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember]
         public virtual SmsTemplateDto Template { get; set; }
-
-        [DataMember]
-        public virtual string? CreatedById { get; set; }
     }
 
     [DataContract]
@@ -4194,6 +4199,9 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember]
         public virtual string? Description { get; set; }
+
+        [DataMember]
+        public virtual string? Env { get; set; }
     }
 
     public partial class SchemaListSettingsDto
@@ -4340,6 +4348,18 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember]
         public virtual string? ParentId { get; set; }
+
+        [DataMember]
+        public virtual string? Description { get; set; }
+
+        [DataMember]
+        public virtual List<string>? Dependencies { get; set; }
+
+        [DataMember]
+        public virtual string? ParentName { get; set; }
+
+        [DataMember]
+        public virtual List<string>? DependencyNames { get; set; }
     }
 
     public partial class TaxonomyTreeDto
@@ -9857,13 +9877,13 @@ namespace Norbix.Sdk.Types.Hub;
     {
     }
 
-    [NorbixRoute("/{version}/code/disable", "GET")]
+    [NorbixRoute("/{version}/code/disable", "PUT")]
     public partial class DisableCode
         : CodeMashRequestBase, INorbixRequest<EmptyResponse>
     {
     }
 
-    [NorbixRoute("/{version}/code/enable", "GET")]
+    [NorbixRoute("/{version}/code/enable", "PUT")]
     public partial class EnableCode
         : CodeMashRequestBase, INorbixRequest<EmptyResponse>
     {
@@ -10824,13 +10844,13 @@ namespace Norbix.Sdk.Types.Hub;
     ///<summary>
     ///Disable database service
     ///</summary>
-    [NorbixRoute("/{version}/database/disable", "GET")]
+    [NorbixRoute("/{version}/database/disable", "PUT")]
     public partial class DisableDatabase
         : CodeMashRequestBase, INorbixRequest<EmptyResponse>
     {
     }
 
-    [NorbixRoute("/{version}/database/enable", "GET")]
+    [NorbixRoute("/{version}/database/enable", "PUT")]
     public partial class EnableDatabase
         : CodeMashRequestBase, INorbixRequest<EmptyResponse>
     {
@@ -12610,7 +12630,7 @@ namespace Norbix.Sdk.Types.Hub;
     ///<summary>
     ///Disable email service
     ///</summary>
-    [NorbixRoute("/{version}/notifications/email/disable", "GET")]
+    [NorbixRoute("/{version}/notifications/email/disable", "PUT")]
     public partial class DisableEmail
         : CodeMashRequestBase, INorbixRequest<EmptyResponse>
     {
@@ -12619,7 +12639,7 @@ namespace Norbix.Sdk.Types.Hub;
     ///<summary>
     ///Enable email service
     ///</summary>
-    [NorbixRoute("/{version}/notifications/email/enable", "GET")]
+    [NorbixRoute("/{version}/notifications/email/enable", "PUT")]
     public partial class EnableEmail
         : CodeMashRequestBase, INorbixRequest<EmptyResponse>
     {
@@ -13697,13 +13717,13 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual string IntegrationId { get; set; }
     }
 
-    [NorbixRoute("/{version}/files/disable", "GET")]
+    [NorbixRoute("/{version}/files/disable", "PUT")]
     public partial class DisableFiles
         : CodeMashRequestBase, INorbixRequest<EmptyResponse>
     {
     }
 
-    [NorbixRoute("/{version}/files/enable", "GET")]
+    [NorbixRoute("/{version}/files/enable", "PUT")]
     public partial class EnableFiles
         : CodeMashRequestBase, INorbixRequest<EmptyResponse>
     {
@@ -14043,13 +14063,13 @@ namespace Norbix.Sdk.Types.Hub;
     ///<summary>
     ///Disable logging service
     ///</summary>
-    [NorbixRoute("/{version}/logs/disable", "GET")]
+    [NorbixRoute("/{version}/logs/disable", "PUT")]
     public partial class DisableLogging
         : CodeMashRequestBase, INorbixRequest<EmptyResponse>
     {
     }
 
-    [NorbixRoute("/{version}/logs/enable", "GET")]
+    [NorbixRoute("/{version}/logs/enable", "PUT")]
     public partial class EnableLogging
         : CodeMashRequestBase, INorbixRequest<EmptyResponse>
     {
@@ -14436,13 +14456,13 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual string IntegrationId { get; set; }
     }
 
-    [NorbixRoute("/{version}/membership/disable", "GET")]
+    [NorbixRoute("/{version}/membership/disable", "PUT")]
     public partial class DisableMembership
         : CodeMashRequestBase, INorbixRequest<EmptyResponse>
     {
     }
 
-    [NorbixRoute("/{version}/membership/enable", "GET")]
+    [NorbixRoute("/{version}/membership/enable", "PUT")]
     public partial class EnableMembership
         : CodeMashRequestBase, INorbixRequest<EmptyResponse>
     {
@@ -15136,7 +15156,7 @@ namespace Norbix.Sdk.Types.Hub;
     ///<summary>
     ///Disable payments service
     ///</summary>
-    [NorbixRoute("/{version}/payments/disable", "GET")]
+    [NorbixRoute("/{version}/payments/disable", "PUT")]
     public partial class DisablePayments
         : CodeMashRequestBase, INorbixRequest<EmptyResponse>
     {
@@ -15145,7 +15165,7 @@ namespace Norbix.Sdk.Types.Hub;
     ///<summary>
     ///Enable payments service
     ///</summary>
-    [NorbixRoute("/{version}/payments/enable", "GET")]
+    [NorbixRoute("/{version}/payments/enable", "PUT")]
     public partial class EnablePayments
         : CodeMashRequestBase, INorbixRequest<EmptyResponse>
     {
@@ -15443,7 +15463,7 @@ namespace Norbix.Sdk.Types.Hub;
     ///<summary>
     ///Disable push service
     ///</summary>
-    [NorbixRoute("/{version}/notifications/push/disable", "GET")]
+    [NorbixRoute("/{version}/notifications/push/disable", "PUT")]
     public partial class DisablePush
         : CodeMashRequestBase, INorbixRequest<EmptyResponse>
     {
@@ -15452,7 +15472,7 @@ namespace Norbix.Sdk.Types.Hub;
     ///<summary>
     ///Enable push service
     ///</summary>
-    [NorbixRoute("/{version}/notifications/push/enable", "GET")]
+    [NorbixRoute("/{version}/notifications/push/enable", "PUT")]
     public partial class EnablePush
         : CodeMashRequestBase, INorbixRequest<EmptyResponse>
     {
@@ -16414,6 +16434,14 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual PaginatedResponse<SchedulerTaskListProjection>? List { get; set; }
     }
 
+    public partial class PushCampaignSchedulerTaskRequest
+        : SchedulerTaskRequest
+    {
+        public virtual SchedulerTaskType Type { get; set; }
+        public virtual PushCampaignRequest? Campaign { get; set; }
+        public virtual string? DatabaseIntegrationId { get; set; }
+    }
+
     ///<summary>
     ///Save scheduled task
     ///</summary>
@@ -16452,10 +16480,18 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual SchedulerTaskType Type { get; set; }
     }
 
+    public partial class SmsCampaignSchedulerTaskRequest
+        : SchedulerTaskRequest
+    {
+        public virtual SchedulerTaskType Type { get; set; }
+        public virtual CreateSmsCampaignRequest? Campaign { get; set; }
+        public virtual string? DatabaseIntegrationId { get; set; }
+    }
+
     ///<summary>
     ///Disable SMS service
     ///</summary>
-    [NorbixRoute("/{version}/notifications/sms/disable", "GET")]
+    [NorbixRoute("/{version}/notifications/sms/disable", "PUT")]
     public partial class DisableSms
         : CodeMashRequestBase, INorbixRequest<EmptyResponse>
     {
@@ -16464,7 +16500,7 @@ namespace Norbix.Sdk.Types.Hub;
     ///<summary>
     ///Enable SMS service
     ///</summary>
-    [NorbixRoute("/{version}/notifications/sms/enable", "GET")]
+    [NorbixRoute("/{version}/notifications/sms/enable", "PUT")]
     public partial class EnableSms
         : CodeMashRequestBase, INorbixRequest<EmptyResponse>
     {

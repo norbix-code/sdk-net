@@ -1,5 +1,5 @@
 ﻿{
-  Method: GET,
+  Method: PUT,
   Path: /v2/files/enable,
   Headers: {
     Authorization: Bearer test-api-key,

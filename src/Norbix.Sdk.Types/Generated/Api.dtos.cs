@@ -2387,6 +2387,9 @@ namespace Norbix.Sdk.Types.Api;
 
         [DataMember]
         public virtual string? Description { get; set; }
+
+        [DataMember]
+        public virtual string? Env { get; set; }
     }
 
     public partial class SchemaSettingsDto
