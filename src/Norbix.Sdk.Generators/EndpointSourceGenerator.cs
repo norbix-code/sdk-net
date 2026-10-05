@@ -589,7 +589,9 @@ public sealed partial class NorbixClient
                 sb.AppendLine($"            \"{Escape(route.Path)}\",");
                 sb.AppendLine($"            \"{verb}\",");
                 sb.AppendLine($"            {pathParamsLiteral},");
-                sb.AppendLine($"            {(ep.IsAccountScoped ? "true" : "false")},");
+                // The scope the transport applies: an AccountId field does not
+                // make an unauthenticated / optional-auth route account-scoped.
+                sb.AppendLine($"            {(scope == "Account" ? "true" : "false")},");
                 sb.AppendLine($"            {(scope == "Unauthenticated" ? "true" : "false")}),");
             }
         }
