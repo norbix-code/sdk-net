@@ -1,0 +1,12 @@
+﻿{
+  Sent: {
+    Method: GET,
+    Path: /v2/account/me,
+    Headers: {
+      Authorization: Bearer test-bearer,
+      X-CM-ProjectId: test-project
+    }
+  },
+  Email: ada@example.test,
+  Phone: +37060000000
+}

@@ -40,10 +40,9 @@ public sealed class SmsBodyVariantTests
     }
 
     /// <summary>
-    /// The four audiences the portal offers (All users · Specified users ·
-    /// Phone numbers · Collection). `AccountUsers` is also in the enum but the
-    /// request has no settings object for it, so it is not a shape a caller
-    /// can send — see the item file's findings.
+    /// The five audiences (All users · Specified users · Account users ·
+    /// Phone numbers · Collection). Account users are the account owner and
+    /// team members picked by id; the server skips members without a phone.
     /// </summary>
     public static IEnumerable<TestCaseData> CampaignDeliveries()
     {
@@ -77,6 +76,21 @@ public sealed class SmsBodyVariantTests
                 },
             }
         ).SetName("SpecifiedUsers");
+
+        yield return new TestCaseData(
+            new CreateSmsCampaignRequest
+            {
+                TemplateId = "tpl-1",
+                IntegrationId = "sms-int-1",
+                DeliveryType = SmsCampaignRecipientsSourceTypes.AccountUsers,
+                AccountUsers = new SmsToAccountUsersDeliverySettingsDto
+                {
+                    RecipientsSourceType = SmsCampaignRecipientsSourceTypes.AccountUsers,
+                    Recipients = new HashSet<string> { "owner-1", "member-2" },
+                    CampaignTime = 1_800_000_000,
+                },
+            }
+        ).SetName("AccountUsers");
 
         yield return new TestCaseData(
             new CreateSmsCampaignRequest
@@ -122,6 +136,24 @@ public sealed class SmsBodyVariantTests
 
         var settings = VerifyConfig.VerifySettings;
         settings.UseFileName($"SmsBodyVariantTests.Campaign.{campaign.DeliveryType}");
+        await Verifier.Verify(sent, settings);
+    }
+
+    /// <summary>
+    /// The campaign list takes an optional campaign id: the server then
+    /// returns only that campaign. It travels in the query string.
+    /// </summary>
+    [Test]
+    public async Task Campaign_list_carries_the_campaign_id_filter()
+    {
+        var sent = await SendAsync(client =>
+            client.Notifications.GetSmsCampaignsAsync(
+                new GetSmsCampaigns { CampaignId = "camp-1", PageSize = 10 }
+            )
+        );
+
+        var settings = VerifyConfig.VerifySettings;
+        settings.UseFileName("SmsBodyVariantTests.CampaignList.CampaignId");
         await Verifier.Verify(sent, settings);
     }
 
