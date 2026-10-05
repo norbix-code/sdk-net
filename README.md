@@ -300,6 +300,19 @@ The public endpoint surface is generated from gateway DTOs at compile time. The 
 | `webhooks` | 8 | Webhook integrations, destinations, tests, and module settings. |
 | `wellKnown` | 2 | OAuth discovery documents under `/.well-known`. |
 
+**Module on / off is `PUT`.** Every module switch — `Enable`/`Disable` for
+Database, Files, Email, SMS, Push, Payments, Logging, Membership, Code and
+Scheduler — is sent as `PUT` with `env` in the body. Older SDK versions sent the
+first nine as `GET`; the gateway still answers that `GET` for a while (it logs a
+deprecation warning) and will drop it after 0.2, so update the package. Your
+code does not change.
+
+`GetDatabaseSchemasAsync` (Hub and Api) returns only the schemas of the request
+environment (`norbix-env` header or `Env`, `PROD` when neither is set); each row
+carries its `Env`. The paging cursors (`StartingAfter` / `EndingBefore`) are now
+schema view ids (`sch_…`), so a cursor saved from an older gateway no longer
+matches.
+
 ## Working with terms
 
 A **taxonomy** is a named tree of **terms** (labels). A term can have one parent (a clean hierarchy) or several parents (the same item under many categories). Pick the call that matches what you want:

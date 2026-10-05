@@ -86,9 +86,9 @@ gateway writes them.
 
 | method | verb | path |
 |---|---|---|
-| `DisableSmsAsync` | `GET` | `/notifications/sms/disable` |
+| `DisableSmsAsync` | `PUT` | `/notifications/sms/disable` |
 | `GetSmsDisableDependenciesAsync` | `GET` | `/notifications/sms/disable-dependencies` |
-| `EnableSmsAsync` | `GET` | `/notifications/sms/enable` |
+| `EnableSmsAsync` | `PUT` | `/notifications/sms/enable` |
 | `GetSmsSettingsAsync` | `GET` | `/notifications/sms/settings` |
 
 ## Integrations
