@@ -379,11 +379,57 @@ many; those calls touch only the caller's own records.
 | `CM-ERRORS-DATABASE-037` | Empty filter `{}` on update many / delete many without `AllRecords = true`. |
 | `CM-ERRORS-MEMBERSHIP-USERS-012` | Change owner to a user who is not in the project (request environment). |
 | `CM-ERRORS-SCHEMA-002` | Rename to a name another schema in the same environment uses. |
+| `CM-ERRORS-SCHEMA-017` | Delete a schema that a schema trigger uses (the blocking trigger ids are in the metadata). |
 | `CM-ERRORS-SCHEMA-018` | Delete a schema that a saved aggregate starts on or joins. |
 | `CM-ERRORS-TAXONOMIES-005` | A taxonomy name longer than 40 characters on a term read. |
 | `CM-ERRORS-TAXONOMIES-010` | The taxonomy name is unknown (term tree, merged tree). |
 | `CM-ERRORS-TAXONOMIES-011` | The term tree has more than 5000 terms (whole taxonomy, merged tree, `IncludeTerms`). |
 | `CM-ERRORS-TRIGGERS-002` | Schema trigger not found in the request environment, or a save that moves an existing trigger id to another schema. |
+
+### Schema delete drops the records; webhook `eventId` (gateway 2026-10-06)
+
+**Deleting a schema also deletes its records.** `DeleteDatabaseSchemaAsync`
+(Hub, `DELETE /{version}/database/schemas/{Id}`) now also drops the schema's
+collection (its records and indexes) in the request environment, in every
+active database integration of that environment. For a schema with AI embed
+on, its records are removed from the AI knowledge too. There is no undo, so
+export the records first if you need them. The delete is still refused while a
+schema trigger (`CM-ERRORS-SCHEMA-017`) or a saved aggregate
+(`CM-ERRORS-SCHEMA-018`) uses the schema; then nothing is dropped. A retry is
+safe. The request and response did not change.
+
+**Outbound webhooks carry `eventId`.** The JSON body Norbix POSTs to your
+webhook destination is:
+
+```json
+{ "id": "…", "eventId": "…", "event": "…", "createdOn": "…",
+  "accountId": "…", "projectId": "…", "triggerId": null, "data": { } }
+```
+
+This SDK has no type for it (it is not one of the generated DTOs); read it with
+`System.Text.Json` in your receiver.
+
+- `id` is one per delivery. A retry of the same delivery keeps its `id` — use
+  it to drop retries.
+- `eventId` is one per change. Every delivery made for ONE record change
+  carries the same `eventId`: the plain webhook delivery and each schema
+  Webhook-trigger delivery. A destination that is subscribed to the event AND
+  targeted by a schema Webhook trigger gets two deliveries (one with
+  `triggerId` null, one with `triggerId` set): two `id`s, one `eventId`.
+- Where there is no shared event (Files, Membership, Payments, AI triggers),
+  `eventId` equals `id`. Older gateways do not send `eventId`; fall back to
+  `id`.
+
+De-duplicate on `eventId`:
+
+```csharp
+using var doc = JsonDocument.Parse(rawBody);
+var root = doc.RootElement;
+var eventId = root.TryGetProperty("eventId", out var e) && e.ValueKind == JsonValueKind.String
+    ? e.GetString()!
+    : root.GetProperty("id").GetString()!;   // older gateway: no eventId
+if (!processedEventIds.Add(eventId)) return Results.Ok();   // same change, already handled
+```
 
 ## Working with terms
 
