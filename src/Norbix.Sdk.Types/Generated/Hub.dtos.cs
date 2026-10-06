@@ -4803,6 +4803,9 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual string? SpanId { get; set; }
 
         [DataMember]
+        public virtual string Env { get; set; }
+
+        [DataMember]
         public virtual IReadOnlyDictionary<string, string>? Meta { get; set; }
     }
 
@@ -6064,6 +6067,7 @@ namespace Norbix.Sdk.Types.Hub;
     {
         public virtual string IntegrationId { get; set; }
         public virtual string Source { get; set; }
+        public virtual string? Env { get; set; }
         public virtual string? EventName { get; set; }
         public virtual string? ProviderEventId { get; set; }
         public virtual int StatusCode { get; set; }
