@@ -1,9 +1,9 @@
 using Norbix.Sdk.Transport;
-using Norbix.Sdk.Types.Api;
+using Norbix.Sdk.Types.Hub;
 
 namespace Norbix.Sdk;
 
-public sealed partial class NorbixClient
+public sealed partial class NorbixHubClient
 {
     /// <summary>
     /// Lightweight gateway call that returns runtime/environment information.
@@ -14,7 +14,7 @@ public sealed partial class NorbixClient
         return Transport.SendAsync<EchoResponse>(
             new NorbixRequestSpec
             {
-                Target = NorbixTarget.Api,
+                Target = NorbixTarget.Hub,
                 Path = "/{version}/echo",
                 Method = "GET",
                 Request = new Echo(),

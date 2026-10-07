@@ -16,7 +16,7 @@ namespace Norbix.Sdk.Transport;
 
 /// <summary>
 /// Internal native-<see cref="HttpClient"/> transport. Not part of the
-/// public surface — consumers see only <see cref="NorbixClient"/>.
+/// public surface — consumers see only the client (<c>NorbixApiClient</c> / <c>NorbixHubClient</c>).
 /// </summary>
 internal sealed class HttpTransport : INorbixTransport, IDisposable
 {

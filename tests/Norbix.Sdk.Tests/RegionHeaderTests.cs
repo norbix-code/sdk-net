@@ -5,7 +5,7 @@ namespace Norbix.Sdk.Tests;
 
 /// <summary>
 /// The <c>nb-region</c> header — injected ONLY when a region is resolved
-/// (per-call <see cref="NorbixClient.WithRegion"/> override → options
+/// (per-call <see cref="NorbixApiClient.WithRegion"/> override → options
 /// <c>Region</c> → <c>NORBIX_REGION</c> → unset; there is no default region,
 /// unlike the env header's PROD) — plus regional base-URL composition: the
 /// SDK-default base URL becomes <c>https://{region}.api.norbix.ai</c>, while

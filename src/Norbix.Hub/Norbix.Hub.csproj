@@ -6,6 +6,10 @@
     <PackageTags>norbix;sdk;hub;schemas;integrations;billing;notifications</PackageTags>
     <RootNamespace>Norbix.Sdk</RootNamespace>
     <AssemblyName>Norbix.Hub</AssemblyName>
+    <!-- The shared sources below name the client NorbixHubClient when this is
+         defined (NorbixApiClient otherwise), so Norbix.Api and Norbix.Hub can
+         both be referenced from one project. -->
+    <DefineConstants>$(DefineConstants);NORBIX_HUB</DefineConstants>
   </PropertyGroup>
 
   <!--
@@ -36,7 +40,7 @@
   <ItemGroup>
     <!-- Share the same runtime sources as Norbix.Api (no extra package). -->
     <Compile Include="..\Norbix.Sdk\**\*.cs"
-             Exclude="..\Norbix.Sdk\bin\**\*;..\Norbix.Sdk\obj\**\*;..\Norbix.Sdk\HealthChecks\**\*;..\Norbix.Sdk\NorbixClient.Convenience.cs"
+             Exclude="..\Norbix.Sdk\bin\**\*;..\Norbix.Sdk\obj\**\*;..\Norbix.Sdk\HealthChecks\**\*;..\Norbix.Sdk\NorbixApiClient.Convenience.cs;..\Norbix.Sdk\NorbixApiServiceCollectionExtensions.cs"
              LinkBase="SharedSdk" />
   </ItemGroup>
 

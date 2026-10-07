@@ -19,7 +19,7 @@ public sealed class ConstructionTests
         // public contract.
         try
         {
-            using var _ = new NorbixClient();
+            using var _ = new NorbixApiClient();
             return Verifier.Verify(new { Threw = false }, VerifyConfig.VerifySettings);
         }
         catch (InvalidOperationException ex)

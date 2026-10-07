@@ -1,4 +1,5 @@
-// This file is intentionally empty. The client class moved to NorbixClient.cs
+// This file is intentionally empty. The client class lives in NorbixClient.cs
+// (NorbixApiClient in Norbix.Api, NorbixHubClient in Norbix.Hub)
 // to give the public type a name that follows the .NET SDK convention
 // (Stripe.NET → StripeClient, Octokit → GitHubClient, MongoDB.Driver →
 // MongoClient, Azure SDK → BlobServiceClient, OpenAI → OpenAIClient).

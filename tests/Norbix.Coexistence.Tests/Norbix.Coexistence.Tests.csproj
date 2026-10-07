@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
+    <RootNamespace>Norbix.Coexistence.Tests</RootNamespace>
+    <NoWarn>$(NoWarn);CA1707</NoWarn>
+  </PropertyGroup>
+
+  <!--
+    One project that references BOTH packages, the way an app that talks to the
+    API and the Hub does. It only has to compile: before the clients had their
+    own names (NorbixApiClient / NorbixHubClient), this failed with CS0433.
+  -->
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="NUnit" />
+    <PackageReference Include="NUnit3TestAdapter" />
+    <PackageReference Include="NUnit.Analyzers" />
+    <PackageReference Include="Verify.NUnit" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Norbix.Sdk\Norbix.Sdk.csproj" />
+    <ProjectReference Include="..\..\src\Norbix.Hub\Norbix.Hub.csproj" />
+    <!-- Bundled in both packages (lib/); a project reference has to name it. -->
+    <ProjectReference Include="..\..\src\Norbix.Contracts\Norbix.Contracts.csproj" />
+  </ItemGroup>
+
+</Project>
