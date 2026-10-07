@@ -1,0 +1,12 @@
+﻿{
+  Method: POST,
+  Path: /v2/database/collections/orders,
+  Headers: {
+    Authorization: Bearer test-api-key,
+    Content-Type: application/json; charset=utf-8,
+    X-CM-ProjectId: test-project
+  },
+  Body: {
+    document: {"customer":"rec_7","address":{"city":"Vilnius","geo":{"point":{"type":"Point","coordinates":[25.28,54.69]}}},"lines":[{"sku":"A-1","qty":2},{"sku":"B-2","qty":1}],"settings":{"theme":{"dark":true}}}
+  }
+}

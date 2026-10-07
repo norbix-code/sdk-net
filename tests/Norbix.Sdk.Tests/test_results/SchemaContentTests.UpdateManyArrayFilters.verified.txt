@@ -1,0 +1,14 @@
+﻿{
+  Method: PUT,
+  Path: /v2/database/collections/orders/many,
+  Headers: {
+    Authorization: Bearer test-api-key,
+    Content-Type: application/json; charset=utf-8,
+    X-CM-ProjectId: test-project
+  },
+  Body: {
+    filter: {"lines":{"$elemMatch":{"sku":"A-1","qty":{"$gte":2}}}},
+    update: {"lines.$[].checked":true,"lines.$[big].flag":"bulk"},
+    arrayFilters: [{"$or":[{"big.qty":{"$gte":10}},{"big.sku":"Z-9"}]}]
+  }
+}

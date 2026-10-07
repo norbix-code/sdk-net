@@ -1,0 +1,5 @@
+﻿{
+  HttpStatus: 400,
+  ErrorCode: CM-ERRORS-DATABASE-039,
+  Message: Field 'lines' is invalid: must be an array
+}

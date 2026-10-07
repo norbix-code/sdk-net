@@ -1,0 +1,13 @@
+﻿{
+  Sent: {
+    Method: GET,
+    Path: /v2/database/taxonomies/tax_regions/terms/trm_1,
+    Headers: {
+      Authorization: Bearer test-bearer,
+      X-CM-AccountId: test-account,
+      X-CM-ProjectId: test-project
+    }
+  },
+  Name: Côte d'Ivoire,
+  Slug: cote-d-ivoire
+}

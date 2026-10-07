@@ -1,0 +1,5 @@
+﻿{
+  HttpStatus: 400,
+  ErrorCode: CM-ERRORS-TAXONOMIES-012,
+  Message: Slug 'springfield' is already used by term 'trm_1' of this taxonomy.
+}

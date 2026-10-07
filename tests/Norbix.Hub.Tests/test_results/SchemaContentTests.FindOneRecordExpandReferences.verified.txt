@@ -1,0 +1,16 @@
+﻿{
+  Sent: {
+    Method: GET,
+    Path: /v2/database/collections/orders/ord_1,
+    Query: ?expandReferences=True,
+    Headers: {
+      Authorization: Bearer test-bearer,
+      X-CM-AccountId: test-account,
+      X-CM-ProjectId: test-project
+    }
+  },
+  Owner: {
+    Id: usr_1,
+    Display: ann@example.test
+  }
+}

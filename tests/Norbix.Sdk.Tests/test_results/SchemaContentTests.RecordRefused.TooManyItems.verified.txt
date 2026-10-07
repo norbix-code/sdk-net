@@ -1,0 +1,5 @@
+﻿{
+  HttpStatus: 400,
+  ErrorCode: CM-ERRORS-DATABASE-040,
+  Message: Field 'lines' is invalid: must have at most 20 items
+}

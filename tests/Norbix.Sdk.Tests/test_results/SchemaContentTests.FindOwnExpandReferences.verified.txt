@@ -1,0 +1,9 @@
+﻿{
+  Method: GET,
+  Path: /v2/database/collections/orders/own,
+  Query: ?expandReferences=True,
+  Headers: {
+    Authorization: Bearer test-api-key,
+    X-CM-ProjectId: test-project
+  }
+}

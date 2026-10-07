@@ -1,0 +1,37 @@
+﻿{
+  Sent: {
+    Method: GET,
+    Path: /v2/database/collections/orders,
+    Query: ?expandReferences=True,
+    Headers: {
+      Authorization: Bearer test-api-key,
+      X-CM-ProjectId: test-project
+    }
+  },
+  Customer: {
+    Id: rec_7,
+    Display: Ann Example
+  },
+  Owner: {
+    Id: usr_1
+  },
+  VisibleTo: [
+    {
+      Id: rol_1,
+      Display: Admin
+    },
+    {
+      Id: rol_2,
+      Display: Editor
+    }
+  ],
+  Region: {
+    Id: trm_1,
+    RawDisplay: {"en":"North","lt":"\u0160iaur\u0117"}
+  },
+  LineProduct: {
+    Id: rec_9,
+    Display: Widget
+  },
+  PlainId: false
+}
