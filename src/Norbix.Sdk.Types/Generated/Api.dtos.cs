@@ -8,8 +8,8 @@
 #pragma warning disable CS0114, CS1570, CS0102, CS0108, CS0618
 
 using System;
-using System.IO;
 using System.Collections;
+using System.IO;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using Norbix.Sdk.Types;
@@ -1191,6 +1191,21 @@ namespace Norbix.Sdk.Types.Api;
     }
 
     ///<summary>
+    ///Files
+    ///</summary>
+    [NorbixRoute("/{version}/files/{filesIntegrationId}/use", "POST")]
+    [DataContract]
+    public partial class UseFileRequest
+        : CodeMashRequestBase, INorbixRequest<IdResponse>
+    {
+        [DataMember]
+        public virtual string FilesIntegrationId { get; set; }
+
+        [DataMember]
+        public virtual string Path { get; set; }
+    }
+
+    ///<summary>
     ///Membership · Passkey
     ///</summary>
     [NorbixRoute("/{version}/membership/userauth/email/confirm-verification", "POST")]
@@ -2093,7 +2108,7 @@ namespace Norbix.Sdk.Types.Api;
     public partial class FileResourceDto
     {
         [DataMember(Order=1)]
-        public virtual string Id { get; set; }
+        public virtual string? Id { get; set; }
 
         [DataMember(Order=2)]
         public virtual string OriginalFileName { get; set; }
@@ -2895,6 +2910,26 @@ namespace Norbix.Sdk.Types.Api;
         public virtual string InstallationType { get; set; }
         public virtual string OnboardingDocsUrl { get; set; }
         public virtual string ToolsUrl { get; set; }
+        public virtual string CliPackage { get; set; }
+        public virtual string CliInstallCommand { get; set; }
+        public virtual string DeviceAuthorizationUrl { get; set; }
+        public virtual string DeviceTokenUrl { get; set; }
+        public virtual List<EchoAgentSnippetDto> Snippets { get; set; } = [];
+    }
+
+    public partial class EchoAgentSnippetDto
+    {
+        public virtual string Client { get; set; }
+        public virtual string Kind { get; set; }
+        public virtual bool Recommended { get; set; }
+        public virtual string Auth { get; set; }
+        public virtual string Config { get; set; }
+    }
+
+    public partial class EchoHostingPlatformDto
+    {
+        public virtual string Provider { get; set; }
+        public virtual bool IsAws { get; set; }
     }
 
     public partial class EchoRegionDto
@@ -2930,6 +2965,7 @@ namespace Norbix.Sdk.Types.Api;
         public virtual string? InstallationDomain { get; set; }
         public virtual string? LicensingDocsUrl { get; set; }
         public virtual EchoAgentDto? Agent { get; set; }
+        public virtual EchoHostingPlatformDto? HostingPlatform { get; set; }
     }
 
     [NorbixRoute("/{version}/public/projects/{ProjectId}/brand/{Kind}", "GET")]

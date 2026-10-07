@@ -1,7 +1,7 @@
 ﻿{
   Target: Api,
   Group: files,
-  Count: 13,
+  Count: 14,
   Endpoints: [
     {
       Target: Api,
@@ -430,6 +430,41 @@
         Items: [
           {}
         ],
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: files,
+      MethodName: UseFileAsync,
+      RequestType: UseFileRequest,
+      HttpMethod: POST,
+      Path: /{version}/files/{filesIntegrationId}/use,
+      PathParams: [
+        filesIntegrationId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/files/{guid}/use,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          path: test-path,
+          env: test-env
+        }
+      },
+      ResponseType: IdResponse,
+      Response: {
+        Id: Guid_1,
+        Status: test-status,
         ResponseStatus: {
           IsSuccess: true
         }

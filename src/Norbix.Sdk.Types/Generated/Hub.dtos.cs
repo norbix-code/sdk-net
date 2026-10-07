@@ -105,6 +105,7 @@ namespace Norbix.Sdk.Types.Hub;
         Compliance = 8192,
         Contacts = 16384,
         Marketplace = 32768,
+        Diagnostics = 65536,
     }
 
     public enum AuthType
@@ -1228,7 +1229,7 @@ namespace Norbix.Sdk.Types.Hub;
     public partial class FileResourceDto
     {
         [DataMember(Order=1)]
-        public virtual string Id { get; set; }
+        public virtual string? Id { get; set; }
 
         [DataMember(Order=2)]
         public virtual string OriginalFileName { get; set; }
@@ -1743,19 +1744,42 @@ namespace Norbix.Sdk.Types.Hub;
     }
 
     [DataContract]
-    public partial class AiScopeDto
+    public partial class AiProjectRoleIdsDto
     {
         [DataMember]
-        public virtual string Reach { get; set; }
+        public virtual string ProjectId { get; set; }
 
         [DataMember]
-        public virtual string? ProjectId { get; set; }
+        public virtual List<string> RoleIds { get; set; } = [];
+    }
+
+    [DataContract]
+    public partial class AiProjectRolesDto
+    {
+        [DataMember]
+        public virtual string Id { get; set; }
 
         [DataMember]
-        public virtual string Rights { get; set; }
+        public virtual string Name { get; set; }
 
         [DataMember]
-        public virtual List<string> Envs { get; set; } = [];
+        public virtual List<AiRoleDto> Roles { get; set; } = [];
+    }
+
+    [DataContract]
+    public partial class AiRoleDto
+    {
+        [DataMember]
+        public virtual string Id { get; set; }
+
+        [DataMember]
+        public virtual string Name { get; set; }
+
+        [DataMember]
+        public virtual string Description { get; set; }
+
+        [DataMember]
+        public virtual bool IsSystem { get; set; }
     }
 
     [DataContract]
@@ -1768,7 +1792,10 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual string Name { get; set; }
 
         [DataMember]
-        public virtual AiScopeDto Scope { get; set; }
+        public virtual List<AiRoleDto> AccountRoles { get; set; } = [];
+
+        [DataMember]
+        public virtual List<AiProjectRolesDto> Projects { get; set; } = [];
 
         [DataMember]
         public virtual DateTime CreatedAt { get; set; }
@@ -3698,6 +3725,9 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember]
         public virtual List<CollectionIndexKeyDto> Keys { get; set; } = [];
+
+        [DataMember]
+        public virtual bool CreatedByNorbix { get; set; }
     }
 
     public partial class CollectionIndexKeyDto
@@ -3887,6 +3917,7 @@ namespace Norbix.Sdk.Types.Hub;
     {
         public virtual DatabaseProvider Provider { get; set; }
         public virtual bool IsSystemOwned { get; set; }
+        public virtual bool? CanManageIndexes { get; set; }
     }
 
     public partial class DatabaseIntegrationListProjection
@@ -4243,6 +4274,72 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember]
         public virtual bool PerUser { get; set; }
+    }
+
+    public partial class SchemaIndexDto
+    {
+        [DataMember]
+        public virtual string Name { get; set; }
+
+        [DataMember]
+        public virtual List<string> Keys { get; set; } = [];
+
+        [DataMember]
+        public virtual bool Unique { get; set; }
+
+        [DataMember]
+        public virtual string Reason { get; set; }
+
+        [DataMember]
+        public virtual string Field { get; set; }
+    }
+
+    public partial class SchemaIndexIntegrationStatusDto
+    {
+        [DataMember]
+        public virtual string IntegrationId { get; set; }
+
+        [DataMember]
+        public virtual string State { get; set; }
+
+        [DataMember]
+        public virtual List<SchemaIndexDto> Wanted { get; set; } = [];
+
+        [DataMember]
+        public virtual List<string> Created { get; set; } = [];
+
+        [DataMember]
+        public virtual List<string> Dropped { get; set; } = [];
+
+        [DataMember]
+        public virtual List<SchemaIndexDto> OverCap { get; set; } = [];
+
+        [DataMember]
+        public virtual string? RefusedReason { get; set; }
+
+        [DataMember]
+        public virtual DateTime LastRunUtc { get; set; }
+    }
+
+    public partial class SchemaIndexStatusDto
+    {
+        [DataMember]
+        public virtual string SchemaId { get; set; }
+
+        [DataMember]
+        public virtual string Env { get; set; }
+
+        [DataMember]
+        public virtual string Collection { get; set; }
+
+        [DataMember]
+        public virtual string State { get; set; }
+
+        [DataMember]
+        public virtual List<SchemaIndexIntegrationStatusDto> Integrations { get; set; } = [];
+
+        [DataMember]
+        public virtual DateTime LastRunUtc { get; set; }
     }
 
     public partial class SchemaListColumnDto
@@ -5920,6 +6017,8 @@ namespace Norbix.Sdk.Types.Hub;
     {
         public virtual string TeamId { get; set; }
         public virtual string AppBundleId { get; set; }
+        public virtual string? KeyId { get; set; }
+        public virtual bool IsProduction { get; set; }
     }
 
     public partial class ChromePluginPushIntegrationDto
@@ -6190,11 +6289,21 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual DateTime ReceivedOn { get; set; }
     }
 
+    public enum LanguageGapKind
+    {
+        Template,
+        Footer,
+        Signature,
+    }
+
     [DataContract]
     public partial class TemplateLanguageGapDto
     {
         [DataMember]
         public virtual ApplicationModule Module { get; set; }
+
+        [DataMember]
+        public virtual LanguageGapKind Kind { get; set; }
 
         [DataMember]
         public virtual string TemplateId { get; set; }
@@ -6476,6 +6585,15 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember]
         public virtual long? UpdatedAtUnix { get; set; }
+
+        [DataMember]
+        public virtual bool IsFailing { get; set; }
+
+        [DataMember]
+        public virtual string? LastFailureReason { get; set; }
+
+        [DataMember]
+        public virtual long? LastFailedAtUnix { get; set; }
     }
 
     [DataContract]
@@ -6498,7 +6616,48 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual bool IsEnabled { get; set; }
 
         [DataMember]
+        public virtual bool IsFailing { get; set; }
+
+        [DataMember]
+        public virtual string? LastFailureReason { get; set; }
+
+        [DataMember]
+        public virtual long? LastFailedAtUnix { get; set; }
+
+        [DataMember]
         public virtual string ViewId { get; set; }
+    }
+
+    [DataContract]
+    public partial class SchedulerTaskRunDto
+    {
+        [DataMember]
+        public virtual string LogId { get; set; }
+
+        [DataMember]
+        public virtual DateTime AtUtc { get; set; }
+
+        [DataMember]
+        public virtual long AtUnix { get; set; }
+
+        [DataMember]
+        public virtual SchedulerTaskRunOutcome Outcome { get; set; }
+
+        [DataMember]
+        public virtual string? Reason { get; set; }
+
+        [DataMember]
+        public virtual string? Detail { get; set; }
+
+        [DataMember]
+        public virtual string? CorrelationId { get; set; }
+    }
+
+    public enum SchedulerTaskRunOutcome
+    {
+        Fired = 1,
+        Failed = 2,
+        Skipped = 3,
     }
 
     [DataContract]
@@ -6835,6 +6994,17 @@ namespace Norbix.Sdk.Types.Hub;
     public partial class SystemEmailTemplateListProjection
         : EmailTemplateListProjection
     {
+        [DataMember]
+        public virtual string? ImagePreview { get; set; }
+
+        [DataMember]
+        public virtual string? Description { get; set; }
+
+        [DataMember]
+        public virtual SystemEmailTemplateTheme? Theme { get; set; }
+
+        [DataMember]
+        public virtual HashSet<string>? SystemTags { get; set; }
     }
 
     [DataContract]
@@ -7472,9 +7642,14 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual string Name { get; set; }
 
         ///<summary>
-        ///Reach (account | project + projectId), rights (read | admin), envs (["TEST"] or ["TEST","PROD"]).
+        ///Account role ids (acc_…_nr_…) to give, built-in or custom. At least one role in total (account or project).
         ///</summary>
-        public virtual AiScopeDto Scope { get; set; }
+        public virtual List<string>? AccountRoleIds { get; set; }
+
+        ///<summary>
+        ///Project roles to give: [{ projectId, roleIds: [pr_…_nr_…] }]. Without an account role the service user is pinned to these projects.
+        ///</summary>
+        public virtual List<AiProjectRoleIdsDto>? ProjectRoles { get; set; }
     }
 
     [NorbixRoute("/{version}/account/ai/service-users/{Id}", "DELETE")]
@@ -8933,6 +9108,8 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual string Client { get; set; }
         public virtual string Config { get; set; }
         public virtual string Auth { get; set; }
+        public virtual string Kind { get; set; }
+        public virtual bool Recommended { get; set; }
     }
 
     public partial class AiToolManifestItem
@@ -9876,6 +10053,127 @@ namespace Norbix.Sdk.Types.Hub;
     }
 
     ///<summary>
+    ///The signed-in person's decision on a CLI browser sign-in: allow with Membership roles, or deny.
+    ///</summary>
+    [NorbixRoute("/{version}/auth/device/consent", "POST")]
+    public partial class AuthDeviceConsentDecisionRequest
+        : RequestBase, INorbixRequest<AuthDeviceConsentDecisionResponse>
+    {
+        ///<summary>
+        ///The code the terminal shows, XXXX-XXXX.
+        ///</summary>
+        public virtual string UserCode { get; set; }
+
+        ///<summary>
+        ///allow | deny.
+        ///</summary>
+        public virtual string Decision { get; set; }
+
+        ///<summary>
+        ///For allow: account role ids (acc_…_nr_…) to give.
+        ///</summary>
+        public virtual List<string>? AccountRoleIds { get; set; }
+
+        ///<summary>
+        ///For allow: project roles to give, [{ projectId, roleIds: [pr_…_nr_…] }].
+        ///</summary>
+        public virtual List<AiProjectRoleIdsDto>? ProjectRoles { get; set; }
+    }
+
+    public partial class AuthDeviceConsentDecisionResponse
+        : ResponseBase
+    {
+    }
+
+    ///<summary>
+    ///The dashboard screen for a CLI browser sign-in: the client and computer that asked, and the roles the signed-in person may give.
+    ///</summary>
+    [NorbixRoute("/{version}/auth/device/consent", "GET")]
+    public partial class AuthDeviceConsentRequest
+        : RequestBase, INorbixRequest<AuthDeviceConsentResponse>
+    {
+        ///<summary>
+        ///The code the terminal shows, XXXX-XXXX (case, spaces and the dash do not matter).
+        ///</summary>
+        public virtual string UserCode { get; set; }
+    }
+
+    public partial class AuthDeviceConsentResponse
+        : ResponseBase
+    {
+        public virtual string ClientName { get; set; }
+        public virtual string DeviceName { get; set; }
+        public virtual string UserCode { get; set; }
+        public virtual string? ProjectId { get; set; }
+        public virtual List<AiRoleDto> AccountRoles { get; set; } = [];
+        public virtual List<AiProjectRolesDto> Projects { get; set; } = [];
+    }
+
+    ///<summary>
+    ///Starts a browser sign-in for the Norbix CLI (OAuth device authorization, RFC 8628): a device code for polling and a user code the person confirms on the dashboard.
+    ///</summary>
+    [NorbixRoute("/{version}/auth/device/start", "POST")]
+    public partial class AuthDeviceStartRequest
+        : RequestBase, INorbixRequest<AuthDeviceStartResponse>, INorbixOptionalAuth
+    {
+        ///<summary>
+        ///Who asks, shown on the dashboard, e.g. "norbix-cli". 1–80 printable characters.
+        ///</summary>
+        public virtual string ClientName { get; set; }
+
+        ///<summary>
+        ///The computer name, shown on the dashboard and part of the AI service user's name (cleaned, at most 40 characters).
+        ///</summary>
+        public virtual string? DeviceName { get; set; }
+
+        ///<summary>
+        ///The project the CLI wants to work in. It must be a project of the account of the person who allows the sign-in.
+        ///</summary>
+        public virtual string? ProjectId { get; set; }
+    }
+
+    public partial class AuthDeviceStartResponse
+        : ResponseBase
+    {
+        public virtual string? DeviceCode { get; set; }
+        public virtual string? UserCode { get; set; }
+        public virtual string? VerificationUri { get; set; }
+        public virtual string? VerificationUriComplete { get; set; }
+        public virtual int ExpiresIn { get; set; }
+        public virtual int Interval { get; set; }
+    }
+
+    ///<summary>
+    ///Polls a CLI browser sign-in (RFC 8628). Always HTTP 200: an error name (authorization_pending, slow_down, access_denied, expired_token, invalid_grant, invalid_request) or the tokens, once.
+    ///</summary>
+    [NorbixRoute("/{version}/auth/device/token", "POST")]
+    public partial class AuthDeviceTokenRequest
+        : RequestBase, INorbixRequest<AuthDeviceTokenResponse>, INorbixOptionalAuth
+    {
+        ///<summary>
+        ///The deviceCode from POST /auth/device/start.
+        ///</summary>
+        public virtual string DeviceCode { get; set; }
+    }
+
+    public partial class AuthDeviceTokenResponse
+        : ResponseBase
+    {
+        public virtual string? Error { get; set; }
+        public virtual string? ErrorDescription { get; set; }
+        public virtual string? ErrorCode { get; set; }
+        public virtual string? BearerToken { get; set; }
+        public virtual string? RefreshToken { get; set; }
+        public virtual int? ExpiresIn { get; set; }
+        public virtual string? ClientId { get; set; }
+        public virtual string? UserId { get; set; }
+        public virtual string? UserName { get; set; }
+        public virtual string? DisplayName { get; set; }
+        public virtual string? AccountId { get; set; }
+        public virtual string? ProjectId { get; set; }
+    }
+
+    ///<summary>
     ///OAuth authorization-server metadata (RFC 8414).
     ///</summary>
     [NorbixRoute("/.well-known/oauth-authorization-server", "GET")]
@@ -9887,23 +10185,145 @@ namespace Norbix.Sdk.Types.Hub;
     }
 
     ///<summary>
-    ///OAuth authorization endpoint: the person's decision from the consent page.
-    ///</summary>
-    [NorbixRoute("/{version}/oauth/authorize", "POST")]
-    public partial class OAuthAuthorizeDecisionRequest
-        : INorbixRequest<string>, INorbixOptionalAuth
-    {
-        public virtual string? Version { get; set; }
-    }
-
-    ///<summary>
-    ///OAuth authorization endpoint: sign-in hint or the consent page (HTML).
+    ///OAuth authorization endpoint: checks the request and redirects to the dashboard consent screen.
     ///</summary>
     [NorbixRoute("/{version}/oauth/authorize", "GET")]
     public partial class OAuthAuthorizeRequest
         : INorbixRequest<string>, INorbixOptionalAuth
     {
         public virtual string? Version { get; set; }
+    }
+
+    ///<summary>
+    ///The signed-in person's decision on the consent screen: allow with roles, or deny. Returns the address to send the browser to.
+    ///</summary>
+    [NorbixRoute("/{version}/oauth/consent", "POST")]
+    public partial class OAuthConsentDecisionRequest
+        : RequestBase, INorbixRequest<OAuthConsentDecisionResponse>
+    {
+        ///<summary>
+        ///OAuth response_type from the authorize request (must be "code").
+        ///</summary>
+        public virtual string? ResponseType { get; set; }
+
+        ///<summary>
+        ///OAuth client_id from the authorize request.
+        ///</summary>
+        public virtual string? ClientId { get; set; }
+
+        ///<summary>
+        ///OAuth redirect_uri from the authorize request.
+        ///</summary>
+        public virtual string? RedirectUri { get; set; }
+
+        ///<summary>
+        ///PKCE code_challenge from the authorize request.
+        ///</summary>
+        public virtual string? CodeChallenge { get; set; }
+
+        ///<summary>
+        ///PKCE code_challenge_method from the authorize request (must be "S256").
+        ///</summary>
+        public virtual string? CodeChallengeMethod { get; set; }
+
+        ///<summary>
+        ///OAuth state from the authorize request; returned to the client unchanged.
+        ///</summary>
+        public virtual string? State { get; set; }
+
+        ///<summary>
+        ///OAuth resource (RFC 8707) from the authorize request.
+        ///</summary>
+        public virtual string? Resource { get; set; }
+
+        ///<summary>
+        ///OAuth scope from the authorize request.
+        ///</summary>
+        public virtual string? Scope { get; set; }
+
+        ///<summary>
+        ///The consentTicket from GET /oauth/consent.
+        ///</summary>
+        public virtual string ConsentTicket { get; set; }
+
+        ///<summary>
+        ///allow | deny.
+        ///</summary>
+        public virtual string Decision { get; set; }
+
+        ///<summary>
+        ///For allow: account role ids (acc_…_nr_…) to give.
+        ///</summary>
+        public virtual List<string>? AccountRoleIds { get; set; }
+
+        ///<summary>
+        ///For allow: project roles to give, [{ projectId, roleIds: [pr_…_nr_…] }].
+        ///</summary>
+        public virtual List<AiProjectRoleIdsDto>? ProjectRoles { get; set; }
+    }
+
+    public partial class OAuthConsentDecisionResponse
+        : ResponseBase
+    {
+        public virtual string? RedirectUrl { get; set; }
+    }
+
+    ///<summary>
+    ///The dashboard consent screen for an AI tool: the client, where it returns to, and the roles the signed-in person may give.
+    ///</summary>
+    [NorbixRoute("/{version}/oauth/consent", "GET")]
+    public partial class OAuthConsentRequest
+        : RequestBase, INorbixRequest<OAuthConsentResponse>
+    {
+        ///<summary>
+        ///OAuth response_type from the authorize request (must be "code").
+        ///</summary>
+        public virtual string? ResponseType { get; set; }
+
+        ///<summary>
+        ///OAuth client_id from the authorize request.
+        ///</summary>
+        public virtual string? ClientId { get; set; }
+
+        ///<summary>
+        ///OAuth redirect_uri from the authorize request.
+        ///</summary>
+        public virtual string? RedirectUri { get; set; }
+
+        ///<summary>
+        ///PKCE code_challenge from the authorize request.
+        ///</summary>
+        public virtual string? CodeChallenge { get; set; }
+
+        ///<summary>
+        ///PKCE code_challenge_method from the authorize request (must be "S256").
+        ///</summary>
+        public virtual string? CodeChallengeMethod { get; set; }
+
+        ///<summary>
+        ///OAuth state from the authorize request; returned to the client unchanged.
+        ///</summary>
+        public virtual string? State { get; set; }
+
+        ///<summary>
+        ///OAuth resource (RFC 8707) from the authorize request.
+        ///</summary>
+        public virtual string? Resource { get; set; }
+
+        ///<summary>
+        ///OAuth scope from the authorize request.
+        ///</summary>
+        public virtual string? Scope { get; set; }
+    }
+
+    public partial class OAuthConsentResponse
+        : ResponseBase
+    {
+        public virtual string ClientName { get; set; }
+        public virtual string RedirectHost { get; set; }
+        public virtual string ConsentTicket { get; set; }
+        public virtual List<AiRoleDto> AccountRoles { get; set; } = [];
+        public virtual List<AiProjectRolesDto> Projects { get; set; } = [];
     }
 
     ///<summary>
@@ -12025,6 +12445,27 @@ namespace Norbix.Sdk.Types.Hub;
     }
 
     ///<summary>
+    ///Gets the Norbix index status of a database schema
+    ///</summary>
+    [NorbixRoute("/{version}/database/schemas/{Id}/index-status", "GET")]
+    [DataContract]
+    public partial class GetDatabaseSchemaIndexStatus
+        : CodeMashRequestBase, INorbixRequest<GetDatabaseSchemaIndexStatusResponse>
+    {
+        ///<summary>
+        ///Schema id from get_database_schemas.
+        ///</summary>
+        [DataMember]
+        public virtual string Id { get; set; }
+    }
+
+    public partial class GetDatabaseSchemaIndexStatusResponse
+        : ResponseBase
+    {
+        public virtual SchemaIndexStatusDto? Status { get; set; }
+    }
+
+    ///<summary>
     ///Gets database schema records-list display settings
     ///</summary>
     [NorbixRoute("/{version}/database/schemas/{Id}/list-settings", "GET")]
@@ -13949,6 +14390,21 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual IList<PublicFolderDto>? PublicFolders { get; set; }
     }
 
+    [NorbixRoute("/{version}/files/item/use", "POST")]
+    public partial class UseFileRequest
+        : CodeMashRequestBase, INorbixRequest<IdResponse>
+    {
+        ///<summary>
+        ///The files integration the file lives on.
+        ///</summary>
+        public virtual string FilesIntegrationId { get; set; }
+
+        ///<summary>
+        ///Path of the file, relative to the integration.
+        ///</summary>
+        public virtual string Path { get; set; }
+    }
+
     public partial class AppleICloudFilesIntegrationRequest
         : FilesIntegrationRequest
     {
@@ -14298,6 +14754,16 @@ namespace Norbix.Sdk.Types.Hub;
         ///Free-text search over title and message.
         ///</summary>
         public virtual string? Search { get; set; }
+
+        ///<summary>
+        ///Meta key to filter on (e.g. taskId). Letters, digits and _ only. Must come with metaValue.
+        ///</summary>
+        public virtual string? MetaKey { get; set; }
+
+        ///<summary>
+        ///Exact Meta value for metaKey (e.g. a task id tsk_...). Must come with metaKey.
+        ///</summary>
+        public virtual string? MetaValue { get; set; }
 
         ///<summary>
         ///Start of the timestamp range (inclusive, UTC). Optional.
@@ -16120,9 +16586,24 @@ namespace Norbix.Sdk.Types.Hub;
         : PushIntegrationRequest
     {
         public virtual PushProvider Provider { get; set; }
+        ///<summary>
+        ///The extension's Chrome id: 32 lower-case letters a–p, as shown on chrome://extensions.
+        ///</summary>
         public virtual string ExtensionId { get; set; }
+
+        ///<summary>
+        ///VAPID public key (URL-safe Base-64, 65 bytes), generated together with the private key — e.g. `npx web-push generate-vapid-keys`. The browser subscribes with it as applicationServerKey.
+        ///</summary>
         public virtual string VapidPublicKey { get; set; }
+
+        ///<summary>
+        ///VAPID private key (URL-safe Base-64, 32 bytes). Stored as a secret.
+        ///</summary>
         public virtual string VapidPrivateKey { get; set; }
+
+        ///<summary>
+        ///Contact e-mail the browser push services can reach you at, e.g. admin@example.com. An e-mail address only (no URL); it is sent as mailto:.
+        ///</summary>
         public virtual string? Subject { get; set; }
     }
 
@@ -16130,8 +16611,19 @@ namespace Norbix.Sdk.Types.Hub;
         : PushIntegrationRequest
     {
         public virtual PushProvider Provider { get; set; }
+        ///<summary>
+        ///VAPID public key (URL-safe Base-64, 65 bytes), generated together with the private key — e.g. `npx web-push generate-vapid-keys`. The browser subscribes with it as applicationServerKey.
+        ///</summary>
         public virtual string VapidPublicKey { get; set; }
+
+        ///<summary>
+        ///VAPID private key (URL-safe Base-64, 32 bytes). Stored as a secret.
+        ///</summary>
         public virtual string VapidPrivateKey { get; set; }
+
+        ///<summary>
+        ///Contact e-mail the browser push services can reach you at, e.g. admin@example.com. An e-mail address only (no URL); it is sent as mailto:.
+        ///</summary>
         public virtual string? Subject { get; set; }
     }
 
@@ -16180,8 +16672,19 @@ namespace Norbix.Sdk.Types.Hub;
         : PushIntegrationRequest
     {
         public virtual PushProvider Provider { get; set; }
+        ///<summary>
+        ///VAPID public key (URL-safe Base-64, 65 bytes), generated together with the private key — e.g. `npx web-push generate-vapid-keys`. The browser subscribes with it as applicationServerKey.
+        ///</summary>
         public virtual string VapidPublicKey { get; set; }
+
+        ///<summary>
+        ///VAPID private key (URL-safe Base-64, 32 bytes). Stored as a secret.
+        ///</summary>
         public virtual string VapidPrivateKey { get; set; }
+
+        ///<summary>
+        ///Contact e-mail the browser push services can reach you at, e.g. admin@example.com. An e-mail address only (no URL); it is sent as mailto:.
+        ///</summary>
         public virtual string? Subject { get; set; }
     }
 
@@ -16202,8 +16705,19 @@ namespace Norbix.Sdk.Types.Hub;
         : PushIntegrationRequest
     {
         public virtual PushProvider Provider { get; set; }
+        ///<summary>
+        ///VAPID public key (URL-safe Base-64, 65 bytes), generated together with the private key — e.g. `npx web-push generate-vapid-keys`. The browser subscribes with it as applicationServerKey.
+        ///</summary>
         public virtual string VapidPublicKey { get; set; }
+
+        ///<summary>
+        ///VAPID private key (URL-safe Base-64, 32 bytes). Stored as a secret.
+        ///</summary>
         public virtual string VapidPrivateKey { get; set; }
+
+        ///<summary>
+        ///Contact e-mail the browser push services can reach you at, e.g. admin@example.com. An e-mail address only (no URL); it is sent as mailto:.
+        ///</summary>
         public virtual string? Subject { get; set; }
     }
 
@@ -16295,13 +16809,13 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual string IntegrationId { get; set; }
 
         ///<summary>
-        ///Optional device token to send the test notification to. Requires DeliveryFamily when set.
+        ///The device token the test is sent to — a device registered for the person receiving the test (get it from get_push_devices). Required for every real provider (only the Fake integration tests without one). For a web device it is the browser subscription JSON. Requires DeliveryFamily.
         ///</summary>
         [DataMember]
         public virtual string? TestToken { get; set; }
 
         ///<summary>
-        ///Optional delivery family for the test token (ios, android, chrome or safari). Requires TestToken when set.
+        ///The delivery family of TestToken: ios, android, chrome (any browser web push) or safari. Requires TestToken.
         ///</summary>
         [DataMember]
         public virtual string? DeliveryFamily { get; set; }
@@ -16582,6 +17096,27 @@ namespace Norbix.Sdk.Types.Hub;
         : ResponseBase
     {
         public virtual SchedulerTaskDto? Item { get; set; }
+    }
+
+    ///<summary>
+    ///Gets the latest runs of a scheduled task
+    ///</summary>
+    [NorbixRoute("/{version}/scheduler/tasks/{id}/runs", "GET")]
+    public partial class GetSchedulerTaskRuns
+        : CodeMashRequestBase, INorbixRequest<GetSchedulerTaskRunsResponse>
+    {
+        public virtual string Id { get; set; }
+        ///<summary>
+        ///How many runs to return, newest first: 1-50. Default 10.
+        ///</summary>
+        public virtual int? Take { get; set; }
+    }
+
+    public partial class GetSchedulerTaskRunsResponse
+        : ResponseBase
+    {
+        public virtual bool LogsEnabled { get; set; }
+        public virtual List<SchedulerTaskRunDto> Runs { get; set; } = [];
     }
 
     ///<summary>
@@ -17725,6 +18260,7 @@ namespace Norbix.Sdk.Types.Hub;
     public partial class ReceiveWebhook
         : INorbixRequest<object>, INorbixOptionalAuth
     {
+        public virtual string? Version { get; set; }
         public virtual string Source { get; set; }
         public virtual string IntegrationInstanceId { get; set; }
         public virtual Stream RequestStream { get; set; }
@@ -17792,6 +18328,26 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual string InstallationType { get; set; }
         public virtual string OnboardingDocsUrl { get; set; }
         public virtual string ToolsUrl { get; set; }
+        public virtual string CliPackage { get; set; }
+        public virtual string CliInstallCommand { get; set; }
+        public virtual string DeviceAuthorizationUrl { get; set; }
+        public virtual string DeviceTokenUrl { get; set; }
+        public virtual List<EchoAgentSnippetDto> Snippets { get; set; } = [];
+    }
+
+    public partial class EchoAgentSnippetDto
+    {
+        public virtual string Client { get; set; }
+        public virtual string Kind { get; set; }
+        public virtual bool Recommended { get; set; }
+        public virtual string Auth { get; set; }
+        public virtual string Config { get; set; }
+    }
+
+    public partial class EchoHostingPlatformDto
+    {
+        public virtual string Provider { get; set; }
+        public virtual bool IsAws { get; set; }
     }
 
     public partial class EchoRegionDto
@@ -17827,6 +18383,7 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual string? InstallationDomain { get; set; }
         public virtual string? LicensingDocsUrl { get; set; }
         public virtual EchoAgentDto? Agent { get; set; }
+        public virtual EchoHostingPlatformDto? HostingPlatform { get; set; }
     }
 
     [NorbixRoute("/{version}/public/projects/{ProjectId}/brand/{Kind}", "GET")]

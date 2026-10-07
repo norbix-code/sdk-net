@@ -58,7 +58,14 @@
           OAuthMetadataUrl: https://example.test/oAuthMetadataUrl,
           InstallationType: test-installationType,
           OnboardingDocsUrl: https://example.test/onboardingDocsUrl,
-          ToolsUrl: https://example.test/toolsUrl
+          ToolsUrl: https://example.test/toolsUrl,
+          CliPackage: test-cliPackage,
+          CliInstallCommand: test-cliInstallCommand,
+          DeviceAuthorizationUrl: https://example.test/deviceAuthorizationUrl
+        },
+        HostingPlatform: {
+          Provider: test-provider,
+          IsAws: true
         }
       }
     }

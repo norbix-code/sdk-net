@@ -1,7 +1,7 @@
 ﻿{
   Target: Hub,
   Group: scheduler,
-  Count: 8,
+  Count: 9,
   Endpoints: [
     {
       Target: Hub,
@@ -187,8 +187,42 @@
           PayloadJson: test-payloadJson,
           InitiatorId: Guid_1,
           IsEnabled: false,
-          StopOnError: false
+          StopOnError: false,
+          IsFailing: false
         },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: scheduler,
+      MethodName: GetSchedulerTaskRunsAsync,
+      RequestType: GetSchedulerTaskRuns,
+      HttpMethod: GET,
+      Path: /{version}/scheduler/tasks/{id}/runs,
+      PathParams: [
+        id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/scheduler/tasks/{guid}/runs,
+        Query: ?take=1&env=test-env,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: GetSchedulerTaskRunsResponse,
+      Response: {
+        LogsEnabled: true,
+        Runs: [
+          {}
+        ],
         ResponseStatus: {
           IsSuccess: true
         }
@@ -218,7 +252,8 @@
         List: {
           Items: [
             {
-              IsEnabled: false
+              IsEnabled: false,
+              IsFailing: false
             }
           ],
           HasMore: false,
