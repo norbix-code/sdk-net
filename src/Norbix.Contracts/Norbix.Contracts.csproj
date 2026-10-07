@@ -12,6 +12,8 @@
     <Compile Include="..\Norbix.Sdk.Types\NorbixRouteAttribute.cs" Link="NorbixRouteAttribute.cs" />
     <Compile Include="..\Norbix.Sdk.Types\INorbixUnauthenticated.cs" Link="INorbixUnauthenticated.cs" />
     <Compile Include="..\Norbix.Sdk.Types\INorbixOptionalAuth.cs" Link="INorbixOptionalAuth.cs" />
+    <Compile Include="..\Norbix.Sdk.Types\SchemaFieldJsonConverter.cs" Link="SchemaFieldJsonConverter.cs" />
+    <Compile Include="..\Norbix.Sdk.Types\ReferenceValue.cs" Link="ReferenceValue.cs" />
   </ItemGroup>
 
 </Project>

@@ -21,6 +21,9 @@
     <Compile Remove="NorbixRouteAttribute.cs" />
     <Compile Remove="INorbixUnauthenticated.cs" />
     <Compile Remove="INorbixOptionalAuth.cs" />
+    <Compile Remove="SchemaFieldJsonConverter.cs" />
+    <Compile Remove="ReferenceValue.cs" />
+    <Compile Remove="SchemaFieldEndpoints.Hub.cs" />
   </ItemGroup>
 
   <ItemGroup>
