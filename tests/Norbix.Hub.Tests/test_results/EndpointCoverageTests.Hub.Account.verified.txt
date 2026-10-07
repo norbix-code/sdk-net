@@ -342,14 +342,12 @@
         },
         Body: {
           name: test-name,
-          scope: {
-            reach: test-reach,
-            projectId: Guid_1,
-            rights: test-rights,
-            envs: [
-              test-string
-            ]
-          }
+          accountRoleIds: [
+            test-string
+          ],
+          projectRoles: [
+            null
+          ]
         }
       },
       ResponseType: CreateAiServiceUserResponse,
@@ -3528,7 +3526,9 @@
         DocsUrl: https://example.test/docsUrl,
         InstallationType: test-installationType,
         Snippets: [
-          {}
+          {
+            Recommended: false
+          }
         ],
         ResponseStatus: {
           IsSuccess: true

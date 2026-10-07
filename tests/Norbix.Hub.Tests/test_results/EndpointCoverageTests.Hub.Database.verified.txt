@@ -1,7 +1,7 @@
 ﻿{
   Target: Hub,
   Group: database,
-  Count: 73,
+  Count: 74,
   Endpoints: [
     {
       Target: Hub,
@@ -628,12 +628,12 @@
       Response: {
         Item: {
           IsSystemOwned: true,
+          CanManageIndexes: true,
           ViewId: Guid_1,
           IntegrationName: test-integrationName,
           IsEnabled: true,
           Env: test-env,
           LastIntegrationTestAtUtc: DateTime_1,
-          LastIntegrationTestSucceeded: true,
           RequiresHumanDeliveryConfirmation: false
         },
         ResponseStatus: {
@@ -1149,7 +1149,9 @@
       ResponseType: GetCollectionIndexesResponse,
       Response: {
         Indexes: [
-          {}
+          {
+            CreatedByNorbix: false
+          }
         ],
         ResponseStatus: {
           IsSuccess: true
@@ -1548,6 +1550,45 @@
           DataSchema: {},
           VisualSchema: {},
           UpdatedAt: DateTimeOffset_1
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: database,
+      MethodName: GetDatabaseSchemaIndexStatusAsync,
+      RequestType: GetDatabaseSchemaIndexStatus,
+      HttpMethod: GET,
+      Path: /{version}/database/schemas/{Id}/index-status,
+      PathParams: [
+        Id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/database/schemas/{guid}/index-status,
+        Query: ?env=test-env,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: GetDatabaseSchemaIndexStatusResponse,
+      Response: {
+        Status: {
+          SchemaId: Guid_1,
+          Env: test-env,
+          Collection: test-collection,
+          State: test-state,
+          Integrations: [
+            {}
+          ],
+          LastRunUtc: DateTime_1
         },
         ResponseStatus: {
           IsSuccess: true

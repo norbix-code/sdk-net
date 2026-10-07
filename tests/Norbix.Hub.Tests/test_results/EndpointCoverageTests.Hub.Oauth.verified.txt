@@ -1,29 +1,8 @@
 ﻿{
   Target: Hub,
   Group: oauth,
-  Count: 5,
+  Count: 6,
   Endpoints: [
-    {
-      Target: Hub,
-      Group: oauth,
-      MethodName: OAuthAuthorizeDecisionAsync,
-      RequestType: OAuthAuthorizeDecisionRequest,
-      HttpMethod: POST,
-      Path: /{version}/oauth/authorize,
-      IsAccountScoped: false,
-      IsUnauthenticated: false,
-      Sent: {
-        Method: POST,
-        Path: /v2/oauth/authorize,
-        Headers: {
-          Authorization: Bearer test-bearer,
-          X-CM-AccountId: test-account,
-          X-CM-ProjectId: test-project
-        }
-      },
-      ResponseType: String,
-      Response: test-response
-    },
     {
       Target: Hub,
       Group: oauth,
@@ -44,6 +23,88 @@
       },
       ResponseType: String,
       Response: test-response
+    },
+    {
+      Target: Hub,
+      Group: oauth,
+      MethodName: OAuthConsentDecisionAsync,
+      RequestType: OAuthConsentDecisionRequest,
+      HttpMethod: POST,
+      Path: /{version}/oauth/consent,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/oauth/consent,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          responseType: test-responseType,
+          clientId: Guid_1,
+          redirectUri: https://example.test/redirectUri,
+          codeChallenge: test-codeChallenge,
+          codeChallengeMethod: test-codeChallengeMethod,
+          state: test-state,
+          resource: test-resource,
+          scope: test-scope,
+          consentTicket: test-consentTicket,
+          decision: test-decision,
+          accountRoleIds: [
+            test-string
+          ],
+          projectRoles: [
+            null
+          ]
+        }
+      },
+      ResponseType: OAuthConsentDecisionResponse,
+      Response: {
+        RedirectUrl: https://example.test/redirectUrl,
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: oauth,
+      MethodName: OAuthConsentAsync,
+      RequestType: OAuthConsentRequest,
+      HttpMethod: GET,
+      Path: /{version}/oauth/consent,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/oauth/consent,
+        Query: ?responseType=test-responseType&clientId={guid}&redirectUri=https%3a%2f%2fexample.test%2fredirectUri&codeChallenge=test-codeChallenge&codeChallengeMethod=test-codeChallengeMethod&state=test-state&resource=test-resource&scope=test-scope,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: OAuthConsentResponse,
+      Response: {
+        ClientName: test-clientName,
+        RedirectHost: test-redirectHost,
+        ConsentTicket: test-consentTicket,
+        AccountRoles: [
+          {
+            IsSystem: false
+          }
+        ],
+        Projects: [
+          {}
+        ],
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
     },
     {
       Target: Hub,

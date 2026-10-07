@@ -1,7 +1,7 @@
 ﻿{
   Target: Hub,
   Group: files,
-  Count: 23,
+  Count: 24,
   Endpoints: [
     {
       Target: Hub,
@@ -171,6 +171,39 @@
             Inherited: false
           }
         ],
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: files,
+      MethodName: UseFileAsync,
+      RequestType: UseFileRequest,
+      HttpMethod: POST,
+      Path: /{version}/files/item/use,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/files/item/use,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          filesIntegrationId: Guid_1,
+          path: test-path,
+          env: test-env
+        }
+      },
+      ResponseType: IdResponse,
+      Response: {
+        Id: Guid_1,
+        Status: test-status,
         ResponseStatus: {
           IsSuccess: true
         }

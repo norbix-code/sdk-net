@@ -1,0 +1,158 @@
+﻿{
+  Target: Hub,
+  Group: auth,
+  Count: 4,
+  Endpoints: [
+    {
+      Target: Hub,
+      Group: auth,
+      MethodName: AuthDeviceConsentDecisionAsync,
+      RequestType: AuthDeviceConsentDecisionRequest,
+      HttpMethod: POST,
+      Path: /{version}/auth/device/consent,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/auth/device/consent,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          userCode: test-userCode,
+          decision: test-decision,
+          accountRoleIds: [
+            test-string
+          ],
+          projectRoles: [
+            null
+          ]
+        }
+      },
+      ResponseType: AuthDeviceConsentDecisionResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: auth,
+      MethodName: AuthDeviceConsentAsync,
+      RequestType: AuthDeviceConsentRequest,
+      HttpMethod: GET,
+      Path: /{version}/auth/device/consent,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/auth/device/consent,
+        Query: ?userCode=test-userCode,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: AuthDeviceConsentResponse,
+      Response: {
+        ClientName: test-clientName,
+        DeviceName: test-deviceName,
+        UserCode: test-userCode,
+        ProjectId: Guid_1,
+        AccountRoles: [
+          {
+            IsSystem: false
+          }
+        ],
+        Projects: [
+          {}
+        ],
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: auth,
+      MethodName: AuthDeviceStartAsync,
+      RequestType: AuthDeviceStartRequest,
+      HttpMethod: POST,
+      Path: /{version}/auth/device/start,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/auth/device/start,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          clientName: test-clientName,
+          deviceName: test-deviceName
+        }
+      },
+      ResponseType: AuthDeviceStartResponse,
+      Response: {
+        DeviceCode: test-deviceCode,
+        UserCode: test-userCode,
+        VerificationUri: https://example.test/verificationUri,
+        VerificationUriComplete: https://example.test/verificationUriComplete,
+        ExpiresIn: 7,
+        Interval: 7,
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: auth,
+      MethodName: AuthDeviceTokenAsync,
+      RequestType: AuthDeviceTokenRequest,
+      HttpMethod: POST,
+      Path: /{version}/auth/device/token,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/auth/device/token,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        },
+        Body: {
+          deviceCode: test-deviceCode
+        }
+      },
+      ResponseType: AuthDeviceTokenResponse,
+      Response: {
+        Error: test-error,
+        ErrorDescription: test-errorDescription,
+        ErrorCode: test-errorCode,
+        BearerToken: test-bearerToken,
+        RefreshToken: test-refreshToken,
+        ExpiresIn: 7,
+        ClientId: Guid_1,
+        UserId: Guid_1,
+        UserName: test-userName,
+        DisplayName: test-displayName,
+        AccountId: Guid_1,
+        ProjectId: Guid_1,
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    }
+  ]
+}
