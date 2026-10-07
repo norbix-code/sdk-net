@@ -1,23 +1,28 @@
 using Norbix.Sdk;
+#if NORBIX_HUB
+using Client = Norbix.Sdk.NorbixHubClient;
+#else
+using Client = Norbix.Sdk.NorbixApiClient;
+#endif
 
 namespace Norbix.Sdk.Tests.Helpers;
 
 /// <summary>
-/// Test fixture that builds a real <see cref="NorbixClient"/> wired to an
-/// in-memory mock handler. The handler is hidden — tests only see the
-/// fixture's <see cref="Client"/>, configuration callback, and
+/// Test fixture that builds a real client (<c>NorbixApiClient</c>, or
+/// <c>NorbixHubClient</c> in the Hub suite) wired to an in-memory mock handler.
+/// The handler is hidden — tests only see the fixture's <see cref="Client"/>, configuration callback, and
 /// <see cref="RecordedRequests"/>.
 /// </summary>
 /// <remarks>
 /// Public surface stays clean: tests never touch <c>HttpClient</c> or
-/// <c>HttpMessageHandler</c>. The fixture reaches the internal NorbixClient
+/// <c>HttpMessageHandler</c>. The fixture reaches the internal client
 /// constructor via <c>InternalsVisibleTo("Norbix.Sdk.Tests")</c>.
 /// </remarks>
 internal sealed class NorbixTestFixture : IDisposable
 {
     private readonly MockHttpHandler _handler = new();
 
-    public NorbixClient Client { get; }
+    public Client Client { get; }
     public NorbixClientOptions Options { get; }
 
     private NorbixTestFixture(NorbixClientOptions options)
@@ -25,7 +30,7 @@ internal sealed class NorbixTestFixture : IDisposable
         Options = options;
         // Default fallback — endpoints not configured by the test return {}.
         _handler.RespondJsonDefault(new { });
-        Client = new NorbixClient(options, _handler);
+        Client = new Client(options, _handler);
     }
 
     /// <summary>

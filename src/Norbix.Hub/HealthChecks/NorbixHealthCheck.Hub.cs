@@ -5,7 +5,7 @@ using Norbix.Sdk.Types.Hub;
 
 namespace Norbix.Sdk.HealthChecks;
 
-internal sealed class NorbixHealthCheck(NorbixClient client, bool ping)
+internal sealed class NorbixHealthCheck(NorbixHubClient client, bool ping)
     : IHealthCheck
 {
     public async Task<HealthCheckResult> CheckHealthAsync(

@@ -6,7 +6,7 @@ using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 namespace Norbix.Sdk.HealthChecks;
 
-public static class NorbixHealthChecksServiceCollectionExtensions
+public static class NorbixApiHealthChecksServiceCollectionExtensions
 {
     /// <summary>
     /// Register a health check for the Norbix SDK.
@@ -16,21 +16,21 @@ public static class NorbixHealthChecksServiceCollectionExtensions
     /// When <paramref name="ping"/> is <c>true</c>, it performs a lightweight gateway call (<c>GET /{version}/echo</c>).
     /// </para>
     /// </summary>
-    public static IHealthChecksBuilder AddNorbixHealthChecks(
+    public static IHealthChecksBuilder AddNorbixApiHealthChecks(
         this IServiceCollection services,
-        string name = "norbix",
+        string name = "norbix-api",
         bool ping = false,
         HealthStatus? failureStatus = null,
         IEnumerable<string>? tags = null)
     {
         ArgumentNullException.ThrowIfNull(services);
 
-        // Ensure the SDK is registered; the health check depends on NorbixClient.
+        // Ensure the SDK is registered; the health check depends on NorbixApiClient.
         // (We don't auto-register the client here to avoid surprising configuration behavior.)
         var builder = services.AddHealthChecks();
         builder.Add(new HealthCheckRegistration(
             name,
-            sp => new NorbixHealthCheck(sp.GetRequiredService<Norbix.Sdk.NorbixClient>(), ping),
+            sp => new NorbixHealthCheck(sp.GetRequiredService<Norbix.Sdk.NorbixApiClient>(), ping),
             failureStatus,
             tags));
         return builder;

@@ -6,12 +6,15 @@
     <RootNamespace>Norbix.Hub.Tests</RootNamespace>
     <AssemblyName>Norbix.Hub.Tests</AssemblyName>
     <NoWarn>$(NoWarn);CA1707</NoWarn>
+    <!-- The shared helpers below pick NorbixHubClient when this is defined. -->
+    <DefineConstants>$(DefineConstants);NORBIX_HUB</DefineConstants>
   </PropertyGroup>
 
   <!--
-    Norbix.Api and Norbix.Hub both define Norbix.Sdk.NorbixClient, so a single
-    test project cannot reference both (CS0433). The Hub surface therefore gets
-    its own project; Norbix.Sdk.Tests stays the Api one.
+    The Hub surface has its own test project; Norbix.Sdk.Tests stays the Api
+    one. Each suite reaches its client's internal constructor through
+    InternalsVisibleTo, which needs one package per test assembly.
+    Norbix.Coexistence.Tests references both packages.
   -->
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" />

@@ -5,7 +5,7 @@ namespace Norbix.Sdk.Tests;
 
 /// <summary>
 /// The <c>norbix-env</c> header — sent from the configured environment, omitted
-/// for the default PROD, and overridable via <see cref="NorbixClient.WithEnv"/>.
+/// for the default PROD, and overridable via <see cref="NorbixApiClient.WithEnv"/>.
 /// </summary>
 [TestFixture]
 public sealed class EnvironmentHeaderTests

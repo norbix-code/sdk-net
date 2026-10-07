@@ -2,6 +2,11 @@ using System.Reflection;
 using System.Text.Json;
 using Norbix.Sdk.Tests.Helpers;
 using NUnit.Framework;
+#if NORBIX_HUB
+using Client = Norbix.Sdk.NorbixHubClient;
+#else
+using Client = Norbix.Sdk.NorbixApiClient;
+#endif
 
 namespace Norbix.Sdk.Tests;
 
@@ -247,7 +252,7 @@ internal static class EndpointCoverageDriver
         return missing;
     }
 
-    private static object ResolveModule(NorbixClient client, NorbixEndpointInfo endpoint)
+    private static object ResolveModule(Client client, NorbixEndpointInfo endpoint)
     {
         // Shared by the Api suite (Norbix.Sdk.Tests) and the Hub suite
         // (Norbix.Hub.Tests). Each assembly only ever sees its own catalog,

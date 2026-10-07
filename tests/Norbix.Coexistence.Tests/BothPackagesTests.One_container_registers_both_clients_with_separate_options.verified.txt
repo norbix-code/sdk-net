@@ -1,0 +1,11 @@
+﻿{
+  Api: {
+    ProjectId: proj_api
+  },
+  Hub: {
+    ProjectId: proj_hub,
+    AccountId: acc_1
+  },
+  ApiOptions: proj_api,
+  HubOptions: proj_hub
+}

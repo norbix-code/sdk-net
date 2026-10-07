@@ -1,0 +1,14 @@
+﻿{
+  Api: {
+    Type: Norbix.Sdk.NorbixApiClient,
+    Assembly: Norbix.Api,
+    ProjectId: proj_api
+  },
+  Hub: {
+    Type: Norbix.Sdk.NorbixHubClient,
+    Assembly: Norbix.Hub,
+    ProjectId: proj_hub
+  },
+  SharedOptionsAssembly: Norbix.Contracts,
+  SharedExceptionAssembly: Norbix.Contracts
+}

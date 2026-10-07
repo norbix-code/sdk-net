@@ -21,7 +21,7 @@ namespace Norbix.Hub.Tests;
 public sealed class TriggerActionBodyVariantTests
 {
     private static async Task<object> SendAsync(
-        Func<NorbixClient, Task> call,
+        Func<NorbixHubClient, Task> call,
         [System.Runtime.CompilerServices.CallerMemberName] string caller = ""
     )
     {
