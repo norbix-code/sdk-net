@@ -269,17 +269,18 @@ public sealed class OrdersController(NorbixClient norbix) : ControllerBase
 
 The public endpoint surface is generated from gateway DTOs at compile time. The test snapshots in `tests/Norbix.Sdk.Tests/test_results` verify every generated module by sending a request and deserializing a representative response.
 
-### API — project-scoped data (97 endpoints)
+### API — project-scoped data (98 endpoints)
 
 | Module | Endpoints | Description |
 | --- | ---: | --- |
 | `ai` | 18 | End-user AI chat for a signed-in project user: availability, sessions, entries, feedback, attachments, memory, `StartEndUserChatTurnAsync` (answers at once with a turn id; the answer streams on the user's channel `ai-chat:{projectId}:{authId}`), plus the end-user tools. |
 | `database` | 22 | Collection CRUD (`FindAsync`, `FindOneAsync`, `FindOwnAsync`, insert / update / replace / delete one or many), count, distinct, aggregate, saved aggregate execution (`ExecuteAggregateAsync`), `ChangeResponsibilityAsync`, schema reads, taxonomy and term reads (`FindTermsAsync`, `FindTermsChildrenAsync`, `FindTaxonomyTreeAsync`, `FindTermTreeAsync`, `FindMergedTermTreeAsync`). |
 | `echo` | 1 | Smoke-test echo endpoint. |
+| `files` | 13 | List, info, signed URL, upload URL + commit, download, delete one / many, public links, and a file by its stored id (`GetFileByIdAsync`). |
 | `membership` | 18 | User CRUD, registration, preferences, roles, and permissions. |
 | `public` | 2 | The project's public config and legal documents, read by the Admin Portal before sign-in (`GetPublicProjectConfigAsync`, `GetPublicProjectLegalAsync`). See [docs/hub/project.md](./docs/hub/project.md#public-config-and-legal-no-sign-in). |
 
-### Hub — project & account configuration (525 endpoints)
+### Hub — project & account configuration (526 endpoints)
 
 | Module | Endpoints | Description |
 | --- | ---: | --- |
@@ -288,7 +289,7 @@ The public endpoint surface is generated from gateway DTOs at compile time. The 
 | `database` | 73 | Module on / off (`EnableDatabaseAsync`, `DisableDatabaseAsync`); schemas with drafts, versions and diff, publish, rename, settings, list settings, embed (`UpdateDatabaseSchemaEmbedAsync`) and `ApplyDatabaseSchemaBundleAsync`; collection records from the dashboard (`FindRecordsAsync`, `InsertRecordAsync`, `UpdateManyRecordsAsync`, `AggregateRecordsAsync`, `SeedCollectionRecordsAsync`, `GetCollectionIndexesAsync`, …); taxonomies and terms with trees (`GetDatabaseTaxonomyTreeAsync`, `GetDatabaseTaxonomyTermTreeAsync`, `GetDatabaseMergedTermTreeAsync`); schema triggers; database integrations (including `GetAllowedFlexTiersAsync`, `TestDatabaseIntegrationAsync`, `RevealManagedFlexConnectionStringAsync`); saved aggregates (`TestDatabaseAggregateAsync`); collection imports. |
 | `echo` | 1 | Smoke-test echo endpoint. |
 | `email` | 2 | Public e-mail link endpoints: `OneClickUnsubscribeAsync` and `GetEmailPreferencesByLinkAsync` (reads the marketing preferences behind a signed unsubscribe link; pass the link's `Token`). Both are public links: they work on a client with no API key (the key is sent only when there is one), like the three `Preview*NotificationAsync` methods. |
-| `files` | 22 | File storage integrations, triggers, public links, and module settings. |
+| `files` | 23 | File storage integrations, triggers, public links, a file by its stored id (`GetFileByIdAsync`), and module settings. |
 | `internal` | 1 | Internal type-generation endpoint. |
 | `logs` | 9 | Logging integrations and module settings. |
 | `membership` | 25 | Roles, policies, users, preferences, integrations, triggers. |
@@ -430,6 +431,178 @@ var eventId = root.TryGetProperty("eventId", out var e) && e.ValueKind == JsonVa
     : root.GetProperty("id").GetString()!;   // older gateway: no eventId
 if (!processedEventIds.Add(eventId)) return Results.Ok();   // same change, already handled
 ```
+
+### Nested forms, reference expansion, files by id (gateway campaign `audit/schema-content`, 2026-10-07)
+
+> Ships with the gateway campaign branch `audit/schema-content`; the methods
+> below answer only once that branch is on the gateway you call.
+
+**A schema read is typed.** `GetDatabaseSchemaAsync` (Api and Hub) returns every
+field as its own class — the gateway writes a `$fieldType` discriminator and
+this SDK reads it:
+
+```csharp
+var schema = await client.Database.GetDatabaseSchemaAsync(new GetDatabaseSchemaRequest { Id = "sch_orders" });
+foreach (var field in schema!.Item!.DataSchema.Fields)
+{
+    switch (field)
+    {
+        case StringFieldDto s:   Console.WriteLine($"{s.FieldName}: text, default {s.Default}, unique {s.Unique}"); break;
+        case ObjectFieldDto o:   Console.WriteLine($"{o.FieldName}: nested form with {o.Properties.Count} members, required {string.Join(",", o.Required ?? [])}"); break;
+        case ArrayFieldDto a:    Console.WriteLine($"{a.FieldName}: list of {a.Items.GetType().Name}, {a.MinItems}..{a.MaxItems}"); break;
+        case JsonFieldDto j:     Console.WriteLine($"{j.FieldName}: free JSON object, max {j.MaxBytes} bytes"); break;
+        case UnknownSchemaFieldDto u: Console.WriteLine($"{u.FieldName}: kind {u.FieldType} this SDK does not know yet"); break;
+    }
+}
+```
+
+The kinds: `StringFieldDto`, `DecimalFieldDto`, `IntegerFieldDto`, `DateFieldDto`,
+`BooleanFieldDto`, `CurrencyFieldDto` (`MultipleOf`, `Minimum`, `Maximum`,
+`Default: CurrencyDefaultDto { Value, Currency }`), `GeolocationFieldDto`,
+`TagsFieldDto` (`MinItems`, `MaxItems`, `Default`), `FileFieldDto` (`MinItems`,
+`MaxItems`, `AllowedFileType`, `MaxSizeMb`), `EnumSelectionFieldDto`,
+`TaxonomySelectionFieldDto` / `CollectionSelectionFieldDto` /
+`UserSelectionFieldDto` / `RoleSelectionFieldDto` (each with `DisplayField`,
+the target property shown instead of the id), and the three new ones:
+`ObjectFieldDto` (a nested form: `Properties`, `Required`), `ArrayFieldDto`
+(`Items` of any kind, `MinItems`, `MaxItems`, `UniqueItems`) and `JsonFieldDto`
+(a free-form object, `MaxBytes`). `Default` and `Unique` exist on the primitive
+kinds. A kind this SDK does not know yet arrives as `UnknownSchemaFieldDto`
+(name + raw `FieldType`), never as an exception. Nesting is recursive:
+`ArrayFieldDto.Items` can be an `ObjectFieldDto` whose `Properties` hold another
+`ArrayFieldDto`.
+
+**Nested documents.** Records are extended-JSON strings, so a nested form or a
+list of objects is just the JSON you write. Reads, filters, sorts and updates
+reach into it with dotted paths:
+
+```csharp
+// insert a record with a nested form, a list of objects and a free JSON object
+await client.Database.InsertOneAsync(new InsertOneRequest
+{
+    CollectionName = "orders",
+    Document = """{"customer":"rec_7","address":{"city":"Vilnius"},"lines":[{"sku":"A-1","qty":2}],"settings":{"theme":"dark"}}""",
+});
+
+// filter on a nested member or inside a list; sort on a nested member (not on or through a list)
+await client.Database.FindAsync(new FindRequest
+{
+    CollectionName = "orders",
+    Filter = """{"address.city":"Vilnius","lines":{"$elemMatch":{"sku":"A-1","qty":{"$gte":2}}}}""",
+    SortBy = "address.city",
+});
+
+// update a nested member, one element, every element, or the elements a filter matches
+await client.Database.UpdateOneAsync(new UpdateOneRequest
+{
+    CollectionName = "orders",
+    Id = "ord_1",
+    Update = """{"address.city":"Kaunas","lines.0.qty":3,"lines.$[].checked":true,"lines.$[line].qty":4}""",
+    ArrayFilters = """[{"line.sku":"A-1"}]""",   // one filter per $[name] in the update
+});
+```
+
+`ArrayFilters` (new on `UpdateOneRequest` / `UpdateManyRequest`, Hub
+`UpdateOneRecord` / `UpdateManyRecords`) is MongoDB's `arrayFilters`: a JSON
+array with one filter document per `$[name]` identifier used in the update.
+`$and` / `$or` / `$nor` are allowed inside a filter. A sort on a list or through
+one (`lines.qty`, `tags.0`) is refused — a list cannot be paged on.
+
+**Reference expansion.** A reference field (user, role, taxonomy term,
+collection record, file) stores an id. Set `ExpandReferences = true` on
+`FindAsync`, `FindOneAsync`, `FindOwnAsync` (Api) or `FindRecordsAsync`,
+`FindOneRecordAsync` (Hub) and every reference comes back as `{ id, display }`,
+where `display` is the target's display field per the schema (a user's e-mail,
+a term's title or slug, a role's name, a record's named field, a file's path)
+and `null` when the target is gone. `ReferenceValue` reads it out of the
+record:
+
+```csharp
+var page = await client.Database.FindAsync(new FindRequest { CollectionName = "orders", ExpandReferences = true });
+var record = (JsonElement)page!.List!.Items[0];
+
+var customer = ReferenceValue.Read(record, "customer");            // { Id = "rec_7", Display = "Ann Example" }
+var roles = ReferenceValue.ReadMany(record.GetProperty("visibleTo")); // a `multiple` field
+var product = ReferenceValue.Read(record, "lines.0.product");      // inside a list of nested forms
+```
+
+Expansion needs read permission on every source the schema links to; a
+caller without it is refused with `CM-ERRORS-DATABASE-056` (the message names
+the source and the fields). Without the flag the read returns the stored ids,
+as before. A `display` that is not a string (a term whose title is a language
+map) lands in `ReferenceValue.RawDisplay`.
+
+**A file by its stored id.** A file field stores file ids (`nbfl_…`, or the
+bare UUID). Read the file behind an id without knowing its path:
+
+```csharp
+// Api: GET /{version}/files/{filesIntegrationId}/by-id/{id}
+var file = await client.Files.GetFileByIdAsync(new GetFileByIdRequest { FilesIntegrationId = integrationId, Id = "nbfl_…" });
+// Hub: GET /{version}/files/item/by-id?filesIntegrationId=…&id=…
+var same = await hub.Files.GetFileByIdAsync(new GetFileById { FilesIntegrationId = integrationId, Id = "nbfl_…" });
+Console.WriteLine($"{file!.File!.Path} public={file.IsPublic} url={file.PublicUrl}");
+```
+
+File ids are stable now (the same id on every listing, `info`, upload commit and
+by-id read).
+
+**Terms carry a slug.** `TermDto.Slug` / `TermTreeDto.Slug` is the URL-safe
+name (`"Côte d'Ivoire"` → `cote-d-ivoire`), unique inside the taxonomy. The
+server derives it from `name` on every save; a save may send an explicit
+`"slug"` in the document (Hub `SaveDatabaseTaxonomyTermRequest.Document`,
+`UpdateDatabaseTaxonomyTermRequest.Update`). A derived slug another term has
+gets a `-2`, `-3`… suffix; an explicit one another term has is refused
+(`CM-ERRORS-TAXONOMIES-012`). A taxonomy reference with `DisplayField = "slug"`
+expands to the slug.
+
+**What else changed for callers:**
+
+- A record is checked against every rule of its schema on write, at any depth:
+  `format` (email / uri), `pattern`, `multipleOf`, `minimum` / `maximum`,
+  enum values, geolocation coordinates, `minItems` / `maxItems` on tags, files
+  and lists, repeated entries where `uniqueItems`, the `{ value, currency }`
+  shape, and — new — a nested form is closed (an undeclared member is refused),
+  while the root stays open. The error names the full path
+  (`customer.address.zip`, `lines[1].qty`).
+- Every referenced user / role / term / record / file must exist in the
+  declared target on write (`CM-ERRORS-DATABASE-050` … `-055`). A role
+  reference stores the role **id**; a role name is refused (`-051`).
+- A translatable string must be a `{ language: text }` object; a plain string
+  is refused (`CM-ERRORS-DATABASE-049`).
+- `SortBy` accepts a dotted path through nested forms (`address.city`); an
+  array position or a path on / through a list is refused.
+- Two update keys that overlap (`address` and `address.city`) are refused
+  (`CM-ERRORS-DATABASE-014`) instead of failing in MongoDB.
+
+**Error codes you may now see** (on `NorbixException.ErrorCode`; record errors
+carry `FieldName` = the full path and `Keyword` in their metadata):
+
+| Code | Keyword | When |
+| --- | --- | --- |
+| `CM-ERRORS-DATABASE-014` | — | `ArrayFilters` malformed or not paired with the `$[name]` identifiers of the update; two update paths overlap. Wrapped in `CM-ERRORS-PROPERTY-002` on the property. |
+| `CM-ERRORS-DATABASE-039` | `type` | Wrong JSON type: a scalar on a list, a list on a single value, a non-object on a nested form / currency / geolocation / JSON field, an empty reference id. |
+| `CM-ERRORS-DATABASE-040` | `length` | `minLength` / `maxLength`; `minItems` / `maxItems` on tags, files and lists; a JSON field above `maxBytes` (or a member write into a capped JSON field). |
+| `CM-ERRORS-DATABASE-041` | `pattern` | The string does not match `pattern`. |
+| `CM-ERRORS-DATABASE-042` | `format` | `format` email / uri; a file id that is not a UUID / `nbfl_…`; a currency code that is not three upper-case letters. |
+| `CM-ERRORS-DATABASE-043` | `range` | `minimum` / `maximum` on integer, decimal, date and the currency amount. |
+| `CM-ERRORS-DATABASE-044` | `multipleOf` | Decimal or currency amount not on the step. |
+| `CM-ERRORS-DATABASE-045` | `enum` | Value outside the enum values, the allowed currencies, the allowed geometry types. |
+| `CM-ERRORS-DATABASE-046` | `uniqueItems` | A repeated entry in tags, a multiple enum, file ids, multiple references, a list with `uniqueItems`. |
+| `CM-ERRORS-DATABASE-047` | `properties` | A nested form, currency or geolocation object with an unknown member or a missing one. |
+| `CM-ERRORS-DATABASE-048` | `coordinates` | Not a `[longitude, latitude]` pair (or list of pairs); longitude outside -180..180, latitude outside -90..90. |
+| `CM-ERRORS-DATABASE-049` | `translateOptions` | A translatable string that is not a `{ language: text }` object. |
+| `CM-ERRORS-DATABASE-050` … `-054` | `reference` | A referenced user (050), role (051), term (052), record (053) or file (054) does not exist in the declared target. `MissingId` in the metadata. |
+| `CM-ERRORS-DATABASE-055` | `reference` | The declared target itself cannot be read (unknown taxonomy, collection without a repository, files integration that cannot open). |
+| `CM-ERRORS-DATABASE-056` | — | `ExpandReferences = true` without read permission on a linked source (`SourceKind`, `Source`, `Fields`, `MissingPermissions` in the metadata). |
+| `CM-ERRORS-SCHEMA-036` | — | A schema nests deeper than 5 levels. |
+| `CM-ERRORS-SCHEMA-037` | — | A field `default` breaks the field's own rules. |
+| `CM-ERRORS-SCHEMA-038` | — | A nested `required` names a member the form does not declare. |
+| `CM-ERRORS-SCHEMA-039` | — | A collection reference's `displayField` is not a field of the target schema. |
+| `CM-ERRORS-SCHEMA-040` | — | A draft or rename would remove a field another schema's collection reference shows (`displayField`). |
+| `CM-ERRORS-SCHEMA-041` | — | A schema delete while another schema's collection reference points at it. |
+| `CM-ERRORS-TAXONOMIES-012` | — | An explicit term slug another term of the taxonomy has. |
+| `CM-ERRORS-TAXONOMIES-013` | — | An explicit term slug with no letter or digit left after slugifying. |
+
 
 ## Working with terms
 
@@ -867,7 +1040,7 @@ a `try / catch`. Endpoints that answer with raw bytes rather than a document
 
 ## How It Stays in Sync With the Backend
 
-The source of truth is `src/Norbix.Sdk.Types/Generated/Api.dtos.cs` and `src/Norbix.Sdk.Types/Generated/Hub.dtos.cs`.
+The source of truth is `src/Norbix.Sdk.Types/Generated/Api.dtos.cs` and `src/Norbix.Sdk.Types/Generated/Hub.dtos.cs`. They are regenerated from a running gateway with `python3 scripts/sync-types.py --api <api url> --hub <hub url>` (see [CONTRIBUTING.md](./CONTRIBUTING.md#regenerate-the-dto-files)); a non-empty `git diff` after a run is a real contract change.
 
 A Roslyn source generator walks every `[NorbixRoute]` DTO and emits:
 

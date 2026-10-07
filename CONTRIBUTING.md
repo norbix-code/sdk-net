@@ -27,6 +27,37 @@ dotnet build
 
 The `Norbix.Sdk.Generators` source generator runs as part of `Norbix.Sdk`'s compilation, walks every type with `[NorbixRoute]`, and emits the `ApiNamespace`, `HubNamespace`, and per-group `XxxModule` classes directly into the in-memory compilation. Nothing is committed under a `Generated/` folder for the SDK methods — they live as compiler artifacts only, so there's no drift to police.
 
+### Regenerate the DTO files
+
+The two DTO files come from a running gateway (Api host and Hub host). One
+script does the export and the post-processing this repo needs:
+
+```bash
+dotnet tool install -g x        # once: the exporter
+python3 scripts/sync-types.py --api http://localhost:5002 --hub http://localhost:5001
+dotnet build && dotnet test
+```
+
+What the script does: runs `x csharp <url> <Api|Hub>`, flattens the output to
+one namespace (`Norbix.Sdk.Types.Api` / `.Hub`), renames the upstream markers
+(`[Route]` → `[NorbixRoute]`, `IReturn<T>` → `INorbixRequest<T>`), drops the
+server-only attributes, and carries the auth markers (`INorbixUnauthenticated`,
+`INorbixOptionalAuth`) over from the file it replaces — the contract does not
+say which endpoint needs no credentials, the SDK does. A new endpoint that
+needs a marker is added to the generated file once, by hand, and kept from
+then on.
+
+Two runs against the same gateway give byte-identical files, so a non-empty
+`git diff` is a real contract change. Read it before committing: a type that
+disappeared is a broken SDK method, not a tidy-up. The endpoint coverage
+snapshots (`tests/*/test_results/EndpointCoverageTests.*.verified.txt`) then
+change with the contract; accept a received snapshot only when every line in
+it matches the diff.
+
+Hand-written companions live next to the generated files as `partial` classes
+(`PushIntegrationEndpoints.cs`, `SchemaFieldEndpoints.cs`, …) and survive a
+regeneration.
+
 If you need to add behavior that isn't per-endpoint (e.g. a new auth helper, a transport feature, a DI extension), edit:
 
 - `src/Norbix.Sdk/NorbixClient.cs` — main client
