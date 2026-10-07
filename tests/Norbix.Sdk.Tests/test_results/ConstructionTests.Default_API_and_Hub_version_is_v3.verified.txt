@@ -1,0 +1,4 @@
+﻿{
+  ApiVersion: v3,
+  HubVersion: v3
+}

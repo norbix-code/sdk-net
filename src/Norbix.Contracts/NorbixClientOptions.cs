@@ -65,11 +65,11 @@ public sealed class NorbixClientOptions
     /// <summary>Hub gateway base URL. Default <c>https://hub.norbix.ai</c> (or <c>NORBIX_HUB_URL</c>).</summary>
     public string HubBaseUrl { get; set; } = DefaultHubBaseUrl;
 
-    /// <summary>{version} segment for API routes. Default <c>v2</c>.</summary>
-    public string ApiVersion { get; set; } = "v2";
+    /// <summary>{version} segment for API routes. Default <c>v3</c>.</summary>
+    public string ApiVersion { get; set; } = "v3";
 
-    /// <summary>{version} segment for Hub routes. Default <c>v2</c>.</summary>
-    public string HubVersion { get; set; } = "v2";
+    /// <summary>{version} segment for Hub routes. Default <c>v3</c>.</summary>
+    public string HubVersion { get; set; } = "v3";
 
     /// <summary>Per-request timeout. Default 30s.</summary>
     public TimeSpan Timeout { get; set; } = TimeSpan.FromSeconds(30);

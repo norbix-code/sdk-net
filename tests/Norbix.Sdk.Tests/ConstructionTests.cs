@@ -29,6 +29,13 @@ public sealed class ConstructionTests
     }
 
     [Test]
+    public Task Default_API_and_Hub_version_is_v3()
+    {
+        var options = new NorbixClientOptions();
+        return Verifier.Verify(new { options.ApiVersion, options.HubVersion }, VerifyConfig.VerifySettings);
+    }
+
+    [Test]
     public async Task Options_built_from_explicit_args()
     {
         using var fixture = NorbixTestFixture.Create(o =>

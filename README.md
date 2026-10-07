@@ -113,8 +113,8 @@ NORBIX_ACCOUNT_ID=acc_456            # optional
 NORBIX_REGION=nb-eu-germany          # optional — no default region (see "Regions")
 NORBIX_API_URL=https://api.norbix.ai
 NORBIX_HUB_URL=https://hub.norbix.ai
-NORBIX_API_VERSION=v2
-NORBIX_HUB_VERSION=v2
+NORBIX_API_VERSION=v3
+NORBIX_HUB_VERSION=v3
 NORBIX_TIMEOUT_MS=30000
 ```
 
