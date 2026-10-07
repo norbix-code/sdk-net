@@ -4,6 +4,12 @@
 **Scope:** UX of configuration and module API surface.
 **Repo path reviewed:** `/Users/djovaisas/Projects/norbix/sdks/norbix-net`
 
+> Names in this review predate 3.13: `NorbixClient` is now `NorbixApiClient`
+> (Norbix.Api) / `NorbixHubClient` (Norbix.Hub), `AddNorbix(...)` is
+> `AddNorbixApi(...)` / `AddNorbixHub(...)`, `AddNorbixHealthChecks()` is
+> `AddNorbixApiHealthChecks()` / `AddNorbixHubHealthChecks()`, and
+> `NorbixClientOptions` lives in `src/Norbix.Contracts`.
+
 ---
 
 ## 1. Suggestions (ordered by impact)

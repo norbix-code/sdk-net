@@ -16,7 +16,7 @@ surface exactly. They live on the Hub client:
 using Norbix.Sdk;
 using Norbix.Sdk.Types.Hub;
 
-var norbix = new NorbixClient(new NorbixClientOptions
+var norbix = new NorbixHubClient(new NorbixClientOptions
 {
     ApiKey = "sk_live_...",
     ProjectId = "proj_123",

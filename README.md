@@ -1,6 +1,6 @@
 # Norbix .NET SDK
 
-[![CI](https://github.com/norbix-dev/norbix-net/actions/workflows/ci.yml/badge.svg)](https://github.com/norbix-dev/norbix-net/actions/workflows/ci.yml)
+[![CI](https://github.com/norbix-code/sdk-net/actions/workflows/ci.yml/badge.svg)](https://github.com/norbix-code/sdk-net/actions/workflows/ci.yml)
 [![NuGet](https://img.shields.io/nuget/v/Norbix.Api.svg?logo=nuget)](https://www.nuget.org/packages/Norbix.Api)
 [![NuGet](https://img.shields.io/nuget/v/Norbix.Hub.svg?logo=nuget)](https://www.nuget.org/packages/Norbix.Hub)
 [![License](https://img.shields.io/nuget/l/Norbix.Api.svg)](./LICENSE)
@@ -11,6 +11,8 @@ Official .NET SDK for [Norbix](https://norbix.ai). There are **two packages**:
 - **`Norbix.Hub`**: project/account configuration (schemas, integrations, team, billing)
 
 Each package exposes the same ergonomic surface (e.g. `client.Database`, `client.Membership`) but targets only its gateway (API or Hub). Targets .NET 10.
+
+The client is **`NorbixApiClient`** in `Norbix.Api` and **`NorbixHubClient`** in `Norbix.Hub`. `NorbixClientOptions`, `NorbixException` and the login types are shared, so one project can reference both packages.
 
 ## Install
 
@@ -33,7 +35,7 @@ using Norbix.Sdk;
 using Norbix.Sdk.Types.Api;
 
 // Service mode — long-lived API key
-using var client = new NorbixClient(new NorbixClientOptions
+using var client = new NorbixApiClient(new NorbixClientOptions
 {
     ApiKey = "<api_key>",
     ProjectId = "proj_123",
@@ -44,7 +46,7 @@ await client.Database.FindAsync(new FindRequest { CollectionName = "orders" });
 
 ```csharp
 // User mode — exchange credentials for a JWT
-using var client = new NorbixClient(new NorbixClientOptions
+using var client = new NorbixApiClient(new NorbixClientOptions
 {
     ProjectId = "proj_123",
 });
@@ -64,7 +66,7 @@ await client.Database.FindAsync(new FindRequest { CollectionName = "orders" }); 
 using Norbix.Sdk;
 using Norbix.Sdk.Types.Hub;
 
-using var client = new NorbixClient(new NorbixClientOptions
+using var client = new NorbixHubClient(new NorbixClientOptions
 {
     ApiKey = "<api_key>",
     ProjectId = "proj_123",
@@ -72,6 +74,17 @@ using var client = new NorbixClient(new NorbixClientOptions
 });
 
 await client.Database.GetDatabaseSchemasAsync(new GetDatabaseSchemas());
+```
+
+### Both packages in one project
+
+```csharp
+using Norbix.Sdk;
+
+var options = new NorbixClientOptions("<api_key>", "proj_123");
+
+using var api = new NorbixApiClient(options); // project data
+using var hub = new NorbixHubClient(options); // project configuration
 ```
 
 ## Authentication
@@ -106,15 +119,15 @@ NORBIX_TIMEOUT_MS=30000
 ```
 
 ```csharp
-using var client = new NorbixClient(); // reads everything from env
+using var client = new NorbixApiClient(); // reads everything from env
 ```
 
-The SDK does not load `.env` files itself. Load them in your app bootstrap or deployment environment before constructing `NorbixClient`.
+The SDK does not load `.env` files itself. Load them in your app bootstrap or deployment environment before constructing the client.
 
 You can also override gateways for self-hosted or local deployments:
 
 ```csharp
-var client = new NorbixClient(new NorbixClientOptions
+var client = new NorbixApiClient(new NorbixClientOptions
 {
     ProjectId = "proj_123",
     ApiKey = "<api_key>",
@@ -135,7 +148,7 @@ Norbix can run in multiple regions. The SDK resolves the region in this order �
 When a region is resolved, every request carries the `nb-region` header.
 
 ```csharp
-using var client = new NorbixClient(new NorbixClientOptions
+using var client = new NorbixApiClient(new NorbixClientOptions
 {
     ApiKey = "<api_key>",
     ProjectId = "proj_123",
@@ -149,7 +162,7 @@ NORBIX_REGION=nb-eu-germany
 ```
 
 ```csharp
-using var client = new NorbixClient(); // picks up NORBIX_REGION
+using var client = new NorbixApiClient(); // picks up NORBIX_REGION
 ```
 
 `WithRegion(...)` creates a derived client for per-call or per-scope overrides. Like `WithBearerToken` / `WithScope`, the new client shares the underlying `HttpClient`:
@@ -230,28 +243,32 @@ Every other project setting (name, CORS, languages, admin URL, legal, Admin Port
 
 ## Integration Guides
 
-- [**Using with ASP.NET Core**](./docs/integrations/aspnet-core.md) — register `NorbixClient`, bind configuration, inject into controllers/services.
+- [**Using with ASP.NET Core**](./docs/integrations/aspnet-core.md) — register `NorbixApiClient` / `NorbixHubClient`, bind configuration, inject into controllers/services.
 - [**Using with Generic Host / DI**](./docs/integrations/di.md) — lifetime patterns, retries (Polly), and advanced options.
 
 ## ASP.NET Core / DI
 
 ```csharp
 // Program.cs
-builder.Services.AddNorbix(builder.Configuration); // scoped by default (safe for per-request auth)
+builder.Services.AddNorbixApi(builder.Configuration); // singleton, reads the "Norbix" section
 
 // or configure explicitly
-builder.Services.AddNorbix(o =>
+builder.Services.AddNorbixApi(o =>
 {
     o.ProjectId = "proj_123";
     o.ApiKey = "<api_key>";
 });
 
-// Service-to-service (fixed API key) singleton:
-builder.Services.AddNorbixSingleton(builder.Configuration);
+// Scoped — for per-request auth (derive with WithBearerToken):
+builder.Services.AddNorbixApiScoped(o => o.ProjectId = "proj_123");
+
+// Norbix.Hub has the same helpers: AddNorbixHub, AddNorbixHubScoped.
+// Each client reads its own named options, so both can live in one container.
+builder.Services.AddNorbixHub(builder.Configuration);
 ```
 
 ```csharp
-public sealed class OrdersController(NorbixClient norbix) : ControllerBase
+public sealed class OrdersController(NorbixApiClient norbix) : ControllerBase
 {
     [HttpGet]
     public async Task<IActionResult> Index(CancellationToken ct)
