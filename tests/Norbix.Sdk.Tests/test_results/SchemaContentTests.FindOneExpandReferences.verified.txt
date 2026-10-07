@@ -1,0 +1,15 @@
+﻿{
+  Sent: {
+    Method: GET,
+    Path: /v2/database/collections/orders/ord_1,
+    Query: ?expandReferences=True,
+    Headers: {
+      Authorization: Bearer test-api-key,
+      X-CM-ProjectId: test-project
+    }
+  },
+  Customer: {
+    Id: rec_7,
+    Display: Ann Example
+  }
+}

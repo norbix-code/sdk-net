@@ -1,0 +1,26 @@
+﻿{
+  Sent: {
+    Method: GET,
+    Path: /v2/database/collections/orders,
+    Query: ?expandReferences=True,
+    Headers: {
+      Authorization: Bearer test-bearer,
+      X-CM-AccountId: test-account,
+      X-CM-ProjectId: test-project
+    }
+  },
+  Customer: {
+    Id: rec_7,
+    Display: Ann Example
+  },
+  Photos: [
+    {
+      Id: nbfl_1,
+      Display: sc_e2e/photos/cat.png
+    }
+  ],
+  Region: {
+    Id: trm_1,
+    Display: north
+  }
+}

@@ -1,0 +1,5 @@
+﻿{
+  HttpStatus: 400,
+  ErrorCode: CM-ERRORS-DATABASE-046,
+  Message: Field 'tags' is invalid: must not repeat an entry
+}

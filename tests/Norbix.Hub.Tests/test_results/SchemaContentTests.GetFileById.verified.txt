@@ -1,0 +1,14 @@
+﻿{
+  Sent: {
+    Method: GET,
+    Path: /v2/files/item/by-id,
+    Query: ?filesIntegrationId={guid}&id=nbfl_{guid},
+    Headers: {
+      Authorization: Bearer test-bearer,
+      X-CM-AccountId: test-account,
+      X-CM-ProjectId: test-project
+    }
+  },
+  FilePath: sc_e2e/photos/cat.png,
+  IsPublic: false
+}

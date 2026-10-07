@@ -1,0 +1,13 @@
+﻿{
+  Method: POST,
+  Path: /v2/database/taxonomies/tax_regions/terms,
+  Headers: {
+    Authorization: Bearer test-bearer,
+    Content-Type: application/json; charset=utf-8,
+    X-CM-AccountId: test-account,
+    X-CM-ProjectId: test-project
+  },
+  Body: {
+    document: {"name":"Springfield","slug":"springfield-il","order":1}
+  }
+}

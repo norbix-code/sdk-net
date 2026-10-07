@@ -1,0 +1,5 @@
+﻿{
+  HttpStatus: 400,
+  ErrorCode: CM-ERRORS-PROPERTY-002,
+  Message: Property 'ArrayFilters' is invalid: CM-ERRORS-DATABASE-014 identifier 'line' is used in the update but has no filter
+}

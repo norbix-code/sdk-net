@@ -1,0 +1,95 @@
+﻿[
+  {
+    Kind: StringFieldDto,
+    Field: {
+      MinLength: 2,
+      Default: ab,
+      Unique: true,
+      FieldName: code
+    }
+  },
+  {
+    Kind: CurrencyFieldDto,
+    Field: {
+      MultipleOf: 0.01,
+      Default: {
+        Value: 10.0,
+        Currency: EUR
+      },
+      FieldName: budget
+    }
+  },
+  {
+    Kind: FileFieldDto,
+    Field: {
+      MaxItems: 3,
+      AllowedFileType: image/*,
+      MaxSizeMb: 2.0,
+      FieldName: photos
+    }
+  },
+  {
+    Kind: TaxonomySelectionFieldDto,
+    Field: {
+      TaxonomyId: tax_regions,
+      Multiple: false,
+      DisplayField: slug,
+      FieldName: region
+    }
+  },
+  {
+    Kind: JsonFieldDto,
+    Field: {
+      MaxBytes: 65536,
+      FieldName: settings
+    }
+  },
+  {
+    Kind: ArrayFieldDto,
+    FieldName: lines,
+    MinItems: 1,
+    Items: {
+      Kind: ObjectFieldDto,
+      FieldName: line,
+      Required: [
+        sku
+      ],
+      Properties: [
+        {
+          Kind: StringFieldDto,
+          Field: {
+            FieldName: sku
+          }
+        },
+        {
+          Kind: ArrayFieldDto,
+          FieldName: serials,
+          UniqueItems: true,
+          Items: {
+            Kind: StringFieldDto,
+            Field: {
+              FieldName: serial
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    Kind: ObjectFieldDto,
+    FieldName: address,
+    Properties: [
+      {
+        Kind: StringFieldDto,
+        Field: {
+          FieldName: city
+        }
+      }
+    ]
+  },
+  {
+    Kind: UnknownSchemaFieldDto,
+    FieldName: future,
+    FieldType: HologramFieldDto
+  }
+]

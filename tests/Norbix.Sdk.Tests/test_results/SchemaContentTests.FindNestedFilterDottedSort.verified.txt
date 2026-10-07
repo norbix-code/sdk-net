@@ -1,0 +1,9 @@
+﻿{
+  Method: GET,
+  Path: /v2/database/collections/orders,
+  Query: ?filter=%7b%22address.city%22%3a%22Vilnius%22%2c%22tags.0%22%3a%22vip%22%7d&sortBy=address.city&sortOrder=-1&expandReferences=False,
+  Headers: {
+    Authorization: Bearer test-api-key,
+    X-CM-ProjectId: test-project
+  }
+}

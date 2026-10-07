@@ -1,0 +1,13 @@
+﻿{
+  Method: PUT,
+  Path: /v2/database/collections/orders/ord_1,
+  Headers: {
+    Authorization: Bearer test-api-key,
+    Content-Type: application/json; charset=utf-8,
+    X-CM-ProjectId: test-project
+  },
+  Body: {
+    update: {"address.city":"Kaunas","lines.$[line].qty":3},
+    arrayFilters: [{"line.sku":"A-1"}]
+  }
+}

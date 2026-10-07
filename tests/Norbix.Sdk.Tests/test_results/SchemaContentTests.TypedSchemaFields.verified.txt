@@ -1,0 +1,214 @@
+﻿[
+  {
+    Kind: StringFieldDto,
+    Field: {
+      Pattern: ^[a-z]{3}$,
+      Default: abc,
+      Unique: true,
+      FieldName: code
+    }
+  },
+  {
+    Kind: DecimalFieldDto,
+    Field: {
+      MultipleOf: 0.01,
+      Default: 9.99,
+      FieldName: price
+    }
+  },
+  {
+    Kind: CurrencyFieldDto,
+    Field: {
+      AllowedCurrencies: [
+        EUR,
+        USD
+      ],
+      MultipleOf: 0.01,
+      Minimum: 0.0,
+      Maximum: 1000.0,
+      Default: {
+        Value: 10.0,
+        Currency: EUR
+      },
+      FieldName: budget
+    }
+  },
+  {
+    Kind: BooleanFieldDto,
+    Field: {
+      Default: false,
+      FieldName: paid
+    }
+  },
+  {
+    Kind: DateFieldDto,
+    Field: {
+      Minimum: 16777216,
+      Default: 20000000,
+      FieldName: due
+    }
+  },
+  {
+    Kind: IntegerFieldDto,
+    Field: {
+      Minimum: 1,
+      Maximum: 10,
+      Default: 1,
+      Unique: false,
+      FieldName: qty
+    }
+  },
+  {
+    Kind: GeolocationFieldDto,
+    Field: {
+      AllowedTypes: [
+        Point
+      ],
+      FieldName: where
+    }
+  },
+  {
+    Kind: TagsFieldDto,
+    Field: {
+      MinItems: 1,
+      MaxItems: 5,
+      Default: [
+        new
+      ],
+      FieldName: tags
+    }
+  },
+  {
+    Kind: FileFieldDto,
+    Field: {
+      Storages: [
+        Guid_1
+      ],
+      MinItems: 0,
+      MaxItems: 3,
+      AllowedFileType: image/*,
+      MaxSizeMb: 2.5,
+      FieldName: photos
+    }
+  },
+  {
+    Kind: TaxonomySelectionFieldDto,
+    Field: {
+      TaxonomyId: tax_regions,
+      Multiple: false,
+      DisplayField: slug,
+      FieldName: region
+    }
+  },
+  {
+    Kind: CollectionSelectionFieldDto,
+    Field: {
+      CollectionId: sch_customers,
+      DisplayField: name,
+      Multiple: false,
+      FieldName: customer
+    }
+  },
+  {
+    Kind: UserSelectionFieldDto,
+    Field: {
+      Multiple: false,
+      DisplayField: email,
+      FieldName: owner
+    }
+  },
+  {
+    Kind: RoleSelectionFieldDto,
+    Field: {
+      Multiple: true,
+      DisplayField: name,
+      FieldName: visibleTo
+    }
+  },
+  {
+    Kind: EnumSelectionFieldDto,
+    Field: {
+      Values: [
+        open,
+        closed
+      ],
+      Multiple: false,
+      Default: [
+        open
+      ],
+      FieldName: status
+    }
+  },
+  {
+    Kind: JsonFieldDto,
+    Field: {
+      MaxBytes: 65536,
+      FieldName: settings
+    }
+  },
+  {
+    Kind: ArrayFieldDto,
+    FieldName: lines,
+    MinItems: 1,
+    MaxItems: 20,
+    UniqueItems: false,
+    Items: {
+      Kind: ObjectFieldDto,
+      FieldName: line,
+      Required: [
+        sku
+      ],
+      Properties: [
+        {
+          Kind: StringFieldDto,
+          Field: {
+            FieldName: sku
+          }
+        },
+        {
+          Kind: IntegerFieldDto,
+          Field: {
+            Minimum: 1,
+            FieldName: qty
+          }
+        }
+      ]
+    }
+  },
+  {
+    Kind: ObjectFieldDto,
+    FieldName: address,
+    Required: [
+      city
+    ],
+    Properties: [
+      {
+        Kind: StringFieldDto,
+        Field: {
+          FieldName: city
+        }
+      },
+      {
+        Kind: ObjectFieldDto,
+        FieldName: geo,
+        Properties: [
+          {
+            Kind: GeolocationFieldDto,
+            Field: {
+              FieldName: point
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    Kind: UnknownSchemaFieldDto,
+    FieldName: future,
+    FieldType: HologramFieldDto
+  },
+  {
+    Kind: UnknownSchemaFieldDto,
+    FieldName: bare
+  }
+]
