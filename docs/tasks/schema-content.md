@@ -16,7 +16,7 @@ Not in scope: merging (the gateway campaign is not on `refactoringV2`); typed re
 4. [done] feat(database): nested documents + `ArrayFilters` on update one / update many (Api + Hub): dotted paths, `$[]`, `$[name]` with `ArrayFilters` go out as sent; CM-ERRORS-DATABASE-014 / -039 / -040 / -046 / -047 refusals surface with their code; a nested filter / dotted `SortBy` travels unchanged.
 5. [done] feat(files): file by id — `GetFileByIdAsync` (Api `GET /{version}/files/{filesIntegrationId}/by-id/{id}`, Hub `GET /{version}/files/item/by-id`) tests.
 6. [done] docs: README section for the schema-content contract (expand references, nested documents + array filters, file by id, typed schema fields, term slug) + the new error codes 039–056, SCHEMA-036–041, TAXONOMIES-012/013; CONTRIBUTING regeneration steps point at the script.
-7. [doing] full suite green (83 + 229, Release build `-warnaserror` clean); `nbx-ship --no-merge`; PR URL in this file.
+7. [done] full suite green (83 + 229, Release build `-warnaserror` clean); `nbx-ship --no-merge` → PR #81 https://github.com/norbix-code/sdk-net/pull/81 (open, not merged on purpose).
 
 ## Changes
 | file | what changed | plan step # |
@@ -45,7 +45,7 @@ Not in scope: merging (the gateway campaign is not on `refactoringV2`); typed re
 - Convenience overloads (`FindAsync(collection, expandReferences: true)`): the SDK's public shape is the generated request DTOs; adding a second shape is a public-surface change that rule 4 of `sdk-management.md` reserves for the owner. The flag is a request member, which is enough.
 
 ## Needs you
-- [ ] Merge after the gateway campaign `audit/schema-content` is on `refactoringV2` — the PR is opened with `nbx-ship --no-merge` and left open on purpose. Order: SDKs first, `cli` last.
+- [ ] Merge PR #81 (https://github.com/norbix-code/sdk-net/pull/81) after the gateway campaign `audit/schema-content` is on `refactoringV2` — the PR is opened with `nbx-ship --no-merge` and left open on purpose. Order: SDKs first, `cli` last.
 
 ## Open questions
 - none
