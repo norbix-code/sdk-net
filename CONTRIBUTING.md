@@ -1,4 +1,4 @@
-# Contributing to `Norbix.Sdk`
+# Contributing to the Norbix .NET SDK (`Norbix.Api`, `Norbix.Hub`)
 
 The .NET SDK is generated at compile time from the gateway DTOs. The flow below is the same one CI runs — if you mirror it locally you'll never get a surprise on merge.
 
@@ -60,10 +60,15 @@ regeneration.
 
 If you need to add behavior that isn't per-endpoint (e.g. a new auth helper, a transport feature, a DI extension), edit:
 
-- `src/Norbix.Sdk/NorbixClient.cs` — main client
+- `src/Norbix.Sdk/NorbixClient.cs` — main client, compiled into both packages: `NorbixApiClient` in Norbix.Api, `NorbixHubClient` in Norbix.Hub (`NORBIX_HUB` picks the name)
 - `src/Norbix.Sdk/Transport/HttpTransport.cs` — HTTP layer
-- `src/Norbix.Sdk/NorbixClientOptions.cs` — config + env-var loading
-- `src/Norbix.Sdk/Auth/*.cs` — login flow
+- `src/Norbix.Contracts/NorbixClientOptions.cs` — config + env-var loading (shared by both packages)
+- `src/Norbix.Contracts/Auth/*.cs` — login types
+- `src/Norbix.Sdk/NorbixApiServiceCollectionExtensions.cs` / `src/Norbix.Hub/NorbixHubServiceCollectionExtensions.cs` — DI helpers (`AddNorbixApi` / `AddNorbixHub`)
+
+A public type that both packages compile must not have the same full name in
+both, or a project that references both fails with CS0433.
+`tests/Norbix.Coexistence.Tests` references both packages and keeps this true.
 
 ## Versioning
 
@@ -138,9 +143,13 @@ scripts/                   SDK maintenance scripts
 src/
   Norbix.Sdk.Types/        DTO contracts + post-processed Generated/*.dtos.cs
   Norbix.Sdk.Generators/   Roslyn IIncrementalGenerator (analyzer-only)
-  Norbix.Sdk/              client, transport, options, login, DI helpers
+  Norbix.Contracts/        shared by both packages: options, errors, login types, DTO contracts
+  Norbix.Sdk/              Norbix.Api: client, transport, DI helpers (sources shared with Norbix.Hub)
+  Norbix.Hub/              Norbix.Hub: compiles Norbix.Sdk's sources as NorbixHubClient
 tests/
-  Norbix.Sdk.Tests/        NUnit + Verify suite + Helpers/MockHttpHandler
+  Norbix.Sdk.Tests/        NUnit + Verify suite + Helpers/MockHttpHandler (Norbix.Api)
+  Norbix.Hub.Tests/        the same for Norbix.Hub
+  Norbix.Coexistence.Tests/ one project referencing both packages
 docs/
   integrations/aspnet-core.md
   integrations/di.md

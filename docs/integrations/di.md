@@ -2,21 +2,21 @@
 
 [← Back to project README](../../README.md)
 
-`AddNorbix(...)` covers the 90 % case. The recipes below cover the rest.
+`AddNorbixApi(...)` / `AddNorbixHub(...)` cover the 90 % case. The recipes below cover the rest.
 
 ## Multiple Norbix scopes in one app
 
 If your app has several Norbix projects (multi-tenant SaaS, separate staging / production) and you want one client per scope, use **keyed services**:
 
 ```csharp
-builder.Services.AddKeyedSingleton<NorbixClient>("tenant-a",
-    (_, _) => new NorbixClient(new NorbixClientOptions
+builder.Services.AddKeyedSingleton<NorbixApiClient>("tenant-a",
+    (_, _) => new NorbixApiClient(new NorbixClientOptions
     {
         ProjectId = "proj_a", ApiKey = "...",
     }));
 
-builder.Services.AddKeyedSingleton<NorbixClient>("tenant-b",
-    (_, _) => new NorbixClient(new NorbixClientOptions
+builder.Services.AddKeyedSingleton<NorbixApiClient>("tenant-b",
+    (_, _) => new NorbixApiClient(new NorbixClientOptions
     {
         ProjectId = "proj_b", ApiKey = "...",
     }));
@@ -24,8 +24,8 @@ builder.Services.AddKeyedSingleton<NorbixClient>("tenant-b",
 
 ```csharp
 public sealed class TenantSwitcher(
-    [FromKeyedServices("tenant-a")] NorbixClient a,
-    [FromKeyedServices("tenant-b")] NorbixClient b)
+    [FromKeyedServices("tenant-a")] NorbixApiClient a,
+    [FromKeyedServices("tenant-b")] NorbixApiClient b)
 {
     public Task<object?> A(CancellationToken ct) => a.EchoAsync(ct);
     public Task<object?> B(CancellationToken ct) => b.EchoAsync(ct);
@@ -37,9 +37,9 @@ public sealed class TenantSwitcher(
 If you want to inject just one module instead of the whole client:
 
 ```csharp
-public sealed class NorbixDatabase(NorbixClient norbix)
+public sealed class NorbixDatabase(NorbixApiClient norbix)
 {
-    public DatabaseModule Database => norbix.Database;
+    public ApiDatabaseModule Database => norbix.Database;
 }
 
 builder.Services.AddSingleton<NorbixDatabase>();
@@ -52,9 +52,9 @@ This keeps your application service signatures focused — `OrdersRepository(Nor
 If your auth provider returns refresh tokens, wrap your domain calls with a small retry helper that creates a derived client via `client.WithBearerToken(...)` after a refresh:
 
 ```csharp
-public sealed class NorbixWithRefresh(NorbixClient norbix, ITokenRefresher refresher)
+public sealed class NorbixWithRefresh(NorbixApiClient norbix, ITokenRefresher refresher)
 {
-    public async Task<T> CallAsync<T>(Func<NorbixClient, Task<T>> call, CancellationToken ct = default)
+    public async Task<T> CallAsync<T>(Func<NorbixApiClient, Task<T>> call, CancellationToken ct = default)
     {
         try { return await call(norbix); }
         catch (NorbixException ex) when (ex.StatusCode == 401)
@@ -70,7 +70,7 @@ Now domain code does `await wrapper.CallAsync(c => c.Database.FindAsync(...))` a
 
 ## Testing
 
-The SDK's public API is `NorbixClient` only — `HttpClient`, `HttpMessageHandler`, and the transport layer are all internal. For your own unit tests, mock `NorbixClient` behind a domain abstraction:
+The SDK's public API is the client (`NorbixApiClient` / `NorbixHubClient`) only — `HttpClient`, `HttpMessageHandler`, and the transport layer are all internal. For your own unit tests, mock the client behind a domain abstraction:
 
 ```csharp
 public interface IOrdersRepository
@@ -78,7 +78,7 @@ public interface IOrdersRepository
     Task<IEnumerable<Order>> ListAsync(CancellationToken ct);
 }
 
-public sealed class NorbixOrdersRepository(NorbixClient norbix) : IOrdersRepository
+public sealed class NorbixOrdersRepository(NorbixApiClient norbix) : IOrdersRepository
 {
     public async Task<IEnumerable<Order>> ListAsync(CancellationToken ct)
     {
@@ -88,7 +88,7 @@ public sealed class NorbixOrdersRepository(NorbixClient norbix) : IOrdersReposit
     }
 }
 
-// In tests, mock IOrdersRepository — not NorbixClient. Domain abstractions
+// In tests, mock IOrdersRepository — not the client. Domain abstractions
 // are easier to fake and don't tie tests to SDK internals.
 ```
 

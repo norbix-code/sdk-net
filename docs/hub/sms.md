@@ -2,7 +2,7 @@
 
 [← Back to project README](../../README.md)
 
-Every SMS endpoint the gateway exposes, and the `NorbixClient` method that
+Every SMS endpoint the gateway exposes, and the `NorbixHubClient` method that
 calls it. The methods are generated at build time from the route attributes in
 `src/Norbix.Sdk.Types/Generated/Hub.dtos.cs`, so this list matches the shipped
 surface exactly. Each method carries a doc comment with its verb, path and
@@ -14,7 +14,7 @@ They live on the Hub client:
 using Norbix.Sdk;
 using Norbix.Sdk.Types.Hub;
 
-var norbix = new NorbixClient(new NorbixClientOptions
+var norbix = new NorbixHubClient(new NorbixClientOptions
 {
     ApiKey = "sk_live_...",
     ProjectId = "proj_123",

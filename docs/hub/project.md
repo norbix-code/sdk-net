@@ -24,7 +24,7 @@ option only sets the `X-CM-ProjectId` header, and a missing path value throws
 using Norbix.Sdk;
 using Norbix.Sdk.Types.Hub;
 
-using var norbix = new NorbixClient(new NorbixClientOptions
+using var norbix = new NorbixHubClient(new NorbixClientOptions
 {
     ApiKey = "<hub_api_key>",
     ProjectId = "proj_123",
@@ -435,7 +435,7 @@ still needs credentials (an API key or a signed-in user) or it throws
 using Norbix.Sdk;
 using Norbix.Sdk.Types.Api;
 
-using var app = new NorbixClient(new NorbixClientOptions { ApiKey = "<api_key>", ProjectId = "proj_123" });
+using var app = new NorbixApiClient(new NorbixClientOptions { ApiKey = "<api_key>", ProjectId = "proj_123" });
 
 var config = await app.Public.GetPublicProjectConfigAsync(
     new GetPublicProjectConfig { ProjectId = "proj_123" });

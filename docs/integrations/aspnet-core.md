@@ -1,4 +1,4 @@
-# Using `Norbix.Sdk` with ASP.NET Core
+# Using `Norbix.Api` / `Norbix.Hub` with ASP.NET Core
 
 [← Back to project README](../../README.md)
 
@@ -8,8 +8,9 @@
 // Program.cs
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddNorbix(builder.Configuration);   // reads "Norbix" section
+builder.Services.AddNorbixApi(builder.Configuration); // reads "Norbix" section
                                                      // + NORBIX_* env vars
+builder.Services.AddNorbixHub(builder.Configuration); // only if you use Norbix.Hub too
 builder.Services.AddControllers();
 
 var app = builder.Build();
@@ -29,11 +30,11 @@ app.Run();
 }
 ```
 
-`AddNorbix(...)` registers `NorbixClient` as **scoped** (safe default for web apps). Inject it everywhere:
+`AddNorbixApi(...)` registers `NorbixApiClient` as a **singleton** (`AddNorbixHub(...)` does the same for `NorbixHubClient`). Use `AddNorbixApiScoped(...)` / `AddNorbixHubScoped(...)` for a scoped client. Inject it everywhere:
 
 ```csharp
 [ApiController, Route("orders")]
-public sealed class OrdersController(NorbixClient norbix) : ControllerBase
+public sealed class OrdersController(NorbixApiClient norbix) : ControllerBase
 {
     [HttpGet]
     public Task<object?> Index(CancellationToken ct)
@@ -43,7 +44,7 @@ public sealed class OrdersController(NorbixClient norbix) : ControllerBase
 
 ## Per-user requests (acting on behalf of an end user)
 
-If your API forwards a logged-in user's JWT to Norbix, the scoped default already matches what you want. You can also override the token per request by constructing the client yourself:
+If your API forwards a logged-in user's JWT to Norbix, construct a scoped client with that token:
 
 ```csharp
 builder.Services.AddHttpContextAccessor();
@@ -53,7 +54,7 @@ builder.Services.AddScoped(sp =>
     var jwt = http.Request.Headers.Authorization
         .ToString().Replace("Bearer ", "", StringComparison.OrdinalIgnoreCase);
 
-    return new NorbixClient(new NorbixClientOptions
+    return new NorbixApiClient(new NorbixClientOptions
     {
         ProjectId   = "proj_123",
         BearerToken = jwt,
@@ -61,13 +62,14 @@ builder.Services.AddScoped(sp =>
 });
 ```
 
-Now every request handler gets a `NorbixClient` already authenticated as the calling user.
+Now every request handler gets a `NorbixApiClient` already authenticated as the calling user.
 
 ## Health checks
 
 ```csharp
-builder.Services.AddNorbix(builder.Configuration);
-builder.Services.AddNorbixHealthChecks(ping: true);
+builder.Services.AddNorbixApi(builder.Configuration);
+builder.Services.AddNorbixApiHealthChecks(ping: true);   // health check "norbix-api"
+// Norbix.Hub: AddNorbixHub(...) + AddNorbixHubHealthChecks(...) ("norbix-hub")
 ```
 
 ## Common gotchas

@@ -1,9 +1,10 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <!--
-    Internal Roslyn source generator. NOT a published package on its own —
-    it ships as an analyzer asset bundled inside the Norbix.Sdk NuGet so
-    consumers see generated SDK methods automatically.
+    Internal Roslyn source generator. NOT a published package, and not
+    shipped inside Norbix.Api or Norbix.Hub either: it runs in those two
+    projects' own builds, and the generated modules are compiled into their
+    DLLs (see the note in Norbix.Sdk.csproj).
 
     Source generators must target netstandard2.0 (Roslyn requirement). We
     override the solution-wide TargetFramework here.
