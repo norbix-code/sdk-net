@@ -258,7 +258,7 @@
       Sent: {
         Method: GET,
         Path: /v2/database/collections/test-collectionName/{guid},
-        Query: ?databaseIntegrationId={guid}&env=test-env,
+        Query: ?databaseIntegrationId={guid}&expandReferences=True&env=test-env,
         Headers: {
           Authorization: Bearer test-bearer,
           X-CM-AccountId: test-account,
@@ -290,7 +290,7 @@
       Sent: {
         Method: GET,
         Path: /v2/database/collections/test-collectionName/own,
-        Query: ?databaseIntegrationId={guid}&filter=test-filter&schemaVersion=1&pagingArgs=Norbix.Sdk.Types.Api.PagingArgs&env=test-env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1,
+        Query: ?databaseIntegrationId={guid}&filter=test-filter&schemaVersion=1&pagingArgs=Norbix.Sdk.Types.Api.PagingArgs&expandReferences=True&env=test-env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1,
         Headers: {
           Authorization: Bearer test-bearer,
           X-CM-AccountId: test-account,
@@ -330,7 +330,7 @@
       Sent: {
         Method: GET,
         Path: /v2/database/collections/test-collectionName,
-        Query: ?databaseIntegrationId={guid}&filter=test-filter&schemaVersion=1&pagingArgs=Norbix.Sdk.Types.Api.PagingArgs&sortBy=test-sortBy&sortOrder=1&env=test-env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1,
+        Query: ?databaseIntegrationId={guid}&filter=test-filter&schemaVersion=1&pagingArgs=Norbix.Sdk.Types.Api.PagingArgs&sortBy=test-sortBy&sortOrder=1&expandReferences=True&env=test-env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1,
         Headers: {
           Authorization: Bearer test-bearer,
           X-CM-AccountId: test-account,
@@ -486,6 +486,7 @@
           filter: test-filter,
           allRecords: true,
           update: test-update,
+          arrayFilters: test-arrayFilters,
           env: test-env
         }
       },
@@ -521,6 +522,7 @@
         Body: {
           databaseIntegrationId: Guid_1,
           update: test-update,
+          arrayFilters: test-arrayFilters,
           env: test-env
         }
       },

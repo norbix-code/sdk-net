@@ -1,7 +1,7 @@
 ﻿{
   Target: Api,
   Group: files,
-  Count: 12,
+  Count: 13,
   Endpoints: [
     {
       Target: Api,
@@ -122,6 +122,45 @@
       ResponseType: Byte[],
       Response: {
         BinaryLength: 49
+      }
+    },
+    {
+      Target: Api,
+      Group: files,
+      MethodName: GetFileByIdAsync,
+      RequestType: GetFileByIdRequest,
+      HttpMethod: GET,
+      Path: /{version}/files/{filesIntegrationId}/by-id/{id},
+      PathParams: [
+        filesIntegrationId,
+        id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/files/{guid}/by-id/{guid},
+        Query: ?env=test-env,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: GetFileByIdResponse,
+      Response: {
+        File: {
+          Resource: {},
+          IntegrationId: Guid_1,
+          Path: test-path,
+          PublicUrl: https://example.test/publicUrl,
+          IsPublic: true
+        },
+        IsPublic: true,
+        PublicUrl: https://example.test/publicUrl,
+        ResponseStatus: {
+          IsSuccess: true
+        }
       }
     },
     {

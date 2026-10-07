@@ -1,7 +1,7 @@
 ﻿{
   Target: Hub,
   Group: files,
-  Count: 22,
+  Count: 23,
   Endpoints: [
     {
       Target: Hub,
@@ -81,6 +81,41 @@
         }
       },
       ResponseType: GetFileResponse,
+      Response: {
+        File: {
+          Resource: {},
+          IntegrationId: Guid_1,
+          Path: test-path,
+          PublicUrl: https://example.test/publicUrl,
+          IsPublic: true
+        },
+        IsPublic: true,
+        PublicUrl: https://example.test/publicUrl,
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: files,
+      MethodName: GetFileByIdAsync,
+      RequestType: GetFileById,
+      HttpMethod: GET,
+      Path: /{version}/files/item/by-id,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/files/item/by-id,
+        Query: ?filesIntegrationId={guid}&id={guid}&env=test-env,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          X-CM-AccountId: test-account,
+          X-CM-ProjectId: test-project
+        }
+      },
+      ResponseType: GetFileByIdResponse,
       Response: {
         File: {
           Resource: {},

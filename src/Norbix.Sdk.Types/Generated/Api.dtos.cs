@@ -8,8 +8,8 @@
 #pragma warning disable CS0114, CS1570, CS0102, CS0108, CS0618
 
 using System;
-using System.Collections;
 using System.IO;
+using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using Norbix.Sdk.Types;
@@ -585,6 +585,9 @@ namespace Norbix.Sdk.Types.Api;
 
         [DataMember]
         public virtual string? DatabaseIntegrationId { get; set; }
+
+        [DataMember]
+        public virtual bool ExpandReferences { get; set; }
     }
 
     public partial class FindOneResponse
@@ -615,6 +618,12 @@ namespace Norbix.Sdk.Types.Api;
 
         [DataMember]
         public virtual PagingArgs? PagingArgs { get; set; }
+
+        ///<summary>
+        ///Set true to get every reference value as { id, display } (display = the target's displayField per the schema; null when the target is gone). Needs read permission on every source the schema links to (users, roles, taxonomy, collection, files) — otherwise the read is refused with CM-ERRORS-DATABASE-056 naming the source. Default false returns the stored ids.
+        ///</summary>
+        [DataMember]
+        public virtual bool ExpandReferences { get; set; }
     }
 
     ///<summary>
@@ -645,6 +654,9 @@ namespace Norbix.Sdk.Types.Api;
 
         [DataMember]
         public virtual int? SortOrder { get; set; }
+
+        [DataMember]
+        public virtual bool ExpandReferences { get; set; }
     }
 
     public partial class FindResponse
@@ -732,6 +744,9 @@ namespace Norbix.Sdk.Types.Api;
 
         [DataMember]
         public virtual string Update { get; set; }
+
+        [DataMember]
+        public virtual string? ArrayFilters { get; set; }
     }
 
     ///<summary>
@@ -753,6 +768,9 @@ namespace Norbix.Sdk.Types.Api;
 
         [DataMember]
         public virtual string Update { get; set; }
+
+        [DataMember]
+        public virtual string? ArrayFilters { get; set; }
     }
 
     ///<summary>
@@ -987,6 +1005,29 @@ namespace Norbix.Sdk.Types.Api;
 
         [DataMember]
         public virtual string Path { get; set; }
+    }
+
+    ///<summary>
+    ///Files
+    ///</summary>
+    [NorbixRoute("/{version}/files/{filesIntegrationId}/by-id/{id}", "GET")]
+    [DataContract]
+    public partial class GetFileByIdRequest
+        : CodeMashRequestBase, INorbixRequest<GetFileByIdResponse>
+    {
+        [DataMember]
+        public virtual string FilesIntegrationId { get; set; }
+
+        [DataMember]
+        public virtual string Id { get; set; }
+    }
+
+    public partial class GetFileByIdResponse
+        : ResponseBase
+    {
+        public virtual FileResourceRefDto? File { get; set; }
+        public virtual bool? IsPublic { get; set; }
+        public virtual string? PublicUrl { get; set; }
     }
 
     ///<summary>
@@ -2214,9 +2255,27 @@ namespace Norbix.Sdk.Types.Api;
         string ProjectId { get; set; }
     }
 
+    public partial class ArrayFieldDto
+        : JsonSchemaFieldDto
+    {
+        [DataMember]
+        public virtual JsonSchemaFieldDto Items { get; set; }
+
+        [DataMember]
+        public virtual int? MinItems { get; set; }
+
+        [DataMember]
+        public virtual int? MaxItems { get; set; }
+
+        [DataMember]
+        public virtual bool? UniqueItems { get; set; }
+    }
+
     public partial class BooleanFieldDto
         : JsonSchemaFieldDto
     {
+        [DataMember]
+        public virtual bool? Default { get; set; }
     }
 
     public partial class CollectionSelectionFieldDto
@@ -2232,11 +2291,32 @@ namespace Norbix.Sdk.Types.Api;
         public virtual bool Multiple { get; set; }
     }
 
+    public partial class CurrencyDefaultDto
+    {
+        [DataMember]
+        public virtual decimal Value { get; set; }
+
+        [DataMember]
+        public virtual string Currency { get; set; }
+    }
+
     public partial class CurrencyFieldDto
         : JsonSchemaFieldDto
     {
         [DataMember]
         public virtual IReadOnlyList<string>? AllowedCurrencies { get; set; }
+
+        [DataMember]
+        public virtual decimal? MultipleOf { get; set; }
+
+        [DataMember]
+        public virtual decimal? Minimum { get; set; }
+
+        [DataMember]
+        public virtual decimal? Maximum { get; set; }
+
+        [DataMember]
+        public virtual CurrencyDefaultDto? Default { get; set; }
     }
 
     public partial class DataSchemaDto
@@ -2256,6 +2336,9 @@ namespace Norbix.Sdk.Types.Api;
 
         [DataMember]
         public virtual long? Maximum { get; set; }
+
+        [DataMember]
+        public virtual long? Default { get; set; }
     }
 
     public partial class DecimalFieldDto
@@ -2269,6 +2352,12 @@ namespace Norbix.Sdk.Types.Api;
 
         [DataMember]
         public virtual decimal? MultipleOf { get; set; }
+
+        [DataMember]
+        public virtual decimal? Default { get; set; }
+
+        [DataMember]
+        public virtual bool? Unique { get; set; }
     }
 
     public partial class EnumSelectionFieldDto
@@ -2279,6 +2368,9 @@ namespace Norbix.Sdk.Types.Api;
 
         [DataMember]
         public virtual bool Multiple { get; set; }
+
+        [DataMember]
+        public virtual IReadOnlyList<string>? Default { get; set; }
     }
 
     public partial class FileFieldDto
@@ -2286,6 +2378,18 @@ namespace Norbix.Sdk.Types.Api;
     {
         [DataMember]
         public virtual IReadOnlyList<string>? Storages { get; set; }
+
+        [DataMember]
+        public virtual int? MinItems { get; set; }
+
+        [DataMember]
+        public virtual int? MaxItems { get; set; }
+
+        [DataMember]
+        public virtual string? AllowedFileType { get; set; }
+
+        [DataMember]
+        public virtual decimal? MaxSizeMb { get; set; }
     }
 
     public partial class GeolocationFieldDto
@@ -2303,6 +2407,19 @@ namespace Norbix.Sdk.Types.Api;
 
         [DataMember]
         public virtual long? Maximum { get; set; }
+
+        [DataMember]
+        public virtual long? Default { get; set; }
+
+        [DataMember]
+        public virtual bool? Unique { get; set; }
+    }
+
+    public partial class JsonFieldDto
+        : JsonSchemaFieldDto
+    {
+        [DataMember]
+        public virtual int? MaxBytes { get; set; }
     }
 
     public partial class JsonSchemaFieldDto
@@ -2311,11 +2428,24 @@ namespace Norbix.Sdk.Types.Api;
         public virtual string FieldName { get; set; }
     }
 
+    public partial class ObjectFieldDto
+        : JsonSchemaFieldDto
+    {
+        [DataMember]
+        public virtual IReadOnlyList<JsonSchemaFieldDto> Properties { get; set; }
+
+        [DataMember]
+        public virtual IReadOnlyList<string>? Required { get; set; }
+    }
+
     public partial class RoleSelectionFieldDto
         : JsonSchemaFieldDto
     {
         [DataMember]
         public virtual bool Multiple { get; set; }
+
+        [DataMember]
+        public virtual string? DisplayField { get; set; }
     }
 
     public partial class SchemaDto
@@ -2427,11 +2557,25 @@ namespace Norbix.Sdk.Types.Api;
 
         [DataMember]
         public virtual IReadOnlyDictionary<string, string>? TranslateOptions { get; set; }
+
+        [DataMember]
+        public virtual string? Default { get; set; }
+
+        [DataMember]
+        public virtual bool? Unique { get; set; }
     }
 
     public partial class TagsFieldDto
         : JsonSchemaFieldDto
     {
+        [DataMember]
+        public virtual int? MinItems { get; set; }
+
+        [DataMember]
+        public virtual int? MaxItems { get; set; }
+
+        [DataMember]
+        public virtual IReadOnlyList<string>? Default { get; set; }
     }
 
     public partial class TaxonomySelectionFieldDto
@@ -2442,6 +2586,9 @@ namespace Norbix.Sdk.Types.Api;
 
         [DataMember]
         public virtual bool Multiple { get; set; }
+
+        [DataMember]
+        public virtual string? DisplayField { get; set; }
     }
 
     public partial class UserSelectionFieldDto
@@ -2449,6 +2596,9 @@ namespace Norbix.Sdk.Types.Api;
     {
         [DataMember]
         public virtual bool Multiple { get; set; }
+
+        [DataMember]
+        public virtual string? DisplayField { get; set; }
     }
 
     public partial class VisualSchemaDto
@@ -2502,6 +2652,9 @@ namespace Norbix.Sdk.Types.Api;
         public virtual Dictionary<string, string>? Names { get; set; }
 
         [DataMember]
+        public virtual string? Slug { get; set; }
+
+        [DataMember]
         public virtual string? Description { get; set; }
 
         [DataMember]
@@ -2551,6 +2704,9 @@ namespace Norbix.Sdk.Types.Api;
 
         [DataMember]
         public virtual Dictionary<string, string>? Names { get; set; }
+
+        [DataMember]
+        public virtual string? Slug { get; set; }
 
         [DataMember]
         public virtual string? Description { get; set; }
