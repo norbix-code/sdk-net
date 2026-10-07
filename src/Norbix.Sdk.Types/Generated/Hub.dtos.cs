@@ -3967,9 +3967,27 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual List<string> Errors { get; set; } = [];
     }
 
+    public partial class ArrayFieldDto
+        : JsonSchemaFieldDto
+    {
+        [DataMember]
+        public virtual JsonSchemaFieldDto Items { get; set; }
+
+        [DataMember]
+        public virtual int? MinItems { get; set; }
+
+        [DataMember]
+        public virtual int? MaxItems { get; set; }
+
+        [DataMember]
+        public virtual bool? UniqueItems { get; set; }
+    }
+
     public partial class BooleanFieldDto
         : JsonSchemaFieldDto
     {
+        [DataMember]
+        public virtual bool? Default { get; set; }
     }
 
     public partial class CollectionSelectionFieldDto
@@ -3985,11 +4003,32 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual bool Multiple { get; set; }
     }
 
+    public partial class CurrencyDefaultDto
+    {
+        [DataMember]
+        public virtual decimal Value { get; set; }
+
+        [DataMember]
+        public virtual string Currency { get; set; }
+    }
+
     public partial class CurrencyFieldDto
         : JsonSchemaFieldDto
     {
         [DataMember]
         public virtual IReadOnlyList<string>? AllowedCurrencies { get; set; }
+
+        [DataMember]
+        public virtual decimal? MultipleOf { get; set; }
+
+        [DataMember]
+        public virtual decimal? Minimum { get; set; }
+
+        [DataMember]
+        public virtual decimal? Maximum { get; set; }
+
+        [DataMember]
+        public virtual CurrencyDefaultDto? Default { get; set; }
     }
 
     public partial class DataSchemaDto
@@ -4009,6 +4048,9 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember]
         public virtual long? Maximum { get; set; }
+
+        [DataMember]
+        public virtual long? Default { get; set; }
     }
 
     public partial class DecimalFieldDto
@@ -4022,6 +4064,12 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember]
         public virtual decimal? MultipleOf { get; set; }
+
+        [DataMember]
+        public virtual decimal? Default { get; set; }
+
+        [DataMember]
+        public virtual bool? Unique { get; set; }
     }
 
     public partial class EnumSelectionFieldDto
@@ -4032,6 +4080,9 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember]
         public virtual bool Multiple { get; set; }
+
+        [DataMember]
+        public virtual IReadOnlyList<string>? Default { get; set; }
     }
 
     public partial class FileFieldDto
@@ -4039,6 +4090,18 @@ namespace Norbix.Sdk.Types.Hub;
     {
         [DataMember]
         public virtual IReadOnlyList<string>? Storages { get; set; }
+
+        [DataMember]
+        public virtual int? MinItems { get; set; }
+
+        [DataMember]
+        public virtual int? MaxItems { get; set; }
+
+        [DataMember]
+        public virtual string? AllowedFileType { get; set; }
+
+        [DataMember]
+        public virtual decimal? MaxSizeMb { get; set; }
     }
 
     public partial class GeolocationFieldDto
@@ -4056,6 +4119,19 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember]
         public virtual long? Maximum { get; set; }
+
+        [DataMember]
+        public virtual long? Default { get; set; }
+
+        [DataMember]
+        public virtual bool? Unique { get; set; }
+    }
+
+    public partial class JsonFieldDto
+        : JsonSchemaFieldDto
+    {
+        [DataMember]
+        public virtual int? MaxBytes { get; set; }
     }
 
     public partial class JsonSchemaFieldDto
@@ -4064,11 +4140,24 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual string FieldName { get; set; }
     }
 
+    public partial class ObjectFieldDto
+        : JsonSchemaFieldDto
+    {
+        [DataMember]
+        public virtual IReadOnlyList<JsonSchemaFieldDto> Properties { get; set; }
+
+        [DataMember]
+        public virtual IReadOnlyList<string>? Required { get; set; }
+    }
+
     public partial class RoleSelectionFieldDto
         : JsonSchemaFieldDto
     {
         [DataMember]
         public virtual bool Multiple { get; set; }
+
+        [DataMember]
+        public virtual string? DisplayField { get; set; }
     }
 
     public partial class SchemaDiffDto
@@ -4262,11 +4351,25 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember]
         public virtual IReadOnlyDictionary<string, string>? TranslateOptions { get; set; }
+
+        [DataMember]
+        public virtual string? Default { get; set; }
+
+        [DataMember]
+        public virtual bool? Unique { get; set; }
     }
 
     public partial class TagsFieldDto
         : JsonSchemaFieldDto
     {
+        [DataMember]
+        public virtual int? MinItems { get; set; }
+
+        [DataMember]
+        public virtual int? MaxItems { get; set; }
+
+        [DataMember]
+        public virtual IReadOnlyList<string>? Default { get; set; }
     }
 
     public partial class TaxonomySelectionFieldDto
@@ -4277,6 +4380,9 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember]
         public virtual bool Multiple { get; set; }
+
+        [DataMember]
+        public virtual string? DisplayField { get; set; }
     }
 
     public partial class UserSelectionFieldDto
@@ -4284,6 +4390,9 @@ namespace Norbix.Sdk.Types.Hub;
     {
         [DataMember]
         public virtual bool Multiple { get; set; }
+
+        [DataMember]
+        public virtual string? DisplayField { get; set; }
     }
 
     public partial class VisualSchemaDto
@@ -4402,6 +4511,9 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual Dictionary<string, string>? Names { get; set; }
 
         [DataMember]
+        public virtual string? Slug { get; set; }
+
+        [DataMember]
         public virtual string? Description { get; set; }
 
         [DataMember]
@@ -4451,6 +4563,9 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember]
         public virtual Dictionary<string, string>? Names { get; set; }
+
+        [DataMember]
+        public virtual string? Slug { get; set; }
 
         [DataMember]
         public virtual string? Description { get; set; }
@@ -11514,6 +11629,10 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual string Id { get; set; }
 
         public virtual string? DatabaseIntegrationId { get; set; }
+        ///<summary>
+        ///Set true to get every reference value as { id, display } (display = the target's displayField per the schema; null when the target is gone). Needs read permission on every source the schema links to (users, roles, taxonomy, collection, files) — otherwise the read is refused with CM-ERRORS-DATABASE-056 naming the source. Default false returns the stored ids.
+        ///</summary>
+        public virtual bool ExpandReferences { get; set; }
     }
 
     public partial class FindOneRecordResponse
@@ -11549,6 +11668,10 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual PagingArgs? PagingArgs { get; set; }
         public virtual string? SortBy { get; set; }
         public virtual int? SortOrder { get; set; }
+        ///<summary>
+        ///Set true to get every reference value as { id, display } (display = the target's displayField per the schema; null when the target is gone). Needs read permission on every source the schema links to (users, roles, taxonomy, collection, files) — otherwise the read is refused with CM-ERRORS-DATABASE-056 naming the source. Default false returns the stored ids.
+        ///</summary>
+        public virtual bool ExpandReferences { get; set; }
     }
 
     public partial class FindRecordsResponse
@@ -11686,9 +11809,14 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual bool? AllRecords { get; set; }
 
         ///<summary>
-        ///The partial update document (applied with $set), as MongoDB extended-JSON.
+        ///The partial update document (applied with $set), as MongoDB extended-JSON. Dotted paths reach nested data: {"address.city":"Vilnius"}, {"lines.$[].qty":1}, or {"lines.$[line].qty":3} together with ArrayFilters.
         ///</summary>
         public virtual string Update { get; set; }
+
+        ///<summary>
+        ///Optional MongoDB arrayFilters — a JSON array of filter documents, one per $[name] identifier used in the Update paths, e.g. [{"line.sku":"A-1"}] for {"lines.$[line].qty":3}.
+        ///</summary>
+        public virtual string? ArrayFilters { get; set; }
     }
 
     ///<summary>
@@ -11710,9 +11838,14 @@ namespace Norbix.Sdk.Types.Hub;
 
         public virtual string? DatabaseIntegrationId { get; set; }
         ///<summary>
-        ///The partial update document (applied with $set), as MongoDB extended-JSON.
+        ///The partial update document (applied with $set), as MongoDB extended-JSON. Dotted paths reach nested data: {"address.city":"Vilnius"}, {"lines.2.qty":3}, {"lines.$[].qty":1}, or {"lines.$[line].qty":3} together with ArrayFilters.
         ///</summary>
         public virtual string Update { get; set; }
+
+        ///<summary>
+        ///Optional MongoDB arrayFilters — a JSON array of filter documents, one per $[name] identifier used in the Update paths, e.g. [{"line.sku":"A-1"}] for {"lines.$[line].qty":3}.
+        ///</summary>
+        public virtual string? ArrayFilters { get; set; }
     }
 
     [DataContract]
@@ -12078,7 +12211,7 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual string? DataSchema { get; set; }
 
         ///<summary>
-        ///OPTIONAL raw JSON string matching the Norbix UI/visual meta-schema (https://norbix.ai/schemas/ui/v1.json) for the draft's record form. If omitted or invalid, the backend auto-generates a flat-list form from the data schema.
+        ///OPTIONAL raw JSON string matching the Norbix UI/visual meta-schema (https://norbix.ai/schemas/ui/v1.json) for the draft's record form. If omitted or empty (no field cell), the backend auto-generates a flat-list form from the data schema; a layout that fails the meta-schema is refused with the key named.
         ///</summary>
         [DataMember]
         public virtual string? VisualSchema { get; set; }
@@ -12447,7 +12580,7 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual string? DatabaseIntegrationId { get; set; }
 
         ///<summary>
-        ///The term to insert, as a MongoDB extended-JSON document string (a raw JSON object). Supported term fields: name (string, or a {lang:value} map — required); description; order (integer sort position, lower shows first — omit for unordered); parentId (id of the single parent term); multiParents ("additional categories": array of {taxonomyId, parentId}). The server stamps taxonomyId/taxonomyName automatically — do not include them. Example: {"name":"France","order":1}.
+        ///The term to insert, as a MongoDB extended-JSON document string (a raw JSON object). Supported term fields: name (string, or a {lang:value} map — required); description; slug (optional — the URL-safe name, unique inside the taxonomy; derived from name when omitted, e.g. 'France' → 'france', with a -2, -3… suffix when another term of the taxonomy already has that derived slug; an explicit slug another term has is refused, CM-ERRORS-TAXONOMIES-012); order (integer sort position, lower shows first — omit for unordered); parentId (id of the single parent term); multiParents ("additional categories": array of {taxonomyId, parentId}). The server stamps taxonomyId/taxonomyName automatically — do not include them. Example: {"name":"France","order":1}.
         ///</summary>
         [DataMember]
         public virtual string Document { get; set; }
@@ -12480,7 +12613,7 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual string? DatabaseIntegrationId { get; set; }
 
         ///<summary>
-        ///Partial update document as MongoDB extended-JSON (a raw JSON object of fields to change), applied with $set — only the given fields change. Updatable term fields: name (string or {lang:value} map); description; order (integer sort position, lower shows first — use this to numerate/rank terms; set null to clear); parentId (single parent term id — a term from THIS taxonomy's parent taxonomy; e.g. link a country to its region by setting the country term's parentId to the region term id); multiParents ("additional categories": array of {taxonomyId, parentId}). Example to rank a term: {"order":1}.
+        ///Partial update document as MongoDB extended-JSON (a raw JSON object of fields to change), applied with $set — only the given fields change. Updatable term fields: name (string or {lang:value} map — a new name re-derives the slug unless 'slug' is sent too; a derived slug another term has gets a -2, -3… suffix); slug (optional — set explicitly, unique inside the taxonomy, CM-ERRORS-TAXONOMIES-012 when another term has it); description; order (integer sort position, lower shows first — use this to numerate/rank terms; set null to clear); parentId (single parent term id — a term from THIS taxonomy's parent taxonomy; e.g. link a country to its region by setting the country term's parentId to the region term id); multiParents ("additional categories": array of {taxonomyId, parentId}). Example to rank a term: {"order":1}.
         ///</summary>
         [DataMember]
         public virtual string Update { get; set; }
@@ -13760,6 +13893,29 @@ namespace Norbix.Sdk.Types.Hub;
         ///The path of the file to fetch metadata for.
         ///</summary>
         public virtual string Path { get; set; }
+    }
+
+    [NorbixRoute("/{version}/files/item/by-id", "GET")]
+    public partial class GetFileById
+        : CodeMashRequestBase, INorbixRequest<GetFileByIdResponse>
+    {
+        ///<summary>
+        ///The files integration id to read from, from get_files_integrations.
+        ///</summary>
+        public virtual string FilesIntegrationId { get; set; }
+
+        ///<summary>
+        ///The file id — nbfl_… as the Files endpoints return it, or its bare UUID.
+        ///</summary>
+        public virtual string Id { get; set; }
+    }
+
+    public partial class GetFileByIdResponse
+        : ResponseBase
+    {
+        public virtual FileResourceRefDto? File { get; set; }
+        public virtual bool? IsPublic { get; set; }
+        public virtual string? PublicUrl { get; set; }
     }
 
     public partial class GetFileResponse
