@@ -7123,6 +7123,14 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual string? Folder { get; set; }
     }
 
+    public partial interface IQueuedTrigger
+    {
+        string ViewId { get; set; }
+        string Name { get; set; }
+        int? Order { get; set; }
+        bool BreakOnError { get; set; }
+    }
+
     [DataContract]
     public partial class MembershipTriggerDto
         : TriggerDto
@@ -7340,7 +7348,7 @@ namespace Norbix.Sdk.Types.Hub;
 
     [DataContract]
     public partial class TriggerDto
-        : IHasViewId
+        : IHasViewId, IQueuedTrigger
     {
         [DataMember]
         public virtual TriggerType Type { get; set; }
@@ -7364,12 +7372,18 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual string? ActivationCode { get; set; }
 
         [DataMember]
+        public virtual int? Order { get; set; }
+
+        [DataMember]
+        public virtual bool BreakOnError { get; set; }
+
+        [DataMember]
         public virtual string? SavedByAuthId { get; set; }
     }
 
     [DataContract]
     public partial class TriggerProjectionList
-        : IHasViewId
+        : IHasViewId, IQueuedTrigger
     {
         [DataMember]
         public virtual string ViewId { get; set; }
@@ -7385,6 +7399,12 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember]
         public virtual bool IsEnabled { get; set; }
+
+        [DataMember]
+        public virtual int? Order { get; set; }
+
+        [DataMember]
+        public virtual bool BreakOnError { get; set; }
     }
 
     [DataContract]
@@ -18173,6 +18193,8 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual string? Description { get; set; }
         public virtual bool IsEnabled { get; set; }
         public virtual string? PreExecuteCode { get; set; }
+        public virtual int? Order { get; set; }
+        public virtual bool BreakOnError { get; set; }
         public virtual TriggerActionDto Action { get; set; }
     }
 

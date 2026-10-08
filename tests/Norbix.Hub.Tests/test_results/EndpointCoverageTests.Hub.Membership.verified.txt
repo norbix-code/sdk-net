@@ -1369,7 +1369,8 @@
           ThenAction: {},
           Description: test-description,
           IsEnabled: true,
-          ActivationCode: test-activationCode
+          ActivationCode: test-activationCode,
+          BreakOnError: false
         },
         ResponseStatus: {
           IsSuccess: true
@@ -1401,7 +1402,8 @@
           Items: [
             {
               HasPreExecuteCode: false,
-              IsEnabled: false
+              IsEnabled: false,
+              BreakOnError: false
             }
           ],
           HasMore: false,
@@ -1439,7 +1441,9 @@
             name: test-name,
             description: test-description,
             isEnabled: true,
-            preExecuteCode: test-preExecuteCode
+            preExecuteCode: test-preExecuteCode,
+            order: 1.0,
+            breakOnError: true
           },
           env: test-env
         }
