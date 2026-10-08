@@ -8,8 +8,8 @@
 #pragma warning disable CS0114, CS1570, CS0102, CS0108, CS0618
 
 using System;
-using System.Collections;
 using System.IO;
+using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using Norbix.Sdk.Types;
@@ -2858,6 +2858,14 @@ namespace Norbix.Sdk.Types.Api;
         public virtual IReadOnlyList<IntegrationTestResultItemDto>? Items { get; set; }
     }
 
+    public partial interface IQueuedTrigger
+    {
+        string ViewId { get; set; }
+        string Name { get; set; }
+        int? Order { get; set; }
+        bool BreakOnError { get; set; }
+    }
+
     [DataContract]
     public partial class TriggerActionDto
     {
@@ -2870,7 +2878,7 @@ namespace Norbix.Sdk.Types.Api;
 
     [DataContract]
     public partial class TriggerDto
-        : IHasViewId
+        : IHasViewId, IQueuedTrigger
     {
         [DataMember]
         public virtual TriggerType Type { get; set; }
@@ -2892,6 +2900,12 @@ namespace Norbix.Sdk.Types.Api;
 
         [DataMember]
         public virtual string? ActivationCode { get; set; }
+
+        [DataMember]
+        public virtual int? Order { get; set; }
+
+        [DataMember]
+        public virtual bool BreakOnError { get; set; }
 
         [DataMember]
         public virtual string? SavedByAuthId { get; set; }
