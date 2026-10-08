@@ -4,7 +4,7 @@
     Path: /v2/files/{guid}/test,
     Headers: {
       Authorization: Bearer test-api-key,
-      X-CM-ProjectId: test-project
+      norbix-project-id: test-project
     }
   },
   Results: [

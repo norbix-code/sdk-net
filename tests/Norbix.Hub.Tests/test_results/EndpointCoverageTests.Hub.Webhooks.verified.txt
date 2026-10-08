@@ -21,8 +21,8 @@
         Headers: {
           Authorization: Bearer test-bearer,
           Content-Type: application/json; charset=utf-8,
-          X-CM-AccountId: test-account,
-          X-CM-ProjectId: test-project
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
         },
         Body: {
           env: test-env
@@ -53,8 +53,8 @@
         Headers: {
           Authorization: Bearer test-bearer,
           Content-Type: application/json; charset=utf-8,
-          X-CM-AccountId: test-account,
-          X-CM-ProjectId: test-project
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
         },
         Body: {
           env: test-env
@@ -85,8 +85,8 @@
         Query: ?env=test-env,
         Headers: {
           Authorization: Bearer test-bearer,
-          X-CM-AccountId: test-account,
-          X-CM-ProjectId: test-project
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
         }
       },
       ResponseType: EmptyResponse,
@@ -111,8 +111,8 @@
         Headers: {
           Authorization: Bearer test-bearer,
           Content-Type: application/json; charset=utf-8,
-          X-CM-AccountId: test-account,
-          X-CM-ProjectId: test-project
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
         },
         Body: {
           destinationId: Guid_1,
@@ -154,8 +154,8 @@
         Path: /v2/webhooks/test-source/{guid},
         Headers: {
           Authorization: Bearer test-bearer,
-          X-CM-AccountId: test-account,
-          X-CM-ProjectId: test-project
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
         }
       },
       ResponseType: Object,
@@ -178,8 +178,8 @@
         Query: ?env=test-env,
         Headers: {
           Authorization: Bearer test-bearer,
-          X-CM-AccountId: test-account,
-          X-CM-ProjectId: test-project
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
         }
       },
       ResponseType: GetWebhookIntegrationResponse,
@@ -221,8 +221,8 @@
         Query: ?env=test-env,
         Headers: {
           Authorization: Bearer test-bearer,
-          X-CM-AccountId: test-account,
-          X-CM-ProjectId: test-project
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
         }
       },
       ResponseType: RevealWebhookIntegrationSecretResponse,
@@ -248,8 +248,8 @@
         Headers: {
           Authorization: Bearer test-bearer,
           Content-Type: application/json; charset=utf-8,
-          X-CM-AccountId: test-account,
-          X-CM-ProjectId: test-project
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
         },
         Body: {
           env: test-env
@@ -278,8 +278,8 @@
         Headers: {
           Authorization: Bearer test-bearer,
           Content-Type: application/json; charset=utf-8,
-          X-CM-AccountId: test-account,
-          X-CM-ProjectId: test-project
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
         },
         Body: {
           extraHeaders: {

@@ -20,6 +20,9 @@ internal static class RecordedRequestExtensions
     private static readonly string[] InterestingHeaders =
     {
         "Authorization",
+        "norbix-project-id",
+        "norbix-account-id",
+        // Legacy names: listed so a snapshot shows it if they are ever sent again.
         "X-CM-ProjectId",
         "X-CM-AccountId",
         "norbix-env",

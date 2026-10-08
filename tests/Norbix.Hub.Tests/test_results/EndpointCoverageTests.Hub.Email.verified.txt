@@ -18,8 +18,8 @@
         Query: ?token=test-token,
         Headers: {
           Authorization: Bearer test-bearer,
-          X-CM-AccountId: test-account,
-          X-CM-ProjectId: test-project
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
         }
       },
       ResponseType: GetEmailPreferencesByLinkResponse,
@@ -51,8 +51,8 @@
         Headers: {
           Authorization: Bearer test-bearer,
           Content-Type: application/json; charset=utf-8,
-          X-CM-AccountId: test-account,
-          X-CM-ProjectId: test-project
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
         },
         Body: {
           token: test-token

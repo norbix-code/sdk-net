@@ -18,8 +18,8 @@
         Query: ?caseId={guid}&env=test-env,
         Headers: {
           Authorization: Bearer test-bearer,
-          X-CM-AccountId: test-account,
-          X-CM-ProjectId: test-project
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
         }
       },
       ResponseType: GetDiagnosticEchoResponse,
@@ -55,8 +55,8 @@
         Query: ?env=test-env,
         Headers: {
           Authorization: Bearer test-bearer,
-          X-CM-AccountId: test-account,
-          X-CM-ProjectId: test-project
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
         }
       },
       ResponseType: GetDiagnosticPacksResponse,
@@ -84,8 +84,8 @@
         Query: ?keyPattern=test-keyPattern&caseId={guid}&env=test-env,
         Headers: {
           Authorization: Bearer test-bearer,
-          X-CM-AccountId: test-account,
-          X-CM-ProjectId: test-project
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
         }
       },
       ResponseType: InspectDiagnosticRedisResponse,
@@ -125,8 +125,8 @@
         Query: ?level=test-level&module=test-module&logCorrelationId={guid}&eventCode=test-eventCode&search=test-search&fromUtc=2026-04-27T12%3a00%3a00.0000000Z&toUtc=2026-04-27T12%3a00%3a00.0000000Z&caseId={guid}&env=test-env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1,
         Headers: {
           Authorization: Bearer test-bearer,
-          X-CM-AccountId: test-account,
-          X-CM-ProjectId: test-project
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
         }
       },
       ResponseType: QueryDiagnosticLogsResponse,
@@ -162,8 +162,8 @@
         Query: ?stream=test-stream&from=1&count=1&caseId={guid}&env=test-env,
         Headers: {
           Authorization: Bearer test-bearer,
-          X-CM-AccountId: test-account,
-          X-CM-ProjectId: test-project
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
         }
       },
       ResponseType: ReadDiagnosticEventsResponse,
@@ -201,8 +201,8 @@
         Headers: {
           Authorization: Bearer test-bearer,
           Content-Type: application/json; charset=utf-8,
-          X-CM-AccountId: test-account,
-          X-CM-ProjectId: test-project
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
         },
         Body: {
           caseId: Guid_1,
@@ -240,8 +240,8 @@
         Headers: {
           Authorization: Bearer test-bearer,
           Content-Type: application/json; charset=utf-8,
-          X-CM-AccountId: test-account,
-          X-CM-ProjectId: test-project
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
         },
         Body: {
           packVersion: 1.0,

@@ -8,8 +8,8 @@
     Path: /v2/echo,
     Headers: {
       Authorization: Bearer test-api-key,
-      X-CM-AccountId: new-account,
-      X-CM-ProjectId: new-project
+      norbix-account-id: new-account,
+      norbix-project-id: new-project
     }
   }
 }

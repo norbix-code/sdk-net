@@ -4,6 +4,6 @@
   Query: ?includeAccountOwner=False&userShouldHavePushDevice=False&projectId=proj-1&startingAfter=member-20&pageSize=50,
   Headers: {
     Authorization: Bearer test-bearer,
-    X-CM-ProjectId: test-project
+    norbix-project-id: test-project
   }
 }

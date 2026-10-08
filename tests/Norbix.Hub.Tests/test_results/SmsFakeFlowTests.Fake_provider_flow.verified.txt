@@ -5,8 +5,8 @@
       Path: /v2/notifications/sms/enable,
       Headers: {
         Authorization: Bearer test-bearer,
-        X-CM-AccountId: test-account,
-        X-CM-ProjectId: test-project
+        norbix-account-id: test-account,
+        norbix-project-id: test-project
       }
     },
     {
@@ -15,8 +15,8 @@
       Headers: {
         Authorization: Bearer test-bearer,
         Content-Type: application/json; charset=utf-8,
-        X-CM-AccountId: test-account,
-        X-CM-ProjectId: test-project
+        norbix-account-id: test-account,
+        norbix-project-id: test-project
       },
       Body: {
         integration: {
@@ -30,8 +30,8 @@
       Path: /v2/notifications/sms/integrations/int-fake,
       Headers: {
         Authorization: Bearer test-bearer,
-        X-CM-AccountId: test-account,
-        X-CM-ProjectId: test-project
+        norbix-account-id: test-account,
+        norbix-project-id: test-project
       }
     },
     {
@@ -39,8 +39,8 @@
       Path: /v2/notifications/sms/integrations/int-fake/default,
       Headers: {
         Authorization: Bearer test-bearer,
-        X-CM-AccountId: test-account,
-        X-CM-ProjectId: test-project
+        norbix-account-id: test-account,
+        norbix-project-id: test-project
       }
     },
     {
@@ -49,8 +49,8 @@
       Headers: {
         Authorization: Bearer test-bearer,
         Content-Type: application/json; charset=utf-8,
-        X-CM-AccountId: test-account,
-        X-CM-ProjectId: test-project
+        norbix-account-id: test-account,
+        norbix-project-id: test-project
       },
       Body: {
         integrationId: int-fake,
@@ -63,8 +63,8 @@
       Headers: {
         Authorization: Bearer test-bearer,
         Content-Type: application/json; charset=utf-8,
-        X-CM-AccountId: test-account,
-        X-CM-ProjectId: test-project
+        norbix-account-id: test-account,
+        norbix-project-id: test-project
       },
       Body: {
         integrationId: int-fake
@@ -76,8 +76,8 @@
       Headers: {
         Authorization: Bearer test-bearer,
         Content-Type: application/json; charset=utf-8,
-        X-CM-AccountId: test-account,
-        X-CM-ProjectId: test-project
+        norbix-account-id: test-account,
+        norbix-project-id: test-project
       },
       Body: {
         templateName: welcome,
@@ -97,8 +97,8 @@
       Path: /v2/notifications/sms/templates/tpl-1/tokens,
       Headers: {
         Authorization: Bearer test-bearer,
-        X-CM-AccountId: test-account,
-        X-CM-ProjectId: test-project
+        norbix-account-id: test-account,
+        norbix-project-id: test-project
       }
     },
     {
@@ -107,8 +107,8 @@
       Headers: {
         Authorization: Bearer test-bearer,
         Content-Type: application/json; charset=utf-8,
-        X-CM-AccountId: test-account,
-        X-CM-ProjectId: test-project
+        norbix-account-id: test-account,
+        norbix-project-id: test-project
       },
       Body: {
         code: Hi @Model.FirstName, your code is @Model.Code,
@@ -133,8 +133,8 @@
       Headers: {
         Authorization: Bearer test-bearer,
         Content-Type: application/json; charset=utf-8,
-        X-CM-AccountId: test-account,
-        X-CM-ProjectId: test-project
+        norbix-account-id: test-account,
+        norbix-project-id: test-project
       },
       Body: {
         templateId: tpl-1,
@@ -159,8 +159,8 @@
       Path: /v2/notifications/sms/campaigns/cmp-1,
       Headers: {
         Authorization: Bearer test-bearer,
-        X-CM-AccountId: test-account,
-        X-CM-ProjectId: test-project
+        norbix-account-id: test-account,
+        norbix-project-id: test-project
       }
     },
     {
@@ -169,8 +169,8 @@
       Query: ?campaignBatchId=batch-1,
       Headers: {
         Authorization: Bearer test-bearer,
-        X-CM-AccountId: test-account,
-        X-CM-ProjectId: test-project
+        norbix-account-id: test-account,
+        norbix-project-id: test-project
       }
     },
     {
@@ -178,8 +178,8 @@
       Path: /v2/notifications/sms/campaigns/cmp-1/batches/batch-1/msg-1,
       Headers: {
         Authorization: Bearer test-bearer,
-        X-CM-AccountId: test-account,
-        X-CM-ProjectId: test-project
+        norbix-account-id: test-account,
+        norbix-project-id: test-project
       }
     },
     {
@@ -187,8 +187,8 @@
       Path: /v2/notifications/sms/campaigns/cmp-1/stats,
       Headers: {
         Authorization: Bearer test-bearer,
-        X-CM-AccountId: test-account,
-        X-CM-ProjectId: test-project
+        norbix-account-id: test-account,
+        norbix-project-id: test-project
       }
     },
     {
@@ -196,8 +196,8 @@
       Path: /v2/notifications/sms/campaigns/cmp-1/stop,
       Headers: {
         Authorization: Bearer test-bearer,
-        X-CM-AccountId: test-account,
-        X-CM-ProjectId: test-project
+        norbix-account-id: test-account,
+        norbix-project-id: test-project
       }
     }
   ],

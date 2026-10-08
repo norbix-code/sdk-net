@@ -12,7 +12,7 @@ namespace Norbix.Hub.Tests;
 /// (<c>POST /account/team/member</c>), the region list for the sign-up form
 /// (<c>GET /account/regions</c>) and the e-mail verification link
 /// (<c>GET /account/verify</c>). The gateway has no <c>[Authenticate]</c> on
-/// any of them, and it never reads the <c>X-CM-AccountId</c> header, so the
+/// any of them, and it never reads the <c>norbix-account-id</c> header, so the
 /// request types carry <c>INorbixUnauthenticated</c> and the client sends
 /// them with no <c>Authorization</c> header.
 /// <para>

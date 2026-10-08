@@ -17,8 +17,8 @@
         Path: /v2/oauth/authorize,
         Headers: {
           Authorization: Bearer test-bearer,
-          X-CM-AccountId: test-account,
-          X-CM-ProjectId: test-project
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
         }
       },
       ResponseType: String,
@@ -39,8 +39,8 @@
         Headers: {
           Authorization: Bearer test-bearer,
           Content-Type: application/json; charset=utf-8,
-          X-CM-AccountId: test-account,
-          X-CM-ProjectId: test-project
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
         },
         Body: {
           responseType: test-responseType,
@@ -84,8 +84,8 @@
         Query: ?responseType=test-responseType&clientId={guid}&redirectUri=https%3a%2f%2fexample.test%2fredirectUri&codeChallenge=test-codeChallenge&codeChallengeMethod=test-codeChallengeMethod&state=test-state&resource=test-resource&scope=test-scope,
         Headers: {
           Authorization: Bearer test-bearer,
-          X-CM-AccountId: test-account,
-          X-CM-ProjectId: test-project
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
         }
       },
       ResponseType: OAuthConsentResponse,
@@ -120,8 +120,8 @@
         Path: /v2/oauth/register,
         Headers: {
           Authorization: Bearer test-bearer,
-          X-CM-AccountId: test-account,
-          X-CM-ProjectId: test-project
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
         }
       },
       ResponseType: String,
@@ -141,8 +141,8 @@
         Path: /v2/oauth/revoke,
         Headers: {
           Authorization: Bearer test-bearer,
-          X-CM-AccountId: test-account,
-          X-CM-ProjectId: test-project
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
         }
       },
       ResponseType: String,
@@ -162,8 +162,8 @@
         Path: /v2/oauth/token,
         Headers: {
           Authorization: Bearer test-bearer,
-          X-CM-AccountId: test-account,
-          X-CM-ProjectId: test-project
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
         }
       },
       ResponseType: String,

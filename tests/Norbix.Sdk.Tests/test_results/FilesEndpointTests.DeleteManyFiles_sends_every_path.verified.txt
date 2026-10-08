@@ -4,6 +4,6 @@
   Query: ?paths=invoices%2fa.pdf&paths=invoices%2fb.pdf,
   Headers: {
     Authorization: Bearer test-api-key,
-    X-CM-ProjectId: test-project
+    norbix-project-id: test-project
   }
 }

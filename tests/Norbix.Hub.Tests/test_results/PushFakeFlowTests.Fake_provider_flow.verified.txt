@@ -5,8 +5,8 @@
       Path: /v2/notifications/push/enable,
       Headers: {
         Authorization: Bearer test-bearer,
-        X-CM-AccountId: test-account,
-        X-CM-ProjectId: test-project
+        norbix-account-id: test-account,
+        norbix-project-id: test-project
       }
     },
     {
@@ -15,8 +15,8 @@
       Headers: {
         Authorization: Bearer test-bearer,
         Content-Type: application/json; charset=utf-8,
-        X-CM-AccountId: test-account,
-        X-CM-ProjectId: test-project
+        norbix-account-id: test-account,
+        norbix-project-id: test-project
       },
       Body: {
         integration: {
@@ -31,8 +31,8 @@
       Path: /v2/notifications/push/integrations/int-fake,
       Headers: {
         Authorization: Bearer test-bearer,
-        X-CM-AccountId: test-account,
-        X-CM-ProjectId: test-project
+        norbix-account-id: test-account,
+        norbix-project-id: test-project
       }
     },
     {
@@ -40,8 +40,8 @@
       Path: /v2/notifications/push/integrations/int-fake/default,
       Headers: {
         Authorization: Bearer test-bearer,
-        X-CM-AccountId: test-account,
-        X-CM-ProjectId: test-project
+        norbix-account-id: test-account,
+        norbix-project-id: test-project
       }
     },
     {
@@ -50,8 +50,8 @@
       Headers: {
         Authorization: Bearer test-bearer,
         Content-Type: application/json; charset=utf-8,
-        X-CM-AccountId: test-account,
-        X-CM-ProjectId: test-project
+        norbix-account-id: test-account,
+        norbix-project-id: test-project
       },
       Body: {
         integrationId: int-fake,
@@ -65,8 +65,8 @@
       Headers: {
         Authorization: Bearer test-bearer,
         Content-Type: application/json; charset=utf-8,
-        X-CM-AccountId: test-account,
-        X-CM-ProjectId: test-project
+        norbix-account-id: test-account,
+        norbix-project-id: test-project
       },
       Body: {
         integrationId: int-fake
@@ -78,8 +78,8 @@
       Headers: {
         Authorization: Bearer test-bearer,
         Content-Type: application/json; charset=utf-8,
-        X-CM-AccountId: test-account,
-        X-CM-ProjectId: test-project
+        norbix-account-id: test-account,
+        norbix-project-id: test-project
       },
       Body: {
         templateName: welcome,
@@ -101,8 +101,8 @@
       Headers: {
         Authorization: Bearer test-bearer,
         Content-Type: application/json; charset=utf-8,
-        X-CM-AccountId: test-account,
-        X-CM-ProjectId: test-project
+        norbix-account-id: test-account,
+        norbix-project-id: test-project
       },
       Body: {
         pushDeviceDto: {
@@ -120,8 +120,8 @@
       Headers: {
         Authorization: Bearer test-bearer,
         Content-Type: application/json; charset=utf-8,
-        X-CM-AccountId: test-account,
-        X-CM-ProjectId: test-project
+        norbix-account-id: test-account,
+        norbix-project-id: test-project
       },
       Body: {
         campaign: {
@@ -141,8 +141,8 @@
       Path: /v2/notifications/push/campaigns/cmp-1,
       Headers: {
         Authorization: Bearer test-bearer,
-        X-CM-AccountId: test-account,
-        X-CM-ProjectId: test-project
+        norbix-account-id: test-account,
+        norbix-project-id: test-project
       }
     },
     {
@@ -150,8 +150,8 @@
       Path: /v2/notifications/push/campaigns/cmp-1/stats,
       Headers: {
         Authorization: Bearer test-bearer,
-        X-CM-AccountId: test-account,
-        X-CM-ProjectId: test-project
+        norbix-account-id: test-account,
+        norbix-project-id: test-project
       }
     }
   ],

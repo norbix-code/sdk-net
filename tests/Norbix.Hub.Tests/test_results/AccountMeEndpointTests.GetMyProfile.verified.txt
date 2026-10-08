@@ -4,7 +4,7 @@
     Path: /v2/account/me,
     Headers: {
       Authorization: Bearer test-bearer,
-      X-CM-ProjectId: test-project
+      norbix-project-id: test-project
     }
   },
   Email: ada@example.test,

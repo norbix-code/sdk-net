@@ -13,7 +13,7 @@
     Path: /v2/account/verify,
     Query: ?token=verify-token-1&accountId=account-1,
     Headers: {
-      X-CM-ProjectId: test-project
+      norbix-project-id: test-project
     }
   }
 }
