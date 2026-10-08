@@ -133,13 +133,15 @@ internal sealed class HttpTransport : INorbixTransport, IDisposable
             request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
         }
 
+        // Tenant scope headers: the gateway reads only these two names
+        // (AuthStatics.ProjectIdHeaderKey / AccountIdHeaderKey).
         if (!string.IsNullOrEmpty(_options.ProjectId))
         {
-            request.Headers.TryAddWithoutValidation("X-CM-ProjectId", _options.ProjectId);
+            request.Headers.TryAddWithoutValidation("norbix-project-id", _options.ProjectId);
         }
         if (!string.IsNullOrEmpty(_options.AccountId))
         {
-            request.Headers.TryAddWithoutValidation("X-CM-AccountId", _options.AccountId);
+            request.Headers.TryAddWithoutValidation("norbix-account-id", _options.AccountId);
         }
 
         // Environment selector. "PROD" is the backend default, so the header is

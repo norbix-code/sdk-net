@@ -8,7 +8,7 @@ namespace Norbix.Sdk.Types.Hub;
 //
 // The gateway has no [Authenticate] on these routes (Hub.Account:
 // Account/Create.cs, Account/Team/Verify.cs, Project/GetRegions.cs,
-// Account/Verify.cs), and it never reads the X-CM-AccountId header. The
+// Account/Verify.cs), and it never reads the norbix-account-id header. The
 // export marks them INorbixOptionalAuth, so a signed-in client would still
 // attach its token, and VerifyAccount — which has an AccountId field — looks
 // account-scoped. INorbixUnauthenticated (it wins over INorbixOptionalAuth

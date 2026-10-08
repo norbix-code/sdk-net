@@ -5,8 +5,8 @@
     Query: ?filesIntegrationId={guid}&id=nbfl_{guid},
     Headers: {
       Authorization: Bearer test-bearer,
-      X-CM-AccountId: test-account,
-      X-CM-ProjectId: test-project
+      norbix-account-id: test-account,
+      norbix-project-id: test-project
     }
   },
   FilePath: sc_e2e/photos/cat.png,

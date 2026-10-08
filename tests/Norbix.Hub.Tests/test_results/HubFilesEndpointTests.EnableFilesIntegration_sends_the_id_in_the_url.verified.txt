@@ -3,6 +3,6 @@
   Path: /v2/files/integrations/{guid}/enable,
   Headers: {
     Authorization: Bearer test-api-key,
-    X-CM-ProjectId: test-project
+    norbix-project-id: test-project
   }
 }

@@ -18,8 +18,8 @@
         Headers: {
           Authorization: Bearer test-bearer,
           Content-Type: application/json; charset=utf-8,
-          X-CM-AccountId: test-account,
-          X-CM-ProjectId: test-project
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
         },
         Body: {
           env: test-env
@@ -47,8 +47,8 @@
         Headers: {
           Authorization: Bearer test-bearer,
           Content-Type: application/json; charset=utf-8,
-          X-CM-AccountId: test-account,
-          X-CM-ProjectId: test-project
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
         },
         Body: {
           env: test-env
@@ -76,8 +76,8 @@
         Query: ?filesIntegrationId={guid}&path=test-path&env=test-env,
         Headers: {
           Authorization: Bearer test-bearer,
-          X-CM-AccountId: test-account,
-          X-CM-ProjectId: test-project
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
         }
       },
       ResponseType: GetFileResponse,
@@ -111,8 +111,8 @@
         Query: ?filesIntegrationId={guid}&id={guid}&env=test-env,
         Headers: {
           Authorization: Bearer test-bearer,
-          X-CM-AccountId: test-account,
-          X-CM-ProjectId: test-project
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
         }
       },
       ResponseType: GetFileByIdResponse,
@@ -146,8 +146,8 @@
         Query: ?filesIntegrationId={guid}&path=test-path&env=test-env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1,
         Headers: {
           Authorization: Bearer test-bearer,
-          X-CM-AccountId: test-account,
-          X-CM-ProjectId: test-project
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
         }
       },
       ResponseType: GetFolderFilesResponse,
@@ -191,8 +191,8 @@
         Headers: {
           Authorization: Bearer test-bearer,
           Content-Type: application/json; charset=utf-8,
-          X-CM-AccountId: test-account,
-          X-CM-ProjectId: test-project
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
         },
         Body: {
           filesIntegrationId: Guid_1,
@@ -227,8 +227,8 @@
         Query: ?env=test-env,
         Headers: {
           Authorization: Bearer test-bearer,
-          X-CM-AccountId: test-account,
-          X-CM-ProjectId: test-project
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
         }
       },
       ResponseType: EmptyResponse,
@@ -256,8 +256,8 @@
         Headers: {
           Authorization: Bearer test-bearer,
           Content-Type: application/json; charset=utf-8,
-          X-CM-AccountId: test-account,
-          X-CM-ProjectId: test-project
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
         },
         Body: {
           env: test-env
@@ -288,8 +288,8 @@
         Headers: {
           Authorization: Bearer test-bearer,
           Content-Type: application/json; charset=utf-8,
-          X-CM-AccountId: test-account,
-          X-CM-ProjectId: test-project
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
         },
         Body: {
           env: test-env
@@ -320,8 +320,8 @@
         Query: ?env=test-env,
         Headers: {
           Authorization: Bearer test-bearer,
-          X-CM-AccountId: test-account,
-          X-CM-ProjectId: test-project
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
         }
       },
       ResponseType: GetFilesIntegrationResponse,
@@ -358,8 +358,8 @@
         Query: ?env=test-env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1,
         Headers: {
           Authorization: Bearer test-bearer,
-          X-CM-AccountId: test-account,
-          X-CM-ProjectId: test-project
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
         }
       },
       ResponseType: GetFilesIntegrationsResponse,
@@ -400,8 +400,8 @@
         Headers: {
           Authorization: Bearer test-bearer,
           Content-Type: application/json; charset=utf-8,
-          X-CM-AccountId: test-account,
-          X-CM-ProjectId: test-project
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
         },
         Body: {
           integration: {
@@ -440,8 +440,8 @@
         Headers: {
           Authorization: Bearer test-bearer,
           Content-Type: application/json; charset=utf-8,
-          X-CM-AccountId: test-account,
-          X-CM-ProjectId: test-project
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
         },
         Body: {
           env: test-env
@@ -469,8 +469,8 @@
         Headers: {
           Authorization: Bearer test-bearer,
           Content-Type: application/json; charset=utf-8,
-          X-CM-AccountId: test-account,
-          X-CM-ProjectId: test-project
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
         },
         Body: {
           integrationId: Guid_1,
@@ -502,8 +502,8 @@
         Headers: {
           Authorization: Bearer test-bearer,
           Content-Type: application/json; charset=utf-8,
-          X-CM-AccountId: test-account,
-          X-CM-ProjectId: test-project
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
         },
         Body: {
           filesIntegrationId: Guid_1,
@@ -533,8 +533,8 @@
         Headers: {
           Authorization: Bearer test-bearer,
           Content-Type: application/json; charset=utf-8,
-          X-CM-AccountId: test-account,
-          X-CM-ProjectId: test-project
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
         },
         Body: {
           filesIntegrationId: Guid_1,
@@ -566,8 +566,8 @@
         Headers: {
           Authorization: Bearer test-bearer,
           Content-Type: application/json; charset=utf-8,
-          X-CM-AccountId: test-account,
-          X-CM-ProjectId: test-project
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
         },
         Body: {
           filesIntegrationId: Guid_1,
@@ -597,8 +597,8 @@
         Headers: {
           Authorization: Bearer test-bearer,
           Content-Type: application/json; charset=utf-8,
-          X-CM-AccountId: test-account,
-          X-CM-ProjectId: test-project
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
         },
         Body: {
           filesIntegrationId: Guid_1,
@@ -633,8 +633,8 @@
         Query: ?triggerType=Membership&schemaId={guid}&env=test-env,
         Headers: {
           Authorization: Bearer test-bearer,
-          X-CM-AccountId: test-account,
-          X-CM-ProjectId: test-project
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
         }
       },
       ResponseType: EmptyResponse,
@@ -662,8 +662,8 @@
         Headers: {
           Authorization: Bearer test-bearer,
           Content-Type: application/json; charset=utf-8,
-          X-CM-AccountId: test-account,
-          X-CM-ProjectId: test-project
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
         },
         Body: {
           triggerType: membership,
@@ -696,8 +696,8 @@
         Headers: {
           Authorization: Bearer test-bearer,
           Content-Type: application/json; charset=utf-8,
-          X-CM-AccountId: test-account,
-          X-CM-ProjectId: test-project
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
         },
         Body: {
           triggerType: membership,
@@ -730,8 +730,8 @@
         Query: ?schemaId={guid}&env=test-env,
         Headers: {
           Authorization: Bearer test-bearer,
-          X-CM-AccountId: test-account,
-          X-CM-ProjectId: test-project
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
         }
       },
       ResponseType: GetFilesTriggerResponse,
@@ -765,8 +765,8 @@
         Query: ?schemaId={guid}&env=test-env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1,
         Headers: {
           Authorization: Bearer test-bearer,
-          X-CM-AccountId: test-account,
-          X-CM-ProjectId: test-project
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
         }
       },
       ResponseType: GetFilesTriggersResponse,
@@ -804,8 +804,8 @@
         Headers: {
           Authorization: Bearer test-bearer,
           Content-Type: application/json; charset=utf-8,
-          X-CM-AccountId: test-account,
-          X-CM-ProjectId: test-project
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
         },
         Body: {
           trigger: {

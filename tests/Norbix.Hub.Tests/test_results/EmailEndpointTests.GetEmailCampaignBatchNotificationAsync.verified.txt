@@ -18,8 +18,8 @@
     Query: ?databaseIntegrationId={guid}&env=test-env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1,
     Headers: {
       Authorization: Bearer test-bearer,
-      X-CM-AccountId: test-account,
-      X-CM-ProjectId: test-project
+      norbix-account-id: test-account,
+      norbix-project-id: test-project
     }
   },
   ResponseType: GetEmailCampaignBatchNotificationResponse,

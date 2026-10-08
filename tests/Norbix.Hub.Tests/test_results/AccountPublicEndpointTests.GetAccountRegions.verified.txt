@@ -12,7 +12,7 @@
     Method: GET,
     Path: /v2/account/regions,
     Headers: {
-      X-CM-ProjectId: test-project
+      norbix-project-id: test-project
     }
   }
 }

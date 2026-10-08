@@ -21,8 +21,8 @@
         Headers: {
           Authorization: Bearer test-bearer,
           Content-Type: application/json; charset=utf-8,
-          X-CM-AccountId: test-account,
-          X-CM-ProjectId: test-project
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
         },
         Body: {
           archived: true,
@@ -51,8 +51,8 @@
         Headers: {
           Authorization: Bearer test-bearer,
           Content-Type: application/json; charset=utf-8,
-          X-CM-AccountId: test-account,
-          X-CM-ProjectId: test-project
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
         },
         Body: {
           assistantId: Guid_1,
@@ -87,8 +87,8 @@
         Query: ?env=test-env,
         Headers: {
           Authorization: Bearer test-bearer,
-          X-CM-AccountId: test-account,
-          X-CM-ProjectId: test-project
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
         }
       },
       ResponseType: EmptyResponse,
@@ -116,8 +116,8 @@
         Query: ?env=test-env,
         Headers: {
           Authorization: Bearer test-bearer,
-          X-CM-AccountId: test-account,
-          X-CM-ProjectId: test-project
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
         }
       },
       ResponseType: EmptyResponse,
@@ -145,8 +145,8 @@
         Query: ?env=test-env,
         Headers: {
           Authorization: Bearer test-bearer,
-          X-CM-AccountId: test-account,
-          X-CM-ProjectId: test-project
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
         }
       },
       ResponseType: EmptyResponse,
@@ -170,8 +170,8 @@
         Path: /v2/ai/tools,
         Headers: {
           Authorization: Bearer test-bearer,
-          X-CM-AccountId: test-account,
-          X-CM-ProjectId: test-project
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
         }
       },
       ResponseType: GetEndUserAiToolsResponse,
@@ -201,8 +201,8 @@
         Query: ?env=test-env,
         Headers: {
           Authorization: Bearer test-bearer,
-          X-CM-AccountId: test-account,
-          X-CM-ProjectId: test-project
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
         }
       },
       ResponseType: GetEndUserChatAvailabilityResponse,
@@ -251,8 +251,8 @@
         Query: ?afterSeq=1&take=1&env=test-env,
         Headers: {
           Authorization: Bearer test-bearer,
-          X-CM-AccountId: test-account,
-          X-CM-ProjectId: test-project
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
         }
       },
       ResponseType: GetEndUserChatEntriesResponse,
@@ -286,8 +286,8 @@
         Query: ?env=test-env,
         Headers: {
           Authorization: Bearer test-bearer,
-          X-CM-AccountId: test-account,
-          X-CM-ProjectId: test-project
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
         }
       },
       ResponseType: GetEndUserChatSessionResponse,
@@ -325,8 +325,8 @@
         Headers: {
           Authorization: Bearer test-bearer,
           Content-Type: application/json; charset=utf-8,
-          X-CM-AccountId: test-account,
-          X-CM-ProjectId: test-project
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
         },
         Body: {
           argumentsJson: test-argumentsJson
@@ -358,8 +358,8 @@
         Query: ?env=test-env,
         Headers: {
           Authorization: Bearer test-bearer,
-          X-CM-AccountId: test-account,
-          X-CM-ProjectId: test-project
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
         }
       },
       ResponseType: ListEndUserChatAttachmentsResponse,
@@ -387,8 +387,8 @@
         Query: ?take=1&env=test-env,
         Headers: {
           Authorization: Bearer test-bearer,
-          X-CM-AccountId: test-account,
-          X-CM-ProjectId: test-project
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
         }
       },
       ResponseType: ListEndUserChatMemoryResponse,
@@ -416,8 +416,8 @@
         Query: ?take=1&includeArchived=True&env=test-env,
         Headers: {
           Authorization: Bearer test-bearer,
-          X-CM-AccountId: test-account,
-          X-CM-ProjectId: test-project
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
         }
       },
       ResponseType: ListEndUserChatSessionsResponse,
@@ -451,8 +451,8 @@
         Headers: {
           Authorization: Bearer test-bearer,
           Content-Type: application/json; charset=utf-8,
-          X-CM-AccountId: test-account,
-          X-CM-ProjectId: test-project
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
         },
         Body: {
           pinned: true,
@@ -484,8 +484,8 @@
         Headers: {
           Authorization: Bearer test-bearer,
           Content-Type: application/json; charset=utf-8,
-          X-CM-AccountId: test-account,
-          X-CM-ProjectId: test-project
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
         },
         Body: {
           title: test-title,
@@ -518,8 +518,8 @@
         Headers: {
           Authorization: Bearer test-bearer,
           Content-Type: application/json; charset=utf-8,
-          X-CM-AccountId: test-account,
-          X-CM-ProjectId: test-project
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
         },
         Body: {
           feedback: test-feedback,
@@ -548,8 +548,8 @@
         Headers: {
           Authorization: Bearer test-bearer,
           Content-Type: application/json; charset=utf-8,
-          X-CM-AccountId: test-account,
-          X-CM-ProjectId: test-project
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
         },
         Body: {
           sessionId: Guid_1,
@@ -586,8 +586,8 @@
         Headers: {
           Authorization: Bearer test-bearer,
           Content-Type: application/json; charset=utf-8,
-          X-CM-AccountId: test-account,
-          X-CM-ProjectId: test-project
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
         },
         Body: {
           fileName: test-fileName,

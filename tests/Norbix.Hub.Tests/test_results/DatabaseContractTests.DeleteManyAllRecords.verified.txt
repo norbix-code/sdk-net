@@ -4,7 +4,7 @@
   Query: ?filter=%7b%7d&allRecords=True,
   Headers: {
     Authorization: Bearer test-bearer,
-    X-CM-AccountId: test-account,
-    X-CM-ProjectId: test-project
+    norbix-account-id: test-account,
+    norbix-project-id: test-project
   }
 }

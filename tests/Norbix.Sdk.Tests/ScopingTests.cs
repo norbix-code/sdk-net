@@ -6,7 +6,7 @@ namespace Norbix.Sdk.Tests;
 
 /// <summary>
 /// Project / Account scope — the SDK's most opinionated guard. The
-/// snapshots lock down both the success path (X-CM-AccountId attached) and
+/// snapshots lock down both the success path (norbix-account-id attached) and
 /// the failure path (NorbixException with structured code).
 /// </summary>
 [TestFixture]

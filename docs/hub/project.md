@@ -17,7 +17,7 @@ sends and the reply it reads.
 
 Most calls are on the Hub client (`Norbix.Hub` package). Calls with
 `{projectId}` in the path need `ProjectId` **on the request** — the client
-option only sets the `X-CM-ProjectId` header, and a missing path value throws
+option only sets the `norbix-project-id` header, and a missing path value throws
 `NORBIX_MISSING_PATH_PARAM` before anything is sent.
 
 ```csharp
@@ -279,7 +279,7 @@ Console.WriteLine(usage!.Result!.Period);
 
 ## LLM integrations
 
-On `norbix.Ai`. The project id comes from the `X-CM-ProjectId` header (set
+On `norbix.Ai`. The project id comes from the `norbix-project-id` header (set
 `ProjectId` in the client options); `ProjectId` on the request is optional here.
 
 | method | verb | path |

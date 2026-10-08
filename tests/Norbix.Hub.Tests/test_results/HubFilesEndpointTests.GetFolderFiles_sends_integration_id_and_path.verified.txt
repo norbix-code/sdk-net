@@ -5,7 +5,7 @@
     Query: ?filesIntegrationId={guid}&path=invoices%2f,
     Headers: {
       Authorization: Bearer test-api-key,
-      X-CM-ProjectId: test-project
+      norbix-project-id: test-project
     }
   },
   Folders: [

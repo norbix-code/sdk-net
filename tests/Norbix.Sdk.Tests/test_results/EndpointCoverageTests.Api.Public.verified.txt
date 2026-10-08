@@ -21,8 +21,8 @@
         Path: /v2/public/projects/{guid}/brand/test-kind,
         Query: ?v=test-v,
         Headers: {
-          X-CM-AccountId: test-account,
-          X-CM-ProjectId: test-project
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
         }
       },
       ResponseType: Byte[],
@@ -47,8 +47,8 @@
         Path: /v2/public/projects/{guid}/config,
         Headers: {
           Authorization: Bearer test-bearer,
-          X-CM-AccountId: test-account,
-          X-CM-ProjectId: test-project
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
         }
       },
       ResponseType: PublicProjectConfigDto,
@@ -98,8 +98,8 @@
         Path: /v2/public/projects/{guid}/legal/test-kind,
         Headers: {
           Authorization: Bearer test-bearer,
-          X-CM-AccountId: test-account,
-          X-CM-ProjectId: test-project
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
         }
       },
       ResponseType: PublicLegalDocumentDto,

@@ -13,7 +13,7 @@
       Path: /auth,
       Headers: {
         Content-Type: application/json; charset=utf-8,
-        X-CM-ProjectId: p1
+        norbix-project-id: p1
       },
       Body: {
         provider: credentials,
@@ -26,7 +26,7 @@
       Path: /v2/echo,
       Headers: {
         Authorization: Bearer fresh-jwt,
-        X-CM-ProjectId: p1
+        norbix-project-id: p1
       }
     }
   ]

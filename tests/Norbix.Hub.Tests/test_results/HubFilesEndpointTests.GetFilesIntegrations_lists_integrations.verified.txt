@@ -4,7 +4,7 @@
     Path: /v2/files/integrations,
     Headers: {
       Authorization: Bearer test-api-key,
-      X-CM-ProjectId: test-project
+      norbix-project-id: test-project
     }
   },
   DefaultIntegrationId: Guid_1
