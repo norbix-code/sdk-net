@@ -1,7 +1,7 @@
 ﻿{
   Target: Hub,
   Group: code,
-  Count: 38,
+  Count: 37,
   Endpoints: [
     {
       Target: Hub,
@@ -425,7 +425,6 @@
       },
       ResponseType: GetCodeIntegrationsResponse,
       Response: {
-        DefaultIntegrationId: Guid_1,
         List: {
           Items: [
             {
@@ -475,38 +474,6 @@
       Response: {
         Id: Guid_1,
         Status: test-status,
-        ResponseStatus: {
-          IsSuccess: true
-        }
-      }
-    },
-    {
-      Target: Hub,
-      Group: code,
-      MethodName: SetCodeIntegrationAsDefaultAsync,
-      RequestType: SetCodeIntegrationAsDefault,
-      HttpMethod: PUT,
-      Path: /{version}/code/integrations/{Id}/default,
-      PathParams: [
-        Id
-      ],
-      IsAccountScoped: false,
-      IsUnauthenticated: false,
-      Sent: {
-        Method: PUT,
-        Path: /v2/code/integrations/{guid}/default,
-        Headers: {
-          Authorization: Bearer test-bearer,
-          Content-Type: application/json; charset=utf-8,
-          norbix-account-id: test-account,
-          norbix-project-id: test-project
-        },
-        Body: {
-          env: test-env
-        }
-      },
-      ResponseType: EmptyResponse,
-      Response: {
         ResponseStatus: {
           IsSuccess: true
         }

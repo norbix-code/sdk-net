@@ -858,7 +858,6 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual SaveCodeIntegration? Typegen_205_SaveCodeIntegration { get; set; }
         public virtual TestCodeIntegration? Typegen_206_TestCodeIntegration { get; set; }
         public virtual ConfirmCodeIntegrationHumanDeliveryRequest? Typegen_207_ConfirmCodeIntegrationHumanDeliveryRequest { get; set; }
-        public virtual SetCodeIntegrationAsDefault? Typegen_208_SetCodeIntegrationAsDefault { get; set; }
         public virtual DeleteCodeIntegrationRequest? Typegen_209_DeleteCodeIntegrationRequest { get; set; }
         public virtual EnableCodeIntegrationRequest? Typegen_210_EnableCodeIntegrationRequest { get; set; }
         public virtual DisableCodeIntegrationRequest? Typegen_211_DisableCodeIntegrationRequest { get; set; }
@@ -3243,9 +3242,6 @@ namespace Norbix.Sdk.Types.Hub;
     {
         [DataMember]
         public virtual bool IsEnabled { get; set; }
-
-        [DataMember]
-        public virtual string? DefaultIntegrationViewId { get; set; }
     }
 
     [DataContract]
@@ -3324,6 +3320,9 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember]
         public virtual string? RequestId { get; set; }
+
+        [DataMember]
+        public virtual string? Input { get; set; }
     }
 
     [DataContract]
@@ -11142,7 +11141,6 @@ namespace Norbix.Sdk.Types.Hub;
     public partial class GetCodeIntegrationsResponse
         : ResponseBase
     {
-        public virtual string? DefaultIntegrationId { get; set; }
         public virtual PaginatedResponse<CodeIntegrationListProjection>? List { get; set; }
     }
 
@@ -11162,16 +11160,6 @@ namespace Norbix.Sdk.Types.Hub;
     {
         [DataMember(Name="integration")]
         public virtual CodeIntegrationRequest Integration { get; set; }
-    }
-
-    [NorbixRoute("/{version}/code/integrations/{Id}/default", "PUT")]
-    public partial class SetCodeIntegrationAsDefault
-        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
-    {
-        ///<summary>
-        ///Integration id, from get_code_integrations.
-        ///</summary>
-        public virtual string Id { get; set; }
     }
 
     [NorbixRoute("/{version}/code/integrations/test", "POST")]
