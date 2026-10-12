@@ -993,6 +993,13 @@ var sample = await hub.Code.GetCodeFunctionEventSampleAsync(new GetCodeFunctionE
 var runs = await hub.Code.GetCodeFunctionRunsAsync(new GetCodeFunctionRuns { TriggerId = "trg_1", Limit = 20 });
 ```
 
+A run through the Fake provider (a dry run) also carries `Input` — the
+envelope the function received, as JSON, with `context.runAs.accessToken`
+masked to `***` and the text cut at 64 KB. It is `null` for every real
+provider (the payload is the project's data) and when the function was not
+called. There is no default Code integration: every call names the
+integration it means (`IntegrationId`), as the examples above do.
+
 ## Coverage Notes
 
 Generated coverage tracks the API and Hub DTO contract files. Some flows are not generated automatically:
