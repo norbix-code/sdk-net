@@ -1,7 +1,7 @@
 ﻿{
   Target: Hub,
   Group: code,
-  Count: 37,
+  Count: 38,
   Endpoints: [
     {
       Target: Hub,
@@ -647,9 +647,9 @@
           Description: test-description,
           IsEnabled: true,
           RequestTemplate: test-requestTemplate,
-          MappedTokens: [
-            {}
-          ]
+          Arguments: {
+            sample-key: test-string
+          }
         },
         ResponseStatus: {
           IsSuccess: true
@@ -682,6 +682,37 @@
       Response: {
         Functions: [
           {}
+        ],
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: code,
+      MethodName: GetMarketplaceFunctionRunsAsync,
+      RequestType: GetMarketplaceFunctionRuns,
+      HttpMethod: GET,
+      Path: /{version}/code/marketplace/functions/runs,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/code/marketplace/functions/runs,
+        Query: ?triggerId={guid}&taskId={guid}&limit=1&env=test-env,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        }
+      },
+      ResponseType: GetMarketplaceFunctionRunsResponse,
+      Response: {
+        Runs: [
+          {
+            Succeeded: false
+          }
         ],
         ResponseStatus: {
           IsSuccess: true
@@ -831,9 +862,9 @@
             description: test-description,
             isEnabled: true,
             requestTemplate: test-requestTemplate,
-            mappedTokens: [
-              null
-            ]
+            arguments: {
+              test-key: test-string
+            }
           },
           env: test-env
         }
@@ -976,7 +1007,14 @@
           Description: test-description,
           Config: {
             sample-key: test-string
-          }
+          },
+          LastValidationSteps: [
+            {
+              RequiredForFunctions: false,
+              Succeeded: false,
+              Skipped: false
+            }
+          ]
         },
         ResponseStatus: {
           IsSuccess: true
@@ -1119,8 +1157,10 @@
             config: {
               test-key: test-string
             },
+            lastValidationSteps: [
+              null
+            ],
             viewId: Guid_1,
-            integrationName: test-integrationName,
             isEnabled: false,
             requiresHumanDeliveryConfirmation: false
           },
@@ -1203,6 +1243,13 @@
       Response: {
         Items: [
           {}
+        ],
+        Steps: [
+          {
+            RequiredForFunctions: false,
+            Succeeded: false,
+            Skipped: false
+          }
         ],
         ResponseStatus: {
           IsSuccess: true
