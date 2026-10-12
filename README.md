@@ -918,6 +918,81 @@ Now each taxonomy node's `Terms` holds that taxonomy's full term tree (same shap
 
 > Every term-reading request also accepts an optional `DatabaseIntegrationId` to target a non-default database.
 
+## Cloud functions
+
+When Norbix calls one of your functions on AWS Lambda, Azure Functions or
+Google Cloud Functions, the function receives one JSON envelope: the event
+name, the data of the source event, a short-lived bearer token for the
+run-as service user and your own config. `CodeFunctionEvent` (in
+`Norbix.Hub`) parses it and hands out typed views; `CreateClientOptions()`
+turns the token and the deployment urls into the options either client
+takes. Your function is a separate project that references `Norbix.Hub`
+(the envelope) and, when it writes project data, `Norbix.Api`.
+
+```csharp
+using System.Text.Json;
+using Amazon.Lambda.Core;
+using Norbix.Sdk;
+using Norbix.Sdk.Types.Api;
+
+public record Order(string _id, string status, decimal total);
+
+public class Function
+{
+    public async Task<object> Handler(JsonElement raw, ILambdaContext _)
+    {
+        var evt = CodeFunctionEvent.Parse(raw);                       // or Parse(string json); throws NorbixException on a foreign body
+        if (evt.Event != "database.record.updated") return new { ok = true };
+
+        var change = evt.AsDatabaseRecordChange<Order>();             // Old / New read as Order, null when absent
+        if (change.Old?.status != change.New?.status && change.New?.status == "processing")
+        {
+            using var api = new NorbixApiClient(evt.CreateClientOptions()); // bearer = context.runAs.accessToken (15 min), urls from the envelope
+            await api.Database.InsertOneAsync(new InsertOneRequest
+            {
+                CollectionName = "order_events",
+                Document = JsonSerializer.Serialize(new { orderId = change.New!._id, status = "processing", eventId = evt.EventId }),
+            });
+        }
+        return new { ok = true };
+    }
+}
+```
+
+| View | Source | Returns |
+| --- | --- | --- |
+| `AsDatabaseRecordChange<T>()` | `database` | `Collection`, `SchemaId`, `SchemaVersion`, `RecordId`, `Old` / `New` as `T`, `Truncated`, `OldRef` / `NewRef` (documents above 200 KB are left out; fetch them with the refs) |
+| `AsUserChange()` / `AsUserChange<T>()` | `membership` | `UserId`, `Old` / `New` |
+| `AsFileChange()` / `AsFileChange<T>()` | `files` | `Old` / `New`, `Path` |
+| `AsPayment()` | `payments` | the webhook fact (`Provider`, `EventName`, `Status`, `AmountMinor`, `Currency`, `ExternalIds`, …) |
+| `AsAiUsage()` | `ai` | `Payload`, `TargetUserId` |
+| `AsScheduledTask()` | `scheduler` | `TaskId`, `Name`, `FiredAt` |
+| `Payload<T>()` | `manual`, `scheduler` | the caller's JSON object as `T`, `null` when none |
+| `ConfigAs<T>()` | any | your config, bound at fire time, as `T`; `null` when the action has none |
+
+A view of another source throws `InvalidOperationException` naming the slot
+and the event. `Parse` refuses a body that is not an envelope
+(`NORBIX_FUNCTION_EVENT_INVALID`) or whose `specVersion` is newer than `1`
+(`NORBIX_FUNCTION_EVENT_UNSUPPORTED`). The raw slots stay on `evt.Data`,
+the whole body on `evt.Raw`.
+
+From your backend, with `Norbix.Hub` — the functions an integration may
+call, their aliases and versions, a call by hand, a sample envelope for a
+local run and the last runs of a trigger:
+
+```csharp
+var functions = await hub.Code.GetCodeFunctionsAsync(new GetCodeFunctions { IntegrationId = "int_1", Prefix = "orders-" });
+var qualifiers = await hub.Code.GetCodeFunctionQualifiersAsync(new GetCodeFunctionQualifiers { IntegrationId = "int_1", FunctionId = "orders-on-update" });
+var result = await hub.Code.InvokeCodeFunctionAsync(new InvokeCodeFunction
+{
+    FunctionRef = new FunctionRefDto { IntegrationId = "int_1", FunctionId = "orders-on-update", Qualifier = "prod" },
+    Payload = new Dictionary<string, object> { ["orderId"] = "6ac54a59212c29912eaddd81", ["dryRun"] = true },
+    InvocationType = CodeInvocationType.Sync,
+});
+var sample = await hub.Code.GetCodeFunctionEventSampleAsync(new GetCodeFunctionEventSample { Source = CodeFunctionSource.Database, Event = "database.record.updated" });
+var runs = await hub.Code.GetCodeFunctionRunsAsync(new GetCodeFunctionRuns { TriggerId = "trg_1", Limit = 20 });
+```
+
 ## Coverage Notes
 
 Generated coverage tracks the API and Hub DTO contract files. Some flows are not generated automatically:

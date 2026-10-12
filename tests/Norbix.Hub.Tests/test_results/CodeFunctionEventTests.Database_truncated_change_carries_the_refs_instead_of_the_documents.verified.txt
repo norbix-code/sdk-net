@@ -1,0 +1,26 @@
+﻿{
+  Event: database.record.replaced,
+  Change: {
+    Collection: orders,
+    SchemaId: sch_1,
+    SchemaVersion: 3,
+    RecordId: 6ac54a59212c29912eaddd83,
+    Truncated: true,
+    OldRef: {
+      Kind: document,
+      DatabaseIntegrationId: int_db_1,
+      SchemaId: sch_1,
+      ExternalId: 6ac54a59212c29912eaddd83,
+      ProjectId: proj_1,
+      IntegrationId: int_db_1
+    },
+    NewRef: {
+      Kind: document,
+      DatabaseIntegrationId: int_db_1,
+      SchemaId: sch_1,
+      ExternalId: 6ac54a59212c29912eaddd83,
+      ProjectId: proj_1,
+      IntegrationId: int_db_1
+    }
+  }
+}

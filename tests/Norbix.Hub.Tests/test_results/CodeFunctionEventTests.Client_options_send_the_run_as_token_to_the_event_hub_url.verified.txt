@@ -1,0 +1,23 @@
+﻿{
+  Options: {
+    BearerToken: eyJ.run-as.token,
+    ProjectId: proj_1,
+    AccountId: acc_1,
+    Env: TEST,
+    Region: nb-eu-germany,
+    HubBaseUrl: https://hub.example.test,
+    ApiBaseUrl: https://api.example.test
+  },
+  Host: https://hub.example.test,
+  Sent: {
+    Method: GET,
+    Path: /v3/echo,
+    Headers: {
+      Authorization: Bearer eyJ.run-as.token,
+      nb-region: nb-eu-germany,
+      norbix-account-id: acc_1,
+      norbix-env: TEST,
+      norbix-project-id: proj_1
+    }
+  }
+}

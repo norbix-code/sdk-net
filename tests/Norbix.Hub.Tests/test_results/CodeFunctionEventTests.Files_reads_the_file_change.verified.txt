@@ -1,0 +1,62 @@
+﻿{
+  Envelope: {
+    SpecVersion: 1,
+    Id: Guid_1,
+    EventId: Guid_2,
+    Event: files.file.uploaded,
+    Source: Files,
+    CreatedOn: DateTimeOffset_1,
+    Context: {
+      AccountId: acc_1,
+      ProjectId: proj_1,
+      Environment: TEST,
+      Region: nb-eu-germany,
+      HubUrl: https://hub.example.test,
+      ApiUrl: https://api.example.test,
+      EchoUrl: https://api.example.test/v3/echo,
+      TriggerId: trg_1,
+      CorrelationId: corr-1,
+      Caller: {
+        UserId: usr_caller_1,
+        Email: ada@example.test,
+        Kind: User
+      },
+      RunAs: {
+        UserId: usr_service_1,
+        AccessToken: eyJ.run-as.token,
+        ExpiresAt: DateTimeOffset_2
+      }
+    },
+    Slots: {
+      Database: false,
+      User: false,
+      File: true,
+      Payment: false,
+      Ai: false,
+      Task: false,
+      Payload: false
+    }
+  },
+  Raw: {
+    New: {
+      id: {
+        ValueKind: String
+      },
+      fileName: {
+        ValueKind: String
+      },
+      contentType: {
+        ValueKind: String
+      }
+    },
+    Path: invoices/2026/invoice.pdf
+  },
+  Typed: {
+    New: {
+      id: fil_1,
+      fileName: invoice.pdf,
+      contentType: application/pdf
+    },
+    Path: invoices/2026/invoice.pdf
+  }
+}
