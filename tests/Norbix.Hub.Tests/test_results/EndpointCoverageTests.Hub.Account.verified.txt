@@ -31,6 +31,8 @@
       },
       ResponseType: CreateStripeCheckoutSessionResponse,
       Response: {
+        TrialIncluded: true,
+        NoTrialReason: test-noTrialReason,
         Id: Guid_1,
         Status: test-status,
         ResponseStatus: {
@@ -134,7 +136,9 @@
           Permissions: [
             test-string
           ],
-          TrialWasIssued: false
+          TrialWasIssued: false,
+          EmailVerified: false,
+          JoinedByInvitation: false
         },
         ResponseStatus: {
           IsSuccess: true
@@ -212,12 +216,12 @@
       Group: account,
       MethodName: ResendAccountVerificationTokenAsync,
       RequestType: ResendAccountVerificationToken,
-      HttpMethod: GET,
+      HttpMethod: POST,
       Path: /{version}/account/verify/resend,
       IsAccountScoped: false,
       IsUnauthenticated: false,
       Sent: {
-        Method: GET,
+        Method: POST,
         Path: /v2/account/verify/resend,
         Headers: {
           Authorization: Bearer test-bearer,
@@ -269,17 +273,21 @@
       Group: account,
       MethodName: VerifyAccountAsync,
       RequestType: VerifyAccount,
-      HttpMethod: GET,
+      HttpMethod: POST,
       Path: /{version}/account/verify,
       IsAccountScoped: false,
       IsUnauthenticated: true,
       Sent: {
-        Method: GET,
+        Method: POST,
         Path: /v2/account/verify,
-        Query: ?token=test-token&accountId={guid},
         Headers: {
+          Content-Type: application/json; charset=utf-8,
           norbix-account-id: test-account,
           norbix-project-id: test-project
+        },
+        Body: {
+          token: test-token,
+          accountId: Guid_1
         }
       },
       ResponseType: EmptyResponse,

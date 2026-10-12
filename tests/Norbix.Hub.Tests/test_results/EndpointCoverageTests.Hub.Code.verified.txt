@@ -1,7 +1,7 @@
 ﻿{
   Target: Hub,
   Group: code,
-  Count: 33,
+  Count: 38,
   Endpoints: [
     {
       Target: Hub,
@@ -56,6 +56,185 @@
       },
       ResponseType: EmptyResponse,
       Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: code,
+      MethodName: GetCodeFunctionEventSampleAsync,
+      RequestType: GetCodeFunctionEventSample,
+      HttpMethod: GET,
+      Path: /{version}/code/functions/event-sample,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/code/functions/event-sample,
+        Query: ?source=Database&event=test-event&schemaId={guid}&env=test-env,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        }
+      },
+      ResponseType: GetCodeFunctionEventSampleResponse,
+      Response: {
+        Sample: {
+          SpecVersion: test-specVersion,
+          Id: Guid_1,
+          EventId: Guid_1,
+          Event: test-event,
+          CreatedOn: DateTimeOffset_1,
+          Context: {},
+          Data: {}
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: code,
+      MethodName: GetCodeFunctionQualifiersAsync,
+      RequestType: GetCodeFunctionQualifiers,
+      HttpMethod: GET,
+      Path: /{version}/code/functions/qualifiers,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/code/functions/qualifiers,
+        Query: ?integrationId={guid}&functionId={guid}&env=test-env,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        }
+      },
+      ResponseType: GetCodeFunctionQualifiersResponse,
+      Response: {
+        Qualifiers: [
+          {}
+        ],
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: code,
+      MethodName: GetCodeFunctionRunsAsync,
+      RequestType: GetCodeFunctionRuns,
+      HttpMethod: GET,
+      Path: /{version}/code/functions/runs,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/code/functions/runs,
+        Query: ?triggerId={guid}&taskId={guid}&limit=1&env=test-env,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        }
+      },
+      ResponseType: GetCodeFunctionRunsResponse,
+      Response: {
+        Runs: [
+          {
+            Succeeded: false
+          }
+        ],
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: code,
+      MethodName: GetCodeFunctionsAsync,
+      RequestType: GetCodeFunctions,
+      HttpMethod: GET,
+      Path: /{version}/code/functions,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/code/functions,
+        Query: ?integrationId={guid}&prefix=test-prefix&tag=test-tag&env=test-env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        }
+      },
+      ResponseType: GetCodeFunctionsResponse,
+      Response: {
+        List: {
+          Items: [
+            {}
+          ],
+          HasMore: false,
+          HasPrevious: false,
+          StartingAfter: cursor-start,
+          EndingBefore: cursor-end
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: code,
+      MethodName: InvokeCodeFunctionAsync,
+      RequestType: InvokeCodeFunction,
+      HttpMethod: POST,
+      Path: /{version}/code/functions/invoke,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/code/functions/invoke,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        },
+        Body: {
+          functionRef: {
+            integrationId: Guid_1,
+            provider: awsLambda,
+            functionId: Guid_1,
+            qualifier: test-qualifier,
+            displayName: test-displayName
+          },
+          payload: {
+            test-key: null
+          },
+          invocationType: sync,
+          runAsUserId: Guid_1,
+          config: test-config,
+          env: test-env
+        }
+      },
+      ResponseType: InvokeCodeFunctionResponse,
+      Response: {
+        StatusCode: 7,
+        Output: {
+          ValueKind: Object
+        },
+        DurationMs: 42,
+        RequestId: Guid_1,
+        Logs: test-logs,
         ResponseStatus: {
           IsSuccess: true
         }
@@ -246,6 +425,7 @@
       },
       ResponseType: GetCodeIntegrationsResponse,
       Response: {
+        DefaultIntegrationId: Guid_1,
         List: {
           Items: [
             {
