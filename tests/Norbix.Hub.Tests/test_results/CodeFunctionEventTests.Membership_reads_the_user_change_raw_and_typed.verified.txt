@@ -1,0 +1,78 @@
+﻿{
+  Envelope: {
+    SpecVersion: 1,
+    Id: Guid_1,
+    EventId: Guid_2,
+    Event: membership.user.updated,
+    Source: Membership,
+    CreatedOn: DateTimeOffset_1,
+    Context: {
+      AccountId: acc_1,
+      ProjectId: proj_1,
+      Environment: TEST,
+      Region: nb-eu-germany,
+      HubUrl: https://hub.example.test,
+      ApiUrl: https://api.example.test,
+      EchoUrl: https://api.example.test/v3/echo,
+      TriggerId: trg_1,
+      CorrelationId: corr-1,
+      Caller: {
+        UserId: usr_caller_1,
+        Email: ada@example.test,
+        Kind: User
+      },
+      RunAs: {
+        UserId: usr_service_1,
+        AccessToken: eyJ.run-as.token,
+        ExpiresAt: DateTimeOffset_2
+      }
+    },
+    Slots: {
+      Database: false,
+      User: true,
+      File: false,
+      Payment: false,
+      Ai: false,
+      Task: false,
+      Payload: false
+    }
+  },
+  Raw: {
+    UserId: usr_member_1,
+    Old: {
+      id: {
+        ValueKind: String
+      },
+      email: {
+        ValueKind: String
+      },
+      displayName: {
+        ValueKind: String
+      }
+    },
+    New: {
+      id: {
+        ValueKind: String
+      },
+      email: {
+        ValueKind: String
+      },
+      displayName: {
+        ValueKind: String
+      }
+    }
+  },
+  Typed: {
+    UserId: usr_member_1,
+    Old: {
+      id: usr_member_1,
+      email: ada@example.test,
+      displayName: Ada
+    },
+    New: {
+      id: usr_member_1,
+      email: ada@example.test,
+      displayName: Ada Lovelace
+    }
+  }
+}

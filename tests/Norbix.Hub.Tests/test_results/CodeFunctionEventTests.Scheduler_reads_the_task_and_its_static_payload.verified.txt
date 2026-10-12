@@ -1,0 +1,51 @@
+﻿{
+  Envelope: {
+    SpecVersion: 1,
+    Id: Guid_1,
+    EventId: Guid_2,
+    Event: scheduler.task.fired,
+    Source: Scheduler,
+    CreatedOn: DateTimeOffset_1,
+    Context: {
+      AccountId: acc_1,
+      ProjectId: proj_1,
+      Environment: PROD,
+      HubUrl: https://hub.example.test,
+      ApiUrl: https://api.example.test,
+      EchoUrl: https://api.example.test/v3/echo,
+      TaskId: tsk_1,
+      CorrelationId: corr-3,
+      Caller: {
+        UserId: usr_service_1,
+        Kind: System
+      },
+      RunAs: {
+        UserId: usr_service_1,
+        AccessToken: eyJ.run-as.token,
+        ExpiresAt: DateTimeOffset_2
+      }
+    },
+    Slots: {
+      Database: false,
+      User: false,
+      File: false,
+      Payment: false,
+      Ai: false,
+      Task: true,
+      Payload: true
+    },
+    Config: [
+      acceptStatus,
+      imageWidth
+    ]
+  },
+  Task: {
+    TaskId: tsk_1,
+    Name: Nightly payouts,
+    FiredAt: DateTimeOffset_1
+  },
+  Payload: {
+    orderId: 6ac54a59212c29912eaddd81,
+    dryRun: false
+  }
+}

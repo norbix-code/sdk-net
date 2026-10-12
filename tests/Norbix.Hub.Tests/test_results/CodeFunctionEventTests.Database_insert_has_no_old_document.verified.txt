@@ -1,0 +1,16 @@
+﻿{
+  Event: database.record.inserted,
+  Change: {
+    Collection: orders,
+    SchemaId: sch_1,
+    SchemaVersion: 3,
+    RecordId: 6ac54a59212c29912eaddd82,
+    New: {
+      _id: 6ac54a59212c29912eaddd82,
+      status: new,
+      total: 10.0,
+      customerEmail: bob@example.test
+    },
+    Truncated: false
+  }
+}

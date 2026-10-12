@@ -1,0 +1,67 @@
+﻿{
+  Envelope: {
+    SpecVersion: 1,
+    Id: Guid_1,
+    EventId: Guid_2,
+    Event: database.record.updated,
+    Source: Database,
+    CreatedOn: DateTimeOffset_1,
+    Context: {
+      AccountId: acc_1,
+      ProjectId: proj_1,
+      Environment: TEST,
+      Region: nb-eu-germany,
+      HubUrl: https://hub.example.test,
+      ApiUrl: https://api.example.test,
+      EchoUrl: https://api.example.test/v3/echo,
+      TriggerId: trg_1,
+      CorrelationId: corr-1,
+      Caller: {
+        UserId: usr_caller_1,
+        Email: ada@example.test,
+        Kind: User
+      },
+      RunAs: {
+        UserId: usr_service_1,
+        AccessToken: eyJ.run-as.token,
+        ExpiresAt: DateTimeOffset_2
+      }
+    },
+    Slots: {
+      Database: true,
+      User: false,
+      File: false,
+      Payment: false,
+      Ai: false,
+      Task: false,
+      Payload: false
+    },
+    Config: [
+      acceptStatus,
+      imageWidth
+    ]
+  },
+  Change: {
+    Collection: orders,
+    SchemaId: sch_1,
+    SchemaVersion: 3,
+    RecordId: 6ac54a59212c29912eaddd81,
+    Old: {
+      _id: 6ac54a59212c29912eaddd81,
+      status: new,
+      total: 42.5,
+      customerEmail: ada@example.test
+    },
+    New: {
+      _id: 6ac54a59212c29912eaddd81,
+      status: processing,
+      total: 42.5,
+      customerEmail: ada@example.test
+    },
+    Truncated: false
+  },
+  Config: {
+    acceptStatus: processing,
+    imageWidth: 568
+  }
+}

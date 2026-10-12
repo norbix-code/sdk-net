@@ -63,4 +63,10 @@ public static class NorbixErrorCodes
     public const string AccountScopeRequired = "NORBIX_ACCOUNT_SCOPE_REQUIRED";
     public const string MissingPathParam = "NORBIX_MISSING_PATH_PARAM";
     public const string NetworkError = "NORBIX_NETWORK_ERROR";
+
+    /// <summary>A cloud function received a body that is not a Norbix code function envelope.</summary>
+    public const string InvalidFunctionEvent = "NORBIX_FUNCTION_EVENT_INVALID";
+
+    /// <summary>A cloud function received an envelope with a <c>specVersion</c> this SDK does not read.</summary>
+    public const string UnsupportedFunctionEvent = "NORBIX_FUNCTION_EVENT_UNSUPPORTED";
 }

@@ -1,0 +1,50 @@
+﻿{
+  Envelope: {
+    SpecVersion: 1,
+    Id: Guid_1,
+    EventId: Guid_1,
+    Event: manual.invoke,
+    Source: Manual,
+    CreatedOn: DateTimeOffset_1,
+    Context: {
+      AccountId: acc_1,
+      ProjectId: proj_1,
+      Environment: TEST,
+      HubUrl: https://hub.example.test,
+      ApiUrl: https://api.example.test,
+      EchoUrl: https://api.example.test/v3/echo,
+      CorrelationId: corr-4,
+      Caller: {
+        UserId: usr_caller_1,
+        Email: ada@example.test,
+        Kind: ApiKey
+      },
+      RunAs: {
+        UserId: usr_caller_1,
+        AccessToken: eyJ.run-as.token,
+        ExpiresAt: DateTimeOffset_2
+      }
+    },
+    Slots: {
+      Database: false,
+      User: false,
+      File: false,
+      Payment: false,
+      Ai: false,
+      Task: false,
+      Payload: true
+    }
+  },
+  Payload: {
+    orderId: 6ac54a59212c29912eaddd81,
+    dryRun: true
+  },
+  RawPayload: {
+    orderId: {
+      ValueKind: String
+    },
+    dryRun: {
+      ValueKind: True
+    }
+  }
+}

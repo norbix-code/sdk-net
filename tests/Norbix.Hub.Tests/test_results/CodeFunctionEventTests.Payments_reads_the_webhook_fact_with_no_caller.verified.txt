@@ -1,0 +1,49 @@
+﻿{
+  Envelope: {
+    SpecVersion: 1,
+    Id: Guid_1,
+    EventId: Guid_2,
+    Event: payments.webhook.received,
+    Source: Payments,
+    CreatedOn: DateTimeOffset_1,
+    Context: {
+      AccountId: acc_1,
+      ProjectId: proj_1,
+      Environment: PROD,
+      HubUrl: https://hub.example.test,
+      ApiUrl: https://api.example.test,
+      EchoUrl: https://api.example.test/v3/echo,
+      TriggerId: trg_2,
+      CorrelationId: corr-2,
+      RunAs: {
+        UserId: usr_service_1,
+        AccessToken: eyJ.run-as.token,
+        ExpiresAt: DateTimeOffset_2
+      }
+    },
+    Slots: {
+      Database: false,
+      User: false,
+      File: false,
+      Payment: true,
+      Ai: false,
+      Task: false,
+      Payload: false
+    }
+  },
+  Payment: {
+    IntegrationId: int_pay_1,
+    Provider: Stripe,
+    ProviderEventId: evt_stripe_1,
+    EventName: payment_intent.succeeded,
+    Status: succeeded,
+    AmountMinor: 4250,
+    Currency: EUR,
+    ExternalIds: {
+      paymentIntent: pi_1,
+      customer: cus_1
+    },
+    OccurredOn: DateTimeOffset_3,
+    ReceivedOn: DateTimeOffset_1
+  }
+}

@@ -1,0 +1,54 @@
+﻿{
+  Envelope: {
+    SpecVersion: 1,
+    Id: Guid_1,
+    EventId: Guid_2,
+    Event: ai.credits.warning,
+    Source: Ai,
+    CreatedOn: DateTimeOffset_1,
+    Context: {
+      AccountId: acc_1,
+      ProjectId: proj_1,
+      Environment: TEST,
+      Region: nb-eu-germany,
+      HubUrl: https://hub.example.test,
+      ApiUrl: https://api.example.test,
+      EchoUrl: https://api.example.test/v3/echo,
+      TriggerId: trg_1,
+      CorrelationId: corr-1,
+      Caller: {
+        UserId: usr_caller_1,
+        Email: ada@example.test,
+        Kind: User
+      },
+      RunAs: {
+        UserId: usr_service_1,
+        AccessToken: eyJ.run-as.token,
+        ExpiresAt: DateTimeOffset_2
+      }
+    },
+    Slots: {
+      Database: false,
+      User: false,
+      File: false,
+      Payment: false,
+      Ai: true,
+      Task: false,
+      Payload: false
+    }
+  },
+  Ai: {
+    Payload: {
+      creditsLeft: {
+        ValueKind: Number
+      },
+      threshold: {
+        ValueKind: Number
+      },
+      plan: {
+        ValueKind: String
+      }
+    },
+    TargetUserId: usr_member_1
+  }
+}
