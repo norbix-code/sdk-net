@@ -17,6 +17,16 @@ using Norbix.Sdk.Types;
 
 namespace Norbix.Sdk.Types.Hub;
 
+    public partial class InvokeCodeFunctionResponse
+        : ResponseBase
+    {
+        public virtual int StatusCode { get; set; }
+        public virtual Object? Output { get; set; }
+        public virtual long DurationMs { get; set; }
+        public virtual string? RequestId { get; set; }
+        public virtual string? Logs { get; set; }
+    }
+
     public partial class TemplatePreview
     {
         public virtual string Channel { get; set; }
@@ -127,6 +137,12 @@ namespace Norbix.Sdk.Types.Hub;
         Duplicate,
     }
 
+    public enum CodeInvocationType
+    {
+        Sync,
+        Async,
+    }
+
     public enum CodeProvider
     {
         AwsLambda,
@@ -139,6 +155,7 @@ namespace Norbix.Sdk.Types.Hub;
         Netlify,
         SupabaseEdge,
         Modal,
+        Fake,
     }
 
     public enum CommunicationChannel
@@ -877,6 +894,38 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual ActionPendingEntryWireDto? Typegen_243_ActionPendingEntryWireDto { get; set; }
         public virtual NoticeEntryWireDto? Typegen_244_NoticeEntryWireDto { get; set; }
         public virtual ConversationSnapshotEntryWireDto? Typegen_245_ConversationSnapshotEntryWireDto { get; set; }
+        public virtual StringFieldDto? Typegen_252_StringFieldDto { get; set; }
+        public virtual DecimalFieldDto? Typegen_253_DecimalFieldDto { get; set; }
+        public virtual CurrencyFieldDto? Typegen_254_CurrencyFieldDto { get; set; }
+        public virtual BooleanFieldDto? Typegen_255_BooleanFieldDto { get; set; }
+        public virtual DateFieldDto? Typegen_256_DateFieldDto { get; set; }
+        public virtual IntegerFieldDto? Typegen_257_IntegerFieldDto { get; set; }
+        public virtual GeolocationFieldDto? Typegen_258_GeolocationFieldDto { get; set; }
+        public virtual TagsFieldDto? Typegen_259_TagsFieldDto { get; set; }
+        public virtual FileFieldDto? Typegen_260_FileFieldDto { get; set; }
+        public virtual TaxonomySelectionFieldDto? Typegen_261_TaxonomySelectionFieldDto { get; set; }
+        public virtual CollectionSelectionFieldDto? Typegen_262_CollectionSelectionFieldDto { get; set; }
+        public virtual UserSelectionFieldDto? Typegen_263_UserSelectionFieldDto { get; set; }
+        public virtual RoleSelectionFieldDto? Typegen_264_RoleSelectionFieldDto { get; set; }
+        public virtual EnumSelectionFieldDto? Typegen_265_EnumSelectionFieldDto { get; set; }
+        public virtual ObjectFieldDto? Typegen_266_ObjectFieldDto { get; set; }
+        public virtual ArrayFieldDto? Typegen_267_ArrayFieldDto { get; set; }
+        public virtual JsonFieldDto? Typegen_268_JsonFieldDto { get; set; }
+        public virtual FunctionRefDto? Typegen_269_FunctionRefDto { get; set; }
+        public virtual CodeFunctionEventDto? Typegen_270_CodeFunctionEventDto { get; set; }
+        public virtual CodeFunctionContextDto? Typegen_271_CodeFunctionContextDto { get; set; }
+        public virtual CodeFunctionCallerDto? Typegen_272_CodeFunctionCallerDto { get; set; }
+        public virtual CodeFunctionRunAsDto? Typegen_273_CodeFunctionRunAsDto { get; set; }
+        public virtual CodeFunctionDataDto? Typegen_274_CodeFunctionDataDto { get; set; }
+        public virtual DatabaseRecordChangeDto? Typegen_275_DatabaseRecordChangeDto { get; set; }
+        public virtual UserChangeDto? Typegen_276_UserChangeDto { get; set; }
+        public virtual FileChangeDto? Typegen_277_FileChangeDto { get; set; }
+        public virtual PaymentFactDto? Typegen_278_PaymentFactDto { get; set; }
+        public virtual AiUsageEventDto? Typegen_279_AiUsageEventDto { get; set; }
+        public virtual ScheduledTaskInfoDto? Typegen_280_ScheduledTaskInfoDto { get; set; }
+        public virtual FakeCodeIntegrationDto? Typegen_281_FakeCodeIntegrationDto { get; set; }
+        public virtual FakeCodeIntegrationRequest? Typegen_282_FakeCodeIntegrationRequest { get; set; }
+        public virtual CodeFunctionSchedulerTaskRequest? Typegen_283_CodeFunctionSchedulerTaskRequest { get; set; }
     }
 
     [DataContract]
@@ -933,6 +982,12 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember]
         public virtual bool TrialWasIssued { get; set; }
+
+        [DataMember]
+        public virtual bool EmailVerified { get; set; }
+
+        [DataMember]
+        public virtual bool JoinedByInvitation { get; set; }
     }
 
     public partial class AdminPortalModuleDto
@@ -3188,6 +3243,360 @@ namespace Norbix.Sdk.Types.Hub;
     {
         [DataMember]
         public virtual bool IsEnabled { get; set; }
+
+        [DataMember]
+        public virtual string? DefaultIntegrationViewId { get; set; }
+    }
+
+    [DataContract]
+    public partial class CodeFunctionDescriptorDto
+    {
+        [DataMember]
+        public virtual string FunctionId { get; set; }
+
+        [DataMember]
+        public virtual string DisplayName { get; set; }
+
+        [DataMember]
+        public virtual string? Runtime { get; set; }
+
+        [DataMember]
+        public virtual string? Region { get; set; }
+
+        [DataMember]
+        public virtual string? Description { get; set; }
+
+        [DataMember]
+        public virtual DateTimeOffset? LastModified { get; set; }
+
+        [DataMember]
+        public virtual Dictionary<string, string>? Tags { get; set; }
+
+        [DataMember]
+        public virtual string? Arn { get; set; }
+    }
+
+    [DataContract]
+    public partial class CodeFunctionQualifierDto
+    {
+        [DataMember]
+        public virtual string Name { get; set; }
+
+        [DataMember]
+        public virtual CodeFunctionQualifierKindDto Kind { get; set; }
+
+        [DataMember]
+        public virtual string? Description { get; set; }
+
+        [DataMember]
+        public virtual string? TargetVersion { get; set; }
+    }
+
+    public enum CodeFunctionQualifierKindDto
+    {
+        Alias,
+        Version,
+    }
+
+    [DataContract]
+    public partial class CodeFunctionRunDto
+    {
+        [DataMember]
+        public virtual DateTimeOffset FiredAt { get; set; }
+
+        [DataMember]
+        public virtual string Event { get; set; }
+
+        [DataMember]
+        public virtual string Source { get; set; }
+
+        [DataMember]
+        public virtual bool Succeeded { get; set; }
+
+        [DataMember]
+        public virtual int? StatusCode { get; set; }
+
+        [DataMember]
+        public virtual long? DurationMs { get; set; }
+
+        [DataMember]
+        public virtual string? Error { get; set; }
+
+        [DataMember]
+        public virtual string? RequestId { get; set; }
+    }
+
+    [DataContract]
+    public partial class FunctionRefDto
+    {
+        [DataMember]
+        public virtual string IntegrationId { get; set; }
+
+        [DataMember]
+        public virtual CodeProvider? Provider { get; set; }
+
+        [DataMember]
+        public virtual string FunctionId { get; set; }
+
+        [DataMember]
+        public virtual string? Qualifier { get; set; }
+
+        [DataMember]
+        public virtual string? DisplayName { get; set; }
+    }
+
+    [DataContract]
+    public partial class AiUsageEventDto
+    {
+        [DataMember]
+        public virtual Dictionary<string, Object> Payload { get; set; } = new();
+
+        [DataMember]
+        public virtual string? TargetUserId { get; set; }
+    }
+
+    [DataContract]
+    public partial class CodeFunctionCallerDto
+    {
+        [DataMember]
+        public virtual string UserId { get; set; }
+
+        [DataMember]
+        public virtual string? Email { get; set; }
+
+        [DataMember]
+        public virtual CodeFunctionCallerKind Kind { get; set; }
+    }
+
+    public enum CodeFunctionCallerKind
+    {
+        User,
+        ApiKey,
+        System,
+    }
+
+    [DataContract]
+    public partial class CodeFunctionContextDto
+    {
+        [DataMember]
+        public virtual string AccountId { get; set; }
+
+        [DataMember]
+        public virtual string ProjectId { get; set; }
+
+        [DataMember]
+        public virtual string Environment { get; set; }
+
+        [DataMember]
+        public virtual string? Region { get; set; }
+
+        [DataMember]
+        public virtual string HubUrl { get; set; }
+
+        [DataMember]
+        public virtual string ApiUrl { get; set; }
+
+        [DataMember]
+        public virtual string EchoUrl { get; set; }
+
+        [DataMember]
+        public virtual string? TriggerId { get; set; }
+
+        [DataMember]
+        public virtual string? TaskId { get; set; }
+
+        [DataMember]
+        public virtual string? CorrelationId { get; set; }
+
+        [DataMember]
+        public virtual CodeFunctionCallerDto? Caller { get; set; }
+
+        [DataMember]
+        public virtual CodeFunctionRunAsDto? RunAs { get; set; }
+    }
+
+    [DataContract]
+    public partial class CodeFunctionDataDto
+    {
+        [DataMember]
+        public virtual DatabaseRecordChangeDto? Database { get; set; }
+
+        [DataMember]
+        public virtual UserChangeDto? User { get; set; }
+
+        [DataMember]
+        public virtual FileChangeDto? File { get; set; }
+
+        [DataMember]
+        public virtual PaymentFactDto? Payment { get; set; }
+
+        [DataMember]
+        public virtual AiUsageEventDto? Ai { get; set; }
+
+        [DataMember]
+        public virtual ScheduledTaskInfoDto? Task { get; set; }
+
+        [DataMember]
+        public virtual Dictionary<string, Object>? Payload { get; set; }
+    }
+
+    [DataContract]
+    public partial class CodeFunctionEventDto
+    {
+        [DataMember]
+        public virtual string SpecVersion { get; set; }
+
+        [DataMember]
+        public virtual string Id { get; set; }
+
+        [DataMember]
+        public virtual string EventId { get; set; }
+
+        [DataMember]
+        public virtual string Event { get; set; }
+
+        [DataMember]
+        public virtual CodeFunctionSource Source { get; set; }
+
+        [DataMember]
+        public virtual DateTimeOffset CreatedOn { get; set; }
+
+        [DataMember]
+        public virtual CodeFunctionContextDto Context { get; set; }
+
+        [DataMember]
+        public virtual CodeFunctionDataDto Data { get; set; }
+
+        [DataMember]
+        public virtual Dictionary<string, Object>? Config { get; set; }
+    }
+
+    [DataContract]
+    public partial class CodeFunctionRunAsDto
+    {
+        [DataMember]
+        public virtual string UserId { get; set; }
+
+        [DataMember]
+        public virtual string? AccessToken { get; set; }
+
+        [DataMember]
+        public virtual DateTimeOffset? ExpiresAt { get; set; }
+    }
+
+    public enum CodeFunctionSource
+    {
+        Database,
+        Membership,
+        Files,
+        Payments,
+        Ai,
+        Scheduler,
+        Manual,
+    }
+
+    [DataContract]
+    public partial class DatabaseRecordChangeDto
+    {
+        [DataMember]
+        public virtual string Collection { get; set; }
+
+        [DataMember]
+        public virtual string SchemaId { get; set; }
+
+        [DataMember]
+        public virtual int? SchemaVersion { get; set; }
+
+        [DataMember]
+        public virtual string? RecordId { get; set; }
+
+        [DataMember]
+        public virtual Dictionary<string, Object>? Old { get; set; }
+
+        [DataMember]
+        public virtual Dictionary<string, Object>? New { get; set; }
+
+        [DataMember]
+        public virtual bool Truncated { get; set; }
+
+        [DataMember]
+        public virtual DocumentRefDto? OldRef { get; set; }
+
+        [DataMember]
+        public virtual DocumentRefDto? NewRef { get; set; }
+    }
+
+    [DataContract]
+    public partial class FileChangeDto
+    {
+        [DataMember]
+        public virtual Dictionary<string, Object>? Old { get; set; }
+
+        [DataMember]
+        public virtual Dictionary<string, Object>? New { get; set; }
+
+        [DataMember]
+        public virtual string? Path { get; set; }
+    }
+
+    [DataContract]
+    public partial class PaymentFactDto
+    {
+        [DataMember]
+        public virtual string IntegrationId { get; set; }
+
+        [DataMember]
+        public virtual string Provider { get; set; }
+
+        [DataMember]
+        public virtual string ProviderEventId { get; set; }
+
+        [DataMember]
+        public virtual string EventName { get; set; }
+
+        [DataMember]
+        public virtual string Status { get; set; }
+
+        [DataMember]
+        public virtual long? AmountMinor { get; set; }
+
+        [DataMember]
+        public virtual string? Currency { get; set; }
+
+        [DataMember]
+        public virtual Dictionary<string, string>? ExternalIds { get; set; }
+
+        [DataMember]
+        public virtual DateTimeOffset? OccurredOn { get; set; }
+
+        [DataMember]
+        public virtual DateTimeOffset ReceivedOn { get; set; }
+    }
+
+    [DataContract]
+    public partial class ScheduledTaskInfoDto
+    {
+        [DataMember]
+        public virtual string TaskId { get; set; }
+
+        [DataMember]
+        public virtual string Name { get; set; }
+
+        [DataMember]
+        public virtual DateTimeOffset FiredAt { get; set; }
+    }
+
+    [DataContract]
+    public partial class UserChangeDto
+    {
+        [DataMember]
+        public virtual string UserId { get; set; }
+
+        [DataMember]
+        public virtual Dictionary<string, Object>? Old { get; set; }
+
+        [DataMember]
+        public virtual Dictionary<string, Object>? New { get; set; }
     }
 
     public partial class CodeIntegrationDto
@@ -3222,6 +3631,11 @@ namespace Norbix.Sdk.Types.Hub;
     {
         public virtual string FunctionAppName { get; set; }
         public virtual string? ResourceGroup { get; set; }
+    }
+
+    public partial class FakeCodeIntegrationDto
+        : CodeIntegrationDto
+    {
     }
 
     public partial class GoogleCloudFunctionsCodeIntegrationDto
@@ -5376,6 +5790,7 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual string Name { get; set; }
         public virtual string? Description { get; set; }
         public virtual bool IsSystem { get; set; }
+        public virtual string Version { get; set; }
         public virtual HashSet<PermissionDto>? Permissions { get; set; }
     }
 
@@ -6315,6 +6730,15 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual List<string> MissingLanguages { get; set; } = [];
     }
 
+    public partial class DocumentRefDto
+        : ResourceRefDto
+    {
+        public virtual ResourceKindDto Kind { get; set; }
+        public virtual string DatabaseIntegrationId { get; set; }
+        public virtual string SchemaId { get; set; }
+        public virtual string ExternalId { get; set; }
+    }
+
     public enum ResolvedRefStatus
     {
         [EnumMember(Value="ok")]
@@ -7236,10 +7660,28 @@ namespace Norbix.Sdk.Types.Hub;
         : TriggerActionDto
     {
         [DataMember]
-        public virtual string FunctionId { get; set; }
+        public virtual FunctionRefDto? FunctionRef { get; set; }
 
         [DataMember]
-        public virtual CodeDeliverySettingsDto DeliverySettings { get; set; }
+        public virtual string? RunAsUserId { get; set; }
+
+        [DataMember]
+        public virtual CodeInvocationType InvocationType { get; set; }
+
+        [DataMember]
+        public virtual string? Config { get; set; }
+
+        [DataMember]
+        public virtual CodeDeliverySettingsDto? DeliverySettings { get; set; }
+
+        [DataMember]
+        public virtual string? FunctionId { get; set; }
+
+        [DataMember]
+        public virtual string? ActivationCode { get; set; }
+
+        [DataMember]
+        public virtual Dictionary<string, string>? Meta { get; set; }
     }
 
     [DataContract]
@@ -7481,6 +7923,11 @@ namespace Norbix.Sdk.Types.Hub;
     public partial class CreateStripeCheckoutSessionResponse
         : IdResponse
     {
+        [DataMember]
+        public virtual bool TrialIncluded { get; set; }
+
+        [DataMember]
+        public virtual string? NoTrialReason { get; set; }
     }
 
     [NorbixRoute("/{version}/account/team/member", "POST")]
@@ -7577,7 +8024,7 @@ namespace Norbix.Sdk.Types.Hub;
     {
     }
 
-    [NorbixRoute("/{version}/account/verify/resend", "GET")]
+    [NorbixRoute("/{version}/account/verify/resend", "POST")]
     public partial class ResendAccountVerificationToken
         : RequestBase, INorbixRequest<EmptyResponse>
     {
@@ -7613,7 +8060,7 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual string? SecurityEmail { get; set; }
     }
 
-    [NorbixRoute("/{version}/account/verify", "GET")]
+    [NorbixRoute("/{version}/account/verify", "POST")]
     public partial class VerifyAccount
         : RequestBase, INorbixRequest<EmptyResponse>, IHasAccountId, INorbixOptionalAuth
     {
@@ -10182,6 +10629,7 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual string? Error { get; set; }
         public virtual string? ErrorDescription { get; set; }
         public virtual string? ErrorCode { get; set; }
+        public virtual string? Reason { get; set; }
         public virtual string? BearerToken { get; set; }
         public virtual string? RefreshToken { get; set; }
         public virtual int? ExpiresIn { get; set; }
@@ -10341,6 +10789,8 @@ namespace Norbix.Sdk.Types.Hub;
     {
         public virtual string ClientName { get; set; }
         public virtual string RedirectHost { get; set; }
+        public virtual string ClientHost { get; set; }
+        public virtual bool RedirectIsLoopback { get; set; }
         public virtual string ConsentTicket { get; set; }
         public virtual List<AiRoleDto> AccountRoles { get; set; } = [];
         public virtual List<AiProjectRolesDto> Projects { get; set; } = [];
@@ -10458,6 +10908,138 @@ namespace Norbix.Sdk.Types.Hub;
     {
     }
 
+    [NorbixRoute("/{version}/code/functions/event-sample", "GET")]
+    public partial class GetCodeFunctionEventSample
+        : CodeMashRequestBase, INorbixRequest<GetCodeFunctionEventSampleResponse>
+    {
+        ///<summary>
+        ///Database | Membership | Files | Payments | Ai | Scheduler | Manual.
+        ///</summary>
+        public virtual CodeFunctionSource Source { get; set; }
+
+        ///<summary>
+        ///The event name, e.g. database.record.inserted; omitted = the source's usual one.
+        ///</summary>
+        public virtual string? Event { get; set; }
+
+        ///<summary>
+        ///The schema id to put into data.database.schemaId (Database source).
+        ///</summary>
+        public virtual string? SchemaId { get; set; }
+    }
+
+    public partial class GetCodeFunctionEventSampleResponse
+        : ResponseBase
+    {
+        public virtual CodeFunctionEventDto? Sample { get; set; }
+    }
+
+    [NorbixRoute("/{version}/code/functions/qualifiers", "GET")]
+    public partial class GetCodeFunctionQualifiers
+        : CodeMashRequestBase, INorbixRequest<GetCodeFunctionQualifiersResponse>
+    {
+        ///<summary>
+        ///Code integration id (int_…), from get_code_integrations.
+        ///</summary>
+        public virtual string IntegrationId { get; set; }
+
+        ///<summary>
+        ///Provider-native function id, from get_code_functions.
+        ///</summary>
+        public virtual string FunctionId { get; set; }
+    }
+
+    public partial class GetCodeFunctionQualifiersResponse
+        : ResponseBase
+    {
+        public virtual IReadOnlyList<CodeFunctionQualifierDto>? Qualifiers { get; set; }
+    }
+
+    [NorbixRoute("/{version}/code/functions/runs", "GET")]
+    public partial class GetCodeFunctionRuns
+        : CodeMashRequestBase, INorbixRequest<GetCodeFunctionRunsResponse>
+    {
+        ///<summary>
+        ///The trigger whose function runs to list (trg_…). One of triggerId / taskId.
+        ///</summary>
+        public virtual string? TriggerId { get; set; }
+
+        ///<summary>
+        ///The scheduler task whose function runs to list (tsk_…). One of triggerId / taskId.
+        ///</summary>
+        public virtual string? TaskId { get; set; }
+
+        ///<summary>
+        ///How many runs, newest first: 1-50. Default 20.
+        ///</summary>
+        public virtual int? Limit { get; set; }
+    }
+
+    public partial class GetCodeFunctionRunsResponse
+        : ResponseBase
+    {
+        public virtual List<CodeFunctionRunDto> Runs { get; set; } = [];
+    }
+
+    [NorbixRoute("/{version}/code/functions", "GET")]
+    public partial class GetCodeFunctions
+        : CodeMashListPaginationRequestBase, INorbixRequest<GetCodeFunctionsResponse>
+    {
+        ///<summary>
+        ///Code integration id (int_…), from get_code_integrations.
+        ///</summary>
+        public virtual string IntegrationId { get; set; }
+
+        ///<summary>
+        ///Only functions whose id starts with this.
+        ///</summary>
+        public virtual string? Prefix { get; set; }
+
+        ///<summary>
+        ///Only functions carrying this tag: "key" or "key=value".
+        ///</summary>
+        public virtual string? Tag { get; set; }
+    }
+
+    public partial class GetCodeFunctionsResponse
+        : ResponseBase
+    {
+        public virtual PaginatedResponse<CodeFunctionDescriptorDto>? List { get; set; }
+    }
+
+    [NorbixRoute("/{version}/code/functions/invoke", "POST")]
+    [DataContract]
+    public partial class InvokeCodeFunction
+        : CodeMashRequestBase, INorbixRequest<InvokeCodeFunctionResponse>
+    {
+        ///<summary>
+        ///Which function: { integrationId, functionId, qualifier? }.
+        ///</summary>
+        [DataMember]
+        public virtual FunctionRefDto FunctionRef { get; set; }
+
+        [DataMember]
+        public virtual Dictionary<string, Object>? Payload { get; set; }
+
+        ///<summary>
+        ///Sync (wait for the result, default) or Async (fire and forget).
+        ///</summary>
+        [DataMember]
+        public virtual CodeInvocationType InvocationType { get; set; }
+
+        ///<summary>
+        ///The service user the function acts as (usr_…); omitted = you.
+        ///</summary>
+        [DataMember]
+        public virtual string? RunAsUserId { get; set; }
+
+        ///<summary>
+        ///A JSON object → envelope config. No bindings: a manual call has nothing to bind them with.
+        ///</summary>
+        [DataMember]
+        public virtual string? Config { get; set; }
+    }
+
     public partial class AwsLambdaCodeIntegrationRequest
         : CodeIntegrationRequest
     {
@@ -10529,6 +11111,12 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual string Id { get; set; }
     }
 
+    public partial class FakeCodeIntegrationRequest
+        : CodeIntegrationRequest
+    {
+        public virtual CodeProvider Provider { get; set; }
+    }
+
     [NorbixRoute("/{version}/code/integrations/{id}", "GET")]
     public partial class GetCodeIntegration
         : CodeMashRequestBase, INorbixRequest<GetCodeIntegrationResponse>
@@ -10554,6 +11142,7 @@ namespace Norbix.Sdk.Types.Hub;
     public partial class GetCodeIntegrationsResponse
         : ResponseBase
     {
+        public virtual string? DefaultIntegrationId { get; set; }
         public virtual PaginatedResponse<CodeIntegrationListProjection>? List { get; set; }
     }
 
@@ -17071,6 +17660,16 @@ namespace Norbix.Sdk.Types.Hub;
     public partial class EnableScheduler
         : CodeMashRequestBase, INorbixRequest<EmptyResponse>
     {
+    }
+
+    public partial class CodeFunctionSchedulerTaskRequest
+        : SchedulerTaskRequest
+    {
+        public virtual SchedulerTaskType Type { get; set; }
+        public virtual FunctionRefDto? FunctionRef { get; set; }
+        public virtual CodeInvocationType InvocationType { get; set; }
+        public virtual string? Config { get; set; }
+        public virtual HashSet<TokenMappingDto>? MappedTokens { get; set; }
     }
 
     [NorbixRoute("/{version}/scheduler/tasks/{Id}", "DELETE")]
