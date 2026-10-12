@@ -439,6 +439,7 @@ namespace Norbix.Sdk.Types.Hub;
         SmsCampaign,
         CodeFunctionalCall,
         WebhookCall,
+        MarketplaceFunctionCall,
     }
 
     public enum SchemaTriggerType
@@ -446,6 +447,14 @@ namespace Norbix.Sdk.Types.Hub;
         OnInserted,
         OnDeleted,
         OnUpdated,
+    }
+
+    public enum SecretValueFormat
+    {
+        Raw,
+        Bearer,
+        Basic,
+        Prefixed,
     }
 
     public enum SmsCampaignRecipientsSourceTypes
@@ -523,6 +532,9 @@ namespace Norbix.Sdk.Types.Hub;
         EmailFooters,
         Old,
         New,
+        RequestInput,
+        IntegrationConfig,
+        IntegrationSecret,
     }
 
     public enum TriggerActionType
@@ -925,6 +937,7 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual FakeCodeIntegrationDto? Typegen_281_FakeCodeIntegrationDto { get; set; }
         public virtual FakeCodeIntegrationRequest? Typegen_282_FakeCodeIntegrationRequest { get; set; }
         public virtual CodeFunctionSchedulerTaskRequest? Typegen_283_CodeFunctionSchedulerTaskRequest { get; set; }
+        public virtual MarketplaceFunctionSchedulerTaskRequest? Typegen_284_MarketplaceFunctionSchedulerTaskRequest { get; set; }
     }
 
     [DataContract]
@@ -1958,6 +1971,12 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember(Name="licenseExpireUtc")]
         public virtual DateTime? LicenseExpireUtc { get; set; }
+
+        [DataMember(Name="lastHeartbeatOutcome")]
+        public virtual string? LastHeartbeatOutcome { get; set; }
+
+        [DataMember(Name="lastHeartbeatError")]
+        public virtual string? LastHeartbeatError { get; set; }
 
         [DataMember(Name="message")]
         public virtual string? Message { get; set; }
@@ -3437,6 +3456,9 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember]
         public virtual Dictionary<string, Object>? Payload { get; set; }
+
+        [DataMember]
+        public virtual MarketplaceFunctionCallDto? Marketplace { get; set; }
     }
 
     [DataContract]
@@ -3536,6 +3558,22 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember]
         public virtual string? Path { get; set; }
+    }
+
+    [DataContract]
+    public partial class MarketplaceFunctionCallDto
+    {
+        [DataMember]
+        public virtual string FunctionId { get; set; }
+
+        [DataMember]
+        public virtual string FunctionKey { get; set; }
+
+        [DataMember]
+        public virtual string IntegrationId { get; set; }
+
+        [DataMember]
+        public virtual Dictionary<string, Object> Payload { get; set; } = new();
     }
 
     [DataContract]
@@ -3644,6 +3682,13 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual string? Region { get; set; }
     }
 
+    public enum MarketplaceAvailability
+    {
+        Development,
+        Staging,
+        Production,
+    }
+
     public enum MarketplaceCategory
     {
         Other,
@@ -3708,6 +3753,16 @@ namespace Norbix.Sdk.Types.Hub;
         MultilineText,
     }
 
+    public enum MarketplaceFormKind
+    {
+        Generic,
+        DatabaseQuery,
+        DatabaseWrite,
+        Message,
+        Prompt,
+        Web,
+    }
+
     [DataContract]
     public partial class MarketplaceFunctionDefinitionDto
     {
@@ -3727,6 +3782,12 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual string? Group { get; set; }
 
         [DataMember]
+        public virtual MarketplaceFormKind FormKind { get; set; }
+
+        [DataMember]
+        public virtual IReadOnlyList<MarketplaceFunctionParameterDto> Inputs { get; set; }
+
+        [DataMember]
         public virtual IReadOnlyList<MarketplaceFunctionParameterDto> Parameters { get; set; }
 
         [DataMember]
@@ -3739,7 +3800,7 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual MarketplaceHttpRequestSpecDto? Request { get; set; }
 
         [DataMember]
-        public virtual List<MarketplaceTokenMappingDto> DefaultTokenMappings { get; set; } = [];
+        public virtual List<TokenMappingDto> DefaultTokenMappings { get; set; } = [];
     }
 
     [DataContract]
@@ -3765,10 +3826,16 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual bool IsEnabled { get; set; }
 
         [DataMember]
-        public virtual string RequestTemplate { get; set; }
+        public virtual string? RequestTemplate { get; set; }
 
         [DataMember]
-        public virtual List<MarketplaceTokenMappingDto> MappedTokens { get; set; } = [];
+        public virtual Dictionary<string, string> Arguments { get; set; } = new();
+
+        [DataMember]
+        public virtual List<MarketplaceFunctionParameterDto> Inputs { get; set; } = [];
+
+        [DataMember]
+        public virtual List<TokenMappingDto> MappedTokens { get; set; } = [];
     }
 
     [DataContract]
@@ -3814,6 +3881,40 @@ namespace Norbix.Sdk.Types.Hub;
     }
 
     [DataContract]
+    public partial class MarketplaceFunctionRunDto
+    {
+        [DataMember]
+        public virtual DateTimeOffset FiredAt { get; set; }
+
+        [DataMember]
+        public virtual string Event { get; set; }
+
+        [DataMember]
+        public virtual string Source { get; set; }
+
+        [DataMember]
+        public virtual string FunctionId { get; set; }
+
+        [DataMember]
+        public virtual string? RunAsUserId { get; set; }
+
+        [DataMember]
+        public virtual bool Succeeded { get; set; }
+
+        [DataMember]
+        public virtual long? DurationMs { get; set; }
+
+        [DataMember]
+        public virtual string? Error { get; set; }
+
+        [DataMember]
+        public virtual string? VendorRequestId { get; set; }
+
+        [DataMember]
+        public virtual string? Input { get; set; }
+    }
+
+    [DataContract]
     public partial class MarketplaceHttpRequestSpecDto
     {
         [DataMember]
@@ -3827,6 +3928,19 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember]
         public virtual string? ContentType { get; set; }
+    }
+
+    [DataContract]
+    public partial class MarketplaceInstallFormDto
+    {
+        [DataMember]
+        public virtual string DataSchema { get; set; }
+
+        [DataMember]
+        public virtual string UiSchema { get; set; }
+
+        [DataMember]
+        public virtual List<string> SecretKeys { get; set; } = [];
     }
 
     [DataContract]
@@ -3850,6 +3964,9 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember]
         public virtual IReadOnlyDictionary<string, string> Config { get; set; }
+
+        [DataMember]
+        public virtual List<MarketplaceValidationStepResultDto>? LastValidationSteps { get; set; }
     }
 
     [DataContract]
@@ -3925,6 +4042,12 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual string? DocumentationUrl { get; set; }
 
         [DataMember]
+        public virtual string? VideoUrl { get; set; }
+
+        [DataMember]
+        public virtual MarketplaceAvailability Availability { get; set; }
+
+        [DataMember]
         public virtual bool IsOfficial { get; set; }
 
         [DataMember]
@@ -3938,6 +4061,12 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember]
         public virtual IReadOnlyList<MarketplaceFieldDefinitionDto> SecretFields { get; set; }
+
+        [DataMember]
+        public virtual MarketplaceInstallFormDto? InstallForm { get; set; }
+
+        [DataMember]
+        public virtual IReadOnlyList<MarketplaceValidationStepDto> ValidationSteps { get; set; }
 
         [DataMember]
         public virtual IReadOnlyList<MarketplaceFunctionDefinitionDto> Functions { get; set; }
@@ -3976,6 +4105,12 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember]
         public virtual int FunctionCount { get; set; }
+
+        [DataMember]
+        public virtual MarketplaceAvailability Availability { get; set; }
+
+        [DataMember]
+        public virtual string? VideoUrl { get; set; }
     }
 
     public enum MarketplaceParameterLocation
@@ -4014,44 +4149,6 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual bool IsRequired { get; set; }
     }
 
-    public enum MarketplaceSecretValueFormat
-    {
-        Raw,
-        Bearer,
-        Basic,
-        Prefixed,
-    }
-
-    [DataContract]
-    public partial class MarketplaceTokenMappingDto
-    {
-        [DataMember]
-        public virtual string Token { get; set; }
-
-        [DataMember]
-        public virtual MarketplaceTokenResolverKind Resolver { get; set; }
-
-        [DataMember]
-        public virtual string? Value { get; set; }
-
-        [DataMember]
-        public virtual List<string>? SecretKeys { get; set; }
-
-        [DataMember]
-        public virtual MarketplaceSecretValueFormat Format { get; set; }
-    }
-
-    public enum MarketplaceTokenResolverKind
-    {
-        Static,
-        Request,
-        Project,
-        Initiator,
-        Custom,
-        IntegrationConfig,
-        IntegrationSecret,
-    }
-
     public enum MarketplaceTransport
     {
         Mcp,
@@ -4059,6 +4156,47 @@ namespace Norbix.Sdk.Types.Hub;
         Code,
         Internal,
         Sdk,
+    }
+
+    [DataContract]
+    public partial class MarketplaceValidationStepDto
+    {
+        [DataMember]
+        public virtual string Key { get; set; }
+
+        [DataMember]
+        public virtual string Label { get; set; }
+
+        [DataMember]
+        public virtual string? Description { get; set; }
+
+        [DataMember]
+        public virtual bool RequiredForFunctions { get; set; }
+
+        [DataMember]
+        public virtual MarketplaceHttpRequestSpecDto? Probe { get; set; }
+    }
+
+    [DataContract]
+    public partial class MarketplaceValidationStepResultDto
+    {
+        [DataMember]
+        public virtual string Key { get; set; }
+
+        [DataMember]
+        public virtual string Label { get; set; }
+
+        [DataMember]
+        public virtual bool RequiredForFunctions { get; set; }
+
+        [DataMember]
+        public virtual bool Succeeded { get; set; }
+
+        [DataMember]
+        public virtual bool Skipped { get; set; }
+
+        [DataMember]
+        public virtual string? Message { get; set; }
     }
 
     public partial class AccountComplianceDto
@@ -6084,6 +6222,12 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember]
         public virtual TokenMappingResolverType Resolver { get; set; }
+
+        [DataMember]
+        public virtual List<string>? SecretKeys { get; set; }
+
+        [DataMember]
+        public virtual SecretValueFormat? SecretFormat { get; set; }
     }
 
     [DataContract]
@@ -6942,6 +7086,9 @@ namespace Norbix.Sdk.Types.Hub;
     {
         [DataMember]
         public virtual IReadOnlyList<IntegrationTestResultItemDto>? Items { get; set; }
+
+        [DataMember]
+        public virtual IReadOnlyList<MarketplaceValidationStepResultDto>? Steps { get; set; }
     }
 
     [DataContract]
@@ -7719,6 +7866,9 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember]
         public virtual Dictionary<string, string>? Payload { get; set; }
+
+        [DataMember]
+        public virtual string? RunAsUserId { get; set; }
     }
 
     [DataContract]
@@ -8200,6 +8350,19 @@ namespace Norbix.Sdk.Types.Hub;
         : ResponseBase
     {
         public virtual LicenseDomainVerificationStatusDto? Status { get; set; }
+    }
+
+    [NorbixRoute("/{version}/account/licenses/{Id}/key", "GET")]
+    public partial class GetLicenseKey
+        : RequestBase, INorbixRequest<GetLicenseKeyResponse>
+    {
+        public virtual string? Id { get; set; }
+    }
+
+    public partial class GetLicenseKeyResponse
+        : ResponseBase
+    {
+        public virtual string? Key { get; set; }
     }
 
     [NorbixRoute("/{version}/account/licenses", "GET")]
@@ -11254,6 +11417,32 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual MarketplaceFunctionDto? Function { get; set; }
     }
 
+    [NorbixRoute("/{version}/code/marketplace/functions/runs", "GET")]
+    public partial class GetMarketplaceFunctionRuns
+        : CodeMashRequestBase, INorbixRequest<GetMarketplaceFunctionRunsResponse>
+    {
+        ///<summary>
+        ///The trigger whose marketplace function runs to list (trg_…). One of triggerId / taskId.
+        ///</summary>
+        public virtual string? TriggerId { get; set; }
+
+        ///<summary>
+        ///The scheduler task whose marketplace function runs to list (tsk_…). One of triggerId / taskId.
+        ///</summary>
+        public virtual string? TaskId { get; set; }
+
+        ///<summary>
+        ///How many runs, newest first: 1-50. Default 20.
+        ///</summary>
+        public virtual int? Limit { get; set; }
+    }
+
+    public partial class GetMarketplaceFunctionRunsResponse
+        : ResponseBase
+    {
+        public virtual List<MarketplaceFunctionRunDto> Runs { get; set; } = [];
+    }
+
     [NorbixRoute("/{version}/code/marketplace/integrations/{IntegrationViewId}/functions", "GET")]
     public partial class GetMarketplaceFunctions
         : CodeMashListPaginationRequestBase, INorbixRequest<GetMarketplaceFunctionsResponse>
@@ -11449,7 +11638,7 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual string IntegrationViewId { get; set; }
 
         [DataMember]
-        public virtual List<MarketplaceTokenMappingDto> TokenMappings { get; set; } = [];
+        public virtual List<TokenMappingDto> TokenMappings { get; set; } = [];
     }
 
     public partial class SetMarketplaceIntegrationTokenMappingsResponse
@@ -17748,6 +17937,14 @@ namespace Norbix.Sdk.Types.Hub;
         : ResponseBase
     {
         public virtual PaginatedResponse<SchedulerTaskListProjection>? List { get; set; }
+    }
+
+    public partial class MarketplaceFunctionSchedulerTaskRequest
+        : SchedulerTaskRequest
+    {
+        public virtual SchedulerTaskType Type { get; set; }
+        public virtual string? FunctionId { get; set; }
+        public virtual Dictionary<string, string>? Payload { get; set; }
     }
 
     public partial class PushCampaignSchedulerTaskRequest

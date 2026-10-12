@@ -1,7 +1,7 @@
 ﻿{
   Target: Hub,
   Group: account,
-  Count: 119,
+  Count: 120,
   Endpoints: [
     {
       Target: Hub,
@@ -554,6 +554,35 @@
             }
           ]
         },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: account,
+      MethodName: GetLicenseKeyAsync,
+      RequestType: GetLicenseKey,
+      HttpMethod: GET,
+      Path: /{version}/account/licenses/{Id}/key,
+      PathParams: [
+        Id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/account/licenses/{guid}/key,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        }
+      },
+      ResponseType: GetLicenseKeyResponse,
+      Response: {
+        Key: test-key,
         ResponseStatus: {
           IsSuccess: true
         }
