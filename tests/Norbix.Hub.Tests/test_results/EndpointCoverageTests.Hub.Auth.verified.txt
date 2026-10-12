@@ -140,6 +140,7 @@
         Error: test-error,
         ErrorDescription: test-errorDescription,
         ErrorCode: test-errorCode,
+        Reason: test-reason,
         BearerToken: test-bearerToken,
         RefreshToken: test-refreshToken,
         ExpiresIn: 7,

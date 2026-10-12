@@ -10,15 +10,17 @@ namespace Norbix.Hub.Tests;
 /// The four account routes a person calls before they have a session:
 /// sign-up (<c>POST /account</c>), joining a team from an invitation
 /// (<c>POST /account/team/member</c>), the region list for the sign-up form
-/// (<c>GET /account/regions</c>) and the e-mail verification link
-/// (<c>GET /account/verify</c>). The gateway has no <c>[Authenticate]</c> on
+/// (<c>GET /account/regions</c>) and the e-mail verification
+/// (<c>POST /account/verify</c>, the token and account id in the body). The
+/// gateway has no <c>[Authenticate]</c> on
 /// any of them, and it never reads the <c>norbix-account-id</c> header, so the
 /// request types carry <c>INorbixUnauthenticated</c> and the client sends
 /// them with no <c>Authorization</c> header.
 /// <para>
 /// Every test uses a client with no API key, no bearer token and no account
 /// id (the matching <c>NORBIX_*</c> environment variables are cleared too).
-/// <c>VerifyAccount</c> carries the account id once, in its own query.
+/// <c>VerifyAccount</c> carries the account id once, in its own body — never
+/// as a <c>norbix-account-id</c> header.
 /// The snapshot also holds the endpoint catalog row, so a scope regression
 /// shows up as a diff. Nothing leaves the process.
 /// </para>
@@ -142,7 +144,7 @@ public sealed class AccountPublicEndpointTests
     }
 
     [Test]
-    public async Task VerifyAccount_sends_the_account_id_once_in_the_query()
+    public async Task VerifyAccount_posts_the_token_and_the_account_id_once_in_the_body()
     {
         using var fixture = AnonymousClient();
         fixture.RespondNoContentDefault();

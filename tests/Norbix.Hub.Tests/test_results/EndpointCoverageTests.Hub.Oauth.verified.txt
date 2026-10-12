@@ -92,6 +92,8 @@
       Response: {
         ClientName: test-clientName,
         RedirectHost: test-redirectHost,
+        ClientHost: test-clientHost,
+        RedirectIsLoopback: true,
         ConsentTicket: test-consentTicket,
         AccountRoles: [
           {
