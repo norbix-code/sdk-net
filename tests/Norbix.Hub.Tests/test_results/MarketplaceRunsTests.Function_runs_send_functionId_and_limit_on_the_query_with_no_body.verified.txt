@@ -1,0 +1,23 @@
+﻿{
+  Sent: {
+    Method: GET,
+    Path: /v2/code/marketplace/functions/runs,
+    Query: ?functionId=func_1p4R3gTobGZpD6fXvHT4rd&limit=50,
+    Headers: {
+      Authorization: Bearer test-bearer,
+      norbix-account-id: test-account,
+      norbix-project-id: test-project
+    }
+  },
+  Runs: [
+    {
+      Event: invoke,
+      Source: api-key,
+      FunctionId: func_1p4R3gTobGZpD6fXvHT4rd,
+      Succeeded: true,
+      Status: ok,
+      CorrelationId: Guid_1,
+      HasDetails: true
+    }
+  ]
+}
