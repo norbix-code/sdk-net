@@ -1,0 +1,23 @@
+﻿{
+  Sent: {
+    Method: GET,
+    Path: /v2/code/marketplace/integrations/int_7Hq2mcpServer/tools,
+    Headers: {
+      Authorization: Bearer test-bearer,
+      norbix-account-id: test-account,
+      norbix-project-id: test-project
+    }
+  },
+  Tools: [
+    {
+      Name: create_issue,
+      Title: Create issue,
+      Description: Open a new issue in a repository,
+      InputSchema: {"type":"object","properties":{"title":{"type":"string"}},"required":["title"]},
+      ReadOnlyHint: false,
+      DestructiveHint: false
+    }
+  ],
+  CatalogHash: 4ce4259bec02f283,
+  Truncated: false
+}
