@@ -1,0 +1,18 @@
+﻿{
+  Sent: {
+    Method: PUT,
+    Path: /v2/code/marketplace/integrations/int_6Qp1dW2kRm8NsT4vYc0Hb/access/roles,
+    Headers: {
+      Authorization: Bearer test-bearer,
+      Content-Type: application/json; charset=utf-8,
+      norbix-account-id: test-account,
+      norbix-project-id: test-project
+    },
+    Body: {
+      roleId: acc_6Qp1dW2kRm8NsT4vYc0Hb_nr_3kLm9QwErTyU,
+      package: readOnly,
+      manage: false
+    }
+  },
+  Id: acc_6Qp1dW2kRm8NsT4vYc0Hb_nr_3kLm9QwErTyU
+}

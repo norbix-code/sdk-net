@@ -1048,6 +1048,31 @@ foreach (var tool in catalog?.Tools ?? [])
     Console.WriteLine($"{tool.Name} {(tool.ReadOnlyHint == true ? "read-only" : "writes")}");
 ```
 
+## Marketplace connections — access
+
+Who may use a connection is set per role with generated access packages
+(`MarketplaceAccessLevel`: `None`, `Viewer`, `FunctionsOnly`, `ReadOnly`,
+`FullAccess`, plus the `Manage` flag):
+
+| Method | Call |
+| --- | --- |
+| `Code.GetMarketplaceIntegrationAccessAsync` | `GET /{version}/code/marketplace/integrations/{IntegrationViewId}/access` — the matrix: `Roles` (package, `IsCustom`, `Manage`, `Custom` policies, `DefaultNotApplied`), `Packages`, `Tools` (`ReadOnly`, `Grantable`), `Functions` |
+| `Code.SetMarketplaceIntegrationRoleAccessAsync` | `PUT …/access/roles` — `RoleId`, `Package`, `Manage`; returns the role id |
+| `Code.SaveMarketplaceIntegrationCustomAccessAsync` | `POST …/access/roles/custom` — `RoleId`, `BasePackage`, `Tools`, `Functions`, `Manage`, `NewPolicyForThisRoleOnly`; returns `PolicyId`, `Created`, `UsedByRoles` |
+
+`TestMarketplaceIntegrationAsync` also returns `AccessChanges`
+(`ReadOnlyAdded`, `ReadOnlyRemoved`, `NotGrantable`) and each step's
+`ErrorCode`.
+
+```csharp
+await hub.Code.SetMarketplaceIntegrationRoleAccessAsync(new SetMarketplaceIntegrationRoleAccess
+{
+    IntegrationViewId = "int_…",
+    RoleId = "acc_…_nr_…",
+    Package = MarketplaceAccessLevel.ReadOnly,
+});
+```
+
 ## Coverage Notes
 
 Generated coverage tracks the API and Hub DTO contract files. Some flows are not generated automatically:
