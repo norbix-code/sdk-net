@@ -3902,6 +3902,9 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual bool Succeeded { get; set; }
 
         [DataMember]
+        public virtual string? Status { get; set; }
+
+        [DataMember]
         public virtual long? DurationMs { get; set; }
 
         [DataMember]
@@ -3909,6 +3912,18 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember]
         public virtual string? VendorRequestId { get; set; }
+
+        [DataMember]
+        public virtual string? CorrelationId { get; set; }
+
+        [DataMember]
+        public virtual bool HasDetails { get; set; }
+
+        [DataMember]
+        public virtual string? TriggerId { get; set; }
+
+        [DataMember]
+        public virtual string? TaskId { get; set; }
 
         [DataMember]
         public virtual string? Input { get; set; }
@@ -11422,12 +11437,17 @@ namespace Norbix.Sdk.Types.Hub;
         : CodeMashRequestBase, INorbixRequest<GetMarketplaceFunctionRunsResponse>
     {
         ///<summary>
-        ///The trigger whose marketplace function runs to list (trg_…). One of triggerId / taskId.
+        ///The marketplace function whose runs to list, from every source (func_…). One of functionId / triggerId / taskId.
+        ///</summary>
+        public virtual string? FunctionId { get; set; }
+
+        ///<summary>
+        ///The trigger whose marketplace function runs to list (trg_…). One of functionId / triggerId / taskId.
         ///</summary>
         public virtual string? TriggerId { get; set; }
 
         ///<summary>
-        ///The scheduler task whose marketplace function runs to list (tsk_…). One of triggerId / taskId.
+        ///The scheduler task whose marketplace function runs to list (tsk_…). One of functionId / triggerId / taskId.
         ///</summary>
         public virtual string? TaskId { get; set; }
 
