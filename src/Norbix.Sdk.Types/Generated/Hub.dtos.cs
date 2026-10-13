@@ -3682,6 +3682,118 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual string? Region { get; set; }
     }
 
+    [DataContract]
+    public partial class MarketplaceAccessChangesDto
+    {
+        [DataMember]
+        public virtual IReadOnlyList<string> ReadOnlyAdded { get; set; }
+
+        [DataMember]
+        public virtual IReadOnlyList<string> ReadOnlyRemoved { get; set; }
+
+        [DataMember]
+        public virtual IReadOnlyList<string> NotGrantable { get; set; }
+    }
+
+    [DataContract]
+    public partial class MarketplaceAccessCustomPolicyDto
+    {
+        [DataMember]
+        public virtual string PolicyId { get; set; }
+
+        [DataMember]
+        public virtual string Name { get; set; }
+
+        [DataMember]
+        public virtual int UsedByRoles { get; set; }
+    }
+
+    [DataContract]
+    public partial class MarketplaceAccessFunctionDto
+    {
+        [DataMember]
+        public virtual string FunctionId { get; set; }
+
+        [DataMember]
+        public virtual string Name { get; set; }
+
+        [DataMember]
+        public virtual string FunctionKey { get; set; }
+    }
+
+    public enum MarketplaceAccessLevel
+    {
+        None,
+        Viewer,
+        FunctionsOnly,
+        ReadOnly,
+        FullAccess,
+        Manage,
+    }
+
+    [DataContract]
+    public partial class MarketplaceAccessPackageDto
+    {
+        [DataMember]
+        public virtual MarketplaceAccessLevel Kind { get; set; }
+
+        [DataMember]
+        public virtual string PolicyId { get; set; }
+
+        [DataMember]
+        public virtual string Name { get; set; }
+
+        [DataMember]
+        public virtual bool Exists { get; set; }
+    }
+
+    [DataContract]
+    public partial class MarketplaceAccessRoleDto
+    {
+        [DataMember]
+        public virtual string RoleId { get; set; }
+
+        [DataMember]
+        public virtual string Name { get; set; }
+
+        [DataMember]
+        public virtual string Scope { get; set; }
+
+        [DataMember]
+        public virtual bool IsSystem { get; set; }
+
+        [DataMember]
+        public virtual bool Fixed { get; set; }
+
+        [DataMember]
+        public virtual MarketplaceAccessLevel Package { get; set; }
+
+        [DataMember]
+        public virtual bool IsCustom { get; set; }
+
+        [DataMember]
+        public virtual bool Manage { get; set; }
+
+        [DataMember]
+        public virtual IReadOnlyList<MarketplaceAccessCustomPolicyDto> Custom { get; set; }
+
+        [DataMember]
+        public virtual string? DefaultNotApplied { get; set; }
+    }
+
+    [DataContract]
+    public partial class MarketplaceAccessToolDto
+    {
+        [DataMember]
+        public virtual string Name { get; set; }
+
+        [DataMember]
+        public virtual bool ReadOnly { get; set; }
+
+        [DataMember]
+        public virtual bool Grantable { get; set; }
+    }
+
     public enum MarketplaceAvailability
     {
         Development,
@@ -4234,6 +4346,9 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember]
         public virtual string? Message { get; set; }
+
+        [DataMember]
+        public virtual string? ErrorCode { get; set; }
     }
 
     public partial class AccountComplianceDto
@@ -7126,6 +7241,9 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember]
         public virtual IReadOnlyList<MarketplaceValidationStepResultDto>? Steps { get; set; }
+
+        [DataMember]
+        public virtual MarketplaceAccessChangesDto? AccessChanges { get; set; }
     }
 
     [DataContract]
@@ -11602,6 +11720,33 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual string IntegrationViewId { get; set; }
     }
 
+    [NorbixRoute("/{version}/code/marketplace/integrations/{IntegrationViewId}/access", "GET")]
+    public partial class GetMarketplaceIntegrationAccess
+        : CodeMashRequestBase, INorbixRequest<GetMarketplaceIntegrationAccessResponse>
+    {
+        ///<summary>
+        ///Integration view id, from get_marketplace_integrations.
+        ///</summary>
+        public virtual string IntegrationViewId { get; set; }
+    }
+
+    [DataContract]
+    public partial class GetMarketplaceIntegrationAccessResponse
+        : ResponseBase
+    {
+        [DataMember]
+        public virtual IReadOnlyList<MarketplaceAccessRoleDto> Roles { get; set; }
+
+        [DataMember]
+        public virtual IReadOnlyList<MarketplaceAccessPackageDto> Packages { get; set; }
+
+        [DataMember]
+        public virtual IReadOnlyList<MarketplaceAccessToolDto> Tools { get; set; }
+
+        [DataMember]
+        public virtual IReadOnlyList<MarketplaceAccessFunctionDto> Functions { get; set; }
+    }
+
     public partial class GetMarketplaceIntegrationResponse
         : ResponseBase
     {
@@ -11685,6 +11830,98 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember]
         public virtual Dictionary<string, string> Secrets { get; set; } = new();
+    }
+
+    [NorbixRoute("/{version}/code/marketplace/integrations/{IntegrationViewId}/access/roles/custom", "POST")]
+    [DataContract]
+    public partial class SaveMarketplaceIntegrationCustomAccess
+        : CodeMashRequestBase, INorbixRequest<SaveMarketplaceIntegrationCustomAccessResponse>
+    {
+        ///<summary>
+        ///Integration view id, from get_marketplace_integrations.
+        ///</summary>
+        [DataMember]
+        public virtual string IntegrationViewId { get; set; }
+
+        ///<summary>
+        ///The role's composite id: acc_…_nr_… or pr_…_nr_….
+        ///</summary>
+        [DataMember]
+        public virtual string RoleId { get; set; }
+
+        ///<summary>
+        ///The package to start from: None, Viewer, FunctionsOnly, ReadOnly or FullAccess.
+        ///</summary>
+        [DataMember]
+        public virtual MarketplaceAccessLevel BasePackage { get; set; }
+
+        ///<summary>
+        ///Tool names the role may run (from the connection's tools).
+        ///</summary>
+        [DataMember]
+        public virtual List<string> Tools { get; set; } = [];
+
+        ///<summary>
+        ///Function ids (func_…) of this connection the role may run.
+        ///</summary>
+        [DataMember]
+        public virtual List<string> Functions { get; set; } = [];
+
+        ///<summary>
+        ///True to include the Manage rights (edit the connection, its secrets, validation and functions).
+        ///</summary>
+        [DataMember]
+        public virtual bool Manage { get; set; }
+
+        ///<summary>
+        ///True to write a new policy for this role only when its current custom policy is shared with other roles.
+        ///</summary>
+        [DataMember]
+        public virtual bool NewPolicyForThisRoleOnly { get; set; }
+    }
+
+    [DataContract]
+    public partial class SaveMarketplaceIntegrationCustomAccessResponse
+        : ResponseBase
+    {
+        [DataMember]
+        public virtual string? PolicyId { get; set; }
+
+        [DataMember]
+        public virtual bool Created { get; set; }
+
+        [DataMember]
+        public virtual int UsedByRoles { get; set; }
+    }
+
+    [NorbixRoute("/{version}/code/marketplace/integrations/{IntegrationViewId}/access/roles", "PUT")]
+    [DataContract]
+    public partial class SetMarketplaceIntegrationRoleAccess
+        : CodeMashRequestBase, INorbixRequest<IdResponse>
+    {
+        ///<summary>
+        ///Integration view id, from get_marketplace_integrations.
+        ///</summary>
+        [DataMember]
+        public virtual string IntegrationViewId { get; set; }
+
+        ///<summary>
+        ///The role's composite id: acc_…_nr_… (account / team role) or pr_…_nr_… (project role).
+        ///</summary>
+        [DataMember]
+        public virtual string RoleId { get; set; }
+
+        ///<summary>
+        ///None, Viewer, FunctionsOnly, ReadOnly or FullAccess.
+        ///</summary>
+        [DataMember]
+        public virtual MarketplaceAccessLevel Package { get; set; }
+
+        ///<summary>
+        ///True to also give the Manage package (edit the connection, its secrets, validation and functions).
+        ///</summary>
+        [DataMember]
+        public virtual bool Manage { get; set; }
     }
 
     [NorbixRoute("/{version}/code/marketplace/integrations/{IntegrationViewId}/token-mappings", "PUT")]
