@@ -1067,6 +1067,12 @@ starts the OAuth sign-in of an MCP connection: open `AuthorizeUrl` in a browser
 attempt). A signed-in connection shows `SignedIn`, `SignedInBy`, `SignedInAt`
 and `TokenExpiresAt`; a listing shows `ConnectSteps` and `OAuthRedirectUrl`.
 
+`Code.SignOutMarketplaceIntegrationAsync`
+(`POST /{version}/code/marketplace/integrations/{IntegrationViewId}/oauth/sign-out`)
+signs an MCP connection out: `WasSignedIn` says whether it was, `Revoke` what
+happened to the vendor token (`Revoked`, `NoRevocationEndpoint`, `Failed` or
+null).
+
 `TestMarketplaceIntegrationAsync` also returns `AccessChanges`
 (`ReadOnlyAdded`, `ReadOnlyRemoved`, `NotGrantable`) and each step's
 `ErrorCode`.
