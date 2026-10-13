@@ -4,6 +4,8 @@ using Norbix.Sdk.Types.Hub;
 
 using NUnit.Framework;
 
+using VerifyNUnit;
+
 namespace Norbix.Hub.Tests;
 
 /// <summary>
@@ -49,18 +51,9 @@ public sealed class MarketplaceRunsTests
         var response = await fixture.Client.Code.GetMarketplaceFunctionRunsAsync(
             new GetMarketplaceFunctionRuns { FunctionId = "func_1p4R3gTobGZpD6fXvHT4rd", Limit = 50 });
 
-        var sent = fixture.LastRequest!;
-        Assert.That(sent.Method, Is.EqualTo("GET"));
-        Assert.That(sent.Path, Is.EqualTo("/v2/code/marketplace/functions/runs"));
-        Assert.That(sent.Query, Is.EqualTo("?functionId=func_1p4R3gTobGZpD6fXvHT4rd&limit=50"));
-        Assert.That(sent.Body, Is.Null);
-
-        var run = response!.Runs!.Single();
-        Assert.That(run.Status, Is.EqualTo("ok"));
-        Assert.That(run.CorrelationId, Is.EqualTo(CorrelationId));
-        Assert.That(run.HasDetails, Is.True);
-        Assert.That(run.Source, Is.EqualTo("api-key"));
-        Assert.That(run.Event, Is.EqualTo("invoke"));
+        // The snapshot pins verb, path, the exact query (functionId + limit only) and no body,
+        // and the new row fields read back from the generated response.
+        await Verifier.Verify(new { Sent = fixture.LastRequest, response!.Runs }, VerifyConfig.VerifySettings);
     }
 
     [Test]
@@ -70,20 +63,25 @@ public sealed class MarketplaceRunsTests
 
         await fixture.Client.GetMarketplaceFunctionRunDetailsAsync(CorrelationId);
 
-        var sent = fixture.LastRequest!;
-        Assert.That(sent.Method, Is.EqualTo("GET"));
-        Assert.That(sent.Path, Is.EqualTo("/v2/logs/audit"));
-        Assert.That(sent.Query, Is.EqualTo($"?targetCorrelationId={CorrelationId}"));
-        Assert.That(sent.Body, Is.Null);
-        Assert.That(sent.Headers["norbix-project-id"], Is.EqualTo("test-project"));
+        // GET /v2/logs/audit?targetCorrelationId=… — the DTO property name, not "correlationId".
+        await Verifier.Verify(fixture.LastRequest, VerifyConfig.VerifySettings);
     }
 
     [Test]
-    public void Run_details_refuse_an_empty_correlation_id()
+    public async Task Run_details_refuse_an_empty_correlation_id()
     {
         using var fixture = NewFixture();
 
-        Assert.ThrowsAsync<ArgumentException>(() => fixture.Client.GetMarketplaceFunctionRunDetailsAsync(" "));
-        Assert.That(fixture.RecordedRequests, Is.Empty);
+        string? error = null;
+        try
+        {
+            await fixture.Client.GetMarketplaceFunctionRunDetailsAsync(" ");
+        }
+        catch (ArgumentException ex)
+        {
+            error = $"{ex.GetType().Name}: {ex.ParamName}";
+        }
+
+        await Verifier.Verify(new { Error = error, NothingSent = fixture.RecordedRequests.Count == 0 }, VerifyConfig.VerifySettings);
     }
 }
