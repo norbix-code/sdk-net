@@ -4094,6 +4094,18 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember]
         public virtual List<MarketplaceValidationStepResultDto>? LastValidationSteps { get; set; }
+
+        [DataMember]
+        public virtual bool SignedIn { get; set; }
+
+        [DataMember]
+        public virtual string? SignedInBy { get; set; }
+
+        [DataMember]
+        public virtual DateTime? SignedInAt { get; set; }
+
+        [DataMember]
+        public virtual DateTime? TokenExpiresAt { get; set; }
     }
 
     [DataContract]
@@ -4135,6 +4147,12 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember]
         public virtual bool RequiresHumanDeliveryConfirmation { get; set; }
+
+        [DataMember]
+        public virtual bool SignedIn { get; set; }
+
+        [DataMember]
+        public virtual DateTime? SignedInAt { get; set; }
     }
 
     [DataContract]
@@ -4173,6 +4191,12 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember]
         public virtual MarketplaceAvailability Availability { get; set; }
+
+        [DataMember]
+        public virtual IReadOnlyList<string> ConnectSteps { get; set; }
+
+        [DataMember]
+        public virtual string? OAuthRedirectUrl { get; set; }
 
         [DataMember]
         public virtual bool IsOfficial { get; set; }
@@ -11942,6 +11966,24 @@ namespace Norbix.Sdk.Types.Hub;
     public partial class SetMarketplaceIntegrationTokenMappingsResponse
         : ResponseBase
     {
+    }
+
+    [NorbixRoute("/{version}/code/marketplace/integrations/{IntegrationViewId}/oauth/start", "POST")]
+    public partial class StartMarketplaceIntegrationSignIn
+        : CodeMashRequestBase, INorbixRequest<StartMarketplaceIntegrationSignInResponse>
+    {
+        ///<summary>
+        ///Integration view id, from get_marketplace_integrations.
+        ///</summary>
+        public virtual string IntegrationViewId { get; set; }
+    }
+
+    public partial class StartMarketplaceIntegrationSignInResponse
+        : ResponseBase
+    {
+        public virtual string? AuthorizeUrl { get; set; }
+        public virtual string? RedirectUrl { get; set; }
+        public virtual DateTime? ExpiresAt { get; set; }
     }
 
     [NorbixRoute("/{version}/code/marketplace/integrations/{IntegrationViewId}/test", "POST")]
