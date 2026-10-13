@@ -1060,6 +1060,13 @@ Who may use a connection is set per role with generated access packages
 | `Code.SetMarketplaceIntegrationRoleAccessAsync` | `PUT …/access/roles` — `RoleId`, `Package`, `Manage`; returns the role id |
 | `Code.SaveMarketplaceIntegrationCustomAccessAsync` | `POST …/access/roles/custom` — `RoleId`, `BasePackage`, `Tools`, `Functions`, `Manage`, `NewPolicyForThisRoleOnly`; returns `PolicyId`, `Created`, `UsedByRoles` |
 
+`Code.StartMarketplaceIntegrationSignInAsync`
+(`POST /{version}/code/marketplace/integrations/{IntegrationViewId}/oauth/start`)
+starts the OAuth sign-in of an MCP connection: open `AuthorizeUrl` in a browser
+(`RedirectUrl` is the callback the vendor app must allow, `ExpiresAt` ends the
+attempt). A signed-in connection shows `SignedIn`, `SignedInBy`, `SignedInAt`
+and `TokenExpiresAt`; a listing shows `ConnectSteps` and `OAuthRedirectUrl`.
+
 `TestMarketplaceIntegrationAsync` also returns `AccessChanges`
 (`ReadOnlyAdded`, `ReadOnlyRemoved`, `NotGrantable`) and each step's
 `ErrorCode`.
