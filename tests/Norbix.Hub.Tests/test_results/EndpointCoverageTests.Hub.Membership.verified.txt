@@ -1524,7 +1524,11 @@
       Response: {
         Id: 7,
         Name: test-name,
-        Key: test-key
+        Key: test-key,
+        Environment: test-environment,
+        ResponseStatus: {
+          IsSuccess: true
+        }
       }
     },
     {
@@ -1555,7 +1559,10 @@
           {
             Active: false
           }
-        ]
+        ],
+        ResponseStatus: {
+          IsSuccess: true
+        }
       }
     }
   ]

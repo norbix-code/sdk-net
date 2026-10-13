@@ -2,7 +2,7 @@
   Sent: {
     Method: GET,
     Path: /v2/database/collections/orders/ord_1,
-    Query: ?expandReferences=True,
+    Query: ?expandReferences=True&allLanguages=False,
     Headers: {
       Authorization: Bearer test-bearer,
       norbix-account-id: test-account,
