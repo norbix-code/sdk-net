@@ -17,7 +17,8 @@
       Fixed: false,
       IsCustom: false,
       Manage: false,
-      DefaultNotApplied: The person who enabled the connection may not manage policies.
+      DefaultNotApplied: The person who enabled the connection may not manage policies.,
+      CanChange: false
     }
   ],
   Packages: [
@@ -32,7 +33,9 @@
     {
       Name: get_me,
       ReadOnly: true,
-      Grantable: true
+      Grantable: true,
+      Curated: false,
+      ExcludedFromFullAccess: false
     }
   ],
   Functions: [
