@@ -1000,6 +1000,34 @@ provider (the payload is the project's data) and when the function was not
 called. There is no default Code integration: every call names the
 integration it means (`IntegrationId`), as the examples above do.
 
+## Marketplace function runs
+
+Each call of a marketplace function is one run row: an invoke (user, API
+key, AI), a trigger run or a scheduler fire.
+`Code.GetMarketplaceFunctionRunsAsync` lists them — set exactly one of
+`FunctionId` (every source, newest first, up to 50), `TriggerId` or
+`TaskId`. A row carries `Status` (`ok` / `failed` / `skipped`, `null` on
+rows written before the field existed), `DurationMs`, `Source`, `Event`,
+`CorrelationId` and `HasDetails`.
+
+The input, steps and response of a run are written to the project log under
+the row's `CorrelationId`, only while the environment's Norbix Logging is on
+— then `HasDetails` is `true`. `GetMarketplaceFunctionRunDetailsAsync` (in
+`Norbix.Hub`, a hand-written helper over `Logs.GetLogsByCorrelationIdAsync`,
+`GET /{version}/logs/audit?targetCorrelationId=…`) reads them:
+
+```csharp
+var runs = await hub.Code.GetMarketplaceFunctionRunsAsync(
+    new GetMarketplaceFunctionRuns { FunctionId = "func_…", Limit = 10 });
+
+foreach (var run in runs?.Runs ?? [])
+{
+    if (!run.HasDetails || run.CorrelationId is null) continue; // logs were off
+    var details = await hub.GetMarketplaceFunctionRunDetailsAsync(run.CorrelationId);
+    // details.Items: marketplace:run:started → marketplace:run:step … → completed | failed | skipped
+}
+```
+
 ## Coverage Notes
 
 Generated coverage tracks the API and Hub DTO contract files. Some flows are not generated automatically:

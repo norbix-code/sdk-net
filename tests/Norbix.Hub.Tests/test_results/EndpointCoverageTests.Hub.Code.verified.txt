@@ -700,7 +700,7 @@
       Sent: {
         Method: GET,
         Path: /v2/code/marketplace/functions/runs,
-        Query: ?triggerId={guid}&taskId={guid}&limit=1&env=test-env,
+        Query: ?functionId={guid}&triggerId={guid}&taskId={guid}&limit=1&env=test-env,
         Headers: {
           Authorization: Bearer test-bearer,
           norbix-account-id: test-account,
@@ -711,7 +711,8 @@
       Response: {
         Runs: [
           {
-            Succeeded: false
+            Succeeded: false,
+            HasDetails: false
           }
         ],
         ResponseStatus: {
