@@ -1028,6 +1028,26 @@ foreach (var run in runs?.Runs ?? [])
 }
 ```
 
+## Marketplace MCP connections — tool catalog
+
+An MCP connection (a Marketplace connection whose listing uses the MCP
+transport) stores its server's tool catalog when it is validated.
+`Code.GetMarketplaceIntegrationToolsAsync` reads it
+(`GET /{version}/code/marketplace/integrations/{IntegrationViewId}/tools`):
+each tool has `Name`, `Title`, `Description`, `InputSchema` (JSON Schema as
+text), `ReadOnlyHint` and `DestructiveHint`; the response also carries
+`ListedAt`, `CatalogHash` and `Truncated`. A connection that was never
+validated answers `CM-ERRORS-MARKETPLACE-020`. A function on a tool is saved
+with `SaveMarketplaceFunction` (`Function.FunctionKey` = the tool name).
+
+```csharp
+var catalog = await hub.Code.GetMarketplaceIntegrationToolsAsync(
+    new GetMarketplaceIntegrationTools { IntegrationViewId = "int_…" });
+
+foreach (var tool in catalog?.Tools ?? [])
+    Console.WriteLine($"{tool.Name} {(tool.ReadOnlyHint == true ? "read-only" : "writes")}");
+```
+
 ## Coverage Notes
 
 Generated coverage tracks the API and Hub DTO contract files. Some flows are not generated automatically:

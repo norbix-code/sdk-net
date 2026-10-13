@@ -1,7 +1,7 @@
 ﻿{
   Target: Hub,
   Group: code,
-  Count: 38,
+  Count: 39,
   Endpoints: [
     {
       Target: Hub,
@@ -1055,6 +1055,41 @@
           StartingAfter: cursor-start,
           EndingBefore: cursor-end
         },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: code,
+      MethodName: GetMarketplaceIntegrationToolsAsync,
+      RequestType: GetMarketplaceIntegrationTools,
+      HttpMethod: GET,
+      Path: /{version}/code/marketplace/integrations/{IntegrationViewId}/tools,
+      PathParams: [
+        IntegrationViewId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/code/marketplace/integrations/{guid}/tools,
+        Query: ?env=test-env,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        }
+      },
+      ResponseType: GetMarketplaceIntegrationToolsResponse,
+      Response: {
+        Tools: [
+          {}
+        ],
+        ListedAt: DateTimeOffset_1,
+        CatalogHash: test-catalogHash,
+        Truncated: true,
         ResponseStatus: {
           IsSuccess: true
         }
