@@ -4128,6 +4128,28 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual string? VideoUrl { get; set; }
     }
 
+    [DataContract]
+    public partial class MarketplaceMcpToolDto
+    {
+        [DataMember]
+        public virtual string Name { get; set; }
+
+        [DataMember]
+        public virtual string? Title { get; set; }
+
+        [DataMember]
+        public virtual string? Description { get; set; }
+
+        [DataMember]
+        public virtual string InputSchema { get; set; }
+
+        [DataMember]
+        public virtual bool? ReadOnlyHint { get; set; }
+
+        [DataMember]
+        public virtual bool? DestructiveHint { get; set; }
+    }
+
     public enum MarketplaceParameterLocation
     {
         Body,
@@ -11596,6 +11618,25 @@ namespace Norbix.Sdk.Types.Hub;
         : ResponseBase
     {
         public virtual PaginatedResponse<MarketplaceIntegrationListProjection>? List { get; set; }
+    }
+
+    [NorbixRoute("/{version}/code/marketplace/integrations/{IntegrationViewId}/tools", "GET")]
+    public partial class GetMarketplaceIntegrationTools
+        : CodeMashRequestBase, INorbixRequest<GetMarketplaceIntegrationToolsResponse>
+    {
+        ///<summary>
+        ///Integration view id, from get_marketplace_integrations.
+        ///</summary>
+        public virtual string IntegrationViewId { get; set; }
+    }
+
+    public partial class GetMarketplaceIntegrationToolsResponse
+        : ResponseBase
+    {
+        public virtual IReadOnlyList<MarketplaceMcpToolDto> Tools { get; set; }
+        public virtual DateTimeOffset? ListedAt { get; set; }
+        public virtual string? CatalogHash { get; set; }
+        public virtual bool Truncated { get; set; }
     }
 
     [NorbixRoute("/{version}/code/marketplace/integrations/{IntegrationViewId}/secrets", "PUT")]
