@@ -1,0 +1,14 @@
+﻿{
+  Sent: {
+    Method: POST,
+    Path: /v2/code/marketplace/integrations/int_6Qp1dW2kRm8NsT4vYc0Hb/oauth/start,
+    Headers: {
+      Authorization: Bearer test-bearer,
+      norbix-account-id: test-account,
+      norbix-project-id: test-project
+    }
+  },
+  AuthorizeUrl: https://slack.com/oauth/v2/authorize?client_id=1&state=s1,
+  RedirectUrl: https://hub.norbix.ai/v3/code/marketplace/oauth/callback,
+  ExpiresAt: DateTime_1
+}
