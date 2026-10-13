@@ -23,5 +23,25 @@ public sealed partial class NorbixHubClient
             },
             cancellationToken);
     }
-}
 
+    /// <summary>
+    /// The details of one marketplace function run: the project log lines filed
+    /// under the run's correlation id (<c>marketplace:run:started</c>, <c>step</c>,
+    /// then <c>completed</c>, <c>failed</c> or <c>skipped</c>). Pass
+    /// <see cref="MarketplaceFunctionRunDto.CorrelationId"/> of a row from
+    /// <c>Code.GetMarketplaceFunctionRunsAsync</c>. Only a row with
+    /// <see cref="MarketplaceFunctionRunDto.HasDetails"/> has lines — they are
+    /// written only while the environment's Norbix Logging is on.
+    /// Same call as <c>Logs.GetLogsByCorrelationIdAsync</c>
+    /// (GET /{version}/logs/audit?targetCorrelationId=…).
+    /// </summary>
+    public Task<GetLogsByCorrelationIdResponse?> GetMarketplaceFunctionRunDetailsAsync(
+        string correlationId,
+        CancellationToken cancellationToken = default)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(correlationId);
+        return Logs.GetLogsByCorrelationIdAsync(
+            new GetLogsByCorrelationId { TargetCorrelationId = correlationId },
+            cancellationToken);
+    }
+}
