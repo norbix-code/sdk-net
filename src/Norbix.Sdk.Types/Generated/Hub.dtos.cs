@@ -1352,11 +1352,14 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual int Id { get; set; }
         public virtual string Name { get; set; }
         public virtual string Key { get; set; }
+        public virtual string? Environment { get; set; }
+        public virtual CodeMashResponseStatus? ResponseStatus { get; set; }
     }
 
     public partial class ListServiceUserApiKeysResponse
     {
         public virtual List<ServiceUserApiKeyDto> Keys { get; set; } = [];
+        public virtual CodeMashResponseStatus? ResponseStatus { get; set; }
     }
 
     public partial class NotificationSettingsChannelDto
@@ -1786,6 +1789,7 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual string Name { get; set; }
         public virtual string? VisibleKey { get; set; }
         public virtual List<string> Scopes { get; set; } = [];
+        public virtual string? Environment { get; set; }
         public virtual DateTime CreatedDate { get; set; }
         public virtual DateTime? ExpiryDate { get; set; }
         public virtual DateTime? CancelledDate { get; set; }
@@ -2933,6 +2937,16 @@ namespace Norbix.Sdk.Types.Hub;
         string UserId { get; set; }
     }
 
+    [DataContract]
+    public partial class NotificationReadMarkDto
+    {
+        [DataMember]
+        public virtual string UserId { get; set; }
+
+        [DataMember]
+        public virtual DateTime ReadAtUtc { get; set; }
+    }
+
     public partial class NotificationStatusChangeEntryDto
     {
         public virtual DateTime Time { get; set; }
@@ -2978,6 +2992,9 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember]
         public virtual PushMessageContentDto? Content { get; set; }
+
+        [DataMember]
+        public virtual List<NotificationReadMarkDto>? ReadBy { get; set; }
     }
 
     [DataContract]
@@ -3693,6 +3710,12 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember]
         public virtual IReadOnlyList<string> NotGrantable { get; set; }
+
+        [DataMember]
+        public virtual IReadOnlyList<string> ReadOnlyHintOverridden { get; set; }
+
+        [DataMember]
+        public virtual IReadOnlyList<string> ExcludedFromFullAccess { get; set; }
     }
 
     [DataContract]
@@ -3779,6 +3802,9 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember]
         public virtual string? DefaultNotApplied { get; set; }
+
+        [DataMember]
+        public virtual bool CanChange { get; set; }
     }
 
     [DataContract]
@@ -3792,6 +3818,12 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember]
         public virtual bool Grantable { get; set; }
+
+        [DataMember]
+        public virtual bool Curated { get; set; }
+
+        [DataMember]
+        public virtual bool ExcludedFromFullAccess { get; set; }
     }
 
     public enum MarketplaceAvailability
@@ -4039,6 +4071,12 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember]
         public virtual string? Input { get; set; }
+
+        [DataMember]
+        public virtual string? IntegrationId { get; set; }
+
+        [DataMember]
+        public virtual string? ToolName { get; set; }
     }
 
     [DataContract]
@@ -6724,6 +6762,24 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember]
         public virtual int? PlatformApiLevel { get; set; }
+
+        [DataMember]
+        public virtual string? Platform { get; set; }
+
+        [DataMember]
+        public virtual string? AppVersion { get; set; }
+
+        [DataMember]
+        public virtual string? InstallationId { get; set; }
+
+        [DataMember]
+        public virtual string? Locale { get; set; }
+
+        [DataMember]
+        public virtual string? TimeZone { get; set; }
+
+        [DataMember]
+        public virtual DateTime? UpdatedAtUtc { get; set; }
     }
 
     public partial class PushIntegrationDto
@@ -11616,6 +11672,11 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual string? TaskId { get; set; }
 
         ///<summary>
+        ///The MCP connection whose tool runs to list — the calls an AI chat made to one of its tools without a saved function (int_…). One of functionId / triggerId / taskId / integrationId.
+        ///</summary>
+        public virtual string? IntegrationId { get; set; }
+
+        ///<summary>
         ///How many runs, newest first: 1-50. Default 20.
         ///</summary>
         public virtual int? Limit { get; set; }
@@ -11769,6 +11830,9 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember]
         public virtual IReadOnlyList<MarketplaceAccessFunctionDto> Functions { get; set; }
+
+        [DataMember]
+        public virtual bool CanManage { get; set; }
     }
 
     public partial class GetMarketplaceIntegrationResponse
@@ -11966,6 +12030,23 @@ namespace Norbix.Sdk.Types.Hub;
     public partial class SetMarketplaceIntegrationTokenMappingsResponse
         : ResponseBase
     {
+    }
+
+    [NorbixRoute("/{version}/code/marketplace/integrations/{IntegrationViewId}/oauth/sign-out", "POST")]
+    public partial class SignOutMarketplaceIntegration
+        : CodeMashRequestBase, INorbixRequest<SignOutMarketplaceIntegrationResponse>
+    {
+        ///<summary>
+        ///Integration view id, from get_marketplace_integrations.
+        ///</summary>
+        public virtual string IntegrationViewId { get; set; }
+    }
+
+    public partial class SignOutMarketplaceIntegrationResponse
+        : ResponseBase
+    {
+        public virtual bool WasSignedIn { get; set; }
+        public virtual string? Revoke { get; set; }
     }
 
     [NorbixRoute("/{version}/code/marketplace/integrations/{IntegrationViewId}/oauth/start", "POST")]
@@ -13179,6 +13260,8 @@ namespace Norbix.Sdk.Types.Hub;
         ///Set true to get every reference value as { id, display } (display = the target's displayField per the schema; null when the target is gone). Needs read permission on every source the schema links to (users, roles, taxonomy, collection, files) — otherwise the read is refused with CM-ERRORS-DATABASE-056 naming the source. Default false returns the stored ids.
         ///</summary>
         public virtual bool ExpandReferences { get; set; }
+
+        public virtual bool AllLanguages { get; set; }
     }
 
     public partial class FindOneRecordResponse
@@ -13218,6 +13301,8 @@ namespace Norbix.Sdk.Types.Hub;
         ///Set true to get every reference value as { id, display } (display = the target's displayField per the schema; null when the target is gone). Needs read permission on every source the schema links to (users, roles, taxonomy, collection, files) — otherwise the read is refused with CM-ERRORS-DATABASE-056 naming the source. Default false returns the stored ids.
         ///</summary>
         public virtual bool ExpandReferences { get; set; }
+
+        public virtual bool AllLanguages { get; set; }
     }
 
     public partial class FindRecordsResponse
