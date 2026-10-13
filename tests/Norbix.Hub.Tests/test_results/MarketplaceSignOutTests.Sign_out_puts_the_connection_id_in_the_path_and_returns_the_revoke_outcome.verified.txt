@@ -1,0 +1,13 @@
+﻿{
+  Sent: {
+    Method: POST,
+    Path: /v2/code/marketplace/integrations/int_6Qp1dW2kRm8NsT4vYc0Hb/oauth/sign-out,
+    Headers: {
+      Authorization: Bearer test-bearer,
+      norbix-account-id: test-account,
+      norbix-project-id: test-project
+    }
+  },
+  WasSignedIn: true,
+  Revoke: Revoked
+}
