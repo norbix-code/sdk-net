@@ -1,0 +1,21 @@
+﻿{
+  Steps: [
+    {
+      Key: mcp.tools,
+      Label: Tools listed,
+      RequiredForFunctions: true,
+      Succeeded: false,
+      Skipped: false,
+      Message: The server listed no tools.,
+      ErrorCode: CM-ERRORS-MARKETPLACE-018
+    }
+  ],
+  AccessChanges: {
+    ReadOnlyAdded: [
+      get_me
+    ],
+    NotGrantable: [
+      bad name
+    ]
+  }
+}

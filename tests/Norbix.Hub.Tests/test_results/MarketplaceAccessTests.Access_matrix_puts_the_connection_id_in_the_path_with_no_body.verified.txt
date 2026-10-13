@@ -1,0 +1,45 @@
+﻿{
+  Sent: {
+    Method: GET,
+    Path: /v2/code/marketplace/integrations/int_6Qp1dW2kRm8NsT4vYc0Hb/access,
+    Headers: {
+      Authorization: Bearer test-bearer,
+      norbix-account-id: test-account,
+      norbix-project-id: test-project
+    }
+  },
+  Roles: [
+    {
+      RoleId: acc_6Qp1dW2kRm8NsT4vYc0Hb_nr_3kLm9QwErTyU,
+      Name: Projects Developer,
+      Scope: account,
+      IsSystem: true,
+      Fixed: false,
+      IsCustom: false,
+      Manage: false,
+      DefaultNotApplied: The person who enabled the connection may not manage policies.
+    }
+  ],
+  Packages: [
+    {
+      Kind: ReadOnly,
+      PolicyId: pol_1,
+      Name: GitHub — Read-only,
+      Exists: true
+    }
+  ],
+  Tools: [
+    {
+      Name: get_me,
+      ReadOnly: true,
+      Grantable: true
+    }
+  ],
+  Functions: [
+    {
+      FunctionId: func_1,
+      Name: Create issue,
+      FunctionKey: create_issue
+    }
+  ]
+}

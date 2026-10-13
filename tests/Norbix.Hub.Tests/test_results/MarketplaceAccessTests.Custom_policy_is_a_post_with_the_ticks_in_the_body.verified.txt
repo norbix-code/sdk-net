@@ -1,0 +1,27 @@
+﻿{
+  Sent: {
+    Method: POST,
+    Path: /v2/code/marketplace/integrations/int_6Qp1dW2kRm8NsT4vYc0Hb/access/roles/custom,
+    Headers: {
+      Authorization: Bearer test-bearer,
+      Content-Type: application/json; charset=utf-8,
+      norbix-account-id: test-account,
+      norbix-project-id: test-project
+    },
+    Body: {
+      roleId: acc_6Qp1dW2kRm8NsT4vYc0Hb_nr_3kLm9QwErTyU,
+      basePackage: readOnly,
+      tools: [
+        create_issue
+      ],
+      functions: [
+        func_4hT2b9QkLm3XcT1yRfGh7a
+      ],
+      manage: false,
+      newPolicyForThisRoleOnly: true
+    }
+  },
+  PolicyId: pol_9,
+  Created: true,
+  UsedByRoles: 1
+}
