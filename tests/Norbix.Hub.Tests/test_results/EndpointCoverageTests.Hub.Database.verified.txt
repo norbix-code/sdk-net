@@ -2115,7 +2115,7 @@
       Sent: {
         Method: GET,
         Path: /v2/database/taxonomies/tree,
-        Query: ?includeTerms=True&databaseIntegrationId={guid}&env=test-env,
+        Query: ?allLanguages=True&includeTerms=True&databaseIntegrationId={guid}&env=test-env,
         Headers: {
           Authorization: Bearer test-bearer,
           norbix-account-id: test-account,
@@ -2246,7 +2246,7 @@
       Sent: {
         Method: GET,
         Path: /v2/database/taxonomies/test-taxonomyName/merged-tree,
-        Query: ?databaseIntegrationId={guid}&env=test-env,
+        Query: ?allLanguages=True&databaseIntegrationId={guid}&env=test-env,
         Headers: {
           Authorization: Bearer test-bearer,
           norbix-account-id: test-account,
@@ -2279,7 +2279,7 @@
       Sent: {
         Method: GET,
         Path: /v2/database/taxonomies/{guid}/terms/{guid},
-        Query: ?databaseIntegrationId={guid}&env=test-env,
+        Query: ?allLanguages=True&databaseIntegrationId={guid}&env=test-env,
         Headers: {
           Authorization: Bearer test-bearer,
           norbix-account-id: test-account,
@@ -2320,7 +2320,7 @@
       Sent: {
         Method: GET,
         Path: /v2/database/taxonomies/test-taxonomyName/terms/tree,
-        Query: ?rootTermId={guid}&depth=1&databaseIntegrationId={guid}&env=test-env,
+        Query: ?allLanguages=True&rootTermId={guid}&depth=1&databaseIntegrationId={guid}&env=test-env,
         Headers: {
           Authorization: Bearer test-bearer,
           norbix-account-id: test-account,

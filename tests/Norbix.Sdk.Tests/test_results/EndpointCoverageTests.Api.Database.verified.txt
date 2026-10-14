@@ -258,7 +258,7 @@
       Sent: {
         Method: GET,
         Path: /v2/database/collections/test-collectionName/{guid},
-        Query: ?databaseIntegrationId={guid}&expandReferences=True&env=test-env,
+        Query: ?databaseIntegrationId={guid}&expandReferences=True&allLanguages=True&env=test-env,
         Headers: {
           Authorization: Bearer test-bearer,
           norbix-account-id: test-account,
@@ -290,7 +290,7 @@
       Sent: {
         Method: GET,
         Path: /v2/database/collections/test-collectionName/own,
-        Query: ?databaseIntegrationId={guid}&filter=test-filter&schemaVersion=1&pagingArgs=Norbix.Sdk.Types.Api.PagingArgs&expandReferences=True&env=test-env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1,
+        Query: ?databaseIntegrationId={guid}&filter=test-filter&schemaVersion=1&pagingArgs=Norbix.Sdk.Types.Api.PagingArgs&expandReferences=True&allLanguages=True&env=test-env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1,
         Headers: {
           Authorization: Bearer test-bearer,
           norbix-account-id: test-account,
@@ -330,7 +330,7 @@
       Sent: {
         Method: GET,
         Path: /v2/database/collections/test-collectionName,
-        Query: ?databaseIntegrationId={guid}&filter=test-filter&schemaVersion=1&pagingArgs=Norbix.Sdk.Types.Api.PagingArgs&sortBy=test-sortBy&sortOrder=1&expandReferences=True&env=test-env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1,
+        Query: ?databaseIntegrationId={guid}&filter=test-filter&schemaVersion=1&pagingArgs=Norbix.Sdk.Types.Api.PagingArgs&sortBy=test-sortBy&sortOrder=1&expandReferences=True&allLanguages=True&env=test-env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1,
         Headers: {
           Authorization: Bearer test-bearer,
           norbix-account-id: test-account,
@@ -624,7 +624,7 @@
       Sent: {
         Method: GET,
         Path: /v2/database/taxonomies/test-taxonomyName/merged-tree,
-        Query: ?databaseIntegrationId={guid}&env=test-env,
+        Query: ?allLanguages=True&databaseIntegrationId={guid}&env=test-env,
         Headers: {
           Authorization: Bearer test-bearer,
           norbix-account-id: test-account,
@@ -653,7 +653,7 @@
       Sent: {
         Method: GET,
         Path: /v2/database/taxonomies/tree,
-        Query: ?includeTerms=True&databaseIntegrationId={guid}&env=test-env,
+        Query: ?allLanguages=True&includeTerms=True&databaseIntegrationId={guid}&env=test-env,
         Headers: {
           Authorization: Bearer test-bearer,
           norbix-account-id: test-account,
@@ -686,7 +686,7 @@
       Sent: {
         Method: GET,
         Path: /v2/database/taxonomies/test-taxonomyName/terms/{guid}/children,
-        Query: ?databaseIntegrationId={guid}&filter=test-filter&pagingArgs=Norbix.Sdk.Types.Api.PagingArgs&env=test-env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1,
+        Query: ?allLanguages=True&databaseIntegrationId={guid}&filter=test-filter&pagingArgs=Norbix.Sdk.Types.Api.PagingArgs&env=test-env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1,
         Headers: {
           Authorization: Bearer test-bearer,
           norbix-account-id: test-account,
@@ -724,7 +724,7 @@
       Sent: {
         Method: GET,
         Path: /v2/database/taxonomies/test-taxonomyName/terms,
-        Query: ?databaseIntegrationId={guid}&filter=test-filter&sortDescending=True&pagingArgs=Norbix.Sdk.Types.Api.PagingArgs&env=test-env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1,
+        Query: ?allLanguages=True&databaseIntegrationId={guid}&filter=test-filter&sortDescending=True&pagingArgs=Norbix.Sdk.Types.Api.PagingArgs&env=test-env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1,
         Headers: {
           Authorization: Bearer test-bearer,
           norbix-account-id: test-account,
@@ -762,7 +762,7 @@
       Sent: {
         Method: GET,
         Path: /v2/database/taxonomies/test-taxonomyName/terms/tree,
-        Query: ?rootTermId={guid}&depth=1&databaseIntegrationId={guid}&env=test-env,
+        Query: ?allLanguages=True&rootTermId={guid}&depth=1&databaseIntegrationId={guid}&env=test-env,
         Headers: {
           Authorization: Bearer test-bearer,
           norbix-account-id: test-account,

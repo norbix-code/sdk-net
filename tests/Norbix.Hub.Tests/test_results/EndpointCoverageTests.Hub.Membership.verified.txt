@@ -1,7 +1,7 @@
 ﻿{
   Target: Hub,
   Group: membership,
-  Count: 45,
+  Count: 46,
   Endpoints: [
     {
       Target: Hub,
@@ -163,6 +163,44 @@
       },
       ResponseType: EmptyResponse,
       Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: membership,
+      MethodName: RepairContactRolesAsync,
+      RequestType: RepairContactRolesRequest,
+      HttpMethod: POST,
+      Path: /{version}/membership/users/repair-roles,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/membership/users/repair-roles,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        },
+        Body: {
+          dryRun: true,
+          env: test-env
+        }
+      },
+      ResponseType: RepairContactRolesResponse,
+      Response: {
+        Result: {
+          dryRun: true,
+          contactsWithoutRoles: 7,
+          contactsToRepair: 7,
+          contactsRepaired: 7,
+          contactsWithoutLoginRoleIds: 7,
+          legacyRoleNamesIgnored: 7
+        },
         ResponseStatus: {
           IsSuccess: true
         }

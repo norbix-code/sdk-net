@@ -23,36 +23,18 @@
       },
       ResponseType: EchoResponse,
       Response: {
-        ContainerName: test-containerName,
-        Ip: test-ip,
         ManagedServiceHubUrl: https://example.test/managedServiceHubUrl,
         ManagedServiceApiUrl: https://example.test/managedServiceApiUrl,
         HubUrl: https://example.test/hubUrl,
         ApiUrl: https://example.test/apiUrl,
         ApiVersion: test-apiVersion,
         HubVersion: test-hubVersion,
-        MjmlUrl: https://example.test/mjmlUrl,
         AdminUrlTemplate: https://example.test/adminUrlTemplate,
-        License: {
-          domain: test-domain,
-          accountId: Guid_1,
-          email: user@example.test,
-          release: test-release,
-          expire: 42,
-          isTrial: true,
-          cap: 7
-        },
-        AskForEnterpriseLicenseEmail: user@example.test,
         EmailServiceConfigured: true,
         RootBootstrapPasswordSource: test-rootBootstrapPasswordSource,
         Regions: [
           {}
         ],
-        IsProductionInstallation: true,
-        LicensingMode: test-licensingMode,
-        GraceDaysLeft: 7,
-        InstallationDomain: test-installationDomain,
-        LicensingDocsUrl: https://example.test/licensingDocsUrl,
         Agent: {
           McpUrl: https://example.test/mcpUrl,
           OAuthMetadataUrl: https://example.test/oAuthMetadataUrl,
