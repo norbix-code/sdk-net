@@ -1,0 +1,233 @@
+﻿{
+  Target: Api,
+  Group: notifications,
+  Count: 7,
+  Endpoints: [
+    {
+      Target: Api,
+      Group: notifications,
+      MethodName: DeleteOwnPushDeviceByTokenAsync,
+      RequestType: DeleteOwnPushDeviceByTokenRequest,
+      HttpMethod: DELETE,
+      Path: /{version}/notifications/push/devices,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: DELETE,
+        Path: /v2/notifications/push/devices,
+        Query: ?token=test-token&env=test-env,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: notifications,
+      MethodName: DeleteOwnPushDeviceAsync,
+      RequestType: DeleteOwnPushDeviceRequest,
+      HttpMethod: DELETE,
+      Path: /{version}/notifications/push/devices/{Id},
+      PathParams: [
+        Id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: DELETE,
+        Path: /v2/notifications/push/devices/{guid},
+        Query: ?env=test-env,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: notifications,
+      MethodName: GetOwnPushDevicesAsync,
+      RequestType: GetOwnPushDevicesRequest,
+      HttpMethod: GET,
+      Path: /{version}/notifications/push/devices,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/notifications/push/devices,
+        Query: ?env=test-env,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        }
+      },
+      ResponseType: GetOwnPushDevicesResponse,
+      Response: {
+        Items: [
+          {}
+        ],
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: notifications,
+      MethodName: GetOwnPushMessagesAsync,
+      RequestType: GetOwnPushMessagesRequest,
+      HttpMethod: GET,
+      Path: /{version}/notifications/push/messages,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/notifications/push/messages,
+        Query: ?unreadOnly=True&env=test-env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        }
+      },
+      ResponseType: GetOwnPushMessagesResponse,
+      Response: {
+        List: {
+          Items: [
+            {
+              IsRead: false
+            }
+          ],
+          HasMore: false,
+          HasPrevious: false,
+          StartingAfter: cursor-start,
+          EndingBefore: cursor-end
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: notifications,
+      MethodName: MarkAllOwnPushMessagesReadAsync,
+      RequestType: MarkAllOwnPushMessagesReadRequest,
+      HttpMethod: POST,
+      Path: /{version}/notifications/push/messages/read,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/notifications/push/messages/read,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        },
+        Body: {
+          env: test-env
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: notifications,
+      MethodName: MarkOwnPushMessageReadAsync,
+      RequestType: MarkOwnPushMessageReadRequest,
+      HttpMethod: POST,
+      Path: /{version}/notifications/push/messages/{Id}/read,
+      PathParams: [
+        Id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/notifications/push/messages/{guid}/read,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        },
+        Body: {
+          env: test-env
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: notifications,
+      MethodName: RegisterOwnPushDeviceAsync,
+      RequestType: RegisterOwnPushDeviceRequest,
+      HttpMethod: POST,
+      Path: /{version}/notifications/push/devices,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/notifications/push/devices,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        },
+        Body: {
+          provider: test-provider,
+          token: test-token,
+          platform: test-platform,
+          osName: test-osName,
+          osVersion: test-osVersion,
+          appVersion: test-appVersion,
+          deviceName: test-deviceName,
+          modelName: test-modelName,
+          brand: test-brand,
+          manufacturer: test-manufacturer,
+          installationId: Guid_1,
+          locale: test-locale,
+          timeZone: test-timeZone,
+          env: test-env
+        }
+      },
+      ResponseType: IdResponse,
+      Response: {
+        Id: Guid_1,
+        Status: test-status,
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    }
+  ]
+}

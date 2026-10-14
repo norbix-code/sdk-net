@@ -1,7 +1,7 @@
 ﻿{
   Method: GET,
   Path: /v2/database/collections/orders/own,
-  Query: ?expandReferences=True,
+  Query: ?expandReferences=True&allLanguages=False,
   Headers: {
     Authorization: Bearer test-api-key,
     norbix-project-id: test-project

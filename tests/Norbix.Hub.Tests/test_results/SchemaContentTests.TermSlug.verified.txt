@@ -2,6 +2,7 @@
   Sent: {
     Method: GET,
     Path: /v2/database/taxonomies/tax_regions/terms/trm_1,
+    Query: ?allLanguages=False,
     Headers: {
       Authorization: Bearer test-bearer,
       norbix-account-id: test-account,

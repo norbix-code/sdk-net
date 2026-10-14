@@ -1913,7 +1913,7 @@ namespace Norbix.Sdk.Types.Hub;
     }
 
     [DataContract]
-    public partial class EchoLicenseDto
+    public partial class InstallationLicenseDetailsDto
     {
         [DataMember(Name="domain")]
         public virtual string? Domain { get; set; }
@@ -1984,6 +1984,15 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember(Name="message")]
         public virtual string? Message { get; set; }
+
+        [DataMember(Name="license")]
+        public virtual InstallationLicenseDetailsDto? License { get; set; }
+
+        [DataMember(Name="licensingDocsUrl")]
+        public virtual string? LicensingDocsUrl { get; set; }
+
+        [DataMember(Name="askForEnterpriseLicenseEmail")]
+        public virtual string? AskForEnterpriseLicenseEmail { get; set; }
     }
 
     [DataContract]
@@ -12319,6 +12328,28 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual ProjectComplianceDto? Settings { get; set; }
     }
 
+    [DataContract]
+    public partial class ContactRolesRepairDto
+    {
+        [DataMember(Name="dryRun")]
+        public virtual bool DryRun { get; set; }
+
+        [DataMember(Name="contactsWithoutRoles")]
+        public virtual int ContactsWithoutRoles { get; set; }
+
+        [DataMember(Name="contactsToRepair")]
+        public virtual int ContactsToRepair { get; set; }
+
+        [DataMember(Name="contactsRepaired")]
+        public virtual int ContactsRepaired { get; set; }
+
+        [DataMember(Name="contactsWithoutLoginRoleIds")]
+        public virtual int ContactsWithoutLoginRoleIds { get; set; }
+
+        [DataMember(Name="legacyRoleNamesIgnored")]
+        public virtual int LegacyRoleNamesIgnored { get; set; }
+    }
+
     ///<summary>
     ///Create a contact
     ///</summary>
@@ -12425,6 +12456,25 @@ namespace Norbix.Sdk.Types.Hub;
         ///The contact ids (ct_…) to merge into the survivor and archive. At least one.
         ///</summary>
         public virtual string[] MergedIds { get; set; } = [];
+    }
+
+    ///<summary>
+    ///Repair contact roles from their logins
+    ///</summary>
+    [NorbixRoute("/{version}/membership/users/repair-roles", "POST")]
+    public partial class RepairContactRolesRequest
+        : CodeMashRequestBase, INorbixRequest<RepairContactRolesResponse>
+    {
+        ///<summary>
+        ///True (default) = only count what would change. False = write.
+        ///</summary>
+        public virtual bool DryRun { get; set; }
+    }
+
+    public partial class RepairContactRolesResponse
+        : ResponseBase
+    {
+        public virtual ContactRolesRepairDto? Result { get; set; }
     }
 
     ///<summary>
@@ -13989,6 +14039,12 @@ namespace Norbix.Sdk.Types.Hub;
         : CodeMashRequestBase, INorbixRequest<GetDatabaseTaxonomyTreeResponse>
     {
         ///<summary>
+        ///Set true to keep name / description as stored even when Accept-Language is sent (editors). The full translations are always in names / descriptions.
+        ///</summary>
+        [DataMember]
+        public virtual bool AllLanguages { get; set; }
+
+        ///<summary>
         ///When true, each taxonomy node also carries its own term tree (heavier response).
         ///</summary>
         [DataMember]
@@ -14121,6 +14177,12 @@ namespace Norbix.Sdk.Types.Hub;
         : CodeMashRequestBase, INorbixRequest<GetDatabaseMergedTermTreeResponse>
     {
         ///<summary>
+        ///Set true to keep name / description as stored even when Accept-Language is sent (editors). The full translations are always in names / descriptions.
+        ///</summary>
+        [DataMember]
+        public virtual bool AllLanguages { get; set; }
+
+        ///<summary>
         ///Root taxonomy slug/name (from get_database_taxonomies). Its terms are the roots; child-taxonomy terms nest under them.
         ///</summary>
         [DataMember]
@@ -14147,6 +14209,12 @@ namespace Norbix.Sdk.Types.Hub;
     public partial class GetDatabaseTaxonomyTermRequest
         : CodeMashRequestBase, INorbixRequest<GetDatabaseTaxonomyTermResponse>
     {
+        ///<summary>
+        ///Set true to keep name / description as stored even when Accept-Language is sent (editors). The full translations are always in names / descriptions.
+        ///</summary>
+        [DataMember]
+        public virtual bool AllLanguages { get; set; }
+
         ///<summary>
         ///Taxonomy id from get_database_taxonomies.
         ///</summary>
@@ -14180,6 +14248,12 @@ namespace Norbix.Sdk.Types.Hub;
     public partial class GetDatabaseTaxonomyTermTreeRequest
         : CodeMashRequestBase, INorbixRequest<GetDatabaseTaxonomyTermTreeResponse>
     {
+        ///<summary>
+        ///Set true to keep name / description as stored even when Accept-Language is sent (editors). The full translations are always in names / descriptions.
+        ///</summary>
+        [DataMember]
+        public virtual bool AllLanguages { get; set; }
+
         ///<summary>
         ///Taxonomy slug/name to fetch the term tree for, from get_database_taxonomies.
         ///</summary>
@@ -19591,8 +19665,6 @@ namespace Norbix.Sdk.Types.Hub;
 
     public partial class EchoResponse
     {
-        public virtual string? ContainerName { get; set; }
-        public virtual string Ip { get; set; }
         public virtual CodeMashRelease Release { get; set; }
         public virtual CodeMashRuntime Runtime { get; set; }
         public virtual string ManagedServiceHubUrl { get; set; }
@@ -19601,18 +19673,10 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual string ApiUrl { get; set; }
         public virtual string ApiVersion { get; set; }
         public virtual string HubVersion { get; set; }
-        public virtual string MjmlUrl { get; set; }
         public virtual string? AdminUrlTemplate { get; set; }
-        public virtual EchoLicenseDto? License { get; set; }
-        public virtual string? AskForEnterpriseLicenseEmail { get; set; }
         public virtual bool EmailServiceConfigured { get; set; }
         public virtual string? RootBootstrapPasswordSource { get; set; }
         public virtual List<EchoRegionDto>? Regions { get; set; }
-        public virtual bool IsProductionInstallation { get; set; }
-        public virtual string LicensingMode { get; set; }
-        public virtual int? GraceDaysLeft { get; set; }
-        public virtual string? InstallationDomain { get; set; }
-        public virtual string? LicensingDocsUrl { get; set; }
         public virtual EchoAgentDto? Agent { get; set; }
         public virtual EchoHostingPlatformDto? HostingPlatform { get; set; }
     }
@@ -19692,11 +19756,6 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual string? Env { get; set; }
     }
 
-    public partial interface ICultureBasedRequest
-    {
-        string? CultureCode { get; set; }
-    }
-
     public partial interface IHasCorrelationIdRequest
     {
         Guid? CorrelationId { get; set; }
@@ -19709,14 +19768,8 @@ namespace Norbix.Sdk.Types.Hub;
 
     [DataContract(Namespace="http://codemash.io/types/")]
     public partial class RequestBase
-        : ICultureBasedRequest, IVersionBasedRequest, IHasCorrelationIdRequest
+        : IVersionBasedRequest, IHasCorrelationIdRequest
     {
-        ///<summary>
-        ///Specify culture code when your response from the API should be localised. E.g.: en
-        ///</summary>
-        [DataMember]
-        public virtual string? CultureCode { get; set; }
-
         ///<summary>
         ///TimeZone
         ///</summary>
