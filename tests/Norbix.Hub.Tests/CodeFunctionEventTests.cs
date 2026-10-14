@@ -31,6 +31,7 @@ public sealed class CodeFunctionEventTests
         "NORBIX_ACCOUNT_ID",
         "NORBIX_ENV",
         "NORBIX_REGION",
+        "NORBIX_LANGUAGE",
         "NORBIX_API_URL",
         "NORBIX_HUB_URL",
     ];

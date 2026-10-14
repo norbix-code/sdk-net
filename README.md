@@ -111,6 +111,7 @@ NORBIX_API_KEY=sk_live_...
 NORBIX_PROJECT_ID=proj_123
 NORBIX_ACCOUNT_ID=acc_456            # optional
 NORBIX_REGION=nb-eu-germany          # optional — no default region (see "Regions")
+NORBIX_LANGUAGE=lt                   # optional — sent as Accept-Language (see "Language")
 NORBIX_API_URL=https://api.norbix.ai
 NORBIX_HUB_URL=https://hub.norbix.ai
 NORBIX_API_VERSION=v3
@@ -234,6 +235,31 @@ await client.Account.UpdateProjectRegionsAsync(new UpdateProjectRegions
 `ProjectDto` (returned by `client.Account.GetProjectAsync(...)`) exposes the same shape as `PrimaryRegion` / `AdditionalRegions` (`ProjectRegionDto`).
 
 Every other project setting (name, CORS, languages, admin URL, legal, Admin Portal, AI) is on [docs/hub/project.md](./docs/hub/project.md).
+
+## Language
+
+The gateway reads exactly one language input: the standard `Accept-Language` header (q-values are honoured; the project's default language is used when nothing matches). The response says which language it picked in `Content-Language`. The old `cultureCode` request field and the `CultureCode` / `norbix-language` headers are gone — the SDK never sends them.
+
+The SDK resolves the language like the region — there is **no default language**:
+
+1. Per-call override — `client.WithLanguage("...")`
+2. `Language` on `NorbixClientOptions` (explicit values win over env vars)
+3. `NORBIX_LANGUAGE` environment variable
+4. Unset — no `Accept-Language` header is sent and the gateway uses the project default
+
+The value is sent as-is, so a single tag or a full header value both work:
+
+```csharp
+var client = new NorbixApiClient(new NorbixClientOptions
+{
+    ProjectId = "proj_123",
+    ApiKey = "<api_key>",
+    Language = "lt-LT, en;q=0.8",
+});
+
+var lt = client.WithLanguage("lt");      // shares the HttpClient, like WithRegion
+var dflt = client.WithLanguage(null);    // clears it — header omitted, project default
+```
 
 ## Project vs Account Scope
 
