@@ -27,6 +27,11 @@ internal static class RecordedRequestExtensions
         "X-CM-AccountId",
         "norbix-env",
         "nb-region",
+        "Accept-Language",
+        // Removed gateway language inputs: listed so a snapshot shows them if
+        // they are ever sent again (Accept-Language is the only one now).
+        "CultureCode",
+        "norbix-language",
         "Content-Type",
     };
 

@@ -59,6 +59,19 @@ public sealed class NorbixClientOptions
     /// </summary>
     public string? Region { get; set; }
 
+    /// <summary>
+    /// Preferred response language, sent as the standard <c>Accept-Language</c>
+    /// header — a single tag (e.g. <c>lt</c>, <c>lt-LT</c>) or a full header
+    /// value with q-values (e.g. <c>lt-LT, en;q=0.8</c>). The gateway honours
+    /// the q-values and falls back to the project's default language when
+    /// nothing matches; the chosen language comes back as
+    /// <c>Content-Language</c>. Like <see cref="Region"/> there is NO default —
+    /// when unset, no header is sent. Resolution order: per-call
+    /// <c>WithLanguage</c> override on the client → this option →
+    /// <c>NORBIX_LANGUAGE</c> environment variable → unset.
+    /// </summary>
+    public string? Language { get; set; }
+
     /// <summary>API gateway base URL. Default <c>https://api.norbix.ai</c> (or <c>NORBIX_API_URL</c>).</summary>
     public string ApiBaseUrl { get; set; } = DefaultApiBaseUrl;
 
@@ -102,6 +115,7 @@ public sealed class NorbixClientOptions
             AccountId = AccountId,
             Env = Env,
             Region = Region,
+            Language = Language,
             ApiBaseUrl = ApiBaseUrl,
             HubBaseUrl = HubBaseUrl,
             ApiVersion = ApiVersion,
@@ -142,6 +156,7 @@ public sealed class NorbixClientOptions
         if (env is not null) Env = env;
 
         Region ??= NullIfEmpty(Read("NORBIX_REGION"));
+        Language ??= NullIfEmpty(Read("NORBIX_LANGUAGE"));
 
         var apiUrl = NullIfEmpty(Read("NORBIX_API_URL"));
         if (apiUrl is not null) ApiBaseUrl = apiUrl;

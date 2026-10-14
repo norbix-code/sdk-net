@@ -190,6 +190,23 @@ public sealed partial class NorbixApiClient : IDisposable, IAsyncDisposable
         return new Client(o, _transport.HttpClient, _transport.Logger);
     }
 
+    /// <summary>
+    /// Create a new client that asks for responses in a given language. The
+    /// new client shares the underlying <see cref="HttpClient"/> and sends
+    /// <paramref name="language"/> as the <c>Accept-Language</c> header on
+    /// every request (omitted when null/empty — there is no default language;
+    /// the gateway then uses the project default). Accepts a single tag or a
+    /// full header value with q-values, e.g.
+    /// <c>await client.WithLanguage("lt").Echo.EchoAsync(new())</c> or
+    /// <c>client.WithLanguage("lt-LT, en;q=0.8")</c>.
+    /// </summary>
+    public Client WithLanguage(string? language)
+    {
+        var o = _options.Clone();
+        o.Language = string.IsNullOrEmpty(language) ? null : language;
+        return new Client(o, _transport.HttpClient, _transport.Logger);
+    }
+
     /// <summary>Create a new client without a JWT bearer token (falls back to ApiKey if configured).</summary>
     public Client WithoutBearerToken() => WithBearerToken(null);
 

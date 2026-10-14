@@ -162,6 +162,16 @@ internal sealed class HttpTransport : INorbixTransport, IDisposable
             request.Headers.TryAddWithoutValidation("nb-region", _options.Region);
         }
 
+        // Language selector — the standard Accept-Language header is the ONLY
+        // language input the gateway reads (q-values honoured; project default
+        // when nothing matches). Like the region there is NO default: the
+        // header is injected only when a language was resolved
+        // (WithLanguage(...) / Options.Language / NORBIX_LANGUAGE).
+        if (!string.IsNullOrEmpty(_options.Language))
+        {
+            request.Headers.TryAddWithoutValidation("Accept-Language", _options.Language);
+        }
+
         foreach (var (k, v) in _options.DefaultHeaders)
         {
             request.Headers.TryAddWithoutValidation(k, v);
