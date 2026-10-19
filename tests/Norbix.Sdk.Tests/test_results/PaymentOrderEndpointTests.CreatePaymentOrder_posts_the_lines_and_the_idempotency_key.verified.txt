@@ -1,0 +1,30 @@
+﻿{
+  Sent: {
+    Method: POST,
+    Path: /v2/payments/orders,
+    Headers: {
+      Authorization: Bearer test-api-key,
+      Content-Type: application/json; charset=utf-8,
+      norbix-project-id: test-project
+    },
+    Body: {
+      buyerUserId: usr_1szWVIyZFBV8HfvC4SfVw,
+      merchantReference: ad-1042-promo-1,
+      idempotencyKey: ad-1042-promo-1-key,
+      currency: EUR,
+      priceVersion: v1,
+      lines: [
+        {
+          sku: star-day,
+          title: Star × day,
+          quantity: 21.0,
+          unitAmountMinor: 30.0
+        }
+      ],
+      metadata: {
+        adId: ad_1042
+      }
+    }
+  },
+  Id: ord_2ToIiRM03X63TZaJ2dJdv2
+}

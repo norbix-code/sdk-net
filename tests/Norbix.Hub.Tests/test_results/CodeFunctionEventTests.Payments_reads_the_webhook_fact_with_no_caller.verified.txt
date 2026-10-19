@@ -26,6 +26,7 @@
       User: false,
       File: false,
       Payment: true,
+      Order: false,
       Ai: false,
       Task: false,
       Payload: false

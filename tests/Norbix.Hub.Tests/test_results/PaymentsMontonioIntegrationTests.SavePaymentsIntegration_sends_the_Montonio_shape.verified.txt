@@ -1,0 +1,22 @@
+﻿{
+  Sent: {
+    Method: POST,
+    Path: /v2/payments/integrations,
+    Headers: {
+      Authorization: Bearer test-api-key,
+      Content-Type: application/json; charset=utf-8,
+      norbix-project-id: test-project
+    },
+    Body: {
+      integration: {
+        provider: montonio,
+        accessKey: test-access-key,
+        secretKey: test-secret-key,
+        isSandbox: true,
+        locale: lt,
+        isEnabled: false
+      }
+    }
+  },
+  Id: int_montonio
+}

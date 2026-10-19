@@ -99,6 +99,7 @@ public sealed class CodeFunctionEventTests
                 User = evt.Data.User is not null,
                 File = evt.Data.File is not null,
                 Payment = evt.Data.Payment is not null,
+                Order = evt.Data.Order is not null,
                 Ai = evt.Data.Ai is not null,
                 Task = evt.Data.Task is not null,
                 Payload = evt.Data.Payload is not null,
@@ -170,6 +171,28 @@ public sealed class CodeFunctionEventTests
             new { Envelope = Describe(evt), Payment = evt.AsPayment() },
             VerifyConfig.VerifySettings
         );
+    }
+
+    [Test]
+    public async Task Payments_order_reads_the_stored_order_and_keeps_the_callback()
+    {
+        var evt = CodeFunctionEvent.Parse(Samples.PaymentOrderPaid);
+
+        await Verifier.Verify(
+            new { Envelope = Describe(evt), Order = evt.AsPaymentOrder(), Callback = evt.AsPayment() },
+            VerifyConfig.VerifySettings
+        );
+    }
+
+    [Test]
+    public void A_webhook_payment_event_has_no_order_slot()
+    {
+        var evt = CodeFunctionEvent.Parse(Samples.PaymentReceived);
+
+        var ex = Assert.Throws<InvalidOperationException>(() => evt.AsPaymentOrder());
+
+        Assert.That(ex!.Message, Is.EqualTo(
+            "AsPaymentOrder() needs data.order, but this 'payments.webhook.received' event (source 'payments') carries no such slot."));
     }
 
     [Test]
@@ -483,6 +506,83 @@ public sealed class CodeFunctionEventTests
                   "externalIds": { "paymentIntent": "pi_1", "customer": "cus_1" },
                   "occurredOn": "2026-10-12T07:59:58Z",
                   "receivedOn": "2026-10-12T08:00:00Z"
+                }
+              }
+            }
+            """;
+
+        public const string PaymentOrderPaid =
+            """
+            {
+              "specVersion": "1",
+              "id": "9f1c0000-0000-4000-8000-000000000021",
+              "eventId": "7a2e0000-0000-4000-8000-000000000022",
+              "event": "payments.order.paid",
+              "source": "payments",
+              "createdOn": "2026-10-19T08:05:00Z",
+              "context": {
+                "accountId": "acc_1",
+                "projectId": "proj_1",
+                "environment": "PROD",
+                "hubUrl": "https://hub.example.test",
+                "apiUrl": "https://api.example.test",
+                "triggerId": "trg_3",
+                "correlationId": "corr-3",
+                "runAs": { "userId": "usr_service_1", "accessToken": "eyJ.run-as.token", "expiresAt": "2026-10-19T08:20:00Z" }
+              },
+              "data": {
+                "payment": {
+                  "integrationId": "int_montonio",
+                  "provider": "Montonio",
+                  "providerEventId": "order:mnt-1:PAID",
+                  "orderId": "ord_2ToIiRM03X63TZaJ2dJdv2",
+                  "eventName": "order.paid",
+                  "status": "Succeeded",
+                  "amountMinor": 630,
+                  "currency": "EUR",
+                  "externalIds": { "montonioOrder": "mnt-1" },
+                  "occurredOn": "2026-10-19T08:04:58Z",
+                  "receivedOn": "2026-10-19T08:05:00Z"
+                },
+                "order": {
+                  "orderEventId": "ord_2ToIiRM03X63TZaJ2dJdv2:2",
+                  "event": "payments.order.paid",
+                  "from": "CheckoutStarted",
+                  "to": "Paid",
+                  "reason": "paid in attempt 1",
+                  "order": {
+                    "id": "ord_2ToIiRM03X63TZaJ2dJdv2",
+                    "env": "PROD",
+                    "buyerUserId": "usr_1szWVIyZFBV8HfvC4SfVw",
+                    "merchantReference": "ad-1042-promo-1",
+                    "currency": "EUR",
+                    "priceVersion": "2026-10-01",
+                    "lines": [
+                      { "sku": "star-day", "title": "Star × day", "quantity": 21, "unitAmountMinor": 30, "amountMinor": 630 }
+                    ],
+                    "totalMinor": 630,
+                    "metadata": { "adId": "ad_1042" },
+                    "status": "Paid",
+                    "createdOnUtc": "2026-10-19T08:00:00Z",
+                    "updatedOnUtc": "2026-10-19T08:05:00Z",
+                    "checkouts": [],
+                    "settledMinor": 630,
+                    "refundedMinor": 0,
+                    "paidOnUtc": "2026-10-19T08:04:58Z",
+                    "providerPaymentId": "mnt-1",
+                    "mismatches": []
+                  },
+                  "payment": {
+                    "integrationId": "int_montonio",
+                    "provider": "Montonio",
+                    "providerEventId": "order:mnt-1:PAID",
+                    "orderId": "ord_2ToIiRM03X63TZaJ2dJdv2",
+                    "eventName": "order.paid",
+                    "status": "Succeeded",
+                    "amountMinor": 630,
+                    "currency": "EUR",
+                    "receivedOn": "2026-10-19T08:05:00Z"
+                  }
                 }
               }
             }

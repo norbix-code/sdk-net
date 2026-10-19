@@ -32,6 +32,7 @@
       User: false,
       File: false,
       Payment: false,
+      Order: false,
       Ai: true,
       Task: false,
       Payload: false

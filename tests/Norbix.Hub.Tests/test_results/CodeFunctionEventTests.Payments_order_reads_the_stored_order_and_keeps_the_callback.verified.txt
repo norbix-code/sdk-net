@@ -1,0 +1,94 @@
+﻿{
+  Envelope: {
+    SpecVersion: 1,
+    Id: Guid_1,
+    EventId: Guid_2,
+    Event: payments.order.paid,
+    Source: Payments,
+    CreatedOn: DateTimeOffset_1,
+    Context: {
+      AccountId: acc_1,
+      ProjectId: proj_1,
+      Environment: PROD,
+      HubUrl: https://hub.example.test,
+      ApiUrl: https://api.example.test,
+      TriggerId: trg_3,
+      CorrelationId: corr-3,
+      RunAs: {
+        UserId: usr_service_1,
+        AccessToken: eyJ.run-as.token,
+        ExpiresAt: DateTimeOffset_2
+      }
+    },
+    Slots: {
+      Database: false,
+      User: false,
+      File: false,
+      Payment: true,
+      Order: true,
+      Ai: false,
+      Task: false,
+      Payload: false
+    }
+  },
+  Order: {
+    OrderEventId: ord_2ToIiRM03X63TZaJ2dJdv2:2,
+    Event: payments.order.paid,
+    From: CheckoutStarted,
+    To: Paid,
+    Reason: paid in attempt 1,
+    Order: {
+      Id: ord_2ToIiRM03X63TZaJ2dJdv2,
+      Env: PROD,
+      BuyerUserId: usr_1szWVIyZFBV8HfvC4SfVw,
+      MerchantReference: ad-1042-promo-1,
+      Currency: EUR,
+      PriceVersion: 2026-10-01,
+      Lines: [
+        {
+          Sku: star-day,
+          Title: Star × day,
+          Quantity: 21,
+          UnitAmountMinor: 30,
+          AmountMinor: 630
+        }
+      ],
+      TotalMinor: 630,
+      Metadata: {
+        adId: ad_1042
+      },
+      Status: Paid,
+      CreatedOnUtc: DateTime_1,
+      UpdatedOnUtc: DateTime_2,
+      SettledMinor: 630,
+      PaidOnUtc: DateTime_3,
+      ProviderPaymentId: mnt-1
+    },
+    Payment: {
+      IntegrationId: int_montonio,
+      Provider: Montonio,
+      ProviderEventId: order:mnt-1:PAID,
+      OrderId: ord_2ToIiRM03X63TZaJ2dJdv2,
+      EventName: order.paid,
+      Status: Succeeded,
+      AmountMinor: 630,
+      Currency: EUR,
+      ReceivedOn: DateTime_2
+    }
+  },
+  Callback: {
+    IntegrationId: int_montonio,
+    Provider: Montonio,
+    ProviderEventId: order:mnt-1:PAID,
+    OrderId: ord_2ToIiRM03X63TZaJ2dJdv2,
+    EventName: order.paid,
+    Status: Succeeded,
+    AmountMinor: 630,
+    Currency: EUR,
+    ExternalIds: {
+      montonioOrder: mnt-1
+    },
+    OccurredOn: DateTimeOffset_3,
+    ReceivedOn: DateTimeOffset_1
+  }
+}
