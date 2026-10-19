@@ -1,0 +1,34 @@
+﻿{
+  Sent: {
+    Method: GET,
+    Path: /v2/payments/orders/ord_2ToIiRM03X63TZaJ2dJdv2,
+    Headers: {
+      Authorization: Bearer test-api-key,
+      norbix-project-id: test-project
+    }
+  },
+  Order: {
+    Id: ord_2ToIiRM03X63TZaJ2dJdv2,
+    Env: PROD,
+    BuyerUserId: usr_1szWVIyZFBV8HfvC4SfVw,
+    MerchantReference: ad-1042-promo-1,
+    Currency: EUR,
+    PriceVersion: v1,
+    Lines: [
+      {
+        Sku: star-day,
+        Title: Star × day,
+        Quantity: 21,
+        UnitAmountMinor: 30,
+        AmountMinor: 630
+      }
+    ],
+    TotalMinor: 630,
+    Metadata: {
+      adId: ad_1042
+    },
+    Status: Created,
+    CreatedOnUtc: DateTime_1,
+    UpdatedOnUtc: DateTime_1
+  }
+}

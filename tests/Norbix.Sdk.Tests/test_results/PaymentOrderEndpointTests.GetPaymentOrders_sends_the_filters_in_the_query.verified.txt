@@ -1,0 +1,14 @@
+﻿{
+  Sent: {
+    Method: GET,
+    Path: /v2/payments/orders,
+    Query: ?buyerUserId=usr_1szWVIyZFBV8HfvC4SfVw&merchantReference=ad-1042-promo-1&status=Paid,
+    Headers: {
+      Authorization: Bearer test-api-key,
+      norbix-project-id: test-project
+    }
+  },
+  Ids: [
+    ord_2ToIiRM03X63TZaJ2dJdv2
+  ]
+}

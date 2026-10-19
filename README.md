@@ -321,6 +321,7 @@ The public endpoint surface is generated from gateway DTOs at compile time. The 
 | `echo` | 1 | Smoke-test echo endpoint. |
 | `files` | 13 | List, info, signed URL, upload URL + commit, download, delete one / many, public links, and a file by its stored id (`GetFileByIdAsync`). |
 | `membership` | 18 | User CRUD, registration, preferences, roles, and permissions. |
+| `payments` | 4 | Payment orders and checkout: `CreatePaymentOrderAsync`, `GetPaymentOrderAsync`, `GetPaymentOrdersAsync`, `StartPaymentCheckoutAsync`. See [Payment orders and checkout](#payment-orders-and-checkout). |
 | `public` | 2 | The project's public config and legal documents, read by the Admin Portal before sign-in (`GetPublicProjectConfigAsync`, `GetPublicProjectLegalAsync`). See [docs/hub/project.md](./docs/hub/project.md#public-config-and-legal-no-sign-in). |
 
 ### Hub — project & account configuration (526 endpoints)
@@ -338,7 +339,7 @@ The public endpoint surface is generated from gateway DTOs at compile time. The 
 | `membership` | 25 | Roles, policies, users, preferences, integrations, triggers. |
 | `notifications` | 123 | Email, push and SMS templates, integrations, campaigns, devices, settings. Push: [docs/hub/push.md](./docs/hub/push.md). SMS: [docs/hub/sms.md](./docs/hub/sms.md). |
 | `oauth` | 5 | The gateway's OAuth server routes (register, authorize, token, revoke). |
-| `payments` | 16 | Payment integrations, triggers, tests, and module settings. |
+| `payments` | 16 | Payment integrations (Stripe, Mollie, Montonio — `MontonioPaymentIntegrationRequest` with `AccessKey`, `SecretKey`, `IsSandbox`, `Locale`), triggers, tests, and module settings. |
 | `scheduler` | 8 | Scheduler module on / off (`EnableSchedulerAsync`, `DisableSchedulerAsync` — `PUT`) and cron tasks: list, read, save, enable, disable, delete. Only email campaign tasks today (`EmailCampaignSchedulerTaskRequest`). Every method and a typed save example: [docs/hub/scheduler.md](./docs/hub/scheduler.md). |
 | `triggers` | 1 | `GetTriggersNeedingAttentionAsync` — triggers of one type (`TriggerType`) whose last run needs attention, with the reason and the time. |
 | `webhooks` | 8 | Webhook integrations, destinations, tests, and module settings. |
@@ -990,7 +991,8 @@ public class Function
 | `AsDatabaseRecordChange<T>()` | `database` | `Collection`, `SchemaId`, `SchemaVersion`, `RecordId`, `Old` / `New` as `T`, `Truncated`, `OldRef` / `NewRef` (documents above 200 KB are left out; fetch them with the refs) |
 | `AsUserChange()` / `AsUserChange<T>()` | `membership` | `UserId`, `Old` / `New` |
 | `AsFileChange()` / `AsFileChange<T>()` | `files` | `Old` / `New`, `Path` |
-| `AsPayment()` | `payments` | the webhook fact (`Provider`, `EventName`, `Status`, `AmountMinor`, `Currency`, `ExternalIds`, …) |
+| `AsPayment()` | `payments` | the webhook fact (`Provider`, `EventName`, `Status`, `AmountMinor`, `Currency`, `ExternalIds`, …); on a `payments.order.*` event, the callback that changed the order |
+| `AsPaymentOrder()` | `payments` (`payments.order.paid`, `.partially_refunded`, `.refunded`, `.reversed`, `.expired`) | `OrderEventId` (the de-duplication key), `Event`, `From` / `To`, `Reason`, the stored `Order` after the change, the `Payment` fact |
 | `AsAiUsage()` | `ai` | `Payload`, `TargetUserId` |
 | `AsScheduledTask()` | `scheduler` | `TaskId`, `Name`, `FiredAt` |
 | `Payload<T>()` | `manual`, `scheduler` | the caller's JSON object as `T`, `null` when none |
@@ -1202,6 +1204,44 @@ and its `Errors`, and the steps after it come back `"NOT_TESTED"`. Only a refuse
 throws `NorbixException`. The Hub client keeps its own
 `TestFilesIntegrationAsync` (`POST /{version}/files/integrations/test`, id in
 the body) for the dashboard.
+
+## Payment orders and checkout
+
+A payment order is the server's record of what a buyer pays for: lines priced
+in minor units, a total, a status, and every checkout attempt. The Api client
+creates it, starts a checkout at a payment integration (Montonio today) and
+reads it back; the status moves when the provider calls back, never from the
+browser.
+
+```csharp
+var created = await api.Payments.CreatePaymentOrderAsync(new CreatePaymentOrderRequest
+{
+    BuyerUserId = userId,                   // usr_…
+    MerchantReference = "ad-1042-promo-1",  // unique per project and environment
+    IdempotencyKey = "ad-1042-promo-1-v1",  // 8–128 chars: same key + same body = the same order
+    Currency = "EUR",
+    PriceVersion = "v1",
+    Lines = [new PaymentOrderLineInput { Sku = "star-day", Title = "Star × day", Quantity = 21, UnitAmountMinor = 30 }],
+    Metadata = new Dictionary<string, string> { ["adId"] = "ad_1042" },
+});
+string orderId = created!.Id!;              // ord_…
+
+var started = await api.Payments.StartPaymentCheckoutAsync(new StartPaymentCheckoutRequest
+{
+    Id = orderId,                           // POST /{version}/payments/orders/{Id}/checkout
+    IntegrationId = montonioIntegrationId,
+    ReturnUrl = "https://shop.example/orders/ad-1042",
+});
+// send the buyer to started!.Checkout!.PaymentUrl; Reused is true when an open attempt was handed back
+
+var order = (await api.Payments.GetPaymentOrderAsync(new GetPaymentOrderRequest { Id = orderId }))!.Item!;
+var mine = await api.Payments.GetPaymentOrdersAsync(new GetPaymentOrdersRequest { BuyerUserId = userId, Status = "Paid" });
+```
+
+Sending the same body with the same `IdempotencyKey` again answers the same
+id; the same key with another body is refused (`409`). React to the outcome in
+a cloud function on a `payments.order.*` trigger with
+[`AsPaymentOrder()`](#cloud-functions), and de-duplicate on its `OrderEventId`.
 
 ## Error Handling
 

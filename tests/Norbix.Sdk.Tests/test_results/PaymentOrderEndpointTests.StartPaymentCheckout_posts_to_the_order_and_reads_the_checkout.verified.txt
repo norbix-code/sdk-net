@@ -1,0 +1,31 @@
+﻿{
+  Sent: {
+    Method: POST,
+    Path: /v2/payments/orders/ord_2ToIiRM03X63TZaJ2dJdv2/checkout,
+    Headers: {
+      Authorization: Bearer test-api-key,
+      Content-Type: application/json; charset=utf-8,
+      norbix-project-id: test-project
+    },
+    Body: {
+      integrationId: int_montonio,
+      method: paymentInitiation,
+      returnUrl: https://shop.example.test/orders/ad-1042,
+      preferredCountry: LT,
+      preferredProvider: SWEDBANK_LT
+    }
+  },
+  Checkout: {
+    Attempt: 1,
+    IntegrationId: int_montonio,
+    Provider: Montonio,
+    ProviderOrderId: mnt-1,
+    ProviderReference: ord_2ToIiRM03X63TZaJ2dJdv2:1,
+    PaymentUrl: https://sandbox-stargate.montonio.com/pay/mnt-1,
+    Method: paymentInitiation,
+    StartedOnUtc: DateTime_1,
+    ExpiresAtUtc: DateTime_2
+  },
+  Reused: false,
+  OrderStatus: Created
+}

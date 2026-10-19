@@ -17,7 +17,7 @@ namespace Norbix.Sdk;
 /// <remarks>
 /// The wire shape is the generated <see cref="CodeFunctionEventDto"/>; this
 /// class parses the JSON the function received and adds the typed views
-/// (<see cref="AsDatabaseRecordChange{T}"/>, <see cref="AsUserChange()"/>, …)
+/// (<see cref="AsDatabaseRecordChange{T}"/>, <see cref="AsUserChange()"/>, <see cref="AsPaymentOrder"/>, …)
 /// and <see cref="CreateClientOptions"/>, which turns
 /// <c>context.runAs.accessToken</c> and the deployment urls into the options
 /// a <c>NorbixApiClient</c> / <c>NorbixHubClient</c> takes.
@@ -233,6 +233,22 @@ public sealed class CodeFunctionEvent
     /// <exception cref="InvalidOperationException">The envelope carries no Payments slot.</exception>
     public PaymentFactDto AsPayment() =>
         Dto.Data.Payment ?? throw MissingSlot("payment", nameof(AsPayment));
+
+    /// <summary>
+    /// The payment order slot of a <c>payments.order.*</c> event
+    /// (<c>payments.order.paid</c>, <c>.partially_refunded</c>, <c>.refunded</c>,
+    /// <c>.reversed</c>, <c>.expired</c>): the stored order after the change
+    /// (<see cref="PaymentOrderEventDto.Order"/>), the status move
+    /// (<see cref="PaymentOrderEventDto.From"/> → <see cref="PaymentOrderEventDto.To"/>,
+    /// <see cref="PaymentOrderEventDto.Reason"/>) and the provider callback that
+    /// made it (<see cref="PaymentOrderEventDto.Payment"/>).
+    /// <see cref="PaymentOrderEventDto.OrderEventId"/> is the de-duplication key:
+    /// the same order change delivered twice carries the same id. <see cref="AsPayment"/>
+    /// still returns the callback.
+    /// </summary>
+    /// <exception cref="InvalidOperationException">The envelope carries no order slot (not a <c>payments.order.*</c> event).</exception>
+    public PaymentOrderEventDto AsPaymentOrder() =>
+        Dto.Data.Order ?? throw MissingSlot("order", nameof(AsPaymentOrder));
 
     /// <summary>The Scheduler slot: which task fired and when.</summary>
     /// <exception cref="InvalidOperationException">The envelope carries no Scheduler slot.</exception>
