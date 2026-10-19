@@ -1,7 +1,7 @@
 ﻿{
   Target: Hub,
   Group: membership,
-  Count: 46,
+  Count: 48,
   Endpoints: [
     {
       Target: Hub,
@@ -78,7 +78,7 @@
       Sent: {
         Method: GET,
         Path: /v2/membership/users,
-        Query: ?startingAfter=test-startingAfter&pageSize=1&env=test-env,
+        Query: ?startingAfter=test-startingAfter&pageSize=1&search=test-search&email=user%40example.test&userName=test-userName&statuses=test-string&types=test-string&roleNames=test-string&env=test-env,
         Headers: {
           Authorization: Bearer test-bearer,
           norbix-account-id: test-account,
@@ -544,7 +544,12 @@
           ResetPasswordTokenExpiration: 7,
           InvitationExpiration: 7,
           EmailVerificationExpiration: 7,
-          DefaultSubscribeToNews: false
+          DefaultSubscribeToNews: false,
+          AllowGuestUsers: false,
+          AllowEmailRegistration: false,
+          AllowUsernameRegistration: false,
+          InviteOnly: false,
+          AllowAnyoneToSignUp: false
         },
         ResponseStatus: {
           IsSuccess: true
@@ -594,6 +599,9 @@
           emailVerificationExpiration: 1.0,
           deactivationExpiration: 1.0,
           defaultSubscribeToNews: true,
+          allowEmailRegistration: true,
+          inviteOnly: true,
+          allowAnyoneToSignUp: true,
           minLength: 1.0,
           maxLength: 1.0,
           minNumbers: 1.0,
@@ -860,6 +868,9 @@
       Response: {
         Id: Guid_1,
         Status: test-status,
+        Warnings: [
+          test-string
+        ],
         ResponseStatus: {
           IsSuccess: true
         }
@@ -1000,6 +1011,9 @@
       Response: {
         Id: Guid_1,
         Status: test-status,
+        Warnings: [
+          test-string
+        ],
         ResponseStatus: {
           IsSuccess: true
         }
@@ -1123,6 +1137,9 @@
       Response: {
         Id: Guid_1,
         Status: test-status,
+        Warnings: [
+          test-string
+        ],
         ResponseStatus: {
           IsSuccess: true
         }
@@ -1156,6 +1173,9 @@
       Response: {
         Id: Guid_1,
         Status: test-status,
+        Warnings: [
+          test-string
+        ],
         ResponseStatus: {
           IsSuccess: true
         }
@@ -1491,6 +1511,94 @@
       Response: {
         Id: Guid_1,
         Status: test-status,
+        Warnings: [
+          test-string
+        ],
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: membership,
+      MethodName: ImportUsersAsync,
+      RequestType: ImportUsersRequest,
+      HttpMethod: POST,
+      Path: /{version}/membership/users/import,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/membership/users/import,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        },
+        Body: {
+          dryRun: true,
+          ignoreDefaultRoles: true,
+          users: [
+            null
+          ],
+          env: test-env
+        }
+      },
+      ResponseType: ImportUsersResponse,
+      Response: {
+        Result: {
+          dryRun: true,
+          received: 7,
+          imported: 7,
+          valid: 7,
+          existing: 7,
+          invalid: 7,
+          failed: 7,
+          rows: [
+            {}
+          ]
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: membership,
+      MethodName: RepairLoginProjectIdsAsync,
+      RequestType: RepairLoginProjectIdsRequest,
+      HttpMethod: POST,
+      Path: /{version}/membership/users/repair-logins,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/membership/users/repair-logins,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        },
+        Body: {
+          dryRun: true,
+          env: test-env
+        }
+      },
+      ResponseType: RepairLoginProjectIdsResponse,
+      Response: {
+        Result: {
+          dryRun: true,
+          loginsWithoutProject: 7,
+          loginsToRepair: 7,
+          loginsRepaired: 7,
+          accountLoginsSkipped: 7,
+          otherProjectLoginsSkipped: 7,
+          loginsWithoutEvidence: 7
+        },
         ResponseStatus: {
           IsSuccess: true
         }

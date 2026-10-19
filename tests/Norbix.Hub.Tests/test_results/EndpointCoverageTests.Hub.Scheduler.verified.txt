@@ -188,6 +188,7 @@
           InitiatorId: Guid_1,
           IsEnabled: false,
           StopOnError: false,
+          HasEnded: false,
           IsFailing: false
         },
         ResponseStatus: {
@@ -253,7 +254,8 @@
           Items: [
             {
               IsEnabled: false,
-              IsFailing: false
+              IsFailing: false,
+              HasEnded: false
             }
           ],
           HasMore: false,
@@ -292,6 +294,7 @@
           initiatorUserId: Guid_1,
           isEnabled: true,
           stopOnError: true,
+          endsAtUnix: 1.0,
           task: {
             type: emailCampaign
           },
@@ -302,6 +305,9 @@
       Response: {
         Id: Guid_1,
         Status: test-status,
+        Warnings: [
+          test-string
+        ],
         ResponseStatus: {
           IsSuccess: true
         }

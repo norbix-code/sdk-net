@@ -1,7 +1,7 @@
 ﻿{
   Target: Hub,
   Group: notifications,
-  Count: 120,
+  Count: 124,
   Endpoints: [
     {
       Target: Hub,
@@ -138,6 +138,9 @@
       Response: {
         Id: Guid_1,
         Status: test-status,
+        Warnings: [
+          test-string
+        ],
         ResponseStatus: {
           IsSuccess: true
         }
@@ -283,11 +286,11 @@
             HasMore: false
           },
           Content: {},
+          TransactionalKind: test-transactionalKind,
           CampaignId: Guid_1,
           BatchId: Guid_1,
           NotificationId: Guid_1,
-          RefNotificationId: Guid_1,
-          Body: test-body
+          RefNotificationId: Guid_1
         },
         ResponseStatus: {
           IsSuccess: true
@@ -838,6 +841,9 @@
       Response: {
         Id: Guid_1,
         Status: test-status,
+        Warnings: [
+          test-string
+        ],
         ResponseStatus: {
           IsSuccess: true
         }
@@ -1100,6 +1106,9 @@
       Response: {
         Id: Guid_1,
         Status: test-status,
+        Warnings: [
+          test-string
+        ],
         ResponseStatus: {
           IsSuccess: true
         }
@@ -1172,6 +1181,9 @@
       Response: {
         Id: Guid_1,
         Status: test-status,
+        Warnings: [
+          test-string
+        ],
         ResponseStatus: {
           IsSuccess: true
         }
@@ -1583,6 +1595,9 @@
       Response: {
         Id: Guid_1,
         Status: test-status,
+        Warnings: [
+          test-string
+        ],
         ResponseStatus: {
           IsSuccess: true
         }
@@ -1620,6 +1635,9 @@
       Response: {
         Id: Guid_1,
         Status: test-status,
+        Warnings: [
+          test-string
+        ],
         ResponseStatus: {
           IsSuccess: true
         }
@@ -1653,6 +1671,131 @@
         Items: [
           {}
         ],
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: notifications,
+      MethodName: GetNotificationInboxAsync,
+      RequestType: GetNotificationInboxRequest,
+      HttpMethod: GET,
+      Path: /{version}/notifications/inbox,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/notifications/inbox,
+        Query: ?unreadOnly=True&channel=test-channel&env=test-env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        }
+      },
+      ResponseType: GetNotificationInboxResponse,
+      Response: {
+        List: {
+          Items: [
+            {
+              IsRead: false
+            }
+          ],
+          HasMore: false,
+          HasPrevious: false,
+          StartingAfter: cursor-start,
+          EndingBefore: cursor-end
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: notifications,
+      MethodName: GetUnreadCountAsync,
+      RequestType: GetUnreadCountRequest,
+      HttpMethod: GET,
+      Path: /{version}/notifications/inbox/unread-count,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/notifications/inbox/unread-count,
+        Query: ?env=test-env,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        }
+      },
+      ResponseType: GetUnreadCountResponse,
+      Response: {
+        Count: 42,
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: notifications,
+      MethodName: MarkAllNotificationsReadAsync,
+      RequestType: MarkAllNotificationsReadRequest,
+      HttpMethod: POST,
+      Path: /{version}/notifications/inbox/read-all,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/notifications/inbox/read-all,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        },
+        Body: {
+          env: test-env
+        }
+      },
+      ResponseType: MarkAllNotificationsReadResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: notifications,
+      MethodName: MarkNotificationReadAsync,
+      RequestType: MarkNotificationReadRequest,
+      HttpMethod: POST,
+      Path: /{version}/notifications/inbox/{notificationId}/read,
+      PathParams: [
+        notificationId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/notifications/inbox/{guid}/read,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        },
+        Body: {
+          env: test-env
+        }
+      },
+      ResponseType: MarkNotificationReadResponse,
+      Response: {
         ResponseStatus: {
           IsSuccess: true
         }
@@ -1793,6 +1936,9 @@
       Response: {
         Id: Guid_1,
         Status: test-status,
+        Warnings: [
+          test-string
+        ],
         ResponseStatus: {
           IsSuccess: true
         }
@@ -2279,6 +2425,9 @@
           StartingAfter: cursor-start,
           EndingBefore: cursor-end
         },
+        TeamDevices: [
+          {}
+        ],
         ResponseStatus: {
           IsSuccess: true
         }
@@ -2322,6 +2471,9 @@
       Response: {
         Id: Guid_1,
         Status: test-status,
+        Warnings: [
+          test-string
+        ],
         ResponseStatus: {
           IsSuccess: true
         }
@@ -2562,6 +2714,9 @@
       Response: {
         Id: Guid_1,
         Status: test-status,
+        Warnings: [
+          test-string
+        ],
         ResponseStatus: {
           IsSuccess: true
         }
@@ -2754,6 +2909,9 @@
       Response: {
         Id: Guid_1,
         Status: test-status,
+        Warnings: [
+          test-string
+        ],
         ResponseStatus: {
           IsSuccess: true
         }
@@ -3135,8 +3293,7 @@
           collection: {
             fieldType: user,
             schemaName: test-schemaName,
-            recipientsSourceType: allUsers,
-            campaignTime: 1.0
+            recipientsSourceType: allUsers
           },
           phoneNumbers: {
             recipientsSourceType: allUsers,
@@ -3151,6 +3308,9 @@
       Response: {
         Id: Guid_1,
         Status: test-status,
+        Warnings: [
+          test-string
+        ],
         ResponseStatus: {
           IsSuccess: true
         }
@@ -3755,6 +3915,9 @@
       Response: {
         Id: Guid_1,
         Status: test-status,
+        Warnings: [
+          test-string
+        ],
         ResponseStatus: {
           IsSuccess: true
         }
@@ -3946,6 +4109,9 @@
       Response: {
         Id: Guid_1,
         Status: test-status,
+        Warnings: [
+          test-string
+        ],
         ResponseStatus: {
           IsSuccess: true
         }

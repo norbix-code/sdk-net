@@ -832,6 +832,9 @@ namespace Norbix.Sdk.Types.Api;
         [DataMember]
         public virtual bool AllLanguages { get; set; }
 
+        ///<summary>
+        ///The taxonomy: its name (slug or title; URL-encode spaces) or its id (txn_…).
+        ///</summary>
         [DataMember]
         public virtual string TaxonomyName { get; set; }
 
@@ -886,6 +889,9 @@ namespace Norbix.Sdk.Types.Api;
         [DataMember]
         public virtual bool AllLanguages { get; set; }
 
+        ///<summary>
+        ///The taxonomy: its name (slug or title; URL-encode spaces) or its id (txn_…).
+        ///</summary>
         [DataMember]
         public virtual string TaxonomyName { get; set; }
 
@@ -922,6 +928,9 @@ namespace Norbix.Sdk.Types.Api;
         [DataMember]
         public virtual bool AllLanguages { get; set; }
 
+        ///<summary>
+        ///The taxonomy: its name (slug or title; URL-encode spaces) or its id (txn_…).
+        ///</summary>
         [DataMember]
         public virtual string TaxonomyName { get; set; }
 
@@ -958,6 +967,9 @@ namespace Norbix.Sdk.Types.Api;
         [DataMember]
         public virtual bool AllLanguages { get; set; }
 
+        ///<summary>
+        ///The taxonomy: its name (slug or title; URL-encode spaces) or its id (txn_…).
+        ///</summary>
         [DataMember]
         public virtual string TaxonomyName { get; set; }
 
@@ -1648,6 +1660,57 @@ namespace Norbix.Sdk.Types.Api;
     ///<summary>
     ///Membership
     ///</summary>
+    [NorbixRoute("/{version}/membership/auth/invitation/finish", "POST")]
+    [DataContract]
+    public partial class FinishInvitationRequest
+        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
+    {
+        ///<summary>
+        ///One-time invitation token from the e-mail link (the #token= fragment).
+        ///</summary>
+        [DataMember]
+        public virtual string Token { get; set; }
+
+        ///<summary>
+        ///The user's password. Validated against the project's complexity policy.
+        ///</summary>
+        [DataMember]
+        public virtual string Password { get; set; }
+
+        ///<summary>
+        ///Optional. The user's full name; replaces the one the admin entered (full name, first name = first word, last name = the rest). Empty = keep the admin's.
+        ///</summary>
+        [DataMember]
+        public virtual string? FullName { get; set; }
+
+        ///<summary>
+        ///Optional. How e-mails greet the user (stored as the display name). Empty = keep the admin's, or the full name when the admin gave none.
+        ///</summary>
+        [DataMember]
+        public virtual string? Salutation { get; set; }
+
+        ///<summary>
+        ///Optional. Older form of Salutation (the display name); Salutation wins when both are sent.
+        ///</summary>
+        [DataMember]
+        public virtual string? DisplayName { get; set; }
+
+        ///<summary>
+        ///Optional first name; wins over the one taken from FullName.
+        ///</summary>
+        [DataMember]
+        public virtual string? FirstName { get; set; }
+
+        ///<summary>
+        ///Optional last name; wins over the one taken from FullName.
+        ///</summary>
+        [DataMember]
+        public virtual string? LastName { get; set; }
+    }
+
+    ///<summary>
+    ///Membership
+    ///</summary>
     [NorbixRoute("/{version}/membership/auth/{id}/preferences", "GET")]
     [DataContract]
     public partial class GetUserPreferencesRequest
@@ -1748,6 +1811,36 @@ namespace Norbix.Sdk.Types.Api;
         ///</summary>
         [DataMember]
         public virtual HashSet<string>? UserIds { get; set; }
+
+        ///<summary>
+        ///Free text, case-insensitive: matches email, user name, display / first / last name or phone.
+        ///</summary>
+        [DataMember]
+        public virtual string? Search { get; set; }
+
+        ///<summary>
+        ///Case-insensitive part of the email.
+        ///</summary>
+        [DataMember]
+        public virtual string? Email { get; set; }
+
+        ///<summary>
+        ///Case-insensitive part of the user name.
+        ///</summary>
+        [DataMember]
+        public virtual string? UserName { get; set; }
+
+        ///<summary>
+        ///Status names, any of: Registered, PendingValidation, Active, Unregistered, Suspended, InActive, Blocked.
+        ///</summary>
+        [DataMember]
+        public virtual HashSet<string>? Statuses { get; set; }
+
+        ///<summary>
+        ///Login type names, any of: Service, Email, UserName, Phone, Guest, Social.
+        ///</summary>
+        [DataMember]
+        public virtual HashSet<string>? Types { get; set; }
     }
 
     public partial class GetUsersResponse
@@ -1795,16 +1888,33 @@ namespace Norbix.Sdk.Types.Api;
         : CodeMashRequestBase, INorbixRequest<EmptyResponse>
     {
         ///<summary>
-        ///Email address the invitation is sent to.
+        ///Email address the invitation is sent to. It cannot be changed later.
         ///</summary>
         [DataMember]
         public virtual string Email { get; set; }
+
+        ///<summary>
+        ///The invited person's full name, e.g. "Rūta Petraitė". Stored as the full name, first name (first word) and last name (the rest). The user may change it when finishing.
+        ///</summary>
+        [DataMember]
+        public virtual string? FullName { get; set; }
+
+        ///<summary>
+        ///Optional. How e-mails greet the person ("Hi {salutation},"), e.g. "Rūta". Stored as the display name. When empty the full name is used. The user may change it when finishing.
+        ///</summary>
+        [DataMember]
+        public virtual string? Salutation { get; set; }
 
         ///<summary>
         ///Database integration id. Optional — defaults to the request environment's default integration.
         ///</summary>
         [DataMember]
         public virtual string? DatabaseIntegrationId { get; set; }
+    }
+
+    public partial interface IPublicRegistrationRequest
+    {
+        List<string>? Roles { get; set; }
     }
 
     ///<summary>
@@ -1849,13 +1959,19 @@ namespace Norbix.Sdk.Types.Api;
     [NorbixRoute("/{version}/membership/auth/register/email", "POST")]
     [DataContract]
     public partial class SaveEmailUser
-        : SaveUser, INorbixRequest<IdResponse>
+        : SaveUser, INorbixRequest<IdResponse>, IPublicRegistrationRequest
     {
         [DataMember]
         public virtual string Password { get; set; }
 
         [DataMember]
         public virtual string Email { get; set; }
+
+        ///<summary>
+        ///Optional roles from the project's "Permitted user registration roles". Empty = the default registration role.
+        ///</summary>
+        [DataMember]
+        public virtual List<string>? Roles { get; set; }
     }
 
     ///<summary>
@@ -1955,13 +2071,19 @@ namespace Norbix.Sdk.Types.Api;
     [NorbixRoute("/{version}/membership/auth/register/user-name", "POST")]
     [DataContract]
     public partial class SaveUserNameUser
-        : SaveUser, INorbixRequest<IdResponse>
+        : SaveUser, INorbixRequest<IdResponse>, IPublicRegistrationRequest
     {
         [DataMember]
         public virtual string Password { get; set; }
 
         [DataMember]
         public virtual string UserName { get; set; }
+
+        ///<summary>
+        ///Optional roles from the project's "Permitted user registration roles". Empty = the default registration role.
+        ///</summary>
+        [DataMember]
+        public virtual List<string>? Roles { get; set; }
     }
 
     ///<summary>
@@ -2223,7 +2345,7 @@ namespace Norbix.Sdk.Types.Api;
         : CodeMashRequestBase, INorbixRequest<IdResponse>
     {
         ///<summary>
-        ///Who issued the token: expo (getExpoPushTokenAsync), fcm (Android / Firebase) or apns (iOS).
+        ///Who issued the token: fcm (Android / Firebase) or apns (iOS). The NATIVE device token — in an Expo app use getDevicePushTokenAsync(). Expo push tokens (provider 'expo') are refused.
         ///</summary>
         public virtual string Provider { get; set; }
 
@@ -2278,6 +2400,143 @@ namespace Norbix.Sdk.Types.Api;
         ///The device time zone (IANA), e.g. Europe/Vilnius.
         ///</summary>
         public virtual string? TimeZone { get; set; }
+    }
+
+    ///<summary>
+    ///Stores a payment order with a fixed price for one of the project's users. Server only (service user API key).
+    ///</summary>
+    [NorbixRoute("/{version}/payments/orders", "POST")]
+    public partial class CreatePaymentOrderRequest
+        : CodeMashRequestBase, INorbixRequest<IdResponse>
+    {
+        ///<summary>
+        ///The user the order is for (usr_…).
+        ///</summary>
+        public virtual string BuyerUserId { get; set; }
+
+        ///<summary>
+        ///The project's own order reference, unique per project and environment (1–64 of A–Z a–z 0–9 . _ : -).
+        ///</summary>
+        public virtual string MerchantReference { get; set; }
+
+        ///<summary>
+        ///8–128 characters. Same key + same body = the stored order; same key + other body = 409. May be sent as the Idempotency-Key header instead.
+        ///</summary>
+        public virtual string? IdempotencyKey { get; set; }
+
+        ///<summary>
+        ///EUR.
+        ///</summary>
+        public virtual string Currency { get; set; }
+
+        ///<summary>
+        ///The version of the price list the server priced the lines with.
+        ///</summary>
+        public virtual string PriceVersion { get; set; }
+
+        ///<summary>
+        ///1–50 lines: sku, title, quantity, unitAmountMinor (cents). Norbix computes the amounts and the total.
+        ///</summary>
+        public virtual List<PaymentOrderLineInput> Lines { get; set; } = [];
+
+        ///<summary>
+        ///Up to 20 project values (e.g. adId). No personal or billing data.
+        ///</summary>
+        public virtual Dictionary<string, string>? Metadata { get; set; }
+    }
+
+    ///<summary>
+    ///Reads one payment order. A buyer reads only their own orders.
+    ///</summary>
+    [NorbixRoute("/{version}/payments/orders/{Id}", "GET")]
+    public partial class GetPaymentOrderRequest
+        : CodeMashRequestBase, INorbixRequest<GetPaymentOrderResponse>
+    {
+        ///<summary>
+        ///The order id (ord_…).
+        ///</summary>
+        public virtual string Id { get; set; }
+    }
+
+    public partial class GetPaymentOrderResponse
+        : ResponseBase
+    {
+        public virtual PaymentOrderDto? Item { get; set; }
+    }
+
+    ///<summary>
+    ///Lists payment orders, newest first. A buyer gets only their own orders.
+    ///</summary>
+    [NorbixRoute("/{version}/payments/orders", "GET")]
+    public partial class GetPaymentOrdersRequest
+        : CodeMashListPaginationRequestBase, INorbixRequest<GetPaymentOrdersResponse>
+    {
+        ///<summary>
+        ///Server only: one buyer's orders (usr_…). A buyer always gets their own.
+        ///</summary>
+        public virtual string? BuyerUserId { get; set; }
+
+        ///<summary>
+        ///Only the order with this merchant reference.
+        ///</summary>
+        public virtual string? MerchantReference { get; set; }
+
+        ///<summary>
+        ///Only orders in this status (Created, CheckoutStarted, Paid, …).
+        ///</summary>
+        public virtual string? Status { get; set; }
+    }
+
+    public partial class GetPaymentOrdersResponse
+        : ResponseBase
+    {
+        public virtual PaginatedResponse<PaymentOrderDto>? List { get; set; }
+    }
+
+    ///<summary>
+    ///Opens a Montonio checkout for a stored order and answers where the buyer pays. The buyer (own order) or the server.
+    ///</summary>
+    [NorbixRoute("/{version}/payments/orders/{Id}/checkout", "POST")]
+    public partial class StartPaymentCheckoutRequest
+        : CodeMashRequestBase, INorbixRequest<StartPaymentCheckoutResponse>
+    {
+        ///<summary>
+        ///The order id (ord_…).
+        ///</summary>
+        public virtual string Id { get; set; }
+
+        ///<summary>
+        ///The Montonio integration (int_…) of the project in the request's environment.
+        ///</summary>
+        public virtual string IntegrationId { get; set; }
+
+        ///<summary>
+        ///bankLink (default), card, applePay or googlePay.
+        ///</summary>
+        public virtual string? Method { get; set; }
+
+        ///<summary>
+        ///Where the buyer comes back after paying; its origin must be one of the project's allowed origins.
+        ///</summary>
+        public virtual string ReturnUrl { get; set; }
+
+        ///<summary>
+        ///Bank links only: the country whose banks are shown first (default LT).
+        ///</summary>
+        public virtual string? PreferredCountry { get; set; }
+
+        ///<summary>
+        ///Bank links only: one bank to open directly (the provider's bank code).
+        ///</summary>
+        public virtual string? PreferredProvider { get; set; }
+    }
+
+    public partial class StartPaymentCheckoutResponse
+        : ResponseBase
+    {
+        public virtual PaymentOrderCheckoutDto? Checkout { get; set; }
+        public virtual bool Reused { get; set; }
+        public virtual PaymentOrderDto? Order { get; set; }
     }
 
     [DataContract]
@@ -2431,6 +2690,70 @@ namespace Norbix.Sdk.Types.Api;
         string ProjectId { get; set; }
     }
 
+    public partial class ArrayFieldDto
+        : JsonSchemaFieldDto
+    {
+        [DataMember]
+        public virtual JsonSchemaFieldDto Items { get; set; }
+
+        [DataMember]
+        public virtual int? MinItems { get; set; }
+
+        [DataMember]
+        public virtual int? MaxItems { get; set; }
+
+        [DataMember]
+        public virtual bool? UniqueItems { get; set; }
+    }
+
+    public partial class BooleanFieldDto
+        : JsonSchemaFieldDto
+    {
+        [DataMember]
+        public virtual bool? Default { get; set; }
+    }
+
+    public partial class CollectionSelectionFieldDto
+        : JsonSchemaFieldDto
+    {
+        [DataMember]
+        public virtual string? CollectionId { get; set; }
+
+        [DataMember]
+        public virtual string? DisplayField { get; set; }
+
+        [DataMember]
+        public virtual bool Multiple { get; set; }
+    }
+
+    public partial class CurrencyDefaultDto
+    {
+        [DataMember]
+        public virtual decimal Value { get; set; }
+
+        [DataMember]
+        public virtual string Currency { get; set; }
+    }
+
+    public partial class CurrencyFieldDto
+        : JsonSchemaFieldDto
+    {
+        [DataMember]
+        public virtual IReadOnlyList<string>? AllowedCurrencies { get; set; }
+
+        [DataMember]
+        public virtual decimal? MultipleOf { get; set; }
+
+        [DataMember]
+        public virtual decimal? Minimum { get; set; }
+
+        [DataMember]
+        public virtual decimal? Maximum { get; set; }
+
+        [DataMember]
+        public virtual CurrencyDefaultDto? Default { get; set; }
+    }
+
     public partial class DataSchemaDto
     {
         [DataMember]
@@ -2440,10 +2763,124 @@ namespace Norbix.Sdk.Types.Api;
         public virtual HashSet<JsonSchemaFieldDto> Fields { get; set; } = [];
     }
 
+    public partial class DateFieldDto
+        : JsonSchemaFieldDto
+    {
+        [DataMember]
+        public virtual long? Minimum { get; set; }
+
+        [DataMember]
+        public virtual long? Maximum { get; set; }
+
+        [DataMember]
+        public virtual long? Default { get; set; }
+    }
+
+    public partial class DecimalFieldDto
+        : JsonSchemaFieldDto
+    {
+        [DataMember]
+        public virtual decimal? Minimum { get; set; }
+
+        [DataMember]
+        public virtual decimal? Maximum { get; set; }
+
+        [DataMember]
+        public virtual decimal? MultipleOf { get; set; }
+
+        [DataMember]
+        public virtual decimal? Default { get; set; }
+
+        [DataMember]
+        public virtual bool? Unique { get; set; }
+    }
+
+    public partial class EnumSelectionFieldDto
+        : JsonSchemaFieldDto
+    {
+        [DataMember]
+        public virtual IReadOnlyList<string>? Values { get; set; }
+
+        [DataMember]
+        public virtual bool Multiple { get; set; }
+
+        [DataMember]
+        public virtual IReadOnlyList<string>? Default { get; set; }
+    }
+
+    public partial class FileFieldDto
+        : JsonSchemaFieldDto
+    {
+        [DataMember]
+        public virtual IReadOnlyList<string>? Storages { get; set; }
+
+        [DataMember]
+        public virtual int? MinItems { get; set; }
+
+        [DataMember]
+        public virtual int? MaxItems { get; set; }
+
+        [DataMember]
+        public virtual string? AllowedFileType { get; set; }
+
+        [DataMember]
+        public virtual decimal? MaxSizeMb { get; set; }
+    }
+
+    public partial class GeolocationFieldDto
+        : JsonSchemaFieldDto
+    {
+        [DataMember]
+        public virtual IReadOnlyList<string>? AllowedTypes { get; set; }
+    }
+
+    public partial class IntegerFieldDto
+        : JsonSchemaFieldDto
+    {
+        [DataMember]
+        public virtual long? Minimum { get; set; }
+
+        [DataMember]
+        public virtual long? Maximum { get; set; }
+
+        [DataMember]
+        public virtual long? Default { get; set; }
+
+        [DataMember]
+        public virtual bool? Unique { get; set; }
+    }
+
+    public partial class JsonFieldDto
+        : JsonSchemaFieldDto
+    {
+        [DataMember]
+        public virtual int? MaxBytes { get; set; }
+    }
+
     public partial class JsonSchemaFieldDto
     {
         [DataMember]
         public virtual string FieldName { get; set; }
+    }
+
+    public partial class ObjectFieldDto
+        : JsonSchemaFieldDto
+    {
+        [DataMember]
+        public virtual IReadOnlyList<JsonSchemaFieldDto> Properties { get; set; }
+
+        [DataMember]
+        public virtual IReadOnlyList<string>? Required { get; set; }
+    }
+
+    public partial class RoleSelectionFieldDto
+        : JsonSchemaFieldDto
+    {
+        [DataMember]
+        public virtual bool Multiple { get; set; }
+
+        [DataMember]
+        public virtual string? DisplayField { get; set; }
     }
 
     public partial class SchemaDto
@@ -2536,6 +2973,76 @@ namespace Norbix.Sdk.Types.Api;
 
         [DataMember]
         public virtual string? Description { get; set; }
+
+        [DataMember]
+        public virtual List<SchemaUniqueIndexDto>? UniqueIndexes { get; set; }
+    }
+
+    public partial class SchemaUniqueIndexDto
+    {
+        [DataMember]
+        public virtual List<string> Fields { get; set; } = [];
+    }
+
+    public partial class StringFieldDto
+        : JsonSchemaFieldDto
+    {
+        [DataMember]
+        public virtual string? Format { get; set; }
+
+        [DataMember]
+        public virtual string? Pattern { get; set; }
+
+        [DataMember]
+        public virtual int? MinLength { get; set; }
+
+        [DataMember]
+        public virtual int? MaxLength { get; set; }
+
+        [DataMember]
+        public virtual IReadOnlyDictionary<string, string>? TranslateOptions { get; set; }
+
+        [DataMember]
+        public virtual string? Default { get; set; }
+
+        [DataMember]
+        public virtual bool? Unique { get; set; }
+    }
+
+    public partial class TagsFieldDto
+        : JsonSchemaFieldDto
+    {
+        [DataMember]
+        public virtual int? MinItems { get; set; }
+
+        [DataMember]
+        public virtual int? MaxItems { get; set; }
+
+        [DataMember]
+        public virtual IReadOnlyList<string>? Default { get; set; }
+    }
+
+    public partial class TaxonomySelectionFieldDto
+        : JsonSchemaFieldDto
+    {
+        [DataMember]
+        public virtual string? TaxonomyId { get; set; }
+
+        [DataMember]
+        public virtual bool Multiple { get; set; }
+
+        [DataMember]
+        public virtual string? DisplayField { get; set; }
+    }
+
+    public partial class UserSelectionFieldDto
+        : JsonSchemaFieldDto
+    {
+        [DataMember]
+        public virtual bool Multiple { get; set; }
+
+        [DataMember]
+        public virtual string? DisplayField { get; set; }
     }
 
     public partial class VisualSchemaDto
@@ -2602,6 +3109,9 @@ namespace Norbix.Sdk.Types.Api;
 
         [DataMember]
         public virtual Object? Meta { get; set; }
+
+        [DataMember]
+        public virtual string? Origin { get; set; }
     }
 
     public partial class TermMultiParentDto
@@ -2801,6 +3311,130 @@ namespace Norbix.Sdk.Types.Api;
         public virtual DateTime? ReadAtUtc { get; set; }
     }
 
+    [DataContract]
+    public partial class PaymentOrderCheckoutDto
+    {
+        [DataMember]
+        public virtual int Attempt { get; set; }
+
+        [DataMember]
+        public virtual string IntegrationId { get; set; }
+
+        [DataMember]
+        public virtual string Provider { get; set; }
+
+        [DataMember]
+        public virtual string ProviderOrderId { get; set; }
+
+        [DataMember]
+        public virtual string ProviderReference { get; set; }
+
+        [DataMember]
+        public virtual string PaymentUrl { get; set; }
+
+        [DataMember]
+        public virtual string Method { get; set; }
+
+        [DataMember]
+        public virtual DateTime StartedOnUtc { get; set; }
+
+        [DataMember]
+        public virtual DateTime ExpiresAtUtc { get; set; }
+    }
+
+    [DataContract]
+    public partial class PaymentOrderDto
+    {
+        [DataMember]
+        public virtual string Id { get; set; }
+
+        [DataMember]
+        public virtual string Env { get; set; }
+
+        [DataMember]
+        public virtual string BuyerUserId { get; set; }
+
+        [DataMember]
+        public virtual string MerchantReference { get; set; }
+
+        [DataMember]
+        public virtual string Currency { get; set; }
+
+        [DataMember]
+        public virtual string PriceVersion { get; set; }
+
+        [DataMember]
+        public virtual List<PaymentOrderLineDto> Lines { get; set; } = [];
+
+        [DataMember]
+        public virtual long TotalMinor { get; set; }
+
+        [DataMember]
+        public virtual Dictionary<string, string> Metadata { get; set; } = new();
+
+        [DataMember]
+        public virtual string Status { get; set; }
+
+        [DataMember]
+        public virtual DateTime CreatedOnUtc { get; set; }
+
+        [DataMember]
+        public virtual DateTime UpdatedOnUtc { get; set; }
+
+        [DataMember]
+        public virtual List<PaymentOrderCheckoutDto> Checkouts { get; set; } = [];
+
+        [DataMember]
+        public virtual long? SettledMinor { get; set; }
+
+        [DataMember]
+        public virtual long RefundedMinor { get; set; }
+
+        [DataMember]
+        public virtual DateTime? PaidOnUtc { get; set; }
+
+        [DataMember]
+        public virtual string? ProviderPaymentId { get; set; }
+
+        [DataMember]
+        public virtual List<string> Mismatches { get; set; } = [];
+    }
+
+    [DataContract]
+    public partial class PaymentOrderLineDto
+    {
+        [DataMember]
+        public virtual string Sku { get; set; }
+
+        [DataMember]
+        public virtual string Title { get; set; }
+
+        [DataMember]
+        public virtual int Quantity { get; set; }
+
+        [DataMember]
+        public virtual long UnitAmountMinor { get; set; }
+
+        [DataMember]
+        public virtual long AmountMinor { get; set; }
+    }
+
+    [DataContract]
+    public partial class PaymentOrderLineInput
+    {
+        [DataMember]
+        public virtual string? Sku { get; set; }
+
+        [DataMember]
+        public virtual string? Title { get; set; }
+
+        [DataMember]
+        public virtual int Quantity { get; set; }
+
+        [DataMember]
+        public virtual long UnitAmountMinor { get; set; }
+    }
+
     public partial class CodeMashResponseStatus
     {
         public virtual bool IsSuccess { get; set; }
@@ -2821,6 +3455,9 @@ namespace Norbix.Sdk.Types.Api;
 
         [DataMember]
         public virtual string? Status { get; set; }
+
+        [DataMember]
+        public virtual List<string>? Warnings { get; set; }
     }
 
     [DataContract]
@@ -2902,6 +3539,76 @@ namespace Norbix.Sdk.Types.Api;
 
         [DataMember]
         public virtual string? SavedByAuthId { get; set; }
+    }
+
+    [NorbixRoute("/{version}/notifications/inbox", "GET")]
+    public partial class GetNotificationInboxRequest
+        : CodeMashListPaginationRequestBase, INorbixRequest<GetNotificationInboxResponse>
+    {
+        public virtual bool UnreadOnly { get; set; }
+        public virtual string? Channel { get; set; }
+    }
+
+    public partial class GetNotificationInboxResponse
+        : ResponseBase
+    {
+        public virtual PaginatedResponse<InAppNotificationDto>? List { get; set; }
+    }
+
+    [NorbixRoute("/{version}/notifications/inbox/unread-count", "GET")]
+    public partial class GetUnreadCountRequest
+        : CodeMashRequestBase, INorbixRequest<GetUnreadCountResponse>
+    {
+    }
+
+    public partial class GetUnreadCountResponse
+        : ResponseBase
+    {
+        public virtual long Count { get; set; }
+    }
+
+    [NorbixRoute("/{version}/notifications/inbox/read-all", "POST")]
+    public partial class MarkAllNotificationsReadRequest
+        : CodeMashRequestBase, INorbixRequest<MarkAllNotificationsReadResponse>
+    {
+    }
+
+    public partial class MarkAllNotificationsReadResponse
+        : ResponseBase
+    {
+    }
+
+    [NorbixRoute("/{version}/notifications/inbox/{notificationId}/read", "POST")]
+    public partial class MarkNotificationReadRequest
+        : CodeMashRequestBase, INorbixRequest<MarkNotificationReadResponse>
+    {
+        public virtual string NotificationId { get; set; }
+    }
+
+    public partial class MarkNotificationReadResponse
+        : ResponseBase
+    {
+    }
+
+    public partial class SharedTypeGen
+    {
+        public virtual StringFieldDto? Typegen_StringFieldDto { get; set; }
+        public virtual DecimalFieldDto? Typegen_DecimalFieldDto { get; set; }
+        public virtual CurrencyFieldDto? Typegen_CurrencyFieldDto { get; set; }
+        public virtual BooleanFieldDto? Typegen_BooleanFieldDto { get; set; }
+        public virtual DateFieldDto? Typegen_DateFieldDto { get; set; }
+        public virtual IntegerFieldDto? Typegen_IntegerFieldDto { get; set; }
+        public virtual GeolocationFieldDto? Typegen_GeolocationFieldDto { get; set; }
+        public virtual TagsFieldDto? Typegen_TagsFieldDto { get; set; }
+        public virtual FileFieldDto? Typegen_FileFieldDto { get; set; }
+        public virtual TaxonomySelectionFieldDto? Typegen_TaxonomySelectionFieldDto { get; set; }
+        public virtual CollectionSelectionFieldDto? Typegen_CollectionSelectionFieldDto { get; set; }
+        public virtual UserSelectionFieldDto? Typegen_UserSelectionFieldDto { get; set; }
+        public virtual RoleSelectionFieldDto? Typegen_RoleSelectionFieldDto { get; set; }
+        public virtual EnumSelectionFieldDto? Typegen_EnumSelectionFieldDto { get; set; }
+        public virtual ObjectFieldDto? Typegen_ObjectFieldDto { get; set; }
+        public virtual ArrayFieldDto? Typegen_ArrayFieldDto { get; set; }
+        public virtual JsonFieldDto? Typegen_JsonFieldDto { get; set; }
     }
 
     [NorbixRoute("/{version}/echo", "GET")]
@@ -3078,6 +3785,20 @@ namespace Norbix.Sdk.Types.Api;
         string ViewId { get; set; }
     }
 
+    public partial class InAppNotificationDto
+    {
+        public virtual string Id { get; set; }
+        public virtual string ProjectId { get; set; }
+        public virtual string UserId { get; set; }
+        public virtual string Channel { get; set; }
+        public virtual string EventName { get; set; }
+        public virtual string? PayloadJson { get; set; }
+        public virtual bool IsRead { get; set; }
+        public virtual DateTime? SeenAtUtc { get; set; }
+        public virtual DateTime? ReadAtUtc { get; set; }
+        public virtual DateTime CreatedAtUtc { get; set; }
+    }
+
     [DataContract]
     public enum CodeMashRelease
     {
@@ -3099,6 +3820,7 @@ namespace Norbix.Sdk.Types.Api;
     {
         Registered = 0,
         PendingValidation = 2,
+        Invited = 4,
         Active = 8,
         Unregistered = 16,
         Suspended = 32,
@@ -3149,245 +3871,4 @@ namespace Norbix.Sdk.Types.Api;
         public virtual int? PageSize { get; set; }
         public virtual string? StartingAfter { get; set; }
         public virtual string? EndingBefore { get; set; }
-    }
-
-    // The Api contract does not export the JsonSchemaFieldDto subclasses yet (gateway
-    // ticket 11-code C22); kept from the previous Api file until the Api host anchors them.
-    public partial class ArrayFieldDto
-        : JsonSchemaFieldDto
-    {
-        [DataMember]
-        public virtual JsonSchemaFieldDto Items { get; set; }
-
-        [DataMember]
-        public virtual int? MinItems { get; set; }
-
-        [DataMember]
-        public virtual int? MaxItems { get; set; }
-
-        [DataMember]
-        public virtual bool? UniqueItems { get; set; }
-    }
-
-    public partial class BooleanFieldDto
-        : JsonSchemaFieldDto
-    {
-        [DataMember]
-        public virtual bool? Default { get; set; }
-    }
-
-    public partial class CollectionSelectionFieldDto
-        : JsonSchemaFieldDto
-    {
-        [DataMember]
-        public virtual string? CollectionId { get; set; }
-
-        [DataMember]
-        public virtual string? DisplayField { get; set; }
-
-        [DataMember]
-        public virtual bool Multiple { get; set; }
-    }
-
-    public partial class CurrencyDefaultDto
-    {
-        [DataMember]
-        public virtual decimal Value { get; set; }
-
-        [DataMember]
-        public virtual string Currency { get; set; }
-    }
-
-    public partial class CurrencyFieldDto
-        : JsonSchemaFieldDto
-    {
-        [DataMember]
-        public virtual IReadOnlyList<string>? AllowedCurrencies { get; set; }
-
-        [DataMember]
-        public virtual decimal? MultipleOf { get; set; }
-
-        [DataMember]
-        public virtual decimal? Minimum { get; set; }
-
-        [DataMember]
-        public virtual decimal? Maximum { get; set; }
-
-        [DataMember]
-        public virtual CurrencyDefaultDto? Default { get; set; }
-    }
-
-    public partial class DateFieldDto
-        : JsonSchemaFieldDto
-    {
-        [DataMember]
-        public virtual long? Minimum { get; set; }
-
-        [DataMember]
-        public virtual long? Maximum { get; set; }
-
-        [DataMember]
-        public virtual long? Default { get; set; }
-    }
-
-    public partial class DecimalFieldDto
-        : JsonSchemaFieldDto
-    {
-        [DataMember]
-        public virtual decimal? Minimum { get; set; }
-
-        [DataMember]
-        public virtual decimal? Maximum { get; set; }
-
-        [DataMember]
-        public virtual decimal? MultipleOf { get; set; }
-
-        [DataMember]
-        public virtual decimal? Default { get; set; }
-
-        [DataMember]
-        public virtual bool? Unique { get; set; }
-    }
-
-    public partial class EnumSelectionFieldDto
-        : JsonSchemaFieldDto
-    {
-        [DataMember]
-        public virtual IReadOnlyList<string>? Values { get; set; }
-
-        [DataMember]
-        public virtual bool Multiple { get; set; }
-
-        [DataMember]
-        public virtual IReadOnlyList<string>? Default { get; set; }
-    }
-
-    public partial class FileFieldDto
-        : JsonSchemaFieldDto
-    {
-        [DataMember]
-        public virtual IReadOnlyList<string>? Storages { get; set; }
-
-        [DataMember]
-        public virtual int? MinItems { get; set; }
-
-        [DataMember]
-        public virtual int? MaxItems { get; set; }
-
-        [DataMember]
-        public virtual string? AllowedFileType { get; set; }
-
-        [DataMember]
-        public virtual decimal? MaxSizeMb { get; set; }
-    }
-
-    public partial class GeolocationFieldDto
-        : JsonSchemaFieldDto
-    {
-        [DataMember]
-        public virtual IReadOnlyList<string>? AllowedTypes { get; set; }
-    }
-
-    public partial class IntegerFieldDto
-        : JsonSchemaFieldDto
-    {
-        [DataMember]
-        public virtual long? Minimum { get; set; }
-
-        [DataMember]
-        public virtual long? Maximum { get; set; }
-
-        [DataMember]
-        public virtual long? Default { get; set; }
-
-        [DataMember]
-        public virtual bool? Unique { get; set; }
-    }
-
-    public partial class JsonFieldDto
-        : JsonSchemaFieldDto
-    {
-        [DataMember]
-        public virtual int? MaxBytes { get; set; }
-    }
-
-    public partial class ObjectFieldDto
-        : JsonSchemaFieldDto
-    {
-        [DataMember]
-        public virtual IReadOnlyList<JsonSchemaFieldDto> Properties { get; set; }
-
-        [DataMember]
-        public virtual IReadOnlyList<string>? Required { get; set; }
-    }
-
-    public partial class RoleSelectionFieldDto
-        : JsonSchemaFieldDto
-    {
-        [DataMember]
-        public virtual bool Multiple { get; set; }
-
-        [DataMember]
-        public virtual string? DisplayField { get; set; }
-    }
-
-    public partial class StringFieldDto
-        : JsonSchemaFieldDto
-    {
-        [DataMember]
-        public virtual string? Format { get; set; }
-
-        [DataMember]
-        public virtual string? Pattern { get; set; }
-
-        [DataMember]
-        public virtual int? MinLength { get; set; }
-
-        [DataMember]
-        public virtual int? MaxLength { get; set; }
-
-        [DataMember]
-        public virtual IReadOnlyDictionary<string, string>? TranslateOptions { get; set; }
-
-        [DataMember]
-        public virtual string? Default { get; set; }
-
-        [DataMember]
-        public virtual bool? Unique { get; set; }
-    }
-
-    public partial class TagsFieldDto
-        : JsonSchemaFieldDto
-    {
-        [DataMember]
-        public virtual int? MinItems { get; set; }
-
-        [DataMember]
-        public virtual int? MaxItems { get; set; }
-
-        [DataMember]
-        public virtual IReadOnlyList<string>? Default { get; set; }
-    }
-
-    public partial class TaxonomySelectionFieldDto
-        : JsonSchemaFieldDto
-    {
-        [DataMember]
-        public virtual string? TaxonomyId { get; set; }
-
-        [DataMember]
-        public virtual bool Multiple { get; set; }
-
-        [DataMember]
-        public virtual string? DisplayField { get; set; }
-    }
-
-    public partial class UserSelectionFieldDto
-        : JsonSchemaFieldDto
-    {
-        [DataMember]
-        public virtual bool Multiple { get; set; }
-
-        [DataMember]
-        public virtual string? DisplayField { get; set; }
     }

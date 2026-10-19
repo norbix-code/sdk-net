@@ -28,6 +28,9 @@
       StartingAfter: cursor-start,
       EndingBefore: cursor-end
     },
+    TeamDevices: [
+      {}
+    ],
     ResponseStatus: {
       IsSuccess: true
     }

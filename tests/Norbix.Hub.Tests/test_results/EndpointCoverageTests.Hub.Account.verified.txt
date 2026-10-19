@@ -1,7 +1,7 @@
 ﻿{
   Target: Hub,
   Group: account,
-  Count: 120,
+  Count: 122,
   Endpoints: [
     {
       Target: Hub,
@@ -35,6 +35,9 @@
         NoTrialReason: test-noTrialReason,
         Id: Guid_1,
         Status: test-status,
+        Warnings: [
+          test-string
+        ],
         ResponseStatus: {
           IsSuccess: true
         }
@@ -68,6 +71,9 @@
         Token: test-token,
         Id: Guid_1,
         Status: test-status,
+        Warnings: [
+          test-string
+        ],
         ResponseStatus: {
           IsSuccess: true
         }
@@ -206,6 +212,9 @@
       Response: {
         Id: Guid_1,
         Status: test-status,
+        Warnings: [
+          test-string
+        ],
         ResponseStatus: {
           IsSuccess: true
         }
@@ -325,6 +334,9 @@
         Token: test-token,
         Id: Guid_1,
         Status: test-status,
+        Warnings: [
+          test-string
+        ],
         ResponseStatus: {
           IsSuccess: true
         }
@@ -482,6 +494,38 @@
       Response: {
         KeyId: Guid_1,
         Key: test-key,
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: account,
+      MethodName: UpdateAiServiceUserAsync,
+      RequestType: UpdateAiServiceUserRequest,
+      HttpMethod: PUT,
+      Path: /{version}/account/ai/service-users/{Id},
+      PathParams: [
+        Id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: PUT,
+        Path: /v2/account/ai/service-users/{guid},
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        },
+        Body: {
+          name: test-name
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
         ResponseStatus: {
           IsSuccess: true
         }
@@ -1083,6 +1127,9 @@
       Response: {
         Id: Guid_1,
         Status: test-status,
+        Warnings: [
+          test-string
+        ],
         ResponseStatus: {
           IsSuccess: true
         }
@@ -1116,6 +1163,9 @@
       Response: {
         Id: Guid_1,
         Status: test-status,
+        Warnings: [
+          test-string
+        ],
         ResponseStatus: {
           IsSuccess: true
         }
@@ -1148,6 +1198,9 @@
       Response: {
         Id: Guid_1,
         Status: test-status,
+        Warnings: [
+          test-string
+        ],
         ResponseStatus: {
           IsSuccess: true
         }
@@ -1182,6 +1235,9 @@
       Response: {
         Id: Guid_1,
         Status: test-status,
+        Warnings: [
+          test-string
+        ],
         ResponseStatus: {
           IsSuccess: true
         }
@@ -1212,6 +1268,9 @@
       Response: {
         Id: Guid_1,
         Status: test-status,
+        Warnings: [
+          test-string
+        ],
         ResponseStatus: {
           IsSuccess: true
         }
@@ -1242,6 +1301,9 @@
       Response: {
         Id: Guid_1,
         Status: test-status,
+        Warnings: [
+          test-string
+        ],
         ResponseStatus: {
           IsSuccess: true
         }
@@ -1435,6 +1497,9 @@
       Response: {
         Id: Guid_1,
         Status: test-status,
+        Warnings: [
+          test-string
+        ],
         ResponseStatus: {
           IsSuccess: true
         }
@@ -1468,6 +1533,9 @@
       Response: {
         Id: Guid_1,
         Status: test-status,
+        Warnings: [
+          test-string
+        ],
         ResponseStatus: {
           IsSuccess: true
         }
@@ -1543,6 +1611,9 @@
       Response: {
         Id: Guid_1,
         Status: test-status,
+        Warnings: [
+          test-string
+        ],
         ResponseStatus: {
           IsSuccess: true
         }
@@ -1786,8 +1857,13 @@
           Blockers: [
             {}
           ],
-          FromVersion: 42,
-          WasDryRun: true
+          TermChanges: [
+            {}
+          ],
+          Warnings: [
+            {}
+          ],
+          WasDryRun: false
         },
         ResponseStatus: {
           IsSuccess: true
@@ -1839,8 +1915,13 @@
           Blockers: [
             {}
           ],
-          FromVersion: 42,
-          WasDryRun: true
+          TermChanges: [
+            {}
+          ],
+          Warnings: [
+            {}
+          ],
+          WasDryRun: false
         },
         ResponseStatus: {
           IsSuccess: true
@@ -2068,6 +2149,9 @@
       Response: {
         Id: Guid_1,
         Status: test-status,
+        Warnings: [
+          test-string
+        ],
         ResponseStatus: {
           IsSuccess: true
         }
@@ -3352,6 +3436,9 @@
       Response: {
         Id: Guid_1,
         Status: test-status,
+        Warnings: [
+          test-string
+        ],
         ResponseStatus: {
           IsSuccess: true
         }
@@ -3473,6 +3560,9 @@
       Response: {
         Id: Guid_1,
         Status: test-status,
+        Warnings: [
+          test-string
+        ],
         ResponseStatus: {
           IsSuccess: true
         }
@@ -3503,6 +3593,9 @@
       Response: {
         Id: Guid_1,
         Status: test-status,
+        Warnings: [
+          test-string
+        ],
         ResponseStatus: {
           IsSuccess: true
         }
@@ -3567,6 +3660,45 @@
             Recommended: false
           }
         ],
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: account,
+      MethodName: GetAiContextAsync,
+      RequestType: GetAiContextRequest,
+      HttpMethod: GET,
+      Path: /{version}/account/ai/context,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/account/ai/context,
+        Query: ?format=test-format&knownVersion=test-knownVersion,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        }
+      },
+      ResponseType: GetAiContextResponse,
+      Response: {
+        Version: test-version,
+        Unchanged: true,
+        Context: {
+          Version: test-version,
+          Caller: {},
+          Projects: [
+            {}
+          ],
+          Hints: [
+            test-string
+          ]
+        },
+        Markdown: test-markdown,
         ResponseStatus: {
           IsSuccess: true
         }
@@ -3887,6 +4019,9 @@
       Response: {
         Id: Guid_1,
         Status: test-status,
+        Warnings: [
+          test-string
+        ],
         ResponseStatus: {
           IsSuccess: true
         }
@@ -3921,6 +4056,9 @@
       Response: {
         Id: Guid_1,
         Status: test-status,
+        Warnings: [
+          test-string
+        ],
         ResponseStatus: {
           IsSuccess: true
         }
@@ -3955,6 +4093,9 @@
       Response: {
         Id: Guid_1,
         Status: test-status,
+        Warnings: [
+          test-string
+        ],
         ResponseStatus: {
           IsSuccess: true
         }
@@ -3989,6 +4130,9 @@
       Response: {
         Id: Guid_1,
         Status: test-status,
+        Warnings: [
+          test-string
+        ],
         ResponseStatus: {
           IsSuccess: true
         }
@@ -4020,6 +4164,9 @@
       Response: {
         Id: Guid_1,
         Status: test-status,
+        Warnings: [
+          test-string
+        ],
         ResponseStatus: {
           IsSuccess: true
         }
@@ -4092,6 +4239,9 @@
         ],
         Collections: [
           test-string
+        ],
+        Warnings: [
+          {}
         ],
         ResponseStatus: {
           IsSuccess: true

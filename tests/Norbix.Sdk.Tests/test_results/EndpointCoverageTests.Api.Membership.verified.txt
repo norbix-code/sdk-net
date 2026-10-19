@@ -1,7 +1,7 @@
 ﻿{
   Target: Api,
   Group: membership,
-  Count: 42,
+  Count: 43,
   Endpoints: [
     {
       Target: Api,
@@ -684,6 +684,42 @@
     {
       Target: Api,
       Group: membership,
+      MethodName: FinishInvitationAsync,
+      RequestType: FinishInvitationRequest,
+      HttpMethod: POST,
+      Path: /{version}/membership/auth/invitation/finish,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/membership/auth/invitation/finish,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        },
+        Body: {
+          token: test-token,
+          password: test-password,
+          fullName: test-fullName,
+          salutation: test-salutation,
+          displayName: test-displayName,
+          firstName: test-firstName,
+          lastName: test-lastName,
+          env: test-env
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: membership,
       MethodName: GetUserPreferencesAsync,
       RequestType: GetUserPreferencesRequest,
       HttpMethod: GET,
@@ -769,7 +805,7 @@
       Sent: {
         Method: GET,
         Path: /v2/membership/auth,
-        Query: ?databaseIntegrationId={guid}&includePermissions=True&userShouldHavePushDevice=True&userShouldHaveEmail=True&includeMeta=True&env=test-env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1,
+        Query: ?databaseIntegrationId={guid}&includePermissions=True&userShouldHavePushDevice=True&userShouldHaveEmail=True&includeMeta=True&search=test-search&email=user%40example.test&userName=test-userName&env=test-env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1,
         Headers: {
           Authorization: Bearer test-bearer,
           norbix-account-id: test-account,
@@ -848,6 +884,8 @@
         },
         Body: {
           email: user@example.test,
+          fullName: test-fullName,
+          salutation: test-salutation,
           databaseIntegrationId: Guid_1,
           env: test-env
         }
@@ -950,6 +988,9 @@
         Body: {
           password: test-password,
           email: user@example.test,
+          roles: [
+            test-string
+          ],
           databaseIntegrationId: Guid_1,
           userGeneralInfo: {
             phone: test-phone,
@@ -971,6 +1012,9 @@
       Response: {
         Id: Guid_1,
         Status: test-status,
+        Warnings: [
+          test-string
+        ],
         ResponseStatus: {
           IsSuccess: true
         }
@@ -1021,6 +1065,9 @@
       Response: {
         Id: Guid_1,
         Status: test-status,
+        Warnings: [
+          test-string
+        ],
         ResponseStatus: {
           IsSuccess: true
         }
@@ -1066,6 +1113,9 @@
       Response: {
         Id: Guid_1,
         Status: test-status,
+        Warnings: [
+          test-string
+        ],
         ResponseStatus: {
           IsSuccess: true
         }
@@ -1112,6 +1162,9 @@
       Response: {
         Id: Guid_1,
         Status: test-status,
+        Warnings: [
+          test-string
+        ],
         ResponseStatus: {
           IsSuccess: true
         }
@@ -1161,6 +1214,9 @@
       Response: {
         Id: Guid_1,
         Status: test-status,
+        Warnings: [
+          test-string
+        ],
         ResponseStatus: {
           IsSuccess: true
         }
@@ -1209,6 +1265,9 @@
       Response: {
         Id: Guid_1,
         Status: test-status,
+        Warnings: [
+          test-string
+        ],
         ResponseStatus: {
           IsSuccess: true
         }
@@ -1235,6 +1294,9 @@
         Body: {
           password: test-password,
           userName: test-userName,
+          roles: [
+            test-string
+          ],
           databaseIntegrationId: Guid_1,
           userGeneralInfo: {
             phone: test-phone,
@@ -1256,6 +1318,9 @@
       Response: {
         Id: Guid_1,
         Status: test-status,
+        Warnings: [
+          test-string
+        ],
         ResponseStatus: {
           IsSuccess: true
         }
@@ -1306,6 +1371,9 @@
       Response: {
         Id: Guid_1,
         Status: test-status,
+        Warnings: [
+          test-string
+        ],
         ResponseStatus: {
           IsSuccess: true
         }
@@ -1526,6 +1594,9 @@
       Response: {
         Id: Guid_1,
         Status: test-status,
+        Warnings: [
+          test-string
+        ],
         ResponseStatus: {
           IsSuccess: true
         }

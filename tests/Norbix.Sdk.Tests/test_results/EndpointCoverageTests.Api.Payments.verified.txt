@@ -1,0 +1,188 @@
+﻿{
+  Target: Api,
+  Group: payments,
+  Count: 4,
+  Endpoints: [
+    {
+      Target: Api,
+      Group: payments,
+      MethodName: CreatePaymentOrderAsync,
+      RequestType: CreatePaymentOrderRequest,
+      HttpMethod: POST,
+      Path: /{version}/payments/orders,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/payments/orders,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        },
+        Body: {
+          buyerUserId: Guid_1,
+          merchantReference: test-merchantReference,
+          idempotencyKey: test-idempotencyKey,
+          currency: test-currency,
+          priceVersion: test-priceVersion,
+          lines: [
+            null
+          ],
+          metadata: {
+            test-key: test-string
+          },
+          env: test-env
+        }
+      },
+      ResponseType: IdResponse,
+      Response: {
+        Id: Guid_1,
+        Status: test-status,
+        Warnings: [
+          test-string
+        ],
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: payments,
+      MethodName: GetPaymentOrderAsync,
+      RequestType: GetPaymentOrderRequest,
+      HttpMethod: GET,
+      Path: /{version}/payments/orders/{Id},
+      PathParams: [
+        Id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/payments/orders/{guid},
+        Query: ?env=test-env,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        }
+      },
+      ResponseType: GetPaymentOrderResponse,
+      Response: {
+        Item: {
+          Id: Guid_1,
+          Env: test-env,
+          BuyerUserId: Guid_1,
+          MerchantReference: test-merchantReference,
+          Currency: test-currency,
+          PriceVersion: test-priceVersion,
+          Lines: [
+            {}
+          ],
+          TotalMinor: 42
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: payments,
+      MethodName: GetPaymentOrdersAsync,
+      RequestType: GetPaymentOrdersRequest,
+      HttpMethod: GET,
+      Path: /{version}/payments/orders,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/payments/orders,
+        Query: ?buyerUserId={guid}&merchantReference=test-merchantReference&status=test-status&env=test-env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        }
+      },
+      ResponseType: GetPaymentOrdersResponse,
+      Response: {
+        List: {
+          Items: [
+            {}
+          ],
+          HasMore: false,
+          HasPrevious: false,
+          StartingAfter: cursor-start,
+          EndingBefore: cursor-end
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: payments,
+      MethodName: StartPaymentCheckoutAsync,
+      RequestType: StartPaymentCheckoutRequest,
+      HttpMethod: POST,
+      Path: /{version}/payments/orders/{Id}/checkout,
+      PathParams: [
+        Id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/payments/orders/{guid}/checkout,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        },
+        Body: {
+          integrationId: Guid_1,
+          method: test-method,
+          returnUrl: https://example.test/returnUrl,
+          preferredCountry: test-preferredCountry,
+          preferredProvider: test-preferredProvider,
+          env: test-env
+        }
+      },
+      ResponseType: StartPaymentCheckoutResponse,
+      Response: {
+        Checkout: {
+          Attempt: 7,
+          IntegrationId: Guid_1,
+          Provider: test-provider,
+          ProviderOrderId: Guid_1,
+          ProviderReference: test-providerReference,
+          PaymentUrl: https://example.test/paymentUrl,
+          Method: test-method,
+          StartedOnUtc: DateTime_1
+        },
+        Reused: true,
+        Order: {
+          Id: Guid_1,
+          Env: test-env,
+          BuyerUserId: Guid_1,
+          MerchantReference: test-merchantReference,
+          Currency: test-currency,
+          PriceVersion: test-priceVersion,
+          Lines: [
+            {}
+          ],
+          TotalMinor: 42
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    }
+  ]
+}

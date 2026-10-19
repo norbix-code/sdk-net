@@ -1,8 +1,46 @@
 ﻿{
   Target: Hub,
   Group: triggers,
-  Count: 1,
+  Count: 3,
   Endpoints: [
+    {
+      Target: Hub,
+      Group: triggers,
+      MethodName: GetTriggerDefinitionAsync,
+      RequestType: GetTriggerDefinition,
+      HttpMethod: GET,
+      Path: /{version}/triggers/{id}/definition,
+      PathParams: [
+        id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/triggers/{guid}/definition,
+        Query: ?triggerType=Membership&schemaId={guid}&env=test-env,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        }
+      },
+      ResponseType: GetTriggerDefinitionResponse,
+      Response: {
+        Trigger: {
+          TriggerId: Guid_1,
+          Name: test-name,
+          Description: test-description,
+          IsEnabled: true,
+          PreExecuteCode: test-preExecuteCode,
+          Order: 7,
+          BreakOnError: true
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
     {
       Target: Hub,
       Group: triggers,
@@ -25,6 +63,46 @@
       ResponseType: GetTriggersNeedingAttentionResponse,
       Response: {
         Items: [
+          {}
+        ],
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: triggers,
+      MethodName: TestTriggerPreExecuteCodeAsync,
+      RequestType: TestTriggerPreExecuteCode,
+      HttpMethod: POST,
+      Path: /{version}/triggers/pre-execute-code/test,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/triggers/pre-execute-code/test,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        },
+        Body: {
+          code: test-code,
+          triggerType: membership,
+          newRecord: test-newRecord,
+          oldRecord: test-oldRecord,
+          eventKind: test-eventKind,
+          eventName: test-eventName,
+          env: test-env
+        }
+      },
+      ResponseType: TestTriggerPreExecuteCodeResponse,
+      Response: {
+        Outcome: test-outcome,
+        TriggerRuns: true,
+        Problems: [
           {}
         ],
         ResponseStatus: {
