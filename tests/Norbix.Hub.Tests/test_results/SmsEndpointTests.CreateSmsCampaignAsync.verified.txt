@@ -41,8 +41,7 @@
       collection: {
         fieldType: user,
         schemaName: test-schemaName,
-        recipientsSourceType: allUsers,
-        campaignTime: 1.0
+        recipientsSourceType: allUsers
       },
       phoneNumbers: {
         recipientsSourceType: allUsers,
@@ -57,6 +56,9 @@
   Response: {
     Id: Guid_1,
     Status: test-status,
+    Warnings: [
+      test-string
+    ],
     ResponseStatus: {
       IsSuccess: true
     }

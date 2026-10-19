@@ -60,6 +60,14 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual string? TemplateRef { get; set; }
     }
 
+    public partial class TriggerActivationTestProblem
+    {
+        public virtual string Code { get; set; }
+        public virtual string Message { get; set; }
+        public virtual int Line { get; set; }
+        public virtual int Column { get; set; }
+    }
+
     public partial class RenderPushResponse
         : ResponseBase
     {
@@ -347,6 +355,7 @@ namespace Norbix.Sdk.Types.Hub;
         CheckOutCom,
         Mollie,
         Worldpay,
+        Montonio,
     }
 
     public enum PaymentTriggerType
@@ -354,6 +363,7 @@ namespace Norbix.Sdk.Types.Hub;
         OnOrderCreated,
         OnOrderPaid,
         OnWebhookCallReceived,
+        OnOrderPaymentChanged,
     }
 
     public enum PermissionEffect
@@ -447,6 +457,9 @@ namespace Norbix.Sdk.Types.Hub;
         OnInserted,
         OnDeleted,
         OnUpdated,
+        OnInsertedMany,
+        OnUpdatedMany,
+        OnDeletedMany,
     }
 
     public enum SecretValueFormat
@@ -713,6 +726,14 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual StripePaymentIntegrationRequest? Typegen_53_StripePaymentIntegrationRequest { get; set; }
         public virtual AppleInAppPaymentIntegrationRequest? Typegen_54_AppleInAppPaymentIntegrationRequest { get; set; }
         public virtual GoogleInAppPaymentIntegrationRequest? Typegen_55_GoogleInAppPaymentIntegrationRequest { get; set; }
+        public virtual MontonioPaymentIntegrationRequest? Typegen_285_MontonioPaymentIntegrationRequest { get; set; }
+        public virtual ShopifyPaymentIntegrationRequest? Typegen_287_ShopifyPaymentIntegrationRequest { get; set; }
+        public virtual WooCommercePaymentIntegrationRequest? Typegen_288_WooCommercePaymentIntegrationRequest { get; set; }
+        public virtual MagentoPaymentIntegrationRequest? Typegen_289_MagentoPaymentIntegrationRequest { get; set; }
+        public virtual BraintreePaymentIntegrationRequest? Typegen_290_BraintreePaymentIntegrationRequest { get; set; }
+        public virtual AuthorizeNetPaymentIntegrationRequest? Typegen_291_AuthorizeNetPaymentIntegrationRequest { get; set; }
+        public virtual CheckOutComPaymentIntegrationRequest? Typegen_292_CheckOutComPaymentIntegrationRequest { get; set; }
+        public virtual WorldpayPaymentIntegrationRequest? Typegen_293_WorldpayPaymentIntegrationRequest { get; set; }
         public virtual EdgeWebPushIntegrationRequest? Typegen_56_EdgeWebPushIntegrationRequest { get; set; }
         public virtual ChromePluginPushIntegrationRequest? Typegen_57_ChromePluginPushIntegrationRequest { get; set; }
         public virtual SafariPushIntegrationRequest? Typegen_58_SafariPushIntegrationRequest { get; set; }
@@ -796,6 +817,8 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual AuthorizeNetPaymentIntegrationDto? Typegen_188_AuthorizeNetPaymentIntegrationDto { get; set; }
         public virtual CheckOutComPaymentIntegrationDto? Typegen_189_CheckOutComPaymentIntegrationDto { get; set; }
         public virtual WorldpayPaymentIntegrationDto? Typegen_190_WorldpayPaymentIntegrationDto { get; set; }
+        public virtual MontonioPaymentIntegrationDto? Typegen_286_MontonioPaymentIntegrationDto { get; set; }
+        public virtual PaymentOrderEventDto? Typegen_294_PaymentOrderEventDto { get; set; }
         public virtual AppleSignInMembershipIntegrationDto? Typegen_128_AppleSignInMembershipIntegrationDto { get; set; }
         public virtual GitHubMembershipIntegrationDto? Typegen_129_GitHubMembershipIntegrationDto { get; set; }
         public virtual GoogleMembershipIntegrationDto? Typegen_130_GoogleMembershipIntegrationDto { get; set; }
@@ -905,23 +928,6 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual ActionPendingEntryWireDto? Typegen_243_ActionPendingEntryWireDto { get; set; }
         public virtual NoticeEntryWireDto? Typegen_244_NoticeEntryWireDto { get; set; }
         public virtual ConversationSnapshotEntryWireDto? Typegen_245_ConversationSnapshotEntryWireDto { get; set; }
-        public virtual StringFieldDto? Typegen_252_StringFieldDto { get; set; }
-        public virtual DecimalFieldDto? Typegen_253_DecimalFieldDto { get; set; }
-        public virtual CurrencyFieldDto? Typegen_254_CurrencyFieldDto { get; set; }
-        public virtual BooleanFieldDto? Typegen_255_BooleanFieldDto { get; set; }
-        public virtual DateFieldDto? Typegen_256_DateFieldDto { get; set; }
-        public virtual IntegerFieldDto? Typegen_257_IntegerFieldDto { get; set; }
-        public virtual GeolocationFieldDto? Typegen_258_GeolocationFieldDto { get; set; }
-        public virtual TagsFieldDto? Typegen_259_TagsFieldDto { get; set; }
-        public virtual FileFieldDto? Typegen_260_FileFieldDto { get; set; }
-        public virtual TaxonomySelectionFieldDto? Typegen_261_TaxonomySelectionFieldDto { get; set; }
-        public virtual CollectionSelectionFieldDto? Typegen_262_CollectionSelectionFieldDto { get; set; }
-        public virtual UserSelectionFieldDto? Typegen_263_UserSelectionFieldDto { get; set; }
-        public virtual RoleSelectionFieldDto? Typegen_264_RoleSelectionFieldDto { get; set; }
-        public virtual EnumSelectionFieldDto? Typegen_265_EnumSelectionFieldDto { get; set; }
-        public virtual ObjectFieldDto? Typegen_266_ObjectFieldDto { get; set; }
-        public virtual ArrayFieldDto? Typegen_267_ArrayFieldDto { get; set; }
-        public virtual JsonFieldDto? Typegen_268_JsonFieldDto { get; set; }
         public virtual FunctionRefDto? Typegen_269_FunctionRefDto { get; set; }
         public virtual CodeFunctionEventDto? Typegen_270_CodeFunctionEventDto { get; set; }
         public virtual CodeFunctionContextDto? Typegen_271_CodeFunctionContextDto { get; set; }
@@ -1684,6 +1690,12 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember]
         public virtual HashSet<ProjectRegionDto>? AdditionalRegions { get; set; }
+
+        [DataMember]
+        public virtual int ModulesCount { get; set; }
+
+        [DataMember]
+        public virtual int UsersCount { get; set; }
     }
 
     public partial class ProjectRegionDto
@@ -2181,10 +2193,32 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual List<PromotionBlockerDto> Blockers { get; set; } = [];
 
         [DataMember]
+        public virtual List<PromotionTermChangeDto> TermChanges { get; set; } = [];
+
+        [DataMember]
+        public virtual List<PromotionBlockerDto> Warnings { get; set; } = [];
+
+        [DataMember]
         public virtual long? FromVersion { get; set; }
 
         [DataMember]
         public virtual bool WasDryRun { get; set; }
+    }
+
+    [DataContract]
+    public partial class PromotionTermChangeDto
+    {
+        [DataMember]
+        public virtual string TaxonomyId { get; set; }
+
+        [DataMember]
+        public virtual string TermId { get; set; }
+
+        [DataMember]
+        public virtual string? Slug { get; set; }
+
+        [DataMember]
+        public virtual string Change { get; set; }
     }
 
     [DataContract]
@@ -2365,6 +2399,58 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual string? Agent { get; set; }
         public virtual string Status { get; set; }
         public virtual string? Detail { get; set; }
+    }
+
+    public partial class AiProjectContextCallerWireDto
+    {
+        public virtual string Kind { get; set; }
+        public virtual string? Name { get; set; }
+        public virtual string? AccountId { get; set; }
+    }
+
+    public partial class AiProjectContextIntegrationWireDto
+    {
+        public virtual string Id { get; set; }
+        public virtual string? Name { get; set; }
+        public virtual string? Kind { get; set; }
+        public virtual bool? Enabled { get; set; }
+        public virtual List<string> DefaultIn { get; set; } = [];
+        public virtual string? Env { get; set; }
+    }
+
+    public partial class AiProjectContextModuleWireDto
+    {
+        public virtual string Name { get; set; }
+        public virtual bool? IntegrationsReadable { get; set; }
+        public virtual List<AiProjectContextIntegrationWireDto>? Integrations { get; set; }
+    }
+
+    public partial class AiProjectContextProjectWireDto
+    {
+        public virtual string Id { get; set; }
+        public virtual string Name { get; set; }
+        public virtual string? UniqueName { get; set; }
+        public virtual string Access { get; set; }
+        public virtual string? Description { get; set; }
+        public virtual string? DefaultLanguage { get; set; }
+        public virtual List<string> Languages { get; set; } = [];
+        public virtual List<string>? Environments { get; set; }
+        public virtual string? PrimaryRegion { get; set; }
+        public virtual List<string>? AdditionalRegions { get; set; }
+        public virtual List<string>? CorsOrigins { get; set; }
+        public virtual string? ApiHost { get; set; }
+        public virtual string? AdminUrl { get; set; }
+        public virtual string? MarketingUrl { get; set; }
+        public virtual bool? AdminPortalEnabled { get; set; }
+        public virtual List<AiProjectContextModuleWireDto>? Modules { get; set; }
+    }
+
+    public partial class AiProjectContextWireDto
+    {
+        public virtual string Version { get; set; }
+        public virtual AiProjectContextCallerWireDto Caller { get; set; }
+        public virtual List<AiProjectContextProjectWireDto> Projects { get; set; } = [];
+        public virtual List<string> Hints { get; set; } = [];
     }
 
     public partial class AssistantQuestionEntryWireDto
@@ -2763,6 +2849,9 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember]
         public virtual EmailMessageContentDto? Content { get; set; }
+
+        [DataMember]
+        public virtual string? TransactionalKind { get; set; }
     }
 
     public partial class EmailCampaignDeliverySettingsDto
@@ -2890,6 +2979,9 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember]
         public virtual HashSet<string>? Languages { get; set; }
+
+        [DataMember]
+        public virtual HashSet<string>? RecordIds { get; set; }
     }
 
     [DataContract]
@@ -3121,6 +3213,9 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember]
         public virtual HashSet<string>? Languages { get; set; }
+
+        [DataMember]
+        public virtual HashSet<string>? RecordIds { get; set; }
     }
 
     [DataContract]
@@ -3257,6 +3352,9 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember]
         public virtual HashSet<string>? Languages { get; set; }
+
+        [DataMember]
+        public virtual HashSet<string>? RecordIds { get; set; }
     }
 
     [DataContract]
@@ -3475,6 +3573,9 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual PaymentFactDto? Payment { get; set; }
 
         [DataMember]
+        public virtual PaymentOrderEventDto? Order { get; set; }
+
+        [DataMember]
         public virtual AiUsageEventDto? Ai { get; set; }
 
         [DataMember]
@@ -3571,6 +3672,25 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember]
         public virtual DocumentRefDto? NewRef { get; set; }
+
+        [DataMember]
+        public virtual DatabaseRecordsBatchDto? Records { get; set; }
+    }
+
+    [DataContract]
+    public partial class DatabaseRecordsBatchDto
+    {
+        [DataMember]
+        public virtual List<string> Ids { get; set; } = [];
+
+        [DataMember]
+        public virtual long Count { get; set; }
+
+        [DataMember]
+        public virtual bool Truncated { get; set; }
+
+        [DataMember]
+        public virtual List<Dictionary<String,Object>>? Documents { get; set; }
     }
 
     [DataContract]
@@ -3613,6 +3733,9 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember]
         public virtual string ProviderEventId { get; set; }
+
+        [DataMember]
+        public virtual string? OrderId { get; set; }
 
         [DataMember]
         public virtual string EventName { get; set; }
@@ -5120,6 +5243,12 @@ namespace Norbix.Sdk.Types.Hub;
     {
         [DataMember]
         public virtual string Field { get; set; }
+
+        [DataMember]
+        public virtual bool Primary { get; set; }
+
+        [DataMember]
+        public virtual bool LinkReference { get; set; }
     }
 
     public partial class SchemaListProjection
@@ -5157,6 +5286,9 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember]
         public virtual SchemaListSortDto? DefaultSort { get; set; }
+
+        [DataMember]
+        public virtual List<string> Filters { get; set; } = [];
     }
 
     public partial class SchemaListSortDto
@@ -5191,6 +5323,15 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember]
         public virtual string? Description { get; set; }
+
+        [DataMember]
+        public virtual List<SchemaUniqueIndexDto>? UniqueIndexes { get; set; }
+    }
+
+    public partial class SchemaUniqueIndexDto
+    {
+        [DataMember]
+        public virtual List<string> Fields { get; set; } = [];
     }
 
     public partial class SchemaVersionSummaryDto
@@ -5291,6 +5432,9 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual string? Description { get; set; }
 
         [DataMember]
+        public virtual string? Env { get; set; }
+
+        [DataMember]
         public virtual DataSchemaDto? TermsMetaDataSchema { get; set; }
 
         [DataMember]
@@ -5326,6 +5470,9 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember]
         public virtual List<TaxonomyRef>? DependencyRefs { get; set; }
+
+        [DataMember]
+        public virtual string? Env { get; set; }
     }
 
     public partial class TaxonomyRef
@@ -5395,6 +5542,9 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember]
         public virtual Object? Meta { get; set; }
+
+        [DataMember]
+        public virtual string? Origin { get; set; }
     }
 
     public partial class TermMultiParentDto
@@ -6008,6 +6158,30 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember]
         public virtual PasswordComplexityDto? PasswordComplexity { get; set; }
+
+        [DataMember]
+        public virtual List<string>? DefaultRoles { get; set; }
+
+        [DataMember]
+        public virtual List<string>? AllowedRegistrationRoles { get; set; }
+
+        [DataMember]
+        public virtual bool AllowGuestUsers { get; set; }
+
+        [DataMember]
+        public virtual int? GuestCleanupPeriodDays { get; set; }
+
+        [DataMember]
+        public virtual bool AllowEmailRegistration { get; set; }
+
+        [DataMember]
+        public virtual bool AllowUsernameRegistration { get; set; }
+
+        [DataMember]
+        public virtual bool InviteOnly { get; set; }
+
+        [DataMember]
+        public virtual bool AllowAnyoneToSignUp { get; set; }
     }
 
     [DataContract]
@@ -6047,6 +6221,9 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember]
         public virtual HashSet<PolicyItemDto>? CustomPolicies { get; set; }
+
+        [DataMember]
+        public virtual HashSet<RoleItemDto>? SystemRoleAttachments { get; set; }
 
         [DataMember]
         public virtual AuthorizationDto? Authorization { get; set; }
@@ -6791,6 +6968,20 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual DateTime? UpdatedAtUtc { get; set; }
     }
 
+    [DataContract]
+    public partial class TeamPushDeviceListProjection
+        : PushDeviceListProjection
+    {
+        [DataMember]
+        public virtual string OwnerKind { get; set; }
+
+        [DataMember]
+        public virtual string? OwnerName { get; set; }
+
+        [DataMember]
+        public virtual string? OwnerEmail { get; set; }
+    }
+
     public partial class PushIntegrationDto
         : IntegrationDto
     {
@@ -6948,6 +7139,21 @@ namespace Norbix.Sdk.Types.Hub;
     {
     }
 
+    public partial class PaymentEventDto
+    {
+        public virtual string IntegrationId { get; set; }
+        public virtual string Provider { get; set; }
+        public virtual string ProviderEventId { get; set; }
+        public virtual string? OrderId { get; set; }
+        public virtual string EventName { get; set; }
+        public virtual string Status { get; set; }
+        public virtual long? AmountMinor { get; set; }
+        public virtual string? Currency { get; set; }
+        public virtual Dictionary<string, string>? ExternalIds { get; set; }
+        public virtual DateTime? OccurredOn { get; set; }
+        public virtual DateTime ReceivedOn { get; set; }
+    }
+
     public partial class PaymentsIntegrationDto
         : IntegrationDto
     {
@@ -7031,6 +7237,14 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual bool IsTestMode { get; set; }
     }
 
+    public partial class MontonioPaymentIntegrationDto
+        : PaymentsIntegrationDto
+    {
+        public virtual string AccessKey { get; set; }
+        public virtual bool IsSandbox { get; set; }
+        public virtual string? Locale { get; set; }
+    }
+
     public partial class PaddlePaymentIntegrationDto
         : PaymentsIntegrationDto
     {
@@ -7074,6 +7288,139 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual string MerchantCode { get; set; }
         public virtual string Environment { get; set; }
         public virtual string? WebhookSecret { get; set; }
+    }
+
+    [DataContract]
+    public partial class PaymentOrderCheckoutDto
+    {
+        [DataMember]
+        public virtual int Attempt { get; set; }
+
+        [DataMember]
+        public virtual string IntegrationId { get; set; }
+
+        [DataMember]
+        public virtual string Provider { get; set; }
+
+        [DataMember]
+        public virtual string ProviderOrderId { get; set; }
+
+        [DataMember]
+        public virtual string ProviderReference { get; set; }
+
+        [DataMember]
+        public virtual string PaymentUrl { get; set; }
+
+        [DataMember]
+        public virtual string Method { get; set; }
+
+        [DataMember]
+        public virtual DateTime StartedOnUtc { get; set; }
+
+        [DataMember]
+        public virtual DateTime ExpiresAtUtc { get; set; }
+    }
+
+    [DataContract]
+    public partial class PaymentOrderDto
+    {
+        [DataMember]
+        public virtual string Id { get; set; }
+
+        [DataMember]
+        public virtual string Env { get; set; }
+
+        [DataMember]
+        public virtual string BuyerUserId { get; set; }
+
+        [DataMember]
+        public virtual string MerchantReference { get; set; }
+
+        [DataMember]
+        public virtual string Currency { get; set; }
+
+        [DataMember]
+        public virtual string PriceVersion { get; set; }
+
+        [DataMember]
+        public virtual List<PaymentOrderLineDto> Lines { get; set; } = [];
+
+        [DataMember]
+        public virtual long TotalMinor { get; set; }
+
+        [DataMember]
+        public virtual Dictionary<string, string> Metadata { get; set; } = new();
+
+        [DataMember]
+        public virtual string Status { get; set; }
+
+        [DataMember]
+        public virtual DateTime CreatedOnUtc { get; set; }
+
+        [DataMember]
+        public virtual DateTime UpdatedOnUtc { get; set; }
+
+        [DataMember]
+        public virtual List<PaymentOrderCheckoutDto> Checkouts { get; set; } = [];
+
+        [DataMember]
+        public virtual long? SettledMinor { get; set; }
+
+        [DataMember]
+        public virtual long RefundedMinor { get; set; }
+
+        [DataMember]
+        public virtual DateTime? PaidOnUtc { get; set; }
+
+        [DataMember]
+        public virtual string? ProviderPaymentId { get; set; }
+
+        [DataMember]
+        public virtual List<string> Mismatches { get; set; } = [];
+    }
+
+    [DataContract]
+    public partial class PaymentOrderEventDto
+    {
+        [DataMember]
+        public virtual string OrderEventId { get; set; }
+
+        [DataMember]
+        public virtual string Event { get; set; }
+
+        [DataMember]
+        public virtual string From { get; set; }
+
+        [DataMember]
+        public virtual string To { get; set; }
+
+        [DataMember]
+        public virtual string Reason { get; set; }
+
+        [DataMember]
+        public virtual PaymentOrderDto Order { get; set; }
+
+        [DataMember]
+        public virtual PaymentEventDto Payment { get; set; }
+    }
+
+    [DataContract]
+    public partial class PaymentOrderLineDto
+    {
+        [DataMember]
+        public virtual string Sku { get; set; }
+
+        [DataMember]
+        public virtual string Title { get; set; }
+
+        [DataMember]
+        public virtual int Quantity { get; set; }
+
+        [DataMember]
+        public virtual long UnitAmountMinor { get; set; }
+
+        [DataMember]
+        public virtual long AmountMinor { get; set; }
     }
 
     public partial class PaymentsWebhookLogEntry
@@ -7213,6 +7560,9 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember]
         public virtual string? Status { get; set; }
+
+        [DataMember]
+        public virtual List<string>? Warnings { get; set; }
     }
 
     [DataContract]
@@ -7401,6 +7751,12 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual long? UpdatedAtUnix { get; set; }
 
         [DataMember]
+        public virtual long? EndsAtUnix { get; set; }
+
+        [DataMember]
+        public virtual bool HasEnded { get; set; }
+
+        [DataMember]
         public virtual bool IsFailing { get; set; }
 
         [DataMember]
@@ -7437,6 +7793,12 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember]
         public virtual long? LastFailedAtUnix { get; set; }
+
+        [DataMember]
+        public virtual long? EndsAtUnix { get; set; }
+
+        [DataMember]
+        public virtual bool HasEnded { get; set; }
 
         [DataMember]
         public virtual string ViewId { get; set; }
@@ -8558,6 +8920,21 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual string? RevokeKeyId { get; set; }
     }
 
+    [NorbixRoute("/{version}/account/ai/service-users/{Id}", "PUT")]
+    public partial class UpdateAiServiceUserRequest
+        : RequestBase, INorbixRequest<EmptyResponse>
+    {
+        ///<summary>
+        ///The service user id (aisu_…).
+        ///</summary>
+        public virtual string Id { get; set; }
+
+        ///<summary>
+        ///The new name, unique in the account, e.g. "Claude Code on my laptop".
+        ///</summary>
+        public virtual string Name { get; set; }
+    }
+
     [NorbixRoute("/{version}/account/licensing/status", "GET")]
     public partial class GetInstallationLicenseStatus
         : RequestBase, INorbixRequest<GetInstallationLicenseStatusResponse>
@@ -9599,7 +9976,7 @@ namespace Norbix.Sdk.Types.Hub;
         : CodeMashRequestBase, INorbixRequest<EmptyResponse>
     {
         ///<summary>
-        ///Custom admin-portal URL to use instead of the canonical address. Null/empty restores the canonical pr_{id}.admin.{host} address.
+        ///Custom admin-portal URL to use instead of the canonical address. Null/empty restores the canonical pr-{project hex}.admin.{host} address.
         ///</summary>
         public virtual string? Url { get; set; }
     }
@@ -9703,7 +10080,7 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual HashSet<string>? Origins { get; set; }
 
         ///<summary>
-        ///Optional. true removes the project's own Admin Portal origin (pr_{projectId}.{admin host}) on purpose. Without it, a list that drops that origin is rejected with CM-ERRORS-PROJECTS-037, because the Norbix-generated end-user portal could no longer call the project's API.
+        ///Optional. true removes the project's own Admin Portal origin (pr-{project hex}.{admin host}) on purpose. Without it, a list that drops that origin is rejected with CM-ERRORS-PROJECTS-037, because the Norbix-generated end-user portal could no longer call the project's API.
         ///</summary>
         public virtual bool? RemoveAdminPortalOrigin { get; set; }
     }
@@ -10166,6 +10543,27 @@ namespace Norbix.Sdk.Types.Hub;
     }
 
     ///<summary>
+    ///The AI project-context summary: the projects the caller may work on, with their settings — never a secret.
+    ///</summary>
+    [NorbixRoute("/{version}/account/ai/context", "GET")]
+    public partial class GetAiContextRequest
+        : RequestBase, INorbixRequest<GetAiContextResponse>
+    {
+        public virtual string? ProjectId { get; set; }
+        public virtual string? Format { get; set; }
+        public virtual string? KnownVersion { get; set; }
+    }
+
+    public partial class GetAiContextResponse
+        : ResponseBase
+    {
+        public virtual string? Version { get; set; }
+        public virtual bool Unchanged { get; set; }
+        public virtual AiProjectContextWireDto? Context { get; set; }
+        public virtual string? Markdown { get; set; }
+    }
+
+    ///<summary>
     ///Lists the AI tools this host exposes (external-agent bridge).
     ///</summary>
     [NorbixRoute("/{version}/account/ai/tools", "GET")]
@@ -10540,6 +10938,7 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual bool Valid { get; set; }
         public virtual List<ScaffoldIssue>? Issues { get; set; }
         public virtual List<string>? Collections { get; set; }
+        public virtual List<ScaffoldIssue>? Warnings { get; set; }
     }
 
     public partial class AnthropicLlmIntegrationRequest
@@ -10987,7 +11386,7 @@ namespace Norbix.Sdk.Types.Hub;
     ///</summary>
     [NorbixRoute("/{version}/auth/device/start", "POST")]
     public partial class AuthDeviceStartRequest
-        : RequestBase, INorbixRequest<AuthDeviceStartResponse>, INorbixOptionalAuth
+        : RequestBase, INorbixRequest<AuthDeviceStartResponse>, INoSessionCookies, INorbixOptionalAuth
     {
         ///<summary>
         ///Who asks, shown on the dashboard, e.g. "norbix-cli". 1–80 printable characters.
@@ -11021,7 +11420,7 @@ namespace Norbix.Sdk.Types.Hub;
     ///</summary>
     [NorbixRoute("/{version}/auth/device/token", "POST")]
     public partial class AuthDeviceTokenRequest
-        : RequestBase, INorbixRequest<AuthDeviceTokenResponse>, INorbixOptionalAuth
+        : RequestBase, INorbixRequest<AuthDeviceTokenResponse>, INoSessionCookies, INorbixOptionalAuth
     {
         ///<summary>
         ///The deviceCode from POST /auth/device/start.
@@ -11053,7 +11452,7 @@ namespace Norbix.Sdk.Types.Hub;
     [NorbixRoute("/.well-known/oauth-authorization-server", "GET")]
     [NorbixRoute("/.well-known/oauth-authorization-server/{Path*}", "GET")]
     public partial class OAuthAuthorizationServerMetadataRequest
-        : INorbixRequest<string>, INorbixOptionalAuth
+        : INorbixRequest<string>, INoSessionCookies, INorbixOptionalAuth
     {
         public virtual string? Path { get; set; }
     }
@@ -11063,7 +11462,7 @@ namespace Norbix.Sdk.Types.Hub;
     ///</summary>
     [NorbixRoute("/{version}/oauth/authorize", "GET")]
     public partial class OAuthAuthorizeRequest
-        : INorbixRequest<string>, INorbixOptionalAuth
+        : INorbixRequest<string>, INoSessionCookies, INorbixOptionalAuth
     {
         public virtual string? Version { get; set; }
     }
@@ -11208,7 +11607,7 @@ namespace Norbix.Sdk.Types.Hub;
     [NorbixRoute("/.well-known/oauth-protected-resource", "GET")]
     [NorbixRoute("/.well-known/oauth-protected-resource/{Path*}", "GET")]
     public partial class OAuthProtectedResourceMetadataRequest
-        : INorbixRequest<string>, INorbixOptionalAuth
+        : INorbixRequest<string>, INoSessionCookies, INorbixOptionalAuth
     {
         public virtual string? Path { get; set; }
     }
@@ -11218,7 +11617,7 @@ namespace Norbix.Sdk.Types.Hub;
     ///</summary>
     [NorbixRoute("/{version}/oauth/register", "POST")]
     public partial class OAuthRegisterRequest
-        : INorbixRequest<string>, INorbixOptionalAuth
+        : INorbixRequest<string>, INoSessionCookies, INorbixOptionalAuth
     {
         public virtual string? Version { get; set; }
         public virtual Stream RequestStream { get; set; }
@@ -11229,7 +11628,7 @@ namespace Norbix.Sdk.Types.Hub;
     ///</summary>
     [NorbixRoute("/{version}/oauth/revoke", "POST")]
     public partial class OAuthRevokeRequest
-        : INorbixRequest<string>, INorbixOptionalAuth
+        : INorbixRequest<string>, INoSessionCookies, INorbixOptionalAuth
     {
         public virtual string? Version { get; set; }
     }
@@ -11239,7 +11638,7 @@ namespace Norbix.Sdk.Types.Hub;
     ///</summary>
     [NorbixRoute("/{version}/oauth/token", "POST")]
     public partial class OAuthTokenRequest
-        : INorbixRequest<string>, INorbixOptionalAuth
+        : INorbixRequest<string>, INoSessionCookies, INorbixOptionalAuth
     {
         public virtual string? Version { get; set; }
     }
@@ -12412,6 +12811,36 @@ namespace Norbix.Sdk.Types.Hub;
         ///How many contacts to return per page (default 50).
         ///</summary>
         public virtual int? PageSize { get; set; }
+
+        ///<summary>
+        ///Free text, case-insensitive: matches the email, phone, display / first / last / full name, or any login's user name or email.
+        ///</summary>
+        public virtual string? Search { get; set; }
+
+        ///<summary>
+        ///Case-insensitive part of the email (primary email or any login's email).
+        ///</summary>
+        public virtual string? Email { get; set; }
+
+        ///<summary>
+        ///Case-insensitive part of any login's user name.
+        ///</summary>
+        public virtual string? UserName { get; set; }
+
+        ///<summary>
+        ///Login status names, any of: Registered, PendingValidation, Active, Unregistered, Suspended, InActive, Blocked.
+        ///</summary>
+        public virtual string[]? Statuses { get; set; }
+
+        ///<summary>
+        ///Login type names, any of: Service, Email, UserName, Phone, Guest, Social.
+        ///</summary>
+        public virtual string[]? Types { get; set; }
+
+        ///<summary>
+        ///Composite project-role ids (pr_{project}_nr_{role}); the contact holds any of them.
+        ///</summary>
+        public virtual string[]? RoleNames { get; set; }
     }
 
     public partial class GetAllContactsResponse
@@ -12429,7 +12858,7 @@ namespace Norbix.Sdk.Types.Hub;
         : CodeMashRequestBase, INorbixRequest<GetContactResponse>
     {
         ///<summary>
-        ///The contact id (ct_…) to fetch. Get it from get_all_contacts.
+        ///The contact id (ct_…) to fetch, or a login id (usr_…) — then the contact that owns that login is returned. Get it from get_all_contacts.
         ///</summary>
         public virtual string ContactId { get; set; }
     }
@@ -14123,7 +14552,7 @@ namespace Norbix.Sdk.Types.Hub;
         : CodeMashRequestBase, INorbixRequest<EmptyResponse>
     {
         ///<summary>
-        ///Taxonomy id that owns the term, from get_database_taxonomies.
+        ///Taxonomy id that owns the term, from get_database_taxonomies — or the taxonomy name (slug or title).
         ///</summary>
         [DataMember]
         public virtual string TaxonomyId { get; set; }
@@ -14150,7 +14579,7 @@ namespace Norbix.Sdk.Types.Hub;
         : CodeMashRequestBase, INorbixRequest<EmptyResponse>
     {
         ///<summary>
-        ///Taxonomy id whose terms to delete, from get_database_taxonomies.
+        ///Taxonomy id whose terms to delete, from get_database_taxonomies — or the taxonomy name (slug or title).
         ///</summary>
         [DataMember]
         public virtual string TaxonomyId { get; set; }
@@ -14183,7 +14612,7 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual bool AllLanguages { get; set; }
 
         ///<summary>
-        ///Root taxonomy slug/name (from get_database_taxonomies). Its terms are the roots; child-taxonomy terms nest under them.
+        ///Root taxonomy slug/name or id, txn_… (from get_database_taxonomies). Its terms are the roots; child-taxonomy terms nest under them.
         ///</summary>
         [DataMember]
         public virtual string TaxonomyName { get; set; }
@@ -14216,7 +14645,7 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual bool AllLanguages { get; set; }
 
         ///<summary>
-        ///Taxonomy id from get_database_taxonomies.
+        ///Taxonomy id from get_database_taxonomies — or the taxonomy name (slug or title).
         ///</summary>
         [DataMember]
         public virtual string TaxonomyId { get; set; }
@@ -14255,7 +14684,7 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual bool AllLanguages { get; set; }
 
         ///<summary>
-        ///Taxonomy slug/name to fetch the term tree for, from get_database_taxonomies.
+        ///Taxonomy slug/name (or its id, txn_…) to fetch the term tree for, from get_database_taxonomies.
         ///</summary>
         [DataMember]
         public virtual string TaxonomyName { get; set; }
@@ -14294,7 +14723,7 @@ namespace Norbix.Sdk.Types.Hub;
         : CodeMashRequestBase, INorbixRequest<IdResponse>
     {
         ///<summary>
-        ///Taxonomy id to insert the term into, from get_database_taxonomies.
+        ///Taxonomy id to insert the term into, from get_database_taxonomies — or the taxonomy name (slug or title).
         ///</summary>
         [DataMember]
         public virtual string TaxonomyId { get; set; }
@@ -14321,7 +14750,7 @@ namespace Norbix.Sdk.Types.Hub;
         : CodeMashRequestBase, INorbixRequest<EmptyResponse>
     {
         ///<summary>
-        ///Taxonomy id that owns the term, from get_database_taxonomies.
+        ///Taxonomy id that owns the term, from get_database_taxonomies — or the taxonomy name (slug or title).
         ///</summary>
         [DataMember]
         public virtual string TaxonomyId { get; set; }
@@ -16459,11 +16888,31 @@ namespace Norbix.Sdk.Types.Hub;
     public partial class UpdateAuthorizationSettings
         : CodeMashRequestBase, INorbixRequest<EmptyResponse>
     {
+        ///<summary>
+        ///Single-setting change (dashboard tabs), e.g. 'DefaultRegisterRole' with userRegistersAsRole, or 'PasswordComplexity'. Unknown values are refused. Leave empty to change defaultRoles / allowedRegistrationRoles / allowGuestUsers / guestCleanupPeriodDays — only the fields you send change.
+        ///</summary>
         public virtual string? Setting { get; set; }
+
+        ///<summary>
+        ///Role names given to a user who registers without naming roles. Omit = keep; [] = none.
+        ///</summary>
         public virtual List<string>? DefaultRoles { get; set; }
+
+        ///<summary>
+        ///Role names a user may pick when registering. Omit = keep; [] = none.
+        ///</summary>
         public virtual List<string>? AllowedRegistrationRoles { get; set; }
-        public virtual bool AllowGuestUsers { get; set; }
+
+        ///<summary>
+        ///Whether guest (anonymous) users may be created. Omit = keep. When sent, guestCleanupPeriodDays is taken with it (null = never clean up).
+        ///</summary>
+        public virtual bool? AllowGuestUsers { get; set; }
+
+        ///<summary>
+        ///Days after which inactive guests are removed; null or 0 = never. Omit both guest fields = keep.
+        ///</summary>
         public virtual int? GuestCleanupPeriodDays { get; set; }
+
         public virtual string? UserRegistersAsRole { get; set; }
         public virtual string? GuestRegistersAsRole { get; set; }
         public virtual List<string>? AllowedRegisterRoles { get; set; }
@@ -16477,6 +16926,21 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual int? EmailVerificationExpiration { get; set; }
         public virtual int? DeactivationExpiration { get; set; }
         public virtual bool DefaultSubscribeToNews { get; set; }
+        ///<summary>
+        ///"Email registration": the public register/email route accepts sign-ups. Omit = keep.
+        ///</summary>
+        public virtual bool? AllowEmailRegistration { get; set; }
+
+        ///<summary>
+        ///"Invite-only": public sign-up (email and username) is refused; only invitations create users. Omit = keep.
+        ///</summary>
+        public virtual bool? InviteOnly { get; set; }
+
+        ///<summary>
+        ///"Allow anyone to sign up": grants (true) / revokes (false) membership:register on the project's Guest role. Omit = keep.
+        ///</summary>
+        public virtual bool? AllowAnyoneToSignUp { get; set; }
+
         public virtual int MinLength { get; set; }
         public virtual int? MaxLength { get; set; }
         public virtual int? MinNumbers { get; set; }
@@ -17015,6 +17479,164 @@ namespace Norbix.Sdk.Types.Hub;
     {
     }
 
+    [DataContract]
+    public partial class ImportUserErrorDto
+    {
+        [DataMember(Name="code")]
+        public virtual string? Code { get; set; }
+
+        [DataMember(Name="message")]
+        public virtual string Message { get; set; }
+    }
+
+    [DataContract]
+    public partial class ImportUserOutcomeDto
+    {
+        [DataMember(Name="row")]
+        public virtual int Row { get; set; }
+
+        [DataMember(Name="login")]
+        public virtual string? Login { get; set; }
+
+        [DataMember(Name="outcome")]
+        public virtual string Outcome { get; set; }
+
+        [DataMember(Name="userId")]
+        public virtual string? UserId { get; set; }
+
+        [DataMember(Name="errors")]
+        public virtual List<ImportUserErrorDto> Errors { get; set; } = [];
+    }
+
+    [DataContract]
+    public partial class ImportUserRowDto
+    {
+        [DataMember(Name="email")]
+        public virtual string? Email { get; set; }
+
+        [DataMember(Name="userName")]
+        public virtual string? UserName { get; set; }
+
+        [DataMember(Name="userGeneralInfo")]
+        public virtual UserGeneralInfoDto? UserGeneralInfo { get; set; }
+
+        [DataMember(Name="roles")]
+        public virtual List<string>? Roles { get; set; }
+
+        [DataMember(Name="createdOn")]
+        public virtual long? CreatedOn { get; set; }
+
+        [DataMember(Name="hashFormat")]
+        public virtual string? HashFormat { get; set; }
+
+        [DataMember(Name="passwordHash")]
+        public virtual string? PasswordHash { get; set; }
+
+        [DataMember(Name="passwordSalt")]
+        public virtual string? PasswordSalt { get; set; }
+    }
+
+    ///<summary>
+    ///Import users with their existing password hashes
+    ///</summary>
+    [NorbixRoute("/{version}/membership/users/import", "POST")]
+    public partial class ImportUsersRequest
+        : CodeMashRequestBase, INorbixRequest<ImportUsersResponse>
+    {
+        ///<summary>
+        ///True (default) = check every row and write nothing. False = write.
+        ///</summary>
+        public virtual bool DryRun { get; set; }
+
+        ///<summary>
+        ///True = do not add the project's default roles (as 'ignoreUserRegistersAsRole' on registration).
+        ///</summary>
+        public virtual bool IgnoreDefaultRoles { get; set; }
+
+        ///<summary>
+        ///The users to import, 1 to 1000 per request.
+        ///</summary>
+        public virtual List<ImportUserRowDto> Users { get; set; } = [];
+    }
+
+    public partial class ImportUsersResponse
+        : ResponseBase
+    {
+        public virtual UsersImportDto? Result { get; set; }
+    }
+
+    [DataContract]
+    public partial class LoginProjectRepairDto
+    {
+        [DataMember(Name="dryRun")]
+        public virtual bool DryRun { get; set; }
+
+        [DataMember(Name="loginsWithoutProject")]
+        public virtual int LoginsWithoutProject { get; set; }
+
+        [DataMember(Name="loginsToRepair")]
+        public virtual int LoginsToRepair { get; set; }
+
+        [DataMember(Name="loginsRepaired")]
+        public virtual int LoginsRepaired { get; set; }
+
+        [DataMember(Name="accountLoginsSkipped")]
+        public virtual int AccountLoginsSkipped { get; set; }
+
+        [DataMember(Name="otherProjectLoginsSkipped")]
+        public virtual int OtherProjectLoginsSkipped { get; set; }
+
+        [DataMember(Name="loginsWithoutEvidence")]
+        public virtual int LoginsWithoutEvidence { get; set; }
+    }
+
+    ///<summary>
+    ///Repair project logins stored without a project id
+    ///</summary>
+    [NorbixRoute("/{version}/membership/users/repair-logins", "POST")]
+    public partial class RepairLoginProjectIdsRequest
+        : CodeMashRequestBase, INorbixRequest<RepairLoginProjectIdsResponse>
+    {
+        ///<summary>
+        ///True (default) = only count what would change. False = write.
+        ///</summary>
+        public virtual bool DryRun { get; set; }
+    }
+
+    public partial class RepairLoginProjectIdsResponse
+        : ResponseBase
+    {
+        public virtual LoginProjectRepairDto? Result { get; set; }
+    }
+
+    [DataContract]
+    public partial class UsersImportDto
+    {
+        [DataMember(Name="dryRun")]
+        public virtual bool DryRun { get; set; }
+
+        [DataMember(Name="received")]
+        public virtual int Received { get; set; }
+
+        [DataMember(Name="imported")]
+        public virtual int Imported { get; set; }
+
+        [DataMember(Name="valid")]
+        public virtual int Valid { get; set; }
+
+        [DataMember(Name="existing")]
+        public virtual int Existing { get; set; }
+
+        [DataMember(Name="invalid")]
+        public virtual int Invalid { get; set; }
+
+        [DataMember(Name="failed")]
+        public virtual int Failed { get; set; }
+
+        [DataMember(Name="rows")]
+        public virtual List<ImportUserOutcomeDto> Rows { get; set; } = [];
+    }
+
     ///<summary>
     ///Membership
     ///</summary>
@@ -17078,6 +17700,55 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual string Id { get; set; }
     }
 
+    [NorbixRoute("/{version}/notifications/inbox", "GET")]
+    public partial class GetNotificationInboxRequest
+        : CodeMashListPaginationRequestBase, INorbixRequest<GetNotificationInboxResponse>
+    {
+        public virtual bool UnreadOnly { get; set; }
+        public virtual string? Channel { get; set; }
+    }
+
+    public partial class GetNotificationInboxResponse
+        : ResponseBase
+    {
+        public virtual PaginatedResponse<InAppNotificationDto>? List { get; set; }
+    }
+
+    [NorbixRoute("/{version}/notifications/inbox/unread-count", "GET")]
+    public partial class GetUnreadCountRequest
+        : CodeMashRequestBase, INorbixRequest<GetUnreadCountResponse>
+    {
+    }
+
+    public partial class GetUnreadCountResponse
+        : ResponseBase
+    {
+        public virtual long Count { get; set; }
+    }
+
+    [NorbixRoute("/{version}/notifications/inbox/read-all", "POST")]
+    public partial class MarkAllNotificationsReadRequest
+        : CodeMashRequestBase, INorbixRequest<MarkAllNotificationsReadResponse>
+    {
+    }
+
+    public partial class MarkAllNotificationsReadResponse
+        : ResponseBase
+    {
+    }
+
+    [NorbixRoute("/{version}/notifications/inbox/{notificationId}/read", "POST")]
+    public partial class MarkNotificationReadRequest
+        : CodeMashRequestBase, INorbixRequest<MarkNotificationReadResponse>
+    {
+        public virtual string NotificationId { get; set; }
+    }
+
+    public partial class MarkNotificationReadResponse
+        : ResponseBase
+    {
+    }
+
     ///<summary>
     ///Disable payments service
     ///</summary>
@@ -17119,6 +17790,36 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual string PaymentProcessingCertificateP12Base64 { get; set; }
         public virtual string PaymentProcessingCertificatePassword { get; set; }
         public virtual string? WebhookBundleId { get; set; }
+    }
+
+    public partial class AuthorizeNetPaymentIntegrationRequest
+        : PaymentIntegrationRequest
+    {
+        public virtual PaymentGatewayPlatform Provider { get; set; }
+        public virtual string MerchantLoginId { get; set; }
+        public virtual string Environment { get; set; }
+        public virtual string TransactionKey { get; set; }
+        public virtual string? WebhookSignatureKey { get; set; }
+    }
+
+    public partial class BraintreePaymentIntegrationRequest
+        : PaymentIntegrationRequest
+    {
+        public virtual PaymentGatewayPlatform Provider { get; set; }
+        public virtual string MerchantId { get; set; }
+        public virtual string Environment { get; set; }
+        public virtual string PrivateKey { get; set; }
+        public virtual string? WebhookSecret { get; set; }
+    }
+
+    public partial class CheckOutComPaymentIntegrationRequest
+        : PaymentIntegrationRequest
+    {
+        public virtual PaymentGatewayPlatform Provider { get; set; }
+        public virtual string MerchantAccount { get; set; }
+        public virtual string Environment { get; set; }
+        public virtual string SecretKey { get; set; }
+        public virtual string? WebhookSecret { get; set; }
     }
 
     ///<summary>
@@ -17231,6 +17932,14 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual bool IsTestMode { get; set; }
     }
 
+    public partial class MagentoPaymentIntegrationRequest
+        : PaymentIntegrationRequest
+    {
+        public virtual PaymentGatewayPlatform Provider { get; set; }
+        public virtual string StoreUrl { get; set; }
+        public virtual string WebhookSecret { get; set; }
+    }
+
     public partial class MolliePaymentIntegrationRequest
         : PaymentIntegrationRequest
     {
@@ -17239,6 +17948,16 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual string ApiKey { get; set; }
         public virtual bool IsTestMode { get; set; }
         public virtual string? WebhookSigningSecret { get; set; }
+    }
+
+    public partial class MontonioPaymentIntegrationRequest
+        : PaymentIntegrationRequest
+    {
+        public virtual PaymentGatewayPlatform Provider { get; set; }
+        public virtual string AccessKey { get; set; }
+        public virtual string SecretKey { get; set; }
+        public virtual bool IsSandbox { get; set; }
+        public virtual string? Locale { get; set; }
     }
 
     public partial class PaddlePaymentIntegrationRequest
@@ -17282,6 +18001,14 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual PaymentIntegrationRequest Integration { get; set; }
     }
 
+    public partial class ShopifyPaymentIntegrationRequest
+        : PaymentIntegrationRequest
+    {
+        public virtual PaymentGatewayPlatform Provider { get; set; }
+        public virtual string ShopDomain { get; set; }
+        public virtual string WebhookSecret { get; set; }
+    }
+
     public partial class StripePaymentIntegrationRequest
         : PaymentIntegrationRequest
     {
@@ -17304,6 +18031,24 @@ namespace Norbix.Sdk.Types.Hub;
         ///The id of the payments integration to test.
         ///</summary>
         public virtual string IntegrationId { get; set; }
+    }
+
+    public partial class WooCommercePaymentIntegrationRequest
+        : PaymentIntegrationRequest
+    {
+        public virtual PaymentGatewayPlatform Provider { get; set; }
+        public virtual string StoreUrl { get; set; }
+        public virtual string WebhookSecret { get; set; }
+    }
+
+    public partial class WorldpayPaymentIntegrationRequest
+        : PaymentIntegrationRequest
+    {
+        public virtual PaymentGatewayPlatform Provider { get; set; }
+        public virtual string MerchantCode { get; set; }
+        public virtual string Environment { get; set; }
+        public virtual string ApiKey { get; set; }
+        public virtual string? WebhookSecret { get; set; }
     }
 
     ///<summary>
@@ -17809,6 +18554,7 @@ namespace Norbix.Sdk.Types.Hub;
         : ResponseBase
     {
         public virtual PaginatedResponse<PushDeviceListProjection>? List { get; set; }
+        public virtual List<TeamPushDeviceListProjection> TeamDevices { get; set; } = [];
     }
 
     ///<summary>
@@ -18094,7 +18840,7 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual string IntegrationId { get; set; }
 
         ///<summary>
-        ///The device token the test is sent to — a device registered for the person receiving the test (get it from get_push_devices). Required for every real provider (only the Fake integration tests without one). For a web device it is the browser subscription JSON. Requires DeliveryFamily.
+        ///The device token the test is sent to — a device registered for the person receiving the test (get it from get_push_devices). Required for every real provider (only the Sandbox integration tests without one). For a web device it is the browser subscription JSON. Requires DeliveryFamily.
         ///</summary>
         [DataMember]
         public virtual string? TestToken { get; set; }
@@ -18482,6 +19228,9 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember]
         public virtual bool StopOnError { get; set; }
+
+        [DataMember]
+        public virtual long? EndsAtUnix { get; set; }
 
         [DataMember]
         public virtual SchedulerTaskRequest Task { get; set; }
@@ -19402,6 +20151,41 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual string? SchemaId { get; set; }
     }
 
+    ///<summary>
+    ///Get one trigger in the shape its save takes (read → change → save)
+    ///</summary>
+    [NorbixRoute("/{version}/triggers/{id}/definition", "GET")]
+    [DataContract]
+    public partial class GetTriggerDefinition
+        : CodeMashRequestBase, INorbixRequest<GetTriggerDefinitionResponse>
+    {
+        ///<summary>
+        ///The trigger id (trg_…).
+        ///</summary>
+        [DataMember]
+        public virtual string Id { get; set; }
+
+        ///<summary>
+        ///Which module the trigger belongs to: Schema, Membership, Files, Payments or Ai.
+        ///</summary>
+        [DataMember]
+        public virtual TriggerType TriggerType { get; set; }
+
+        ///<summary>
+        ///The collection (schema) id the trigger watches. Required for Schema triggers.
+        ///</summary>
+        [DataMember]
+        public virtual string? SchemaId { get; set; }
+    }
+
+    [DataContract]
+    public partial class GetTriggerDefinitionResponse
+        : ResponseBase
+    {
+        [DataMember]
+        public virtual SaveTriggerRequest? Trigger { get; set; }
+    }
+
     public partial class GetTriggerResponse
         : ResponseBase
     {
@@ -19488,6 +20272,65 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual string SchemaId { get; set; }
         public virtual SchemaTriggerType When { get; set; }
         public virtual string? ConfigurationCode { get; set; }
+    }
+
+    ///<summary>
+    ///Test a trigger's pre-action code against a sample record
+    ///</summary>
+    [NorbixRoute("/{version}/triggers/pre-execute-code/test", "POST")]
+    [DataContract]
+    public partial class TestTriggerPreExecuteCode
+        : CodeMashRequestBase, INorbixRequest<TestTriggerPreExecuteCodeResponse>
+    {
+        ///<summary>
+        ///The code to test, as saved in preExecuteCode: C# statements ending in 'return true;' or 'return false;', e.g. 'return New.status == "published";'.
+        ///</summary>
+        [DataMember]
+        public virtual string Code { get; set; }
+
+        ///<summary>
+        ///Which kind of trigger the code is for: Schema, Membership, Files, Payments or Ai.
+        ///</summary>
+        [DataMember]
+        public virtual TriggerType TriggerType { get; set; }
+
+        ///<summary>
+        ///The sample record AFTER the change (the code's New), as a JSON object. Omit = empty (a delete).
+        ///</summary>
+        [DataMember]
+        public virtual string? NewRecord { get; set; }
+
+        ///<summary>
+        ///The sample record BEFORE the change (the code's Old), as a JSON object. Omit = empty (an insert).
+        ///</summary>
+        [DataMember]
+        public virtual string? OldRecord { get; set; }
+
+        ///<summary>
+        ///What the code sees as Event.Kind: Inserted, Updated, Deleted or Other. Omit = Updated when both records are given, Inserted when only newRecord, Deleted when only oldRecord.
+        ///</summary>
+        [DataMember]
+        public virtual string? EventKind { get; set; }
+
+        ///<summary>
+        ///What the code sees as Event.Name, e.g. database.record.updated. Optional.
+        ///</summary>
+        [DataMember]
+        public virtual string? EventName { get; set; }
+    }
+
+    [DataContract]
+    public partial class TestTriggerPreExecuteCodeResponse
+        : ResponseBase
+    {
+        [DataMember]
+        public virtual string Outcome { get; set; }
+
+        [DataMember]
+        public virtual bool TriggerRuns { get; set; }
+
+        [DataMember]
+        public virtual List<TriggerActivationTestProblem> Problems { get; set; } = [];
     }
 
     [NorbixRoute("/{version}/webhooks/destinations/{DestinationId}/disable", "PUT")]
@@ -19618,6 +20461,31 @@ namespace Norbix.Sdk.Types.Hub;
         ///The integration-wide static headers to send with every delivery. Pass an empty dictionary to clear all extra headers.
         ///</summary>
         public virtual Dictionary<string, string>? ExtraHeaders { get; set; }
+    }
+
+    public partial class SharedTypeGen
+    {
+        public virtual StringFieldDto? Typegen_StringFieldDto { get; set; }
+        public virtual DecimalFieldDto? Typegen_DecimalFieldDto { get; set; }
+        public virtual CurrencyFieldDto? Typegen_CurrencyFieldDto { get; set; }
+        public virtual BooleanFieldDto? Typegen_BooleanFieldDto { get; set; }
+        public virtual DateFieldDto? Typegen_DateFieldDto { get; set; }
+        public virtual IntegerFieldDto? Typegen_IntegerFieldDto { get; set; }
+        public virtual GeolocationFieldDto? Typegen_GeolocationFieldDto { get; set; }
+        public virtual TagsFieldDto? Typegen_TagsFieldDto { get; set; }
+        public virtual FileFieldDto? Typegen_FileFieldDto { get; set; }
+        public virtual TaxonomySelectionFieldDto? Typegen_TaxonomySelectionFieldDto { get; set; }
+        public virtual CollectionSelectionFieldDto? Typegen_CollectionSelectionFieldDto { get; set; }
+        public virtual UserSelectionFieldDto? Typegen_UserSelectionFieldDto { get; set; }
+        public virtual RoleSelectionFieldDto? Typegen_RoleSelectionFieldDto { get; set; }
+        public virtual EnumSelectionFieldDto? Typegen_EnumSelectionFieldDto { get; set; }
+        public virtual ObjectFieldDto? Typegen_ObjectFieldDto { get; set; }
+        public virtual ArrayFieldDto? Typegen_ArrayFieldDto { get; set; }
+        public virtual JsonFieldDto? Typegen_JsonFieldDto { get; set; }
+    }
+
+    public partial interface INoSessionCookies
+    {
     }
 
     [NorbixRoute("/{version}/echo", "GET")]
@@ -19920,6 +20788,20 @@ namespace Norbix.Sdk.Types.Hub;
         string ViewId { get; set; }
     }
 
+    public partial class InAppNotificationDto
+    {
+        public virtual string Id { get; set; }
+        public virtual string ProjectId { get; set; }
+        public virtual string UserId { get; set; }
+        public virtual string Channel { get; set; }
+        public virtual string EventName { get; set; }
+        public virtual string? PayloadJson { get; set; }
+        public virtual bool IsRead { get; set; }
+        public virtual DateTime? SeenAtUtc { get; set; }
+        public virtual DateTime? ReadAtUtc { get; set; }
+        public virtual DateTime CreatedAtUtc { get; set; }
+    }
+
     [DataContract]
     public enum CodeMashRelease
     {
@@ -19941,6 +20823,7 @@ namespace Norbix.Sdk.Types.Hub;
     {
         Registered = 0,
         PendingValidation = 2,
+        Invited = 4,
         Active = 8,
         Unregistered = 16,
         Suspended = 32,
