@@ -1,0 +1,30 @@
+﻿{
+  Sent: {
+    Method: POST,
+    Path: /v2/logs,
+    Headers: {
+      Authorization: Bearer test-api-key,
+      Content-Type: application/json; charset=utf-8,
+      norbix-project-id: test-project
+    },
+    Body: {
+      entries: [
+        {
+          title: Order paid,
+          message: Order ord_1042 paid by card,
+          eventCode: order:paid,
+          correlationId: checkout-1042,
+          meta: {
+            orderId: ord_1042
+          }
+        },
+        {
+          level: warning,
+          title: Stock low,
+          timestamp: DateTimeOffset_1
+        }
+      ]
+    }
+  },
+  Accepted: 2
+}

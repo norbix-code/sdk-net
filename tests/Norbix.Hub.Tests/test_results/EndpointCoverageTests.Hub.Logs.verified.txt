@@ -1,7 +1,7 @@
 ﻿{
   Target: Hub,
   Group: logs,
-  Count: 14,
+  Count: 15,
   Endpoints: [
     {
       Target: Hub,
@@ -86,6 +86,45 @@
       },
       ResponseType: CleanLogsResponse,
       Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: logs,
+      MethodName: GetLogAsync,
+      RequestType: GetLog,
+      HttpMethod: GET,
+      Path: /{version}/logs/{Id},
+      PathParams: [
+        Id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/logs/{guid},
+        Query: ?env=test-env,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        }
+      },
+      ResponseType: GetLogResponse,
+      Response: {
+        Item: {
+          Id: Guid_1,
+          Timestamp: DateTime_1,
+          Module: test-module,
+          Level: test-level,
+          EventCode: test-eventCode,
+          Title: test-title,
+          Message: test-message,
+          CorrelationId: Guid_1
+        },
         ResponseStatus: {
           IsSuccess: true
         }

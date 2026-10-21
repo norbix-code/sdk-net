@@ -1,0 +1,12 @@
+﻿{
+  Method: POST,
+  Path: /v2/logs/integrations/test,
+  Headers: {
+    Authorization: Bearer test-api-key,
+    Content-Type: application/json; charset=utf-8,
+    norbix-project-id: test-project
+  },
+  Body: {
+    integrationId: Guid_1
+  }
+}
