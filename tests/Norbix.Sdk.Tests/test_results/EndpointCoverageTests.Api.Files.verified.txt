@@ -1,7 +1,7 @@
 ﻿{
   Target: Api,
   Group: files,
-  Count: 14,
+  Count: 15,
   Endpoints: [
     {
       Target: Api,
@@ -29,6 +29,8 @@
           contentType: test-contentType,
           sizeBytes: 1.0,
           fileName: test-fileName,
+          ownerUserId: Guid_1,
+          reassignOwner: true,
           env: test-env
         }
       },
@@ -367,6 +369,50 @@
     {
       Target: Api,
       Group: files,
+      MethodName: RegisterFilesAsync,
+      RequestType: RegisterFilesRequest,
+      HttpMethod: POST,
+      Path: /{version}/files/{filesIntegrationId}/register,
+      PathParams: [
+        filesIntegrationId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/files/{guid}/register,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        },
+        Body: {
+          items: [
+            null
+          ],
+          reassignOwner: true,
+          dryRun: true,
+          env: test-env
+        }
+      },
+      ResponseType: RegisterFilesResponse,
+      Response: {
+        DryRun: true,
+        Registered: 7,
+        Unchanged: 7,
+        Failed: 7,
+        Items: [
+          {}
+        ],
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: files,
       MethodName: RequestUploadUrlAsync,
       RequestType: RequestUploadUrlRequest,
       HttpMethod: POST,
@@ -389,6 +435,8 @@
           path: test-path,
           contentType: test-contentType,
           expirationSeconds: 1.0,
+          ownerUserId: Guid_1,
+          reassignOwner: true,
           env: test-env
         }
       },
@@ -458,6 +506,8 @@
         },
         Body: {
           path: test-path,
+          ownerUserId: Guid_1,
+          reassignOwner: true,
           env: test-env
         }
       },

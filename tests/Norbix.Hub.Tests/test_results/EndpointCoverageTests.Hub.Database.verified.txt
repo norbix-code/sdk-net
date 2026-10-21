@@ -1,7 +1,7 @@
 ﻿{
   Target: Hub,
   Group: database,
-  Count: 74,
+  Count: 75,
   Endpoints: [
     {
       Target: Hub,
@@ -1498,6 +1498,49 @@
     {
       Target: Hub,
       Group: database,
+      MethodName: EndUserOwnRecordsReportAsync,
+      RequestType: EndUserOwnRecordsReportRequest,
+      HttpMethod: POST,
+      Path: /{version}/database/schemas/end-user-own-records,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/database/schemas/end-user-own-records,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        },
+        Body: {
+          dryRun: true,
+          enable: [
+            test-string
+          ],
+          env: test-env
+        }
+      },
+      ResponseType: EndUserOwnRecordsReportResponse,
+      Response: {
+        Result: {
+          dryRun: true,
+          env: test-env,
+          schemas: [
+            {
+              hasRecordOwner: false,
+              endUserOwnRecords: false
+            }
+          ]
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: database,
       MethodName: GetDatabaseSchemaAsync,
       RequestType: GetDatabaseSchema,
       HttpMethod: GET,
@@ -1857,7 +1900,8 @@
             description: test-description,
             uniqueIndexes: [
               null
-            ]
+            ],
+            endUserOwnRecords: true
           },
           env: test-env
         }
@@ -2016,7 +2060,8 @@
             description: test-description,
             uniqueIndexes: [
               null
-            ]
+            ],
+            endUserOwnRecords: true
           },
           env: test-env
         }
