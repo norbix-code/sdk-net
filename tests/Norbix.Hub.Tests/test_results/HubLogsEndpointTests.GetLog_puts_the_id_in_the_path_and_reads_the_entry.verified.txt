@@ -1,0 +1,25 @@
+﻿{
+  Sent: {
+    Method: GET,
+    Path: /v2/logs/6716f2a0c3b1e4d5f6a7b8c9,
+    Headers: {
+      Authorization: Bearer test-api-key,
+      norbix-project-id: test-project
+    }
+  },
+  Entry: {
+    Id: 6716f2a0c3b1e4d5f6a7b8c9,
+    Timestamp: DateTime_1,
+    Module: app,
+    Level: information,
+    EventCode: app:order:paid,
+    Title: Order paid,
+    Message: Order ord_1042 paid by card,
+    CorrelationId: checkout-1042,
+    Env: PROD,
+    Origin: app,
+    Meta: {
+      orderId: ord_1042
+    }
+  }
+}

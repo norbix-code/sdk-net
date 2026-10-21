@@ -1,0 +1,40 @@
+﻿{
+  Target: Api,
+  Group: logs,
+  Count: 1,
+  Endpoints: [
+    {
+      Target: Api,
+      Group: logs,
+      MethodName: WriteLogsAsync,
+      RequestType: WriteLogs,
+      HttpMethod: POST,
+      Path: /{version}/logs,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/logs,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        },
+        Body: {
+          entries: [
+            null
+          ],
+          env: test-env
+        }
+      },
+      ResponseType: WriteLogsResponse,
+      Response: {
+        Accepted: 7,
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    }
+  ]
+}
