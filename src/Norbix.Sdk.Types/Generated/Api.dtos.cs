@@ -1338,6 +1338,63 @@ namespace Norbix.Sdk.Types.Api;
         public virtual bool? ReassignOwner { get; set; }
     }
 
+    public partial class WriteLogEntry
+    {
+        ///<summary>
+        ///information (default), warning or error.
+        ///</summary>
+        public virtual string? Level { get; set; }
+
+        ///<summary>
+        ///A short line, 1–200 characters — what the Logs list shows.
+        ///</summary>
+        public virtual string Title { get; set; }
+
+        ///<summary>
+        ///Details, at most 8 000 characters.
+        ///</summary>
+        public virtual string? Message { get; set; }
+
+        ///<summary>
+        ///Your own code for this kind of line, e.g. order:paid — lower case letters, digits and _ . : -, at most 64. Stored as app:<code>; app:log when empty.
+        ///</summary>
+        public virtual string? EventCode { get; set; }
+
+        ///<summary>
+        ///Groups your lines into one flow in the Logs details view: at most 64 letters, digits, _ or -. Empty = the id of this request.
+        ///</summary>
+        public virtual string? CorrelationId { get; set; }
+
+        ///<summary>
+        ///When it happened (UTC). Empty = when Norbix received it. At most 7 days old and at most 5 minutes ahead.
+        ///</summary>
+        public virtual DateTime? Timestamp { get; set; }
+
+        ///<summary>
+        ///Extra fields, at most 20; key at most 64, value at most 2 000 characters. Values under secret-looking keys (password, token, apiKey …) are masked.
+        ///</summary>
+        public virtual Dictionary<string, string>? Meta { get; set; }
+    }
+
+    ///<summary>
+    ///Send your app's own log entries to the project's logs.
+    ///</summary>
+    [NorbixRoute("/{version}/logs", "POST")]
+    public partial class WriteLogs
+        : CodeMashRequestBase, INorbixRequest<WriteLogsResponse>
+    {
+        ///<summary>
+        ///1–100 entries.
+        ///</summary>
+        public virtual List<WriteLogEntry> Entries { get; set; } = [];
+    }
+
+    public partial class WriteLogsResponse
+        : ResponseBase
+    {
+        public virtual int Accepted { get; set; }
+    }
+
     ///<summary>
     ///Membership · Passkey
     ///</summary>
