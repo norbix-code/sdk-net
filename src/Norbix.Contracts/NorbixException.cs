@@ -38,6 +38,14 @@ public sealed class NorbixException : Exception
     /// <summary>Same value as <see cref="RawBody"/> — the answer as it arrived.</summary>
     public object? Body => RawBody;
 
+    /// <summary>
+    /// Seconds to wait before sending again, from the answer's <c>Retry-After</c>
+    /// header: the number itself, or the seconds until the HTTP date it names
+    /// (never below 0). <c>null</c> when the header is absent or unreadable.
+    /// A 429 <c>CM-ERRORS-LOGGING-003</c> from <c>WriteLogsAsync</c> carries it.
+    /// </summary>
+    public int? RetryAfterSeconds { get; }
+
     public NorbixException(
         string message,
         int statusCode = 0,
@@ -45,7 +53,8 @@ public sealed class NorbixException : Exception
         IReadOnlyList<ResponseError>? fieldErrors = null,
         string? url = null,
         object? rawBody = null,
-        Exception? innerException = null)
+        Exception? innerException = null,
+        int? retryAfterSeconds = null)
         : base(message, innerException)
     {
         StatusCode = statusCode;
@@ -53,6 +62,7 @@ public sealed class NorbixException : Exception
         FieldErrors = fieldErrors ?? Array.Empty<ResponseError>();
         Url = url;
         RawBody = rawBody;
+        RetryAfterSeconds = retryAfterSeconds;
     }
 }
 
