@@ -320,6 +320,7 @@ The public endpoint surface is generated from gateway DTOs at compile time. The 
 | `database` | 22 | Collection CRUD (`FindAsync`, `FindOneAsync`, `FindOwnAsync`, insert / update / replace / delete one or many), count, distinct, aggregate, saved aggregate execution (`ExecuteAggregateAsync`), `ChangeResponsibilityAsync`, schema reads, taxonomy and term reads (`FindTermsAsync`, `FindTermsChildrenAsync`, `FindTaxonomyTreeAsync`, `FindTermTreeAsync`, `FindMergedTermTreeAsync`). |
 | `echo` | 1 | Smoke-test echo endpoint. |
 | `files` | 13 | List, info, signed URL, upload URL + commit, download, delete one / many, public links, and a file by its stored id (`GetFileByIdAsync`). |
+| `logs` | 1 | `WriteLogsAsync` sends your app's own log entries to the project's logs: 1–100 `WriteLogEntry` per call (`Title` up to 200 characters; optional `Level` `information` / `warning` / `error`, `Message`, `EventCode` stored as `app:<code>`, `CorrelationId`, `Timestamp`, `Meta` up to 20 keys). It answers `Accepted` at once — the entries are queued. Over the project's per-minute quota it throws `NorbixException` with `HttpStatus` 429 and `CM-ERRORS-LOGGING-003` (wait a minute and retry); `CM-ERRORS-LOGGING-002` means the Logs module is off. |
 | `membership` | 18 | User CRUD, registration, preferences, roles, and permissions. |
 | `payments` | 4 | Payment orders and checkout: `CreatePaymentOrderAsync`, `GetPaymentOrderAsync`, `GetPaymentOrdersAsync`, `StartPaymentCheckoutAsync`. See [Payment orders and checkout](#payment-orders-and-checkout). |
 | `public` | 2 | The project's public config and legal documents, read by the Admin Portal before sign-in (`GetPublicProjectConfigAsync`, `GetPublicProjectLegalAsync`). See [docs/hub/project.md](./docs/hub/project.md#public-config-and-legal-no-sign-in). |
@@ -335,7 +336,7 @@ The public endpoint surface is generated from gateway DTOs at compile time. The 
 | `email` | 2 | Public e-mail link endpoints: `OneClickUnsubscribeAsync` and `GetEmailPreferencesByLinkAsync` (reads the marketing preferences behind a signed unsubscribe link; pass the link's `Token`). Both are public links: they work on a client with no API key (the key is sent only when there is one), like the three `Preview*NotificationAsync` methods. |
 | `files` | 23 | File storage integrations, triggers, public links, a file by its stored id (`GetFileByIdAsync`), and module settings. |
 | `internal` | 1 | Internal type-generation endpoint. |
-| `logs` | 9 | Logging integrations and module settings. |
+| `logs` | 15 | Module on / off, the log list (`GetLogsAsync`), one entry by id (`GetLogAsync`), one flow by correlation id (`GetLogsByCorrelationIdAsync`), `CleanLogsAsync`, log settings, and logging integrations (MongoDB, Datadog, AWS CloudWatch, …). After saving an integration call `TestLoggingIntegrationAsync`: nothing is delivered to an integration until its last test passed. |
 | `membership` | 25 | Roles, policies, users, preferences, integrations, triggers. |
 | `notifications` | 123 | Email, push and SMS templates, integrations, campaigns, devices, settings. Push: [docs/hub/push.md](./docs/hub/push.md). SMS: [docs/hub/sms.md](./docs/hub/sms.md). |
 | `oauth` | 5 | The gateway's OAuth server routes (register, authorize, token, revoke). |
