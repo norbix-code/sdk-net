@@ -233,7 +233,7 @@ internal sealed class HttpTransport : INorbixTransport, IDisposable
             using var ms = new MemoryStream();
             await stream.CopyToAsync(ms, cancellationToken).ConfigureAwait(false);
             ms.Position = 0;
-            throw await BuildExceptionAsync(ms, (int)response.StatusCode, url, cancellationToken)
+            throw await BuildExceptionAsync(ms, (int)response.StatusCode, url, RetryAfterSecondsOf(response), cancellationToken)
                 .ConfigureAwait(false);
         }
 
@@ -276,7 +276,7 @@ internal sealed class HttpTransport : INorbixTransport, IDisposable
         if (SaysItFailed(buffer))
         {
             buffer.Position = 0;
-            throw await BuildExceptionAsync(buffer, (int)response.StatusCode, url, cancellationToken)
+            throw await BuildExceptionAsync(buffer, (int)response.StatusCode, url, RetryAfterSecondsOf(response), cancellationToken)
                 .ConfigureAwait(false);
         }
 
@@ -337,10 +337,30 @@ internal sealed class HttpTransport : INorbixTransport, IDisposable
         return false;
     }
 
+    /// <summary>
+    /// The answer's <c>Retry-After</c> as whole seconds: the delta itself, or the
+    /// seconds until the HTTP date it names (never below 0). <c>null</c> when the
+    /// header is absent or unreadable.
+    /// </summary>
+    internal static int? RetryAfterSecondsOf(HttpResponseMessage response)
+    {
+        var header = response.Headers.RetryAfter;
+        if (header?.Delta is { } delta)
+        {
+            return (int)Math.Ceiling(Math.Max(0, delta.TotalSeconds));
+        }
+        if (header?.Date is { } date)
+        {
+            return (int)Math.Max(0, Math.Ceiling((date - DateTimeOffset.UtcNow).TotalSeconds));
+        }
+        return null;
+    }
+
     private static async Task<NorbixException> BuildExceptionAsync(
         Stream body,
         int statusCode,
         string url,
+        int? retryAfterSeconds,
         CancellationToken cancellationToken)
     {
         ResponseStatus? status = null;
@@ -383,7 +403,8 @@ internal sealed class HttpTransport : INorbixTransport, IDisposable
             code: code,
             fieldErrors: status?.Errors,
             url: url,
-            rawBody: raw);
+            rawBody: raw,
+            retryAfterSeconds: retryAfterSeconds);
 
         static string? Pick(string? value) => string.IsNullOrEmpty(value) ? null : value;
     }
