@@ -320,7 +320,7 @@ The public endpoint surface is generated from gateway DTOs at compile time. The 
 | `database` | 22 | Collection CRUD (`FindAsync`, `FindOneAsync`, `FindOwnAsync`, insert / update / replace / delete one or many), count, distinct, aggregate, saved aggregate execution (`ExecuteAggregateAsync`), `ChangeResponsibilityAsync`, schema reads, taxonomy and term reads (`FindTermsAsync`, `FindTermsChildrenAsync`, `FindTaxonomyTreeAsync`, `FindTermTreeAsync`, `FindMergedTermTreeAsync`). |
 | `echo` | 1 | Smoke-test echo endpoint. |
 | `files` | 13 | List, info, signed URL, upload URL + commit, download, delete one / many, public links, and a file by its stored id (`GetFileByIdAsync`). |
-| `logs` | 1 | `WriteLogsAsync` sends your app's own log entries to the project's logs: 1–100 `WriteLogEntry` per call (`Title` up to 200 characters; optional `Level` `information` / `warning` / `error`, `Message`, `EventCode` stored as `app:<code>`, `CorrelationId`, `Timestamp`, `Meta` up to 20 keys). It answers `Accepted` at once — the entries are queued. Over the project's per-minute quota it throws `NorbixException` with `HttpStatus` 429 and `CM-ERRORS-LOGGING-003` (wait a minute and retry); `CM-ERRORS-LOGGING-002` means the Logs module is off. |
+| `logs` | 1 | `WriteLogsAsync` sends your app's own log entries to the project's logs: 1–100 `WriteLogEntry` per call (`Title` up to 200 characters; optional `Level` `information` / `warning` / `error`, `Message`, `EventCode` stored as `app:<code>`, `CorrelationId`, `Timestamp`, `Meta` up to 20 keys). It answers `Accepted` at once — the entries are queued. Over the project's per-minute quota it throws `NorbixException` with `HttpStatus` 429 and `CM-ERRORS-LOGGING-003`; `RetryAfterSeconds` says how many seconds to wait before sending again (the SDK never resends a POST itself); `CM-ERRORS-LOGGING-002` means the Logs module is off. |
 | `membership` | 18 | User CRUD, registration, preferences, roles, and permissions. |
 | `payments` | 4 | Payment orders and checkout: `CreatePaymentOrderAsync`, `GetPaymentOrderAsync`, `GetPaymentOrdersAsync`, `StartPaymentCheckoutAsync`. See [Payment orders and checkout](#payment-orders-and-checkout). |
 | `public` | 2 | The project's public config and legal documents, read by the Admin Portal before sign-in (`GetPublicProjectConfigAsync`, `GetPublicProjectLegalAsync`). See [docs/hub/project.md](./docs/hub/project.md#public-config-and-legal-no-sign-in). |
@@ -1270,6 +1270,20 @@ first entry for `Message` / `ErrorCode`, and keeps every entry in `Errors`. Only
 when the body has no `responseStatus` are the top-level `message` and
 `errorCode` read. `Request failed (HTTP <status>)` is the last fallback, used
 when the body says nothing (for example a 500 page that is not JSON).
+
+`RetryAfterSeconds` (`int?`) is the answer's `Retry-After` header in whole
+seconds — the number itself, or the seconds until the HTTP date it names (never
+below 0). It is `null` when the header is absent or unreadable. A 429 carries
+it, for example `CM-ERRORS-LOGGING-003` from `WriteLogsAsync` when the project's
+per-minute log quota is used up:
+
+```csharp
+catch (NorbixException ex) when (ex.HttpStatus == 429)
+{
+    await Task.Delay(TimeSpan.FromSeconds(ex.RetryAfterSeconds ?? 60));
+    // send the entries again
+}
+```
 
 | Code | Meaning |
 | --- | --- |
