@@ -1,7 +1,7 @@
 ﻿{
   Target: Hub,
   Group: account,
-  Count: 122,
+  Count: 128,
   Endpoints: [
     {
       Target: Hub,
@@ -366,6 +366,9 @@
             test-string
           ],
           projectRoles: [
+            null
+          ],
+          roleEnvironments: [
             null
           ]
         }
@@ -1102,6 +1105,39 @@
     {
       Target: Hub,
       Group: account,
+      MethodName: CancelTeamInvitationAsync,
+      RequestType: CancelTeamInvitation,
+      HttpMethod: DELETE,
+      Path: /{version}/account/team/invitations/{InvitationId},
+      PathParams: [
+        InvitationId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: DELETE,
+        Path: /v2/account/team/invitations/{guid},
+        Headers: {
+          Authorization: Bearer test-bearer,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        }
+      },
+      ResponseType: IdResponse,
+      Response: {
+        Id: Guid_1,
+        Status: test-status,
+        Warnings: [
+          test-string
+        ],
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: account,
       MethodName: ChangeTeamMemberPasswordAsync,
       RequestType: ChangeTeamMemberPassword,
       HttpMethod: POST,
@@ -1382,6 +1418,34 @@
     {
       Target: Hub,
       Group: account,
+      MethodName: GetAccountTeamInvitationsAsync,
+      RequestType: GetAccountTeamInvitations,
+      HttpMethod: GET,
+      Path: /{version}/account/team/invitations,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/account/team/invitations,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        }
+      },
+      ResponseType: GetAccountTeamInvitationsResponse,
+      Response: {
+        Items: [
+          {}
+        ],
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: account,
       MethodName: GetAccountTeamPoliciesAsync,
       RequestType: GetAccountTeamPolicies,
       HttpMethod: GET,
@@ -1442,6 +1506,39 @@
     {
       Target: Hub,
       Group: account,
+      MethodName: RemoveTeamMemberAsync,
+      RequestType: RemoveTeamMember,
+      HttpMethod: DELETE,
+      Path: /{version}/account/team/member/{MemberId},
+      PathParams: [
+        MemberId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: DELETE,
+        Path: /v2/account/team/member/{guid},
+        Headers: {
+          Authorization: Bearer test-bearer,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        }
+      },
+      ResponseType: IdResponse,
+      Response: {
+        Id: Guid_1,
+        Status: test-status,
+        Warnings: [
+          test-string
+        ],
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: account,
       MethodName: SendInviteToTeamMemberAsync,
       RequestType: SendInviteToTeamMember,
       HttpMethod: POST,
@@ -1463,6 +1560,44 @@
       },
       ResponseType: EmptyResponse,
       Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: account,
+      MethodName: SetTeamMemberRoleEnvironmentsAsync,
+      RequestType: SetTeamMemberRoleEnvironmentsRequest,
+      HttpMethod: PUT,
+      Path: /{version}/account/team/member/role-environments,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: PUT,
+        Path: /v2/account/team/member/role-environments,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        },
+        Body: {
+          memberId: Guid_1,
+          roleId: Guid_1,
+          environments: [
+            test-string
+          ]
+        }
+      },
+      ResponseType: IdResponse,
+      Response: {
+        Id: Guid_1,
+        Status: test-status,
+        Warnings: [
+          test-string
+        ],
         ResponseStatus: {
           IsSuccess: true
         }
@@ -1527,6 +1662,44 @@
           id: Guid_1,
           roleName: test-roleName,
           description: test-description
+        }
+      },
+      ResponseType: IdResponse,
+      Response: {
+        Id: Guid_1,
+        Status: test-status,
+        Warnings: [
+          test-string
+        ],
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: account,
+      MethodName: UpdateTeamMemberAsync,
+      RequestType: UpdateTeamMember,
+      HttpMethod: PUT,
+      Path: /{version}/account/team/member,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: PUT,
+        Path: /v2/account/team/member,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        },
+        Body: {
+          memberId: Guid_1,
+          displayName: test-displayName,
+          roles: [
+            null
+          ]
         }
       },
       ResponseType: IdResponse,
@@ -1779,6 +1952,9 @@
         Item: {
           Environments: [
             test-string
+          ],
+          PromotionOrder: [
+            test-string
           ]
         },
         ResponseStatus: {
@@ -1833,12 +2009,35 @@
           sourceEnv: test-sourceEnv,
           targetEnv: test-targetEnv,
           dryRun: true,
+          confirmRecordLoss: true,
+          integrationChoices: [
+            null
+          ],
           env: test-env
         }
       },
       ResponseType: PromoteEnvironmentResponse,
       Response: {
         Item: {
+          Summary: {
+            IsNoOp: false
+          },
+          Items: [
+            {
+              BuiltIn: false
+            }
+          ],
+          Integrations: [
+            {
+              HoldsSecret: false,
+              IsFake: false,
+              RealSender: false
+            }
+          ],
+          NotPromoted: [
+            {}
+          ],
+          RequiresConfirmation: true,
           ContentMirrored: [
             {}
           ],
@@ -1848,23 +2047,44 @@
           IntegrationsSeeded: [
             {}
           ],
-          IntegrationsToProvision: [
-            {}
-          ],
-          IntegrationsSkipped: [
-            {}
-          ],
-          Blockers: [
-            {}
-          ],
-          TermChanges: [
-            {}
-          ],
-          Warnings: [
-            {}
-          ],
           WasDryRun: false
         },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: account,
+      MethodName: RepairEnvironmentBuiltInsAsync,
+      RequestType: RepairEnvironmentBuiltInsRequest,
+      HttpMethod: POST,
+      Path: /{version}/account/projects/environments/built-ins/repair,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/account/projects/environments/built-ins/repair,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        },
+        Body: {
+          environmentName: test-environmentName,
+          dryRun: true,
+          env: test-env
+        }
+      },
+      ResponseType: RepairEnvironmentBuiltInsResponse,
+      Response: {
+        Items: [
+          {
+            IsNoOp: false
+          }
+        ],
         ResponseStatus: {
           IsSuccess: true
         }
@@ -1891,12 +2111,33 @@
         Body: {
           targetEnv: test-targetEnv,
           fromVersion: 1.0,
+          dryRun: true,
+          confirmRecordLoss: true,
           env: test-env
         }
       },
       ResponseType: PromoteEnvironmentResponse,
       Response: {
         Item: {
+          Summary: {
+            IsNoOp: false
+          },
+          Items: [
+            {
+              BuiltIn: false
+            }
+          ],
+          Integrations: [
+            {
+              HoldsSecret: false,
+              IsFake: false,
+              RealSender: false
+            }
+          ],
+          NotPromoted: [
+            {}
+          ],
+          RequiresConfirmation: true,
           ContentMirrored: [
             {}
           ],
@@ -1904,21 +2145,6 @@
             {}
           ],
           IntegrationsSeeded: [
-            {}
-          ],
-          IntegrationsToProvision: [
-            {}
-          ],
-          IntegrationsSkipped: [
-            {}
-          ],
-          Blockers: [
-            {}
-          ],
-          TermChanges: [
-            {}
-          ],
-          Warnings: [
             {}
           ],
           WasDryRun: false

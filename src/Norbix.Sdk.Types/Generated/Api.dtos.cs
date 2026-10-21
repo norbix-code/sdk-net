@@ -8,8 +8,8 @@
 #pragma warning disable CS0114, CS1570, CS0102, CS0108, CS0618
 
 using System;
-using System.IO;
 using System.Collections;
+using System.IO;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using Norbix.Sdk.Types;
@@ -1011,6 +1011,12 @@ namespace Norbix.Sdk.Types.Api;
 
         [DataMember]
         public virtual string? FileName { get; set; }
+
+        [DataMember]
+        public virtual string? OwnerUserId { get; set; }
+
+        [DataMember]
+        public virtual bool? ReassignOwner { get; set; }
     }
 
     ///<summary>
@@ -1202,6 +1208,70 @@ namespace Norbix.Sdk.Types.Api;
         public virtual string? Token { get; set; }
     }
 
+    [DataContract]
+    public partial class RegisterFileItem
+    {
+        [DataMember]
+        public virtual string? Path { get; set; }
+
+        [DataMember]
+        public virtual string? OwnerUserId { get; set; }
+
+        [DataMember]
+        public virtual string? ContentType { get; set; }
+
+        [DataMember]
+        public virtual long? SizeBytes { get; set; }
+
+        [DataMember]
+        public virtual string? FileName { get; set; }
+    }
+
+    public partial class RegisterFileResult
+    {
+        public virtual int Index { get; set; }
+        public virtual string? Path { get; set; }
+        public virtual string? OwnerUserId { get; set; }
+        public virtual string? Status { get; set; }
+        public virtual string? FileId { get; set; }
+        public virtual bool? Verified { get; set; }
+        public virtual string? Warning { get; set; }
+        public virtual string? ErrorCode { get; set; }
+        public virtual int? ErrorStatus { get; set; }
+        public virtual string? Error { get; set; }
+    }
+
+    ///<summary>
+    ///Files
+    ///</summary>
+    [NorbixRoute("/{version}/files/{filesIntegrationId}/register", "POST")]
+    [DataContract]
+    public partial class RegisterFilesRequest
+        : CodeMashRequestBase, INorbixRequest<RegisterFilesResponse>
+    {
+        [DataMember]
+        public virtual string FilesIntegrationId { get; set; }
+
+        [DataMember]
+        public virtual List<RegisterFileItem>? Items { get; set; }
+
+        [DataMember]
+        public virtual bool? ReassignOwner { get; set; }
+
+        [DataMember]
+        public virtual bool? DryRun { get; set; }
+    }
+
+    public partial class RegisterFilesResponse
+        : ResponseBase
+    {
+        public virtual bool DryRun { get; set; }
+        public virtual int Registered { get; set; }
+        public virtual int Unchanged { get; set; }
+        public virtual int Failed { get; set; }
+        public virtual List<RegisterFileResult>? Items { get; set; }
+    }
+
     ///<summary>
     ///Files
     ///</summary>
@@ -1221,6 +1291,12 @@ namespace Norbix.Sdk.Types.Api;
 
         [DataMember]
         public virtual int? ExpirationSeconds { get; set; }
+
+        [DataMember]
+        public virtual string? OwnerUserId { get; set; }
+
+        [DataMember]
+        public virtual bool? ReassignOwner { get; set; }
     }
 
     public partial class RequestUploadUrlResponse
@@ -1254,6 +1330,12 @@ namespace Norbix.Sdk.Types.Api;
 
         [DataMember]
         public virtual string Path { get; set; }
+
+        [DataMember]
+        public virtual string? OwnerUserId { get; set; }
+
+        [DataMember]
+        public virtual bool? ReassignOwner { get; set; }
     }
 
     ///<summary>
@@ -1663,7 +1745,7 @@ namespace Norbix.Sdk.Types.Api;
     [NorbixRoute("/{version}/membership/auth/invitation/finish", "POST")]
     [DataContract]
     public partial class FinishInvitationRequest
-        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
+        : CodeMashRequestBase, INorbixRequest<EmptyResponse>, INorbixOptionalAuth
     {
         ///<summary>
         ///One-time invitation token from the e-mail link (the #token= fragment).
@@ -2976,6 +3058,9 @@ namespace Norbix.Sdk.Types.Api;
 
         [DataMember]
         public virtual List<SchemaUniqueIndexDto>? UniqueIndexes { get; set; }
+
+        [DataMember]
+        public virtual bool? EndUserOwnRecords { get; set; }
     }
 
     public partial class SchemaUniqueIndexDto

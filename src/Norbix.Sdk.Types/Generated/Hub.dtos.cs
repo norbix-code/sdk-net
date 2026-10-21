@@ -84,6 +84,15 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual string? Text { get; set; }
     }
 
+    public partial class TeamInvitationDto
+    {
+        public virtual string Id { get; set; }
+        public virtual string Email { get; set; }
+        public virtual List<string> Roles { get; set; } = [];
+        public virtual DateTime SentOn { get; set; }
+        public virtual DateTime ExpiresOn { get; set; }
+    }
+
     [Flags]
     public enum AccountStatus
     {
@@ -1863,6 +1872,9 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember]
         public virtual bool IsSystem { get; set; }
+
+        [DataMember]
+        public virtual List<string> Environments { get; set; } = [];
     }
 
     [DataContract]
@@ -1898,6 +1910,19 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember]
         public virtual DateTime IssuedAt { get; set; }
+    }
+
+    [DataContract]
+    public partial class BuiltInRepairDto
+    {
+        [DataMember]
+        public virtual string Env { get; set; }
+
+        [DataMember]
+        public virtual List<PromotionItemChangeDto> Items { get; set; } = [];
+
+        [DataMember]
+        public virtual bool IsNoOp { get; set; }
     }
 
     public partial class CodeMashSubscriptionDto
@@ -2143,6 +2168,9 @@ namespace Norbix.Sdk.Types.Hub;
     {
         [DataMember]
         public virtual List<string> Environments { get; set; } = [];
+
+        [DataMember]
+        public virtual List<string> PromotionOrder { get; set; } = [];
     }
 
     [DataContract]
@@ -2162,6 +2190,124 @@ namespace Norbix.Sdk.Types.Hub;
     }
 
     [DataContract]
+    public partial class PromotionIntegrationChangeDto
+    {
+        [DataMember]
+        public virtual string Module { get; set; }
+
+        [DataMember]
+        public virtual string Id { get; set; }
+
+        [DataMember]
+        public virtual string Name { get; set; }
+
+        [DataMember]
+        public virtual string Provider { get; set; }
+
+        [DataMember]
+        public virtual string Status { get; set; }
+
+        [DataMember]
+        public virtual string DefaultAction { get; set; }
+
+        [DataMember]
+        public virtual string? Action { get; set; }
+
+        [DataMember]
+        public virtual string? TargetId { get; set; }
+
+        [DataMember]
+        public virtual string? MapToId { get; set; }
+
+        [DataMember]
+        public virtual bool HoldsSecret { get; set; }
+
+        [DataMember]
+        public virtual bool IsFake { get; set; }
+
+        [DataMember]
+        public virtual bool RealSender { get; set; }
+
+        [DataMember]
+        public virtual List<PromotionIntegrationTargetDto> Targets { get; set; } = [];
+
+        [DataMember]
+        public virtual string? Warning { get; set; }
+
+        [DataMember]
+        public virtual string? Note { get; set; }
+    }
+
+    [DataContract]
+    public partial class PromotionIntegrationChoiceDto
+    {
+        ///<summary>
+        ///The SOURCE integration id (int_…), as listed in the preview's integrations[].id.
+        ///</summary>
+        [DataMember]
+        public virtual string Id { get; set; }
+
+        ///<summary>
+        ///'seed' = copy the integration (with its secret) into the target; 'skip' = leave it out; 'map' = point the promoted content at an existing target integration of the same module (mapToId).
+        ///</summary>
+        [DataMember]
+        public virtual string Action { get; set; }
+
+        ///<summary>
+        ///Only for 'map': the TARGET integration id (same module), from the preview's integrations[].targets[].id.
+        ///</summary>
+        [DataMember]
+        public virtual string? MapToId { get; set; }
+    }
+
+    [DataContract]
+    public partial class PromotionIntegrationTargetDto
+    {
+        [DataMember]
+        public virtual string Id { get; set; }
+
+        [DataMember]
+        public virtual string Name { get; set; }
+
+        [DataMember]
+        public virtual string Provider { get; set; }
+
+        [DataMember]
+        public virtual bool IsDefault { get; set; }
+    }
+
+    [DataContract]
+    public partial class PromotionItemChangeDto
+    {
+        [DataMember]
+        public virtual string Type { get; set; }
+
+        [DataMember]
+        public virtual string Id { get; set; }
+
+        [DataMember]
+        public virtual string? Name { get; set; }
+
+        [DataMember]
+        public virtual string Status { get; set; }
+
+        [DataMember]
+        public virtual string? MatchedBy { get; set; }
+
+        [DataMember]
+        public virtual string? PreviousTargetId { get; set; }
+
+        [DataMember]
+        public virtual bool BuiltIn { get; set; }
+
+        [DataMember]
+        public virtual long? RecordCount { get; set; }
+
+        [DataMember]
+        public virtual string? Note { get; set; }
+    }
+
+    [DataContract]
     public partial class PromotionItemDto
     {
         [DataMember]
@@ -2172,8 +2318,39 @@ namespace Norbix.Sdk.Types.Hub;
     }
 
     [DataContract]
+    public partial class PromotionNotPromotedDto
+    {
+        [DataMember]
+        public virtual string Area { get; set; }
+
+        [DataMember]
+        public virtual string Scope { get; set; }
+
+        [DataMember]
+        public virtual string Reason { get; set; }
+
+        [DataMember]
+        public virtual int? Count { get; set; }
+    }
+
+    [DataContract]
     public partial class PromotionResultDto
     {
+        [DataMember]
+        public virtual PromotionSummaryDto Summary { get; set; }
+
+        [DataMember]
+        public virtual List<PromotionItemChangeDto> Items { get; set; } = [];
+
+        [DataMember]
+        public virtual List<PromotionIntegrationChangeDto> Integrations { get; set; } = [];
+
+        [DataMember]
+        public virtual List<PromotionNotPromotedDto> NotPromoted { get; set; } = [];
+
+        [DataMember]
+        public virtual bool RequiresConfirmation { get; set; }
+
         [DataMember]
         public virtual List<PromotionItemDto> ContentMirrored { get; set; } = [];
 
@@ -2203,6 +2380,52 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember]
         public virtual bool WasDryRun { get; set; }
+
+        [DataMember]
+        public virtual bool? Promoted { get; set; }
+
+        [DataMember]
+        public virtual string? Message { get; set; }
+    }
+
+    [DataContract]
+    public partial class PromotionSummaryDto
+    {
+        [DataMember]
+        public virtual int Added { get; set; }
+
+        [DataMember]
+        public virtual int Changed { get; set; }
+
+        [DataMember]
+        public virtual int Unchanged { get; set; }
+
+        [DataMember]
+        public virtual int Deleted { get; set; }
+
+        [DataMember]
+        public virtual int Kept { get; set; }
+
+        [DataMember]
+        public virtual int Skipped { get; set; }
+
+        [DataMember]
+        public virtual long RecordsAtRisk { get; set; }
+
+        [DataMember]
+        public virtual int IntegrationsSeeded { get; set; }
+
+        [DataMember]
+        public virtual int IntegrationsSkipped { get; set; }
+
+        [DataMember]
+        public virtual int IntegrationsMapped { get; set; }
+
+        [DataMember]
+        public virtual int IntegrationsRemoved { get; set; }
+
+        [DataMember]
+        public virtual bool IsNoOp { get; set; }
     }
 
     [DataContract]
@@ -5326,6 +5549,9 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember]
         public virtual List<SchemaUniqueIndexDto>? UniqueIndexes { get; set; }
+
+        [DataMember]
+        public virtual bool? EndUserOwnRecords { get; set; }
     }
 
     public partial class SchemaUniqueIndexDto
@@ -6336,6 +6562,16 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual AccessInformationDto RegistrationInformation { get; set; }
     }
 
+    [DataContract]
+    public partial class RoleEnvironmentsDto
+    {
+        [DataMember]
+        public virtual string RoleId { get; set; }
+
+        [DataMember]
+        public virtual List<string> Environments { get; set; } = [];
+    }
+
     public partial class RoleItemDto
     {
         public virtual string Id { get; set; }
@@ -7178,9 +7414,10 @@ namespace Norbix.Sdk.Types.Hub;
     public partial class AppleInAppPaymentIntegrationDto
         : PaymentsIntegrationDto
     {
-        public virtual string MerchantIdentifier { get; set; }
-        public virtual string MerchantDomain { get; set; }
-        public virtual string DisplayName { get; set; }
+        public virtual string? WebhookBundleId { get; set; }
+        public virtual string? MerchantIdentifier { get; set; }
+        public virtual string? MerchantDomain { get; set; }
+        public virtual string? DisplayName { get; set; }
     }
 
     public partial class AuthorizeNetPaymentIntegrationDto
@@ -7188,7 +7425,6 @@ namespace Norbix.Sdk.Types.Hub;
     {
         public virtual string MerchantLoginId { get; set; }
         public virtual string Environment { get; set; }
-        public virtual string? WebhookSignatureKey { get; set; }
     }
 
     public partial class BraintreePaymentIntegrationDto
@@ -7196,7 +7432,6 @@ namespace Norbix.Sdk.Types.Hub;
     {
         public virtual string MerchantId { get; set; }
         public virtual string Environment { get; set; }
-        public virtual string? WebhookSecret { get; set; }
     }
 
     public partial class CheckOutComPaymentIntegrationDto
@@ -7204,15 +7439,15 @@ namespace Norbix.Sdk.Types.Hub;
     {
         public virtual string MerchantAccount { get; set; }
         public virtual string Environment { get; set; }
-        public virtual string? WebhookSecret { get; set; }
     }
 
     public partial class GoogleInAppPaymentIntegrationDto
         : PaymentsIntegrationDto
     {
-        public virtual string MerchantId { get; set; }
-        public virtual string MerchantName { get; set; }
-        public virtual string Gateway { get; set; }
+        public virtual string? WebhookPackageName { get; set; }
+        public virtual string? MerchantId { get; set; }
+        public virtual string? MerchantName { get; set; }
+        public virtual string? Gateway { get; set; }
         public virtual string? GatewayMerchantId { get; set; }
     }
 
@@ -7227,7 +7462,6 @@ namespace Norbix.Sdk.Types.Hub;
         : PaymentsIntegrationDto
     {
         public virtual string StoreUrl { get; set; }
-        public virtual string? WebhookSecret { get; set; }
     }
 
     public partial class MolliePaymentIntegrationDto
@@ -7264,7 +7498,6 @@ namespace Norbix.Sdk.Types.Hub;
         : PaymentsIntegrationDto
     {
         public virtual string ShopDomain { get; set; }
-        public virtual string? WebhookSecret { get; set; }
     }
 
     public partial class StripePaymentIntegrationDto
@@ -7279,7 +7512,6 @@ namespace Norbix.Sdk.Types.Hub;
         : PaymentsIntegrationDto
     {
         public virtual string StoreUrl { get; set; }
-        public virtual string? WebhookSecret { get; set; }
     }
 
     public partial class WorldpayPaymentIntegrationDto
@@ -7287,7 +7519,6 @@ namespace Norbix.Sdk.Types.Hub;
     {
         public virtual string MerchantCode { get; set; }
         public virtual string Environment { get; set; }
-        public virtual string? WebhookSecret { get; set; }
     }
 
     [DataContract]
@@ -8872,6 +9103,11 @@ namespace Norbix.Sdk.Types.Hub;
         ///Project roles to give: [{ projectId, roleIds: [pr_…_nr_…] }]. Without an account role the service user is pinned to these projects.
         ///</summary>
         public virtual List<AiProjectRoleIdsDto>? ProjectRoles { get; set; }
+
+        ///<summary>
+        ///Optional "Applies in" per role (N41): [{ roleId, environments: ["TEST"] }]. A role given here applies only in those environments (requests in another environment get 403 CM-ERRORS-MEMBERSHIP-041). No entry or an empty list = every environment.
+        ///</summary>
+        public virtual List<RoleEnvironmentsDto>? RoleEnvironments { get; set; }
     }
 
     [NorbixRoute("/{version}/account/ai/service-users/{Id}", "DELETE")]
@@ -9254,6 +9490,19 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual HashSet<string>? Policies { get; set; }
     }
 
+    ///<summary>
+    ///Cancels a pending team invitation
+    ///</summary>
+    [NorbixRoute("/{version}/account/team/invitations/{InvitationId}", "DELETE")]
+    public partial class CancelTeamInvitation
+        : RequestBase, INorbixRequest<IdResponse>
+    {
+        ///<summary>
+        ///The invitation id, as get_account_team_invitations lists it.
+        ///</summary>
+        public virtual string InvitationId { get; set; }
+    }
+
     [NorbixRoute("/{version}/account/team/member/password", "POST")]
     public partial class ChangeTeamMemberPassword
         : RequestBase, INorbixRequest<IdResponse>, INorbixOptionalAuth
@@ -9400,6 +9649,21 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual AccountPasswordPolicyDto? Policy { get; set; }
     }
 
+    ///<summary>
+    ///Lists the account's pending team invitations
+    ///</summary>
+    [NorbixRoute("/{version}/account/team/invitations", "GET")]
+    public partial class GetAccountTeamInvitations
+        : RequestBase, INorbixRequest<GetAccountTeamInvitationsResponse>
+    {
+    }
+
+    public partial class GetAccountTeamInvitationsResponse
+        : ResponseBase
+    {
+        public virtual List<TeamInvitationDto> Items { get; set; } = [];
+    }
+
     [NorbixRoute("/{version}/account/team/policies", "GET")]
     public partial class GetAccountTeamPolicies
         : RequestBase, INorbixRequest<GetAccountTeamPoliciesResponse>
@@ -9425,6 +9689,19 @@ namespace Norbix.Sdk.Types.Hub;
     }
 
     ///<summary>
+    ///Removes a team member from the account
+    ///</summary>
+    [NorbixRoute("/{version}/account/team/member/{MemberId}", "DELETE")]
+    public partial class RemoveTeamMember
+        : RequestBase, INorbixRequest<IdResponse>
+    {
+        ///<summary>
+        ///The team member's id (usr_…), as get_account_collaborators lists it.
+        ///</summary>
+        public virtual string MemberId { get; set; }
+    }
+
+    ///<summary>
     ///Send invite to team member
     ///</summary>
     [NorbixRoute("/{version}/account/team/member/invite", "POST")]
@@ -9440,6 +9717,39 @@ namespace Norbix.Sdk.Types.Hub;
         ///Account role ids (GUIDs from get_account_team_roles) the member gets on accepting. Omit for the default member role.
         ///</summary>
         public virtual HashSet<string>? Roles { get; set; }
+    }
+
+    [NorbixRoute("/{version}/account/team/member/role-environments", "PUT")]
+    public partial class SetTeamMemberRoleEnvironmentsRequest
+        : RequestBase, INorbixRequest<IdResponse>
+    {
+        ///<summary>
+        ///The team member's id (usr_…), as GET /account/collaborators lists it.
+        ///</summary>
+        public virtual string MemberId { get; set; }
+
+        ///<summary>
+        ///The account role the member holds: its id (acc_…_nr_…) or its template id (GUID, as GetAccountTeamRoles lists it).
+        ///</summary>
+        public virtual string RoleId { get; set; }
+
+        ///<summary>
+        ///Environment names, e.g. ["TEST"]. Empty = every environment.
+        ///</summary>
+        public virtual List<string>? Environments { get; set; }
+    }
+
+    public partial class TeamMemberRoleInput
+    {
+        ///<summary>
+        ///Account role id (acc_…_nr_…) or its template id (GUID), as get_account_team_roles lists it.
+        ///</summary>
+        public virtual string RoleId { get; set; }
+
+        ///<summary>
+        ///Environment names the role applies in, e.g. ["TEST"]. Empty or omitted = every environment.
+        ///</summary>
+        public virtual List<string>? Environments { get; set; }
     }
 
     [NorbixRoute("/{version}/account/team/policies", "PUT")]
@@ -9490,6 +9800,29 @@ namespace Norbix.Sdk.Types.Hub;
         ///Public policy ids (from get_account_team_policies) to attach — replaces the current set.
         ///</summary>
         public virtual HashSet<string>? Policies { get; set; }
+    }
+
+    ///<summary>
+    ///Updates a team member's display name and/or account roles
+    ///</summary>
+    [NorbixRoute("/{version}/account/team/member", "PUT")]
+    public partial class UpdateTeamMember
+        : RequestBase, INorbixRequest<IdResponse>
+    {
+        ///<summary>
+        ///The team member's id (usr_…), as get_account_collaborators lists it.
+        ///</summary>
+        public virtual string MemberId { get; set; }
+
+        ///<summary>
+        ///New display name. Omit to keep the current one.
+        ///</summary>
+        public virtual string? DisplayName { get; set; }
+
+        ///<summary>
+        ///The member's account roles after the change — REPLACES the current ones. Omit to keep the roles; an empty list removes every account role (the member stays on the team).
+        ///</summary>
+        public virtual List<TeamMemberRoleInput>? Roles { get; set; }
     }
 
     [NorbixRoute("/{version}/account/projects/environments", "POST")]
@@ -9638,12 +9971,48 @@ namespace Norbix.Sdk.Types.Hub;
         ///</summary>
         [DataMember]
         public virtual bool DryRun { get; set; }
+
+        ///<summary>
+        ///Must be true for a real run that deletes a collection holding records in the target (the preview lists each with recordCount). Without it the run refuses and changes nothing.
+        ///</summary>
+        [DataMember]
+        public virtual bool ConfirmRecordLoss { get; set; }
+
+        ///<summary>
+        ///Per source integration id: action 'seed' (copy it with its secret into the target), 'skip' (leave it out) or 'map' (mapToId: a target integration of the same module the promoted content should use). Missing ids use the default: Fake providers 'seed' (unless the target already has its own Fake of that module), everything else 'skip'.
+        ///</summary>
+        [DataMember]
+        public virtual List<PromotionIntegrationChoiceDto>? IntegrationChoices { get; set; }
     }
 
     public partial class PromoteEnvironmentResponse
         : ResponseBase
     {
         public virtual PromotionResultDto? Item { get; set; }
+    }
+
+    [NorbixRoute("/{version}/account/projects/environments/built-ins/repair", "POST")]
+    [DataContract]
+    public partial class RepairEnvironmentBuiltInsRequest
+        : CodeMashRequestBase, INorbixRequest<RepairEnvironmentBuiltInsResponse>
+    {
+        ///<summary>
+        ///The environment to repair. Empty = every environment except PROD.
+        ///</summary>
+        [DataMember]
+        public virtual string? EnvironmentName { get; set; }
+
+        ///<summary>
+        ///When true, only returns what would be done.
+        ///</summary>
+        [DataMember]
+        public virtual bool DryRun { get; set; }
+    }
+
+    public partial class RepairEnvironmentBuiltInsResponse
+        : ResponseBase
+    {
+        public virtual List<BuiltInRepairDto> Items { get; set; } = [];
     }
 
     [NorbixRoute("/{version}/account/projects/environments/promote/rollback", "POST")]
@@ -9662,6 +10031,18 @@ namespace Norbix.Sdk.Types.Hub;
         ///</summary>
         [DataMember]
         public virtual long FromVersion { get; set; }
+
+        ///<summary>
+        ///When true, only returns the rollback plan without applying it.
+        ///</summary>
+        [DataMember]
+        public virtual bool DryRun { get; set; }
+
+        ///<summary>
+        ///Must be true when the rollback deletes a collection holding records in the target.
+        ///</summary>
+        [DataMember]
+        public virtual bool ConfirmRecordLoss { get; set; }
     }
 
     [NorbixRoute("/{version}/account/projects/environments/{environmentName}/rank", "PATCH")]
@@ -14092,6 +14473,62 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual string Id { get; set; }
     }
 
+    [DataContract]
+    public partial class EndUserOwnRecordsReportDto
+    {
+        [DataMember(Name="dryRun")]
+        public virtual bool DryRun { get; set; }
+
+        [DataMember(Name="env")]
+        public virtual string Env { get; set; }
+
+        [DataMember(Name="schemas")]
+        public virtual List<EndUserOwnRecordsRowDto> Schemas { get; set; } = [];
+    }
+
+    ///<summary>
+    ///List the endUserOwnRecords switch of every schema (and turn it on for named schemas)
+    ///</summary>
+    [NorbixRoute("/{version}/database/schemas/end-user-own-records", "POST")]
+    public partial class EndUserOwnRecordsReportRequest
+        : CodeMashRequestBase, INorbixRequest<EndUserOwnRecordsReportResponse>
+    {
+        ///<summary>
+        ///True (default) = only list. False = turn the switch on for the schemas in 'enable'.
+        ///</summary>
+        public virtual bool DryRun { get; set; }
+
+        ///<summary>
+        ///Schema names to turn the switch ON for (only with dryRun:false). Empty = change nothing.
+        ///</summary>
+        public virtual List<string> Enable { get; set; } = [];
+    }
+
+    public partial class EndUserOwnRecordsReportResponse
+        : ResponseBase
+    {
+        public virtual EndUserOwnRecordsReportDto? Result { get; set; }
+    }
+
+    [DataContract]
+    public partial class EndUserOwnRecordsRowDto
+    {
+        [DataMember(Name="schemaId")]
+        public virtual string SchemaId { get; set; }
+
+        [DataMember(Name="schemaName")]
+        public virtual string SchemaName { get; set; }
+
+        [DataMember(Name="hasRecordOwner")]
+        public virtual bool HasRecordOwner { get; set; }
+
+        [DataMember(Name="endUserOwnRecords")]
+        public virtual bool EndUserOwnRecords { get; set; }
+
+        [DataMember(Name="action")]
+        public virtual string Action { get; set; }
+    }
+
     ///<summary>
     ///Gets database schema by id
     ///</summary>
@@ -17782,14 +18219,14 @@ namespace Norbix.Sdk.Types.Hub;
         : PaymentIntegrationRequest
     {
         public virtual PaymentGatewayPlatform Provider { get; set; }
-        public virtual string MerchantIdentifier { get; set; }
-        public virtual string MerchantDomain { get; set; }
-        public virtual string DisplayName { get; set; }
-        public virtual string MerchantIdentityCertificateP12Base64 { get; set; }
-        public virtual string MerchantIdentityCertificatePassword { get; set; }
-        public virtual string PaymentProcessingCertificateP12Base64 { get; set; }
-        public virtual string PaymentProcessingCertificatePassword { get; set; }
-        public virtual string? WebhookBundleId { get; set; }
+        public virtual string WebhookBundleId { get; set; }
+        public virtual string? MerchantIdentifier { get; set; }
+        public virtual string? MerchantDomain { get; set; }
+        public virtual string? DisplayName { get; set; }
+        public virtual string? MerchantIdentityCertificateP12Base64 { get; set; }
+        public virtual string? MerchantIdentityCertificatePassword { get; set; }
+        public virtual string? PaymentProcessingCertificateP12Base64 { get; set; }
+        public virtual string? PaymentProcessingCertificatePassword { get; set; }
     }
 
     public partial class AuthorizeNetPaymentIntegrationRequest
@@ -17914,12 +18351,12 @@ namespace Norbix.Sdk.Types.Hub;
         : PaymentIntegrationRequest
     {
         public virtual PaymentGatewayPlatform Provider { get; set; }
-        public virtual string MerchantId { get; set; }
-        public virtual string MerchantName { get; set; }
-        public virtual string Gateway { get; set; }
-        public virtual string PrivateKeyOrToken { get; set; }
+        public virtual string WebhookPackageName { get; set; }
+        public virtual string? MerchantId { get; set; }
+        public virtual string? MerchantName { get; set; }
+        public virtual string? Gateway { get; set; }
+        public virtual string? PrivateKeyOrToken { get; set; }
         public virtual string? GatewayMerchantId { get; set; }
-        public virtual string? WebhookPackageName { get; set; }
     }
 
     public partial class LemonSqueezyPaymentIntegrationRequest
@@ -18048,7 +18485,7 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual string MerchantCode { get; set; }
         public virtual string Environment { get; set; }
         public virtual string ApiKey { get; set; }
-        public virtual string? WebhookSecret { get; set; }
+        public virtual string WebhookSecret { get; set; }
     }
 
     ///<summary>
