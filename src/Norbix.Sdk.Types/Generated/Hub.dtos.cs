@@ -953,6 +953,8 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual FakeCodeIntegrationRequest? Typegen_282_FakeCodeIntegrationRequest { get; set; }
         public virtual CodeFunctionSchedulerTaskRequest? Typegen_283_CodeFunctionSchedulerTaskRequest { get; set; }
         public virtual MarketplaceFunctionSchedulerTaskRequest? Typegen_284_MarketplaceFunctionSchedulerTaskRequest { get; set; }
+        public virtual AwsCloudWatchLoggingIntegrationRequest? Typegen_285_AwsCloudWatchLoggingIntegrationRequest { get; set; }
+        public virtual AwsCloudWatchLoggingIntegrationDto? Typegen_286_AwsCloudWatchLoggingIntegrationDto { get; set; }
     }
 
     [DataContract]
@@ -6168,6 +6170,9 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual string Env { get; set; }
 
         [DataMember]
+        public virtual string Origin { get; set; }
+
+        [DataMember]
         public virtual IReadOnlyDictionary<string, string>? Meta { get; set; }
     }
 
@@ -6192,6 +6197,14 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual string VirtualHost { get; set; }
         public virtual string Exchange { get; set; }
         public virtual string RoutingKey { get; set; }
+    }
+
+    public partial class AwsCloudWatchLoggingIntegrationDto
+        : LoggingIntegrationDto
+    {
+        public virtual string Region { get; set; }
+        public virtual string LogGroup { get; set; }
+        public virtual string LogStream { get; set; }
     }
 
     public partial class AwsKinesisLoggingIntegrationDto
@@ -16875,6 +16888,25 @@ namespace Norbix.Sdk.Types.Hub;
     }
 
     ///<summary>
+    ///Fetch one tenant log entry by id
+    ///</summary>
+    [NorbixRoute("/{version}/logs/{Id}", "GET")]
+    public partial class GetLog
+        : CodeMashRequestBase, INorbixRequest<GetLogResponse>
+    {
+        ///<summary>
+        ///The log entry id (24 hex characters), from a get_logs row.
+        ///</summary>
+        public virtual string Id { get; set; }
+    }
+
+    public partial class GetLogResponse
+        : ResponseBase
+    {
+        public virtual TenantLogEntryDto? Item { get; set; }
+    }
+
+    ///<summary>
     ///Fetch a filtered, cursor-paged list of tenant log entries
     ///</summary>
     [NorbixRoute("/{version}/logs", "GET")]
@@ -16978,19 +17010,19 @@ namespace Norbix.Sdk.Types.Hub;
         : CodeMashRequestBase, INorbixRequest<SaveLogSettingsResponse>
     {
         ///<summary>
-        ///Drop log entries from requests originating from the Norbix studio (cloud dashboard).
+        ///Drop log entries from requests originating from the Norbix studio (cloud dashboard). Not sent = unchanged.
         ///</summary>
-        public virtual bool SkipCloudDashboardLogs { get; set; }
+        public virtual bool? SkipCloudDashboardLogs { get; set; }
 
         ///<summary>
-        ///Strip request/response body meta off http:request / http:response log entries.
+        ///Strip request/response body meta off http:request / http:response log entries. Not sent = unchanged.
         ///</summary>
-        public virtual bool SkipHttpBodyMeta { get; set; }
+        public virtual bool? SkipHttpBodyMeta { get; set; }
 
         ///<summary>
-        ///Turn on tenant-visible log entries for AI chat turns. Default false.
+        ///Turn on tenant-visible log entries for AI chat turns. Default false. Not sent = unchanged.
         ///</summary>
-        public virtual bool AiChatLoggingEnabled { get; set; }
+        public virtual bool? AiChatLoggingEnabled { get; set; }
     }
 
     public partial class SaveLogSettingsResponse
@@ -17009,6 +17041,17 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual string RoutingKey { get; set; }
         public virtual string Username { get; set; }
         public virtual string Password { get; set; }
+    }
+
+    public partial class AwsCloudWatchLoggingIntegrationRequest
+        : LoggingIntegrationRequest
+    {
+        public virtual LoggingProvider Provider { get; set; }
+        public virtual string Region { get; set; }
+        public virtual string LogGroup { get; set; }
+        public virtual string LogStream { get; set; }
+        public virtual string AccessKey { get; set; }
+        public virtual string SecretKey { get; set; }
     }
 
     public partial class AwsKinesisLoggingIntegrationRequest
