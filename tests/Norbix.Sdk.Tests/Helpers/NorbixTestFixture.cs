@@ -50,14 +50,18 @@ internal sealed class NorbixTestFixture : IDisposable
         return new NorbixTestFixture(opts);
     }
 
-    /// <summary>Register a JSON response for a route. Returns <c>this</c> for chaining.</summary>
+    /// <summary>
+    /// Register a JSON response for a route, with optional response headers
+    /// (<c>Retry-After</c>, say). Returns <c>this</c> for chaining.
+    /// </summary>
     public NorbixTestFixture Respond(
         string pathSuffix,
         object body,
-        System.Net.HttpStatusCode status = System.Net.HttpStatusCode.OK
+        System.Net.HttpStatusCode status = System.Net.HttpStatusCode.OK,
+        IReadOnlyDictionary<string, string>? headers = null
     )
     {
-        _handler.RespondJson(pathSuffix, body, status);
+        _handler.RespondJson(pathSuffix, body, status, headers);
         return this;
     }
 

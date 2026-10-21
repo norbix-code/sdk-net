@@ -29,7 +29,8 @@ internal sealed class MockHttpHandler : HttpMessageHandler
     public MockHttpHandler RespondJson(
         string pathSuffix,
         object body,
-        HttpStatusCode status = HttpStatusCode.OK
+        HttpStatusCode status = HttpStatusCode.OK,
+        IReadOnlyDictionary<string, string>? headers = null
     )
     {
         _responders.Insert(
@@ -39,7 +40,15 @@ internal sealed class MockHttpHandler : HttpMessageHandler
                 Match = req =>
                     req.RequestUri?.AbsolutePath.EndsWith(pathSuffix, StringComparison.Ordinal)
                     == true,
-                Build = () => Json(body, status),
+                Build = () =>
+                {
+                    var response = Json(body, status);
+                    foreach (var (name, value) in headers ?? new Dictionary<string, string>())
+                    {
+                        response.Headers.TryAddWithoutValidation(name, value);
+                    }
+                    return response;
+                },
             }
         );
         return this;
