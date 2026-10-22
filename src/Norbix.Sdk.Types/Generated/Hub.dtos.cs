@@ -679,9 +679,7 @@ namespace Norbix.Sdk.Types.Hub;
         Fake,
     }
 
-    [NorbixRoute("/internal/_typegen", "GET")]
     public partial class InternalsTypeGen
-        : INorbixOptionalAuth
     {
         public virtual SmtpEmailIntegrationRequest? Typegen_0_SmtpEmailIntegrationRequest { get; set; }
         public virtual AwsSesEmailIntegrationRequest? Typegen_1_AwsSesEmailIntegrationRequest { get; set; }
@@ -8861,7 +8859,7 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual string? ContentType { get; set; }
 
         [DataMember]
-        public virtual bool IncludeRawPayload { get; set; }
+        public virtual bool? IncludeRawPayload { get; set; }
 
         [DataMember]
         public virtual HashSet<TokenMappingDto>? MappedTokens { get; set; }
@@ -11406,7 +11404,7 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual string? IntegrationId { get; set; }
         public virtual EmbeddingProvider Provider { get; set; }
         public virtual string IntegrationName { get; set; }
-        public virtual bool IsEnabled { get; set; }
+        public virtual bool? IsEnabled { get; set; }
         public virtual string? Endpoint { get; set; }
         public virtual string Model { get; set; }
         public virtual int Dimension { get; set; }
@@ -13289,9 +13287,9 @@ namespace Norbix.Sdk.Types.Hub;
         : CodeMashRequestBase, INorbixRequest<RepairContactRolesResponse>
     {
         ///<summary>
-        ///True (default) = only count what would change. False = write.
+        ///True = only count what would change. False = write. Empty = true (only count).
         ///</summary>
-        public virtual bool DryRun { get; set; }
+        public virtual bool? DryRun { get; set; }
     }
 
     public partial class RepairContactRolesResponse
@@ -14432,10 +14430,10 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual bool Translatable { get; set; }
 
         ///<summary>
-        ///false = leave every collection as a draft instead of publishing v1. Default true.
+        ///false = leave every collection as a draft instead of publishing v1. Empty = true (publish v1).
         ///</summary>
         [DataMember]
-        public virtual bool Publish { get; set; }
+        public virtual bool? Publish { get; set; }
     }
 
     [DataContract]
@@ -14507,9 +14505,9 @@ namespace Norbix.Sdk.Types.Hub;
         : CodeMashRequestBase, INorbixRequest<EndUserOwnRecordsReportResponse>
     {
         ///<summary>
-        ///True (default) = only list. False = turn the switch on for the schemas in 'enable'.
+        ///True = only list. False = turn the switch on for the schemas in 'enable'. Empty = true (only list).
         ///</summary>
-        public virtual bool DryRun { get; set; }
+        public virtual bool? DryRun { get; set; }
 
         ///<summary>
         ///Schema names to turn the switch ON for (only with dryRun:false). Empty = change nothing.
@@ -16454,7 +16452,7 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual string? IntegrationId { get; set; }
         public virtual EmailValidationProvider Provider { get; set; }
         public virtual string IntegrationName { get; set; }
-        public virtual bool IsEnabled { get; set; }
+        public virtual bool? IsEnabled { get; set; }
     }
 
     [NorbixRoute("/{version}/notifications/email/validation/integrations", "POST")]
@@ -17090,7 +17088,11 @@ namespace Norbix.Sdk.Types.Hub;
         : LoggingIntegrationRequest
     {
         public virtual LoggingProvider Provider { get; set; }
+        ///<summary>
+        ///The Datadog site of your account, one of: datadoghq.com, us3.datadoghq.com, us5.datadoghq.com, datadoghq.eu, ap1.datadoghq.com, ap2.datadoghq.com, ddog-gov.com (DataDogSites.All).
+        ///</summary>
         public virtual string Site { get; set; }
+
         public virtual string ServiceName { get; set; }
         public virtual string Environment { get; set; }
         public virtual string ApiKey { get; set; }
@@ -17700,9 +17702,9 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual int RecoveryCodeCount { get; set; }
 
         ///<summary>
-        ///Whether recovery codes are generated automatically at signup.
+        ///Whether recovery codes are generated automatically at signup. Empty = true (generated).
         ///</summary>
-        public virtual bool GenerateRecoveryCodesAtSignup { get; set; }
+        public virtual bool? GenerateRecoveryCodesAtSignup { get; set; }
 
         ///<summary>
         ///Accepted authenticator types: 'Any', 'Platform', or 'CrossPlatform'.
@@ -18024,9 +18026,9 @@ namespace Norbix.Sdk.Types.Hub;
         : CodeMashRequestBase, INorbixRequest<ImportUsersResponse>
     {
         ///<summary>
-        ///True (default) = check every row and write nothing. False = write.
+        ///True = check every row and write nothing. False = write. Empty = true (check only, write nothing).
         ///</summary>
-        public virtual bool DryRun { get; set; }
+        public virtual bool? DryRun { get; set; }
 
         ///<summary>
         ///True = do not add the project's default roles (as 'ignoreUserRegistersAsRole' on registration).
@@ -18078,9 +18080,9 @@ namespace Norbix.Sdk.Types.Hub;
         : CodeMashRequestBase, INorbixRequest<RepairLoginProjectIdsResponse>
     {
         ///<summary>
-        ///True (default) = only count what would change. False = write.
+        ///True = only count what would change. False = write. Empty = true (only count).
         ///</summary>
-        public virtual bool DryRun { get; set; }
+        public virtual bool? DryRun { get; set; }
     }
 
     public partial class RepairLoginProjectIdsResponse
@@ -18436,7 +18438,7 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual PaymentGatewayPlatform Provider { get; set; }
         public virtual string AccessKey { get; set; }
         public virtual string SecretKey { get; set; }
-        public virtual bool IsSandbox { get; set; }
+        public virtual bool? IsSandbox { get; set; }
         public virtual string? Locale { get; set; }
     }
 
@@ -20873,9 +20875,9 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual Dictionary<string, string>? ExtraHeaders { get; set; }
 
         ///<summary>
-        ///Whether this destination is enabled for delivery. Defaults to true.
+        ///Whether this destination is enabled for delivery. Empty = true (enabled).
         ///</summary>
-        public virtual bool IsEnabled { get; set; }
+        public virtual bool? IsEnabled { get; set; }
     }
 
     public partial class SaveWebhookDestinationResponse

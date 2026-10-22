@@ -325,7 +325,7 @@ The public endpoint surface is generated from gateway DTOs at compile time. The 
 | `payments` | 4 | Payment orders and checkout: `CreatePaymentOrderAsync`, `GetPaymentOrderAsync`, `GetPaymentOrdersAsync`, `StartPaymentCheckoutAsync`. See [Payment orders and checkout](#payment-orders-and-checkout). |
 | `public` | 2 | The project's public config and legal documents, read by the Admin Portal before sign-in (`GetPublicProjectConfigAsync`, `GetPublicProjectLegalAsync`). See [docs/hub/project.md](./docs/hub/project.md#public-config-and-legal-no-sign-in). |
 
-### Hub — project & account configuration (526 endpoints)
+### Hub — project & account configuration (525 endpoints)
 
 | Module | Endpoints | Description |
 | --- | ---: | --- |
@@ -335,12 +335,11 @@ The public endpoint surface is generated from gateway DTOs at compile time. The 
 | `echo` | 1 | Smoke-test echo endpoint. |
 | `email` | 2 | Public e-mail link endpoints: `OneClickUnsubscribeAsync` and `GetEmailPreferencesByLinkAsync` (reads the marketing preferences behind a signed unsubscribe link; pass the link's `Token`). Both are public links: they work on a client with no API key (the key is sent only when there is one), like the three `Preview*NotificationAsync` methods. |
 | `files` | 23 | File storage integrations, triggers, public links, a file by its stored id (`GetFileByIdAsync`), and module settings. |
-| `internal` | 1 | Internal type-generation endpoint. |
 | `logs` | 15 | Module on / off, the log list (`GetLogsAsync`), one entry by id (`GetLogAsync`), one flow by correlation id (`GetLogsByCorrelationIdAsync`), `CleanLogsAsync`, log settings, and logging integrations (MongoDB, Datadog, AWS CloudWatch, …). After saving an integration call `TestLoggingIntegrationAsync`: nothing is delivered to an integration until its last test passed. |
 | `membership` | 25 | Roles, policies, users, preferences, integrations, triggers. |
 | `notifications` | 123 | Email, push and SMS templates, integrations, campaigns, devices, settings. Push: [docs/hub/push.md](./docs/hub/push.md). SMS: [docs/hub/sms.md](./docs/hub/sms.md). |
 | `oauth` | 5 | The gateway's OAuth server routes (register, authorize, token, revoke). |
-| `payments` | 16 | Payment integrations (Stripe, Mollie, Montonio — `MontonioPaymentIntegrationRequest` with `AccessKey`, `SecretKey`, `IsSandbox`, `Locale`), triggers, tests, and module settings. |
+| `payments` | 16 | Payment integrations (Stripe, Mollie, Montonio — `MontonioPaymentIntegrationRequest` with `AccessKey`, `SecretKey`, `IsSandbox` — `bool?`, empty = true (sandbox), `Locale`), triggers, tests, and module settings. |
 | `scheduler` | 8 | Scheduler module on / off (`EnableSchedulerAsync`, `DisableSchedulerAsync` — `PUT`) and cron tasks: list, read, save, enable, disable, delete. Only email campaign tasks today (`EmailCampaignSchedulerTaskRequest`). Every method and a typed save example: [docs/hub/scheduler.md](./docs/hub/scheduler.md). |
 | `triggers` | 1 | `GetTriggersNeedingAttentionAsync` — triggers of one type (`TriggerType`) whose last run needs attention, with the reason and the time. |
 | `webhooks` | 8 | Webhook integrations, destinations, tests, and module settings. |
@@ -358,6 +357,21 @@ environment (`norbix-env` header or `Env`, `PROD` when neither is set); each row
 carries its `Env`. The paging cursors (`StartingAfter` / `EndingBefore`) are now
 schema view ids (`sch_…`), so a cursor saved from an older gateway no longer
 matches.
+
+### True-by-default switches are `bool?` — empty = true (gateway 2026-10-22)
+
+A true/false field that defaults to **true** on the gateway is a `bool?`. Left
+`null` it is not sent (the client writes JSON with `WhenWritingNull`) and the
+gateway keeps the safe default; set it to `false` to switch it off.
+
+| Field | Request | Empty (`null`) means |
+| --- | --- | --- |
+| `IsSandbox` | `MontonioPaymentIntegrationRequest` | sandbox, no live money |
+| `DryRun` | `ImportUsersRequest`, `RepairLoginProjectIdsRequest`, `RepairContactRolesRequest`, `EndUserOwnRecordsReportRequest` | only check / count, write nothing |
+| `Publish` | `ApplyDatabaseSchemaBundleRequest` | publish v1 |
+| `IsEnabled` | `EmbeddingIntegrationRequest`, `EmailValidationIntegrationRequest`, `SaveWebhookDestinationRequest` | enabled |
+| `GenerateRecoveryCodesAtSignup` | `SavePasskeySettings` | generated |
+| `IncludeRawPayload` | `WebhookDeliverySettingsDto` | included |
 
 ### Database writes, triggers and taxonomies (gateway 2026-10-05)
 

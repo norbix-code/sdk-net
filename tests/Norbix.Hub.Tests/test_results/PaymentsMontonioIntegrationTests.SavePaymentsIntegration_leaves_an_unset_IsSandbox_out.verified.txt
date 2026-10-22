@@ -1,0 +1,19 @@
+﻿{
+  Unset: {
+    integration: {
+      provider: montonio,
+      accessKey: test-access-key,
+      secretKey: test-secret-key,
+      isEnabled: false
+    }
+  },
+  LiveOnPurpose: {
+    integration: {
+      provider: montonio,
+      accessKey: test-access-key,
+      secretKey: test-secret-key,
+      isSandbox: false,
+      isEnabled: false
+    }
+  }
+}
