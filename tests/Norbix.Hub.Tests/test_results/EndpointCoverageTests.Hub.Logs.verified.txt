@@ -219,6 +219,10 @@
         SkipHttpBodyMeta: true,
         AiChatLoggingEnabled: true,
         HasNorbixLogging: true,
+        Env: test-env,
+        LastEntryAtUtc: DateTime_1,
+        LastStoredAtUtc: DateTime_1,
+        StorageWarning: test-storageWarning,
         ResponseStatus: {
           IsSuccess: true
         }

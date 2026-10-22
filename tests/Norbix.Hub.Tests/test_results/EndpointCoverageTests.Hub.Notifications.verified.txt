@@ -1,7 +1,7 @@
 ﻿{
   Target: Hub,
   Group: notifications,
-  Count: 124,
+  Count: 125,
   Endpoints: [
     {
       Target: Hub,
@@ -2350,6 +2350,35 @@
           StartingAfter: cursor-start,
           EndingBefore: cursor-end
         },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: notifications,
+      MethodName: DeletePushDeviceAsync,
+      RequestType: DeletePushDevice,
+      HttpMethod: DELETE,
+      Path: /{version}/notifications/push/devices/{Id},
+      PathParams: [
+        Id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: DELETE,
+        Path: /v2/notifications/push/devices/{guid},
+        Query: ?databaseIntegrationId={guid}&env=test-env,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
         ResponseStatus: {
           IsSuccess: true
         }
