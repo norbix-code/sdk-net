@@ -1772,6 +1772,30 @@ namespace Norbix.Sdk.Types.Api;
 
         [DataMember]
         public virtual string? IntegrationProblem { get; set; }
+
+        [DataMember]
+        public virtual string? TemplateId { get; set; }
+
+        [DataMember]
+        public virtual string? TemplateName { get; set; }
+
+        [DataMember]
+        public virtual string? TemplateSource { get; set; }
+
+        [DataMember]
+        public virtual string? Language { get; set; }
+
+        [DataMember]
+        public virtual string? LanguageRule { get; set; }
+
+        [DataMember]
+        public virtual List<string>? TemplateLanguages { get; set; }
+
+        [DataMember]
+        public virtual string? Fallback { get; set; }
+
+        [DataMember]
+        public virtual string? MjmlRenderer { get; set; }
     }
 
     ///<summary>
@@ -2304,6 +2328,12 @@ namespace Norbix.Sdk.Types.Api;
     {
         [DataMember]
         public virtual List<string> Roles { get; set; } = [];
+
+        ///<summary>
+        ///Tags to put on the new user's contact (free labels campaigns and segments select by, normalised like any tag). Only here, on the routes that need membership:create — a public self sign-up cannot tag itself. Ignored for a service user (no contact).
+        ///</summary>
+        [DataMember]
+        public virtual List<string>? Tags { get; set; }
     }
 
     ///<summary>
