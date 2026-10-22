@@ -261,6 +261,11 @@ public sealed class EndpointSourceGenerator : IIncrementalGenerator
             return;
         }
 
+        // owner 2026-10-22: /internal/* is not SDK surface
+        endpoints = endpoints
+            .Where(e => !e.Routes.All(r => r.Path.StartsWith("/internal/", StringComparison.Ordinal)))
+            .ToImmutableArray();
+
         var apiEndpoints = endpoints.Where(e => e.Target == EndpointTarget.Api).ToImmutableArray();
         var hubEndpoints = endpoints.Where(e => e.Target == EndpointTarget.Hub).ToImmutableArray();
 
