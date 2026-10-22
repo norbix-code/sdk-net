@@ -1,0 +1,4 @@
+﻿{
+  InternalRoutes: (none),
+  InternalModuleProperty: (none)
+}
