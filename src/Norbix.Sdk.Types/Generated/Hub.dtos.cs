@@ -1568,6 +1568,9 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual HashSet<string>? AllowedOrigins { get; set; }
 
         [DataMember]
+        public virtual List<ProjectEnvironmentAdminUrlDto>? EnvironmentAdminUrls { get; set; }
+
+        [DataMember]
         public virtual bool ExposeBrandToAdminPortal { get; set; }
 
         [DataMember]
@@ -1674,6 +1677,16 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember]
         public virtual int Connections { get; set; }
+    }
+
+    [DataContract]
+    public partial class ProjectEnvironmentAdminUrlDto
+    {
+        [DataMember]
+        public virtual string Env { get; set; }
+
+        [DataMember]
+        public virtual string Url { get; set; }
     }
 
     [DataContract]
@@ -1950,6 +1963,25 @@ namespace Norbix.Sdk.Types.Hub;
     }
 
     [DataContract]
+    public partial class EnvironmentAdminUrlDto
+    {
+        [DataMember]
+        public virtual string Env { get; set; }
+
+        [DataMember]
+        public virtual string? AdminUrl { get; set; }
+
+        [DataMember]
+        public virtual string? EffectiveAdminUrl { get; set; }
+
+        [DataMember]
+        public virtual string Source { get; set; }
+
+        [DataMember]
+        public virtual string? Note { get; set; }
+    }
+
+    [DataContract]
     public partial class InstallationLicenseDetailsDto
     {
         [DataMember(Name="domain")]
@@ -2171,6 +2203,9 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember]
         public virtual List<string> PromotionOrder { get; set; } = [];
+
+        [DataMember]
+        public virtual List<EnvironmentAdminUrlDto> AdminUrls { get; set; } = [];
     }
 
     [DataContract]
@@ -9919,6 +9954,24 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual HashSet<ProjectRegionDto>? Items { get; set; }
     }
 
+    [NorbixRoute("/{version}/account/projects/environments/{environmentName}/admin-url", "GET")]
+    [DataContract]
+    public partial class GetEnvironmentAdminUrl
+        : CodeMashRequestBase, INorbixRequest<GetEnvironmentAdminUrlResponse>
+    {
+        ///<summary>
+        ///Name of the environment (from get_project_environments), e.g. 'TEST'.
+        ///</summary>
+        [DataMember]
+        public virtual string EnvironmentName { get; set; }
+    }
+
+    public partial class GetEnvironmentAdminUrlResponse
+        : ResponseBase
+    {
+        public virtual EnvironmentAdminUrlDto? Item { get; set; }
+    }
+
     ///<summary>
     ///Gets project info.
     ///</summary>
@@ -10074,6 +10127,24 @@ namespace Norbix.Sdk.Types.Hub;
         ///</summary>
         [DataMember]
         public virtual int Rank { get; set; }
+    }
+
+    [NorbixRoute("/{version}/account/projects/environments/{environmentName}/admin-url", "PATCH")]
+    [DataContract]
+    public partial class UpdateEnvironmentAdminUrl
+        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
+    {
+        ///<summary>
+        ///Name of the environment (from get_project_environments), e.g. 'TEST' or 'PROD'.
+        ///</summary>
+        [DataMember]
+        public virtual string EnvironmentName { get; set; }
+
+        ///<summary>
+        ///The environment's admin portal address, e.g. https://test-admin.example.com. https, host and optional path, no query. Empty clears it (the project admin URL is used).
+        ///</summary>
+        [DataMember]
+        public virtual string? Url { get; set; }
     }
 
     ///<summary>
@@ -10616,7 +10687,7 @@ namespace Norbix.Sdk.Types.Hub;
         : CodeMashRequestBase, INorbixRequest<EmptyResponse>
     {
         ///<summary>
-        ///The new project name, unique per account.
+        ///The new project name, unique per account. The short name (slug) in Cloud addresses is made from it; the project id does not change.
         ///</summary>
         public virtual string Name { get; set; }
     }
@@ -13174,6 +13245,11 @@ namespace Norbix.Sdk.Types.Hub;
         ///Contact's last name (optional).
         ///</summary>
         public virtual string? LastName { get; set; }
+
+        ///<summary>
+        ///Tags to put on the new contact — free labels campaigns and segments select by, normalised like any tag.
+        ///</summary>
+        public virtual List<string>? Tags { get; set; }
     }
 
     ///<summary>
@@ -16994,6 +17070,10 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual bool SkipHttpBodyMeta { get; set; }
         public virtual bool AiChatLoggingEnabled { get; set; }
         public virtual bool HasNorbixLogging { get; set; }
+        public virtual string Env { get; set; }
+        public virtual DateTime? LastEntryAtUtc { get; set; }
+        public virtual DateTime? LastStoredAtUtc { get; set; }
+        public virtual string? StorageWarning { get; set; }
     }
 
     public partial class GetLogsResponse
@@ -18979,6 +19059,24 @@ namespace Norbix.Sdk.Types.Hub;
         : ResponseBase
     {
         public virtual PaginatedResponse<PushCampaignBatchNotificationDto>? List { get; set; }
+    }
+
+    ///<summary>
+    ///Deletes a registered push device
+    ///</summary>
+    [NorbixRoute("/{version}/notifications/push/devices/{Id}", "DELETE")]
+    public partial class DeletePushDevice
+        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
+    {
+        ///<summary>
+        ///The device id (pnd_…) to delete. Get it from get_push_devices.
+        ///</summary>
+        public virtual string Id { get; set; }
+
+        ///<summary>
+        ///Optional database integration id; omit to use the project's default for the environment.
+        ///</summary>
+        public virtual string? DatabaseIntegrationId { get; set; }
     }
 
     ///<summary>
