@@ -679,6 +679,7 @@ namespace Norbix.Sdk.Types.Hub;
         Fake,
     }
 
+    [NorbixRoute("/internal/_typegen", "GET")]
     public partial class InternalsTypeGen
     {
         public virtual SmtpEmailIntegrationRequest? Typegen_0_SmtpEmailIntegrationRequest { get; set; }
@@ -7392,6 +7393,7 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual string Provider { get; set; }
         public virtual string ProviderEventId { get; set; }
         public virtual string? OrderId { get; set; }
+        public virtual string? BuyerUserId { get; set; }
         public virtual string EventName { get; set; }
         public virtual string Status { get; set; }
         public virtual long? AmountMinor { get; set; }

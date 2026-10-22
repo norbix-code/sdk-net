@@ -8,8 +8,8 @@
 #pragma warning disable CS0114, CS1570, CS0102, CS0108, CS0618
 
 using System;
-using System.Collections;
 using System.IO;
+using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using Norbix.Sdk.Types;
@@ -1728,6 +1728,53 @@ namespace Norbix.Sdk.Types.Api;
     }
 
     ///<summary>
+    ///Membership · Password
+    ///</summary>
+    [NorbixRoute("/{version}/membership/userauth/password/reset/test", "POST")]
+    [DataContract]
+    public partial class SendTestPasswordResetRequest
+        : CodeMashRequestBase, INorbixRequest<SendTestPasswordResetResponse>
+    {
+        ///<summary>
+        ///Email address of the project user (a login in the request environment).
+        ///</summary>
+        [DataMember]
+        public virtual string Email { get; set; }
+    }
+
+    [DataContract]
+    public partial class SendTestPasswordResetResponse
+        : ResponseBase
+    {
+        [DataMember]
+        public virtual bool Queued { get; set; }
+
+        [DataMember]
+        public virtual string? Reason { get; set; }
+
+        [DataMember]
+        public virtual string Env { get; set; }
+
+        [DataMember]
+        public virtual string? CorrelationId { get; set; }
+
+        [DataMember]
+        public virtual DateTime? ExpiresAtUtc { get; set; }
+
+        [DataMember]
+        public virtual string? IntegrationId { get; set; }
+
+        [DataMember]
+        public virtual string? IntegrationName { get; set; }
+
+        [DataMember]
+        public virtual string? Provider { get; set; }
+
+        [DataMember]
+        public virtual string? IntegrationProblem { get; set; }
+    }
+
+    ///<summary>
     ///Membership
     ///</summary>
     [NorbixRoute("/{version}/membership/auth/assign-roles", "PUT")]
@@ -2134,8 +2181,19 @@ namespace Norbix.Sdk.Types.Api;
     [NorbixRoute("/{version}/membership/auth/register/guest", "POST")]
     [DataContract]
     public partial class SaveGuestUser
-        : SaveUser, INorbixRequest<IdResponse>
+        : SaveUser, INorbixRequest<SaveGuestUserResponse>
     {
+    }
+
+    [DataContract]
+    public partial class SaveGuestUserResponse
+        : IdResponse
+    {
+        [DataMember]
+        public virtual string? UserName { get; set; }
+
+        [DataMember]
+        public virtual string? Password { get; set; }
     }
 
     ///<summary>
