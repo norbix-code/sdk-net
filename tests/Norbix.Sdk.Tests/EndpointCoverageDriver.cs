@@ -23,10 +23,14 @@ internal static class EndpointCoverageDriver
         "CorrelationId",
     };
 
+    // Owner decision 2026-10-22: /internal/* gateway plumbing (e.g. GET /internal/_typegen) is not in the SDK endpoint list.
+    private static IEnumerable<NorbixEndpointInfo> SdkEndpoints =>
+        NorbixEndpointCatalog.All.Where(e => !e.Path.StartsWith("/internal/", StringComparison.Ordinal));
+
     public static IEnumerable<TestCaseData> GetModuleCases()
     {
-        return NorbixEndpointCatalog
-            .All.GroupBy(e => new { e.Target, e.Group })
+        return SdkEndpoints
+            .GroupBy(e => new { e.Target, e.Group })
             .OrderBy(g => g.Key.Target, StringComparer.Ordinal)
             .ThenBy(g => g.Key.Group, StringComparer.Ordinal)
             .Select(g =>
@@ -54,8 +58,8 @@ internal static class EndpointCoverageDriver
         Func<NorbixEndpointInfo, bool> predicate
     )
     {
-        return NorbixEndpointCatalog
-            .All.Where(predicate)
+        return SdkEndpoints
+            .Where(predicate)
             .OrderBy(e => e.Path, StringComparer.Ordinal)
             .ThenBy(e => e.HttpMethod, StringComparer.Ordinal);
     }
@@ -95,8 +99,8 @@ internal static class EndpointCoverageDriver
         });
         fixture.RespondNoContentDefault();
 
-        var endpoints = NorbixEndpointCatalog
-            .All.Where(e => e.Target == target && e.Group == group)
+        var endpoints = SdkEndpoints
+            .Where(e => e.Target == target && e.Group == group)
             .ToList();
 
         // Endpoints whose route token has no settable property can never be
