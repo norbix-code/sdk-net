@@ -1,7 +1,7 @@
 ﻿{
   Target: Hub,
   Group: account,
-  Count: 128,
+  Count: 130,
   Endpoints: [
     {
       Target: Hub,
@@ -1877,6 +1877,42 @@
     {
       Target: Hub,
       Group: account,
+      MethodName: GetEnvironmentAdminUrlAsync,
+      RequestType: GetEnvironmentAdminUrl,
+      HttpMethod: GET,
+      Path: /{version}/account/projects/environments/{environmentName}/admin-url,
+      PathParams: [
+        environmentName
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/account/projects/environments/test-environmentName/admin-url,
+        Query: ?env=test-env,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        }
+      },
+      ResponseType: GetEnvironmentAdminUrlResponse,
+      Response: {
+        Item: {
+          Env: test-env,
+          AdminUrl: https://example.test/adminUrl,
+          EffectiveAdminUrl: https://example.test/effectiveAdminUrl,
+          Source: test-source,
+          Note: test-note
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: account,
       MethodName: GetProjectAsync,
       RequestType: GetProject,
       HttpMethod: GET,
@@ -1955,6 +1991,9 @@
           ],
           PromotionOrder: [
             test-string
+          ],
+          AdminUrls: [
+            {}
           ]
         },
         ResponseStatus: {
@@ -2177,6 +2216,39 @@
         },
         Body: {
           rank: 1.0,
+          env: test-env
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: account,
+      MethodName: UpdateEnvironmentAdminUrlAsync,
+      RequestType: UpdateEnvironmentAdminUrl,
+      HttpMethod: PATCH,
+      Path: /{version}/account/projects/environments/{environmentName}/admin-url,
+      PathParams: [
+        environmentName
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: PATCH,
+        Path: /v2/account/projects/environments/test-environmentName/admin-url,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        },
+        Body: {
+          url: https://example.test/url,
           env: test-env
         }
       },

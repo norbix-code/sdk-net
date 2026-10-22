@@ -624,6 +624,16 @@
         IntegrationName: test-integrationName,
         Provider: test-provider,
         IntegrationProblem: test-integrationProblem,
+        TemplateId: Guid_1,
+        TemplateName: test-templateName,
+        TemplateSource: test-templateSource,
+        Language: test-language,
+        LanguageRule: test-languageRule,
+        TemplateLanguages: [
+          test-string
+        ],
+        Fallback: test-fallback,
+        MjmlRenderer: test-mjmlRenderer,
         ResponseStatus: {
           IsSuccess: true
         }
@@ -1083,6 +1093,9 @@
           roles: [
             test-string
           ],
+          tags: [
+            test-string
+          ],
           databaseIntegrationId: Guid_1,
           userGeneralInfo: {
             phone: test-phone,
@@ -1234,6 +1247,9 @@
           roles: [
             test-string
           ],
+          tags: [
+            test-string
+          ],
           databaseIntegrationId: Guid_1,
           userGeneralInfo: {
             phone: test-phone,
@@ -1283,6 +1299,9 @@
         },
         Body: {
           roles: [
+            test-string
+          ],
+          tags: [
             test-string
           ],
           databaseIntegrationId: Guid_1,
@@ -1389,6 +1408,9 @@
           password: test-password,
           userName: test-userName,
           roles: [
+            test-string
+          ],
+          tags: [
             test-string
           ],
           databaseIntegrationId: Guid_1,

@@ -1,7 +1,8 @@
 ﻿{
-  Count: 38,
+  Count: 39,
   Endpoints: [
     DELETE /{version}/notifications/push/campaigns/{Id} -> DeletePushCampaignAsync,
+    DELETE /{version}/notifications/push/devices/{Id} -> DeletePushDeviceAsync,
     DELETE /{version}/notifications/push/integrations/{Id} -> DeletePushIntegrationAsync,
     DELETE /{version}/notifications/push/templates/{Id} -> DeletePushTemplateAsync,
     GET /{version}/notifications/push/campaigns -> GetPushCampaignsAsync,
