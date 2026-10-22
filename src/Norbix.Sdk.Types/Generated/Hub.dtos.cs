@@ -679,7 +679,6 @@ namespace Norbix.Sdk.Types.Hub;
         Fake,
     }
 
-    [NorbixRoute("/internal/_typegen", "GET")]
     public partial class InternalsTypeGen
     {
         public virtual SmtpEmailIntegrationRequest? Typegen_0_SmtpEmailIntegrationRequest { get; set; }
@@ -4261,6 +4260,7 @@ namespace Norbix.Sdk.Types.Hub;
         Message,
         Prompt,
         Web,
+        MembershipUser,
     }
 
     [DataContract]
