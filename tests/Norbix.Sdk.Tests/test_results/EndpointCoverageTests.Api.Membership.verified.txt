@@ -1,7 +1,7 @@
 ﻿{
   Target: Api,
   Group: membership,
-  Count: 43,
+  Count: 44,
   Endpoints: [
     {
       Target: Api,
@@ -593,6 +593,45 @@
     {
       Target: Api,
       Group: membership,
+      MethodName: SendTestPasswordResetAsync,
+      RequestType: SendTestPasswordResetRequest,
+      HttpMethod: POST,
+      Path: /{version}/membership/userauth/password/reset/test,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/membership/userauth/password/reset/test,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        },
+        Body: {
+          email: user@example.test,
+          env: test-env
+        }
+      },
+      ResponseType: SendTestPasswordResetResponse,
+      Response: {
+        Queued: true,
+        Reason: test-reason,
+        Env: test-env,
+        CorrelationId: Guid_1,
+        ExpiresAtUtc: DateTime_1,
+        IntegrationId: Guid_1,
+        IntegrationName: test-integrationName,
+        Provider: test-provider,
+        IntegrationProblem: test-integrationProblem,
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: membership,
       MethodName: AssignRolePermissionsAsync,
       RequestType: AssignRolePermissionsRequest,
       HttpMethod: PUT,
@@ -1109,8 +1148,10 @@
           env: test-env
         }
       },
-      ResponseType: IdResponse,
+      ResponseType: SaveGuestUserResponse,
       Response: {
+        UserName: test-userName,
+        Password: test-password,
         Id: Guid_1,
         Status: test-status,
         Warnings: [
