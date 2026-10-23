@@ -15916,7 +15916,7 @@ namespace Norbix.Sdk.Types.Hub;
     ///</summary>
     [NorbixRoute("/{version}/notifications/email/templates/{Id}/clone", "POST")]
     public partial class CloneEmailTemplateRequest
-        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
+        : CodeMashRequestBase, INorbixRequest<IdResponse>
     {
         ///<summary>
         ///The email template id to clone. Get it from get_email_templates.
@@ -19494,7 +19494,7 @@ namespace Norbix.Sdk.Types.Hub;
     ///</summary>
     [NorbixRoute("/{version}/notifications/push/templates/{Id}/clone", "POST")]
     public partial class ClonePushTemplateRequest
-        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
+        : CodeMashRequestBase, INorbixRequest<IdResponse>
     {
         ///<summary>
         ///The push template id to clone. Get it from get_push_templates.
@@ -20399,7 +20399,7 @@ namespace Norbix.Sdk.Types.Hub;
     ///</summary>
     [NorbixRoute("/{version}/notifications/sms/templates/{Id}/clone", "POST")]
     public partial class CloneSmsTemplateRequest
-        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
+        : CodeMashRequestBase, INorbixRequest<IdResponse>
     {
         ///<summary>
         ///The SMS template id to clone. Get it from get_sms_templates.

@@ -1,0 +1,11 @@
+﻿{
+  Sent: {
+    Method: POST,
+    Path: /v2/notifications/push/templates/tpl_source_1/clone,
+    Headers: {
+      Authorization: Bearer test-api-key,
+      norbix-project-id: test-project
+    }
+  },
+  CopyId: tpl_copy_1
+}

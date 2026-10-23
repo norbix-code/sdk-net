@@ -120,6 +120,9 @@ gateway writes them.
 | `GetSmsTemplateAsync` | `GET` | `/notifications/sms/templates/{id}` |
 | `GetSmsMessageContentTokensAsync` | `GET` | `/notifications/sms/templates/{id}/tokens` |
 
+`CloneSmsTemplateAsync` answers an `IdResponse` whose `Id` is the copy's template id
+(the source SMS template stays as it is).
+
 `RenderSmsAsync` runs a template body through the gateway's Razor engine with
 the tokens you pass and answers with the bound text, or the names of the
 tokens that are still unresolved (`Variables`). `GetSmsMessageContentTokensAsync`
