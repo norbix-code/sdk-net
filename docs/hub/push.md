@@ -114,6 +114,9 @@ the gateway writes them.
 | `GetPushTemplateAsync` | `GET` | `/notifications/push/templates/{id}` |
 | `GetPushMessageContentTokensAsync` | `GET` | `/notifications/push/templates/{id}/tokens` |
 
+`ClonePushTemplateAsync` answers an `IdResponse` whose `Id` is the copy's template id
+(the source push template stays as it is).
+
 ## Campaigns
 
 | method | verb | path |
