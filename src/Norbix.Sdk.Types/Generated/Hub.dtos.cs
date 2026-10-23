@@ -365,6 +365,7 @@ namespace Norbix.Sdk.Types.Hub;
         Mollie,
         Worldpay,
         Montonio,
+        Neopay,
     }
 
     public enum PaymentTriggerType
@@ -734,6 +735,7 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual AppleInAppPaymentIntegrationRequest? Typegen_54_AppleInAppPaymentIntegrationRequest { get; set; }
         public virtual GoogleInAppPaymentIntegrationRequest? Typegen_55_GoogleInAppPaymentIntegrationRequest { get; set; }
         public virtual MontonioPaymentIntegrationRequest? Typegen_285_MontonioPaymentIntegrationRequest { get; set; }
+        public virtual NeopayPaymentIntegrationRequest? Typegen_295_NeopayPaymentIntegrationRequest { get; set; }
         public virtual ShopifyPaymentIntegrationRequest? Typegen_287_ShopifyPaymentIntegrationRequest { get; set; }
         public virtual WooCommercePaymentIntegrationRequest? Typegen_288_WooCommercePaymentIntegrationRequest { get; set; }
         public virtual MagentoPaymentIntegrationRequest? Typegen_289_MagentoPaymentIntegrationRequest { get; set; }
@@ -825,6 +827,7 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual CheckOutComPaymentIntegrationDto? Typegen_189_CheckOutComPaymentIntegrationDto { get; set; }
         public virtual WorldpayPaymentIntegrationDto? Typegen_190_WorldpayPaymentIntegrationDto { get; set; }
         public virtual MontonioPaymentIntegrationDto? Typegen_286_MontonioPaymentIntegrationDto { get; set; }
+        public virtual NeopayPaymentIntegrationDto? Typegen_296_NeopayPaymentIntegrationDto { get; set; }
         public virtual PaymentOrderEventDto? Typegen_294_PaymentOrderEventDto { get; set; }
         public virtual AppleSignInMembershipIntegrationDto? Typegen_128_AppleSignInMembershipIntegrationDto { get; set; }
         public virtual GitHubMembershipIntegrationDto? Typegen_129_GitHubMembershipIntegrationDto { get; set; }
@@ -7524,6 +7527,15 @@ namespace Norbix.Sdk.Types.Hub;
     {
         public virtual string AccessKey { get; set; }
         public virtual bool IsSandbox { get; set; }
+        public virtual string? Locale { get; set; }
+    }
+
+    public partial class NeopayPaymentIntegrationDto
+        : PaymentsIntegrationDto
+    {
+        public virtual string ProjectId { get; set; }
+        public virtual bool IsSandbox { get; set; }
+        public virtual string? Country { get; set; }
         public virtual string? Locale { get; set; }
     }
 
@@ -18521,6 +18533,17 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual string AccessKey { get; set; }
         public virtual string SecretKey { get; set; }
         public virtual bool? IsSandbox { get; set; }
+        public virtual string? Locale { get; set; }
+    }
+
+    public partial class NeopayPaymentIntegrationRequest
+        : PaymentIntegrationRequest
+    {
+        public virtual PaymentGatewayPlatform Provider { get; set; }
+        public virtual string ProjectId { get; set; }
+        public virtual string ProjectKey { get; set; }
+        public virtual bool? IsSandbox { get; set; }
+        public virtual string? Country { get; set; }
         public virtual string? Locale { get; set; }
     }
 
