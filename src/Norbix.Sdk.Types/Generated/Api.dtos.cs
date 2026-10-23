@@ -2721,7 +2721,7 @@ namespace Norbix.Sdk.Types.Api;
     }
 
     ///<summary>
-    ///Opens a Montonio checkout for a stored order and answers where the buyer pays. The buyer (own order) or the server.
+    ///Opens a provider checkout (Montonio or Neopay) for a stored order and answers where the buyer pays. The buyer (own order) or the server.
     ///</summary>
     [NorbixRoute("/{version}/payments/orders/{Id}/checkout", "POST")]
     public partial class StartPaymentCheckoutRequest
@@ -2733,12 +2733,12 @@ namespace Norbix.Sdk.Types.Api;
         public virtual string Id { get; set; }
 
         ///<summary>
-        ///The Montonio integration (int_…) of the project in the request's environment.
+        ///The checkout integration (int_…, Montonio or Neopay) of the project in the request's environment.
         ///</summary>
         public virtual string IntegrationId { get; set; }
 
         ///<summary>
-        ///bankLink (default), card, applePay or googlePay.
+        ///bankLink (default), card, applePay or googlePay (the wallets: Montonio only).
         ///</summary>
         public virtual string? Method { get; set; }
 
