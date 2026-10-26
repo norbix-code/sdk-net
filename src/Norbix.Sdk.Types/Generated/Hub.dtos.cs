@@ -494,6 +494,7 @@ namespace Norbix.Sdk.Types.Hub;
         CodeFunctionalCall,
         WebhookCall,
         MarketplaceFunctionCall,
+        WorkflowCall,
     }
 
     public enum SchemaTriggerType
@@ -600,6 +601,7 @@ namespace Norbix.Sdk.Types.Hub;
         RequestInput,
         IntegrationConfig,
         IntegrationSecret,
+        StepOutput,
     }
 
     public enum TriggerActionType
@@ -611,6 +613,7 @@ namespace Norbix.Sdk.Types.Hub;
         WebhookCall,
         SseCall,
         Marketplace,
+        Workflow,
     }
 
     public enum TriggerType
@@ -3798,6 +3801,9 @@ namespace Norbix.Sdk.Types.Hub;
     {
         [DataMember]
         public virtual bool IsEnabled { get; set; }
+
+        [DataMember]
+        public virtual bool WorkflowsEnabled { get; set; }
     }
 
     [DataContract]
@@ -3968,6 +3974,15 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember]
         public virtual CodeFunctionRunAsDto? RunAs { get; set; }
+
+        [DataMember]
+        public virtual string? WorkflowId { get; set; }
+
+        [DataMember]
+        public virtual string? RunId { get; set; }
+
+        [DataMember]
+        public virtual string? StepId { get; set; }
     }
 
     [DataContract]
@@ -3999,6 +4014,9 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember]
         public virtual MarketplaceFunctionCallDto? Marketplace { get; set; }
+
+        [DataMember]
+        public virtual WorkflowStepInfoDto? Workflow { get; set; }
     }
 
     [DataContract]
@@ -4054,6 +4072,7 @@ namespace Norbix.Sdk.Types.Hub;
         Ai,
         Scheduler,
         Manual,
+        Workflow,
     }
 
     [DataContract]
@@ -4196,6 +4215,25 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember]
         public virtual Dictionary<string, Object>? New { get; set; }
+    }
+
+    [DataContract]
+    public partial class WorkflowStepInfoDto
+    {
+        [DataMember]
+        public virtual string WorkflowId { get; set; }
+
+        [DataMember]
+        public virtual string RunId { get; set; }
+
+        [DataMember]
+        public virtual string StepId { get; set; }
+
+        [DataMember]
+        public virtual int? Version { get; set; }
+
+        [DataMember]
+        public virtual Dictionary<string, Object>? Request { get; set; }
     }
 
     public partial class CodeIntegrationDto
@@ -4957,6 +4995,649 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember]
         public virtual string? ErrorCode { get; set; }
+    }
+
+    [DataContract]
+    public partial class WorkflowBindingFamilyDto
+    {
+        [DataMember]
+        public virtual string Family { get; set; }
+
+        [DataMember]
+        public virtual string Description { get; set; }
+    }
+
+    [DataContract]
+    public partial class WorkflowDefinitionDto
+    {
+        ///<summary>
+        ///The version of this shape: "1".
+        ///</summary>
+        [DataMember]
+        public virtual string SchemaVersion { get; set; }
+
+        ///<summary>
+        ///wf_… — absent on the first save, required on an update.
+        ///</summary>
+        [DataMember]
+        public virtual string? WorkflowId { get; set; }
+
+        ///<summary>
+        ///1–120 characters.
+        ///</summary>
+        [DataMember]
+        public virtual string Name { get; set; }
+
+        ///<summary>
+        ///Up to 2 000 characters.
+        ///</summary>
+        [DataMember]
+        public virtual string? Description { get; set; }
+
+        ///<summary>
+        ///Read-only: the published version number (null on a draft). Ignored on save.
+        ///</summary>
+        [DataMember]
+        public virtual int? Version { get; set; }
+
+        ///<summary>
+        ///Read-only on save (use the enable / disable routes).
+        ///</summary>
+        [DataMember]
+        public virtual bool IsEnabled { get; set; }
+
+        ///<summary>
+        ///usr_… — the service user every step runs as.
+        ///</summary>
+        [DataMember]
+        public virtual string ExecutionIdentityId { get; set; }
+
+        ///<summary>
+        ///Optional JSON Schema (draft 2020-12, type object) of the manual-invoke payload.
+        ///</summary>
+        [DataMember]
+        public virtual Dictionary<string, Object>? Inputs { get; set; }
+
+        [DataMember]
+        public virtual string? Start { get; set; }
+
+        ///<summary>
+        ///1–200 steps.
+        ///</summary>
+        [DataMember]
+        public virtual List<WorkflowStepDto> Steps { get; set; } = [];
+
+        [DataMember]
+        public virtual WorkflowOnErrorDto? OnError { get; set; }
+
+        [DataMember]
+        public virtual WorkflowLimitsDto? Limits { get; set; }
+    }
+
+    [DataContract]
+    public partial class WorkflowDto
+    {
+        [DataMember]
+        public virtual string WorkflowId { get; set; }
+
+        [DataMember]
+        public virtual string Env { get; set; }
+
+        [DataMember]
+        public virtual WorkflowDefinitionDto Definition { get; set; }
+
+        [DataMember]
+        public virtual int Version { get; set; }
+
+        [DataMember]
+        public virtual bool IsPublished { get; set; }
+
+        [DataMember]
+        public virtual bool HasDraft { get; set; }
+
+        [DataMember]
+        public virtual bool IsEnabled { get; set; }
+
+        [DataMember]
+        public virtual string? DisabledReason { get; set; }
+
+        [DataMember]
+        public virtual DateTime? DraftUpdatedAt { get; set; }
+
+        [DataMember]
+        public virtual DateTime? PublishedAt { get; set; }
+
+        [DataMember]
+        public virtual DateTime CreatedAt { get; set; }
+
+        [DataMember]
+        public virtual DateTime UpdatedAt { get; set; }
+
+        [DataMember]
+        public virtual string? SavedByAuthId { get; set; }
+
+        [DataMember]
+        public virtual List<WorkflowVersionSummaryDto> Versions { get; set; } = [];
+
+        [DataMember]
+        public virtual List<WorkflowValidationIssueDto> Warnings { get; set; } = [];
+    }
+
+    [DataContract]
+    public partial class WorkflowLastRunDto
+    {
+        [DataMember]
+        public virtual string RunId { get; set; }
+
+        [DataMember]
+        public virtual string Status { get; set; }
+
+        [DataMember]
+        public virtual DateTime? FinishedAt { get; set; }
+    }
+
+    [DataContract]
+    public partial class WorkflowLimitsDto
+    {
+        ///<summary>
+        ///Step executions per run; default 200, cap 5000.
+        ///</summary>
+        [DataMember]
+        public virtual int? MaxStepRuns { get; set; }
+
+        ///<summary>
+        ///Wall-clock from start, including parked time; default 604800 (7 days), cap 2592000.
+        ///</summary>
+        [DataMember]
+        public virtual int? MaxDurationSeconds { get; set; }
+
+        ///<summary>
+        ///The longest one delay / wait may park; default 604800, cap 2592000.
+        ///</summary>
+        [DataMember]
+        public virtual int? MaxWaitSeconds { get; set; }
+
+        ///<summary>
+        ///Branch heads per parallel; default 10, cap 20.
+        ///</summary>
+        [DataMember]
+        public virtual int? MaxParallelBranches { get; set; }
+
+        ///<summary>
+        ///Nesting of workflow.start and trigger-started descendants; default 3, cap 5.
+        ///</summary>
+        [DataMember]
+        public virtual int? MaxDepth { get; set; }
+    }
+
+    [DataContract]
+    public partial class WorkflowListProjection
+        : IHasViewId
+    {
+        [DataMember]
+        public virtual string ViewId { get; set; }
+
+        [DataMember]
+        public virtual string WorkflowId { get; set; }
+
+        [DataMember]
+        public virtual string Name { get; set; }
+
+        [DataMember]
+        public virtual string Env { get; set; }
+
+        [DataMember]
+        public virtual int Version { get; set; }
+
+        [DataMember]
+        public virtual bool IsPublished { get; set; }
+
+        [DataMember]
+        public virtual bool HasDraft { get; set; }
+
+        [DataMember]
+        public virtual bool IsEnabled { get; set; }
+
+        [DataMember]
+        public virtual string? DisabledReason { get; set; }
+
+        [DataMember]
+        public virtual string? ExecutionIdentityId { get; set; }
+
+        [DataMember]
+        public virtual DateTime UpdatedAt { get; set; }
+
+        [DataMember]
+        public virtual WorkflowLastRunDto? LastRun { get; set; }
+
+        [DataMember]
+        public virtual int WaitingRuns { get; set; }
+    }
+
+    [DataContract]
+    public partial class WorkflowOnErrorDto
+    {
+        ///<summary>
+        ///fail | continue | goto
+        ///</summary>
+        [DataMember]
+        public virtual string Action { get; set; }
+
+        ///<summary>
+        ///goto: the step to jump to.
+        ///</summary>
+        [DataMember]
+        public virtual string? Goto { get; set; }
+    }
+
+    [DataContract]
+    public partial class WorkflowRunActorDto
+    {
+        [DataMember]
+        public virtual string? UserId { get; set; }
+
+        [DataMember]
+        public virtual string Kind { get; set; }
+    }
+
+    [DataContract]
+    public partial class WorkflowRunDto
+    {
+        [DataMember]
+        public virtual string RunId { get; set; }
+
+        [DataMember]
+        public virtual string WorkflowId { get; set; }
+
+        [DataMember]
+        public virtual int? Version { get; set; }
+
+        [DataMember]
+        public virtual bool IsDraft { get; set; }
+
+        [DataMember]
+        public virtual string Status { get; set; }
+
+        [DataMember]
+        public virtual string Source { get; set; }
+
+        [DataMember]
+        public virtual WorkflowRunActorDto? StartedBy { get; set; }
+
+        [DataMember]
+        public virtual string? TriggerId { get; set; }
+
+        [DataMember]
+        public virtual string? TaskId { get; set; }
+
+        [DataMember]
+        public virtual string? ParentRunId { get; set; }
+
+        [DataMember]
+        public virtual int Depth { get; set; }
+
+        [DataMember]
+        public virtual string Env { get; set; }
+
+        [DataMember]
+        public virtual string? CorrelationId { get; set; }
+
+        [DataMember]
+        public virtual string? ExecutionIdentityId { get; set; }
+
+        [DataMember]
+        public virtual DateTime StartedAt { get; set; }
+
+        [DataMember]
+        public virtual DateTime? FinishedAt { get; set; }
+
+        [DataMember]
+        public virtual long? DurationMs { get; set; }
+
+        [DataMember]
+        public virtual List<WorkflowWaitingOnDto> WaitingOn { get; set; } = [];
+
+        [DataMember]
+        public virtual WorkflowRunErrorDto? Error { get; set; }
+
+        [DataMember]
+        public virtual Object? Output { get; set; }
+
+        [DataMember]
+        public virtual int StepRuns { get; set; }
+
+        [DataMember]
+        public virtual List<WorkflowRunStepDto> Steps { get; set; } = [];
+
+        [DataMember]
+        public virtual Dictionary<string, Object>? Request { get; set; }
+
+        [DataMember]
+        public virtual Dictionary<string, Object>? Trigger { get; set; }
+    }
+
+    [DataContract]
+    public partial class WorkflowRunErrorDto
+    {
+        [DataMember]
+        public virtual string? Code { get; set; }
+
+        [DataMember]
+        public virtual string? StepId { get; set; }
+
+        [DataMember]
+        public virtual string? Reason { get; set; }
+
+        [DataMember]
+        public virtual string? Message { get; set; }
+    }
+
+    [DataContract]
+    public partial class WorkflowRunListProjection
+    {
+        [DataMember]
+        public virtual string RunId { get; set; }
+
+        [DataMember]
+        public virtual string WorkflowId { get; set; }
+
+        [DataMember]
+        public virtual int? Version { get; set; }
+
+        [DataMember]
+        public virtual bool IsDraft { get; set; }
+
+        [DataMember]
+        public virtual string Status { get; set; }
+
+        [DataMember]
+        public virtual string Source { get; set; }
+
+        [DataMember]
+        public virtual DateTime StartedAt { get; set; }
+
+        [DataMember]
+        public virtual DateTime? FinishedAt { get; set; }
+
+        [DataMember]
+        public virtual long? DurationMs { get; set; }
+
+        [DataMember]
+        public virtual List<string> CurrentStepIds { get; set; } = [];
+
+        [DataMember]
+        public virtual List<WorkflowWaitingOnDto> WaitingOn { get; set; } = [];
+
+        [DataMember]
+        public virtual WorkflowRunErrorDto? Error { get; set; }
+    }
+
+    [DataContract]
+    public partial class WorkflowRunStepDto
+    {
+        [DataMember]
+        public virtual string StepId { get; set; }
+
+        [DataMember]
+        public virtual string Kind { get; set; }
+
+        [DataMember]
+        public virtual string? Name { get; set; }
+
+        [DataMember]
+        public virtual string Status { get; set; }
+
+        [DataMember]
+        public virtual int Attempt { get; set; }
+
+        [DataMember]
+        public virtual int Pass { get; set; }
+
+        [DataMember]
+        public virtual DateTime? StartedAt { get; set; }
+
+        [DataMember]
+        public virtual DateTime? FinishedAt { get; set; }
+
+        [DataMember]
+        public virtual long? DurationMs { get; set; }
+
+        [DataMember]
+        public virtual Object? Input { get; set; }
+
+        [DataMember]
+        public virtual bool InputTruncated { get; set; }
+
+        [DataMember]
+        public virtual Object? Output { get; set; }
+
+        [DataMember]
+        public virtual bool OutputTruncated { get; set; }
+
+        [DataMember]
+        public virtual WorkflowRunErrorDto? Error { get; set; }
+
+        [DataMember]
+        public virtual WorkflowRunActorDto? ResumedBy { get; set; }
+
+        [DataMember]
+        public virtual string? Decision { get; set; }
+    }
+
+    [DataContract]
+    public partial class WorkflowSchemaDto
+    {
+        [DataMember]
+        public virtual string SchemaVersion { get; set; }
+
+        [DataMember]
+        public virtual Dictionary<string, Object> Definition { get; set; } = new();
+
+        [DataMember]
+        public virtual List<WorkflowStepKindSchemaDto> StepKinds { get; set; } = [];
+
+        [DataMember]
+        public virtual List<WorkflowBindingFamilyDto> Bindings { get; set; } = [];
+    }
+
+    [DataContract]
+    public partial class WorkflowStepDiffDto
+    {
+        [DataMember]
+        public virtual string StepId { get; set; }
+
+        [DataMember]
+        public virtual List<string> Paths { get; set; } = [];
+    }
+
+    [DataContract]
+    public partial class WorkflowStepDto
+    {
+        ///<summary>
+        ///^[A-Za-z_][A-Za-z0-9_]{0,63}$, unique in the definition.
+        ///</summary>
+        [DataMember]
+        public virtual string Id { get; set; }
+
+        ///<summary>
+        ///email.send | sms.send | push.send | code.invoke | webhook.call | sse.publish | marketplace.invoke | condition | transform | log | delay | wait | parallel | join | workflow.start
+        ///</summary>
+        [DataMember]
+        public virtual string Kind { get; set; }
+
+        [DataMember]
+        public virtual string? Name { get; set; }
+
+        ///<summary>
+        ///The step after this one; absent = the branch ends.
+        ///</summary>
+        [DataMember]
+        public virtual string? Next { get; set; }
+
+        ///<summary>
+        ///condition: the step when the expression is true.
+        ///</summary>
+        [DataMember]
+        public virtual string? Then { get; set; }
+
+        ///<summary>
+        ///condition: the step when the expression is false.
+        ///</summary>
+        [DataMember]
+        public virtual string? Else { get; set; }
+
+        ///<summary>
+        ///wait (approval): the step when rejected; absent = the branch ends.
+        ///</summary>
+        [DataMember]
+        public virtual string? Rejected { get; set; }
+
+        ///<summary>
+        ///wait: the step when the wait times out; absent = the run fails (-022).
+        ///</summary>
+        [DataMember]
+        public virtual string? OnTimeout { get; set; }
+
+        [DataMember]
+        public virtual WorkflowStepRetryDto? Retry { get; set; }
+
+        ///<summary>
+        ///A step still running after it is failed with reason=timeout (default 300, cap 3600).
+        ///</summary>
+        [DataMember]
+        public virtual int? TimeoutSeconds { get; set; }
+
+        [DataMember]
+        public virtual WorkflowOnErrorDto? OnError { get; set; }
+
+        ///<summary>
+        ///Action kinds: the trigger action body (type may be left out — the kind implies it).
+        ///</summary>
+        [DataMember]
+        public virtual Dictionary<string, Object>? Action { get; set; }
+
+        ///<summary>
+        ///Flow kinds: expression | level, message, meta | seconds, until | mode, key, inputs, assignees, timeoutSeconds | branches, join | mode | workflowRef, payload.
+        ///</summary>
+        [DataMember]
+        public virtual Dictionary<string, Object>? Config { get; set; }
+    }
+
+    [DataContract]
+    public partial class WorkflowStepKindSchemaDto
+    {
+        [DataMember]
+        public virtual string Kind { get; set; }
+
+        [DataMember]
+        public virtual string Description { get; set; }
+
+        [DataMember]
+        public virtual Dictionary<string, Object>? ConfigSchema { get; set; }
+
+        [DataMember]
+        public virtual Dictionary<string, Object>? OutputSchema { get; set; }
+
+        [DataMember]
+        public virtual List<string> Requires { get; set; } = [];
+    }
+
+    [DataContract]
+    public partial class WorkflowStepRetryDto
+    {
+        ///<summary>
+        ///0–10 automatic retries.
+        ///</summary>
+        [DataMember]
+        public virtual int Count { get; set; }
+
+        ///<summary>
+        ///1–3600 seconds before the first retry, doubled per attempt.
+        ///</summary>
+        [DataMember]
+        public virtual int BackoffSeconds { get; set; }
+    }
+
+    [DataContract]
+    public partial class WorkflowValidationIssueDto
+    {
+        [DataMember]
+        public virtual string Code { get; set; }
+
+        [DataMember]
+        public virtual string Message { get; set; }
+
+        [DataMember]
+        public virtual string? Path { get; set; }
+
+        [DataMember]
+        public virtual string? StepId { get; set; }
+
+        [DataMember]
+        public virtual int? Line { get; set; }
+
+        [DataMember]
+        public virtual int? Column { get; set; }
+    }
+
+    [DataContract]
+    public partial class WorkflowVersionDiffDto
+    {
+        [DataMember]
+        public virtual int FromVersion { get; set; }
+
+        [DataMember]
+        public virtual int ToVersion { get; set; }
+
+        [DataMember]
+        public virtual List<string> AddedSteps { get; set; } = [];
+
+        [DataMember]
+        public virtual List<string> RemovedSteps { get; set; } = [];
+
+        [DataMember]
+        public virtual List<WorkflowStepDiffDto> ChangedSteps { get; set; } = [];
+
+        [DataMember]
+        public virtual List<string> ChangedFields { get; set; } = [];
+    }
+
+    [DataContract]
+    public partial class WorkflowVersionSummaryDto
+    {
+        [DataMember]
+        public virtual int Version { get; set; }
+
+        [DataMember]
+        public virtual string Name { get; set; }
+
+        [DataMember]
+        public virtual int StepCount { get; set; }
+
+        [DataMember]
+        public virtual DateTime PublishedAt { get; set; }
+
+        [DataMember]
+        public virtual string? PublishedByAuthId { get; set; }
+    }
+
+    [DataContract]
+    public partial class WorkflowWaitingOnDto
+    {
+        [DataMember]
+        public virtual string StepId { get; set; }
+
+        [DataMember]
+        public virtual string Kind { get; set; }
+
+        [DataMember]
+        public virtual DateTime? Until { get; set; }
+
+        [DataMember]
+        public virtual string? Key { get; set; }
+
+        [DataMember]
+        public virtual List<string>? Assignees { get; set; }
     }
 
     public partial class AccountComplianceDto
@@ -7889,6 +8570,7 @@ namespace Norbix.Sdk.Types.Hub;
 
     public partial class PaymentsWebhookLogEntry
     {
+        public virtual string? RunId { get; set; }
         public virtual string IntegrationId { get; set; }
         public virtual string Source { get; set; }
         public virtual string? Env { get; set; }
@@ -7897,6 +8579,71 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual int StatusCode { get; set; }
         public virtual string Description { get; set; }
         public virtual DateTime ReceivedOn { get; set; }
+    }
+
+    public partial class PaymentsWebhookRawCallDto
+    {
+        public virtual string CallId { get; set; }
+        public virtual DateTime ReceivedOn { get; set; }
+        public virtual string? ContentType { get; set; }
+        public virtual string Body { get; set; }
+        public virtual bool Truncated { get; set; }
+        public virtual int MaskedFields { get; set; }
+        public virtual Dictionary<string, string> Headers { get; set; } = new();
+        public virtual int AnswerStatus { get; set; }
+        public virtual string? AnswerBody { get; set; }
+        public virtual int Parts { get; set; }
+    }
+
+    public partial class PaymentsWebhookRunActionDto
+    {
+        public virtual string TriggerId { get; set; }
+        public virtual string? TriggerName { get; set; }
+        public virtual string? Action { get; set; }
+        public virtual string Status { get; set; }
+        public virtual string? Reason { get; set; }
+        public virtual string? Queue { get; set; }
+        public virtual string? MessageId { get; set; }
+        public virtual int? Deliveries { get; set; }
+        public virtual string NorbixEvent { get; set; }
+        public virtual DateTime At { get; set; }
+    }
+
+    public partial class PaymentsWebhookRunDetailsDto
+    {
+        public virtual PaymentsWebhookRunDto Run { get; set; }
+        public virtual PaymentsWebhookRawCallDto? Raw { get; set; }
+    }
+
+    public partial class PaymentsWebhookRunDto
+    {
+        public virtual string Id { get; set; }
+        public virtual string CallId { get; set; }
+        public virtual string Env { get; set; }
+        public virtual string IntegrationId { get; set; }
+        public virtual string Source { get; set; }
+        public virtual DateTime ReceivedOn { get; set; }
+        public virtual int StatusCode { get; set; }
+        public virtual string Outcome { get; set; }
+        public virtual string Reason { get; set; }
+        public virtual string Description { get; set; }
+        public virtual string? EventName { get; set; }
+        public virtual string? ProviderEventId { get; set; }
+        public virtual string? CorrelationId { get; set; }
+        public virtual PaymentEventDto? Fact { get; set; }
+        public virtual PaymentsWebhookRunOrderDto? Order { get; set; }
+        public virtual List<PaymentsWebhookRunActionDto> Actions { get; set; } = [];
+        public virtual int Part { get; set; }
+        public virtual int Parts { get; set; }
+    }
+
+    public partial class PaymentsWebhookRunOrderDto
+    {
+        public virtual string? OrderId { get; set; }
+        public virtual string Kind { get; set; }
+        public virtual string? From { get; set; }
+        public virtual string? To { get; set; }
+        public virtual string Reason { get; set; }
     }
 
     public enum LanguageGapKind
@@ -13206,6 +13953,503 @@ namespace Norbix.Sdk.Types.Hub;
         : ResponseBase
     {
         public virtual List<string>? Tokens { get; set; }
+    }
+
+    [NorbixRoute("/{version}/code/workflows/runs/{RunId}/cancel", "POST")]
+    [DataContract]
+    public partial class CancelCodeWorkflowRun
+        : CodeMashRequestBase, INorbixRequest<WorkflowRunResponse>
+    {
+        ///<summary>
+        ///wfr_…
+        ///</summary>
+        [DataMember]
+        public virtual string RunId { get; set; }
+
+        [DataMember]
+        public virtual string? Reason { get; set; }
+    }
+
+    [NorbixRoute("/{version}/code/workflows/{Id}", "DELETE")]
+    [DataContract]
+    public partial class DeleteCodeWorkflow
+        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
+    {
+        ///<summary>
+        ///wf_…
+        ///</summary>
+        [DataMember]
+        public virtual string Id { get; set; }
+    }
+
+    [NorbixRoute("/{version}/code/workflows/{Id}/disable", "PUT")]
+    [DataContract]
+    public partial class DisableCodeWorkflow
+        : CodeMashRequestBase, INorbixRequest<WorkflowResponse>
+    {
+        ///<summary>
+        ///wf_…
+        ///</summary>
+        [DataMember]
+        public virtual string Id { get; set; }
+    }
+
+    [NorbixRoute("/{version}/code/workflows/disable", "PUT")]
+    [DataContract]
+    public partial class DisableCodeWorkflows
+        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
+    {
+    }
+
+    [NorbixRoute("/{version}/code/workflows/{Id}/draft", "DELETE")]
+    [DataContract]
+    public partial class DiscardCodeWorkflowDraft
+        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
+    {
+        ///<summary>
+        ///wf_…
+        ///</summary>
+        [DataMember]
+        public virtual string Id { get; set; }
+    }
+
+    [NorbixRoute("/{version}/code/workflows/{Id}/enable", "PUT")]
+    [DataContract]
+    public partial class EnableCodeWorkflow
+        : CodeMashRequestBase, INorbixRequest<WorkflowResponse>
+    {
+        ///<summary>
+        ///wf_…
+        ///</summary>
+        [DataMember]
+        public virtual string Id { get; set; }
+    }
+
+    [NorbixRoute("/{version}/code/workflows/enable", "PUT")]
+    [DataContract]
+    public partial class EnableCodeWorkflows
+        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
+    {
+    }
+
+    [NorbixRoute("/{version}/code/workflows/{Id}", "GET")]
+    [DataContract]
+    public partial class GetCodeWorkflow
+        : CodeMashRequestBase, INorbixRequest<WorkflowResponse>
+    {
+        ///<summary>
+        ///wf_…
+        ///</summary>
+        [DataMember]
+        public virtual string Id { get; set; }
+
+        ///<summary>
+        ///A pinned published version; absent = the latest.
+        ///</summary>
+        [DataMember]
+        public virtual int? PinnedVersion { get; set; }
+    }
+
+    [NorbixRoute("/{version}/code/workflows/{Id}/draft", "GET")]
+    [DataContract]
+    public partial class GetCodeWorkflowDraft
+        : CodeMashRequestBase, INorbixRequest<WorkflowResponse>
+    {
+        ///<summary>
+        ///wf_…
+        ///</summary>
+        [DataMember]
+        public virtual string Id { get; set; }
+    }
+
+    [NorbixRoute("/{version}/code/workflows/runs/{RunId}", "GET")]
+    [DataContract]
+    public partial class GetCodeWorkflowRun
+        : CodeMashRequestBase, INorbixRequest<WorkflowRunResponse>
+    {
+        ///<summary>
+        ///wfr_…
+        ///</summary>
+        [DataMember]
+        public virtual string RunId { get; set; }
+    }
+
+    [NorbixRoute("/{version}/code/workflows/runs/{RunId}/logs", "GET")]
+    [DataContract]
+    public partial class GetCodeWorkflowRunLogs
+        : CodeMashListPaginationRequestBase, INorbixRequest<WorkflowRunLogsResponse>
+    {
+        ///<summary>
+        ///wfr_…
+        ///</summary>
+        [DataMember]
+        public virtual string RunId { get; set; }
+
+        ///<summary>
+        ///Only this step's lines.
+        ///</summary>
+        [DataMember]
+        public virtual string? StepId { get; set; }
+
+        ///<summary>
+        ///Information | Warning | Error
+        ///</summary>
+        [DataMember]
+        public virtual string? Level { get; set; }
+    }
+
+    [NorbixRoute("/{version}/code/workflows/{Id}/runs", "GET")]
+    [DataContract]
+    public partial class GetCodeWorkflowRuns
+        : CodeMashListPaginationRequestBase, INorbixRequest<WorkflowRunsResponse>
+    {
+        ///<summary>
+        ///wf_…
+        ///</summary>
+        [DataMember]
+        public virtual string Id { get; set; }
+
+        ///<summary>
+        ///running | waiting | succeeded | failed | cancelled
+        ///</summary>
+        [DataMember]
+        public virtual string? Status { get; set; }
+
+        [DataMember]
+        public virtual DateTime? From { get; set; }
+
+        [DataMember]
+        public virtual DateTime? To { get; set; }
+    }
+
+    [NorbixRoute("/{version}/code/workflows", "GET")]
+    [DataContract]
+    public partial class GetCodeWorkflows
+        : CodeMashListPaginationRequestBase, INorbixRequest<WorkflowsResponse>
+    {
+        ///<summary>
+        ///Only enabled (true) or only disabled (false) workflows.
+        ///</summary>
+        [DataMember]
+        public virtual bool? IsEnabled { get; set; }
+    }
+
+    [NorbixRoute("/{version}/code/workflows/schema", "GET")]
+    [DataContract]
+    public partial class GetCodeWorkflowSchema
+        : CodeMashRequestBase, INorbixRequest<WorkflowSchemaResponse>
+    {
+    }
+
+    [NorbixRoute("/{version}/code/workflows/{Id}/versions/diff", "GET")]
+    [DataContract]
+    public partial class GetCodeWorkflowVersionDiff
+        : CodeMashRequestBase, INorbixRequest<WorkflowVersionDiffResponse>
+    {
+        ///<summary>
+        ///wf_…
+        ///</summary>
+        [DataMember]
+        public virtual string Id { get; set; }
+
+        ///<summary>
+        ///The earlier version.
+        ///</summary>
+        [DataMember]
+        public virtual int FromVersion { get; set; }
+
+        ///<summary>
+        ///The later version.
+        ///</summary>
+        [DataMember]
+        public virtual int ToVersion { get; set; }
+    }
+
+    [NorbixRoute("/{version}/code/workflows/{Id}/versions", "GET")]
+    [DataContract]
+    public partial class GetCodeWorkflowVersions
+        : CodeMashRequestBase, INorbixRequest<WorkflowVersionsResponse>
+    {
+        ///<summary>
+        ///wf_…
+        ///</summary>
+        [DataMember]
+        public virtual string Id { get; set; }
+    }
+
+    [NorbixRoute("/{version}/code/workflows/runs", "GET")]
+    [DataContract]
+    public partial class GetCodeWorkflowWaitingRuns
+        : CodeMashListPaginationRequestBase, INorbixRequest<WorkflowRunsResponse>
+    {
+        ///<summary>
+        ///running | waiting (default) | succeeded | failed | cancelled
+        ///</summary>
+        [DataMember]
+        public virtual string? Status { get; set; }
+
+        ///<summary>
+        ///approval | event | delay
+        ///</summary>
+        [DataMember]
+        public virtual string? WaitingKind { get; set; }
+
+        ///<summary>
+        ///"me" or a usr_… id: only approvals assigned to that user.
+        ///</summary>
+        [DataMember]
+        public virtual string? Assignee { get; set; }
+
+        ///<summary>
+        ///Only runs of this workflow (wf_…).
+        ///</summary>
+        [DataMember]
+        public virtual string? WorkflowId { get; set; }
+
+        ///<summary>
+        ///The wait's rendered key, exact match.
+        ///</summary>
+        [DataMember]
+        public virtual string? Key { get; set; }
+    }
+
+    [NorbixRoute("/{version}/code/workflows/{Id}/invoke", "POST")]
+    [DataContract]
+    public partial class InvokeCodeWorkflow
+        : CodeMashRequestBase, INorbixRequest<InvokeCodeWorkflowResponse>
+    {
+        ///<summary>
+        ///wf_…
+        ///</summary>
+        [DataMember]
+        public virtual string Id { get; set; }
+
+        ///<summary>
+        ///The @Model.Request object; checked against the definition's inputs when it has one.
+        ///</summary>
+        [DataMember]
+        public virtual Dictionary<string, Object>? Payload { get; set; }
+
+        ///<summary>
+        ///0–30 seconds to wait for the run; default 10; 0 answers 202 at once.
+        ///</summary>
+        [DataMember]
+        public virtual int? WaitSeconds { get; set; }
+
+        ///<summary>
+        ///"draft" to test the draft, a version number to pin one; absent = the latest published.
+        ///</summary>
+        [DataMember]
+        public virtual string? RunVersion { get; set; }
+    }
+
+    [DataContract]
+    public partial class InvokeCodeWorkflowResponse
+        : ResponseBase
+    {
+        [DataMember]
+        public virtual string? RunId { get; set; }
+
+        [DataMember]
+        public virtual string? Status { get; set; }
+
+        [DataMember]
+        public virtual Object? Output { get; set; }
+
+        [DataMember]
+        public virtual long? DurationMs { get; set; }
+
+        [DataMember]
+        public virtual WorkflowRunErrorDto? Error { get; set; }
+
+        [DataMember]
+        public virtual WorkflowRunDto? Run { get; set; }
+    }
+
+    [NorbixRoute("/{version}/code/workflows/{Id}/publish", "POST")]
+    [DataContract]
+    public partial class PublishCodeWorkflow
+        : CodeMashRequestBase, INorbixRequest<WorkflowResponse>
+    {
+        ///<summary>
+        ///wf_…
+        ///</summary>
+        [DataMember]
+        public virtual string Id { get; set; }
+    }
+
+    [NorbixRoute("/{version}/code/workflows/runs/{RunId}/resume", "POST")]
+    [DataContract]
+    public partial class ResumeCodeWorkflowRun
+        : CodeMashRequestBase, INorbixRequest<WorkflowRunResponse>
+    {
+        ///<summary>
+        ///wfr_…
+        ///</summary>
+        [DataMember]
+        public virtual string RunId { get; set; }
+
+        ///<summary>
+        ///Required when several steps wait.
+        ///</summary>
+        [DataMember]
+        public virtual string? StepId { get; set; }
+
+        ///<summary>
+        ///approved | rejected — required for an approval wait.
+        ///</summary>
+        [DataMember]
+        public virtual string? Decision { get; set; }
+
+        [DataMember]
+        public virtual Dictionary<string, Object>? Payload { get; set; }
+    }
+
+    [NorbixRoute("/{version}/code/workflows/{Id}/resume", "POST")]
+    [DataContract]
+    public partial class ResumeCodeWorkflowRunByKey
+        : CodeMashRequestBase, INorbixRequest<WorkflowRunResponse>
+    {
+        ///<summary>
+        ///wf_…
+        ///</summary>
+        [DataMember]
+        public virtual string Id { get; set; }
+
+        ///<summary>
+        ///The wait's rendered key.
+        ///</summary>
+        [DataMember]
+        public virtual string Key { get; set; }
+
+        [DataMember]
+        public virtual string? StepId { get; set; }
+
+        ///<summary>
+        ///approved | rejected — required for an approval wait.
+        ///</summary>
+        [DataMember]
+        public virtual string? Decision { get; set; }
+
+        [DataMember]
+        public virtual Dictionary<string, Object>? Payload { get; set; }
+    }
+
+    [NorbixRoute("/{version}/code/workflows/runs/{RunId}/retry", "POST")]
+    [DataContract]
+    public partial class RetryCodeWorkflowRunStep
+        : CodeMashRequestBase, INorbixRequest<WorkflowRunResponse>
+    {
+        ///<summary>
+        ///wfr_…
+        ///</summary>
+        [DataMember]
+        public virtual string RunId { get; set; }
+
+        ///<summary>
+        ///The failed step; default = the step named in the run's error.
+        ///</summary>
+        [DataMember]
+        public virtual string? StepId { get; set; }
+    }
+
+    [NorbixRoute("/{version}/code/workflows", "PUT")]
+    [DataContract]
+    public partial class SaveCodeWorkflow
+        : CodeMashRequestBase, INorbixRequest<WorkflowResponse>
+    {
+        ///<summary>
+        ///The definition (JSON Schema v1 from GET /code/workflows/schema).
+        ///</summary>
+        [DataMember]
+        public virtual WorkflowDefinitionDto Definition { get; set; }
+    }
+
+    [NorbixRoute("/{version}/code/workflows/validate", "POST")]
+    [DataContract]
+    public partial class ValidateCodeWorkflow
+        : CodeMashRequestBase, INorbixRequest<ValidateCodeWorkflowResponse>
+    {
+        [DataMember]
+        public virtual WorkflowDefinitionDto Definition { get; set; }
+    }
+
+    [DataContract]
+    public partial class ValidateCodeWorkflowResponse
+        : ResponseBase
+    {
+        [DataMember]
+        public virtual bool IsValid { get; set; }
+
+        [DataMember]
+        public virtual List<WorkflowValidationIssueDto> Errors { get; set; } = [];
+
+        [DataMember]
+        public virtual List<WorkflowValidationIssueDto> Warnings { get; set; } = [];
+    }
+
+    [DataContract]
+    public partial class WorkflowResponse
+        : ResponseBase
+    {
+        [DataMember]
+        public virtual WorkflowDto? Workflow { get; set; }
+    }
+
+    [DataContract]
+    public partial class WorkflowRunLogsResponse
+        : ResponseBase
+    {
+        [DataMember]
+        public virtual PaginatedResponse<TenantLogEntryDto>? List { get; set; }
+    }
+
+    [DataContract]
+    public partial class WorkflowRunResponse
+        : ResponseBase
+    {
+        [DataMember]
+        public virtual WorkflowRunDto? Run { get; set; }
+    }
+
+    [DataContract]
+    public partial class WorkflowRunsResponse
+        : ResponseBase
+    {
+        [DataMember]
+        public virtual PaginatedResponse<WorkflowRunListProjection>? List { get; set; }
+    }
+
+    [DataContract]
+    public partial class WorkflowSchemaResponse
+        : ResponseBase
+    {
+        [DataMember]
+        public virtual WorkflowSchemaDto? Schema { get; set; }
+    }
+
+    [DataContract]
+    public partial class WorkflowsResponse
+        : ResponseBase
+    {
+        [DataMember]
+        public virtual PaginatedResponse<WorkflowListProjection>? List { get; set; }
+    }
+
+    [DataContract]
+    public partial class WorkflowVersionDiffResponse
+        : ResponseBase
+    {
+        [DataMember]
+        public virtual WorkflowVersionDiffDto? Diff { get; set; }
+    }
+
+    [DataContract]
+    public partial class WorkflowVersionsResponse
+        : ResponseBase
+    {
+        [DataMember]
+        public virtual List<WorkflowVersionSummaryDto>? Items { get; set; }
     }
 
     [NorbixRoute("/{version}/compliance/account", "GET")]
@@ -18973,6 +20217,69 @@ namespace Norbix.Sdk.Types.Hub;
         : ResponseBase
     {
         public virtual IReadOnlyList<PaymentsWebhookLogEntry>? List { get; set; }
+    }
+
+    ///<summary>
+    ///Reads one received payment webhook with its masked raw call
+    ///</summary>
+    [NorbixRoute("/{version}/payments/webhooks/runs/{Id}", "GET")]
+    public partial class GetPaymentsWebhookRun
+        : CodeMashRequestBase, INorbixRequest<GetPaymentsWebhookRunResponse>
+    {
+        ///<summary>
+        ///The run id (pwr_…).
+        ///</summary>
+        public virtual string Id { get; set; }
+    }
+
+    public partial class GetPaymentsWebhookRunResponse
+        : ResponseBase
+    {
+        public virtual PaymentsWebhookRunDetailsDto? Item { get; set; }
+    }
+
+    ///<summary>
+    ///Lists the received payment webhooks of the request's environment, newest first
+    ///</summary>
+    [NorbixRoute("/{version}/payments/webhooks/runs", "GET")]
+    public partial class GetPaymentsWebhookRuns
+        : CodeMashListPaginationRequestBase, INorbixRequest<GetPaymentsWebhookRunsResponse>
+    {
+        ///<summary>
+        ///Only events posted to this payments integration (int_…).
+        ///</summary>
+        public virtual string? IntegrationId { get; set; }
+
+        ///<summary>
+        ///Only this provider event name (e.g. payment_intent.succeeded, payment.success).
+        ///</summary>
+        public virtual string? EventName { get; set; }
+
+        ///<summary>
+        ///Only events that reached this trigger (trg_…).
+        ///</summary>
+        public virtual string? TriggerId { get; set; }
+
+        ///<summary>
+        ///applied (processed) · ignored (200, e.g. duplicate) · refused (4xx) · failed (5xx) · all (default).
+        ///</summary>
+        public virtual string? Outcome { get; set; }
+
+        ///<summary>
+        ///Received at or after this UTC time.
+        ///</summary>
+        public virtual DateTime? FromUtc { get; set; }
+
+        ///<summary>
+        ///Received at or before this UTC time.
+        ///</summary>
+        public virtual DateTime? ToUtc { get; set; }
+    }
+
+    public partial class GetPaymentsWebhookRunsResponse
+        : ResponseBase
+    {
+        public virtual PaginatedResponse<PaymentsWebhookRunDto>? List { get; set; }
     }
 
     ///<summary>

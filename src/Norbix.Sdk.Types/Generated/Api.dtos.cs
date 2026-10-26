@@ -61,6 +61,7 @@ namespace Norbix.Sdk.Types.Api;
         WebhookCall,
         SseCall,
         Marketplace,
+        Workflow,
     }
 
     public enum TriggerType
