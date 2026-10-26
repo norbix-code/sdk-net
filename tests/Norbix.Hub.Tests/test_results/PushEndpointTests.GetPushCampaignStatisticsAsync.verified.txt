@@ -26,6 +26,8 @@
       Batches: 7,
       Sent: 7,
       Failed: 7,
+      FailedRetryable: 7,
+      Cancelled: 7,
       SuccessRate: 3.14
     },
     ResponseStatus: {

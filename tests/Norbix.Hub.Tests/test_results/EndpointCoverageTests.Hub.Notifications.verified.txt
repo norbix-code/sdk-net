@@ -1,7 +1,7 @@
 ﻿{
   Target: Hub,
   Group: notifications,
-  Count: 125,
+  Count: 128,
   Endpoints: [
     {
       Target: Hub,
@@ -402,6 +402,8 @@
           Batches: 7,
           Sent: 7,
           Failed: 7,
+          FailedRetryable: 7,
+          Cancelled: 7,
           SuccessRate: 3.14
         },
         ResponseStatus: {
@@ -432,6 +434,54 @@
       Response: {
         Subject: test-subject,
         Body: test-body,
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: notifications,
+      MethodName: RetryFailedEmailNotificationsAsync,
+      RequestType: RetryFailedEmailNotificationsRequest,
+      HttpMethod: POST,
+      Path: /{version}/notifications/email/campaigns/{Id}/retry-failed,
+      PathParams: [
+        Id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/notifications/email/campaigns/{guid}/retry-failed,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        },
+        Body: {
+          databaseIntegrationId: Guid_1,
+          idempotencyKey: test-idempotencyKey,
+          notificationIds: [
+            test-string
+          ],
+          includeAmbiguous: true,
+          categories: [
+            test-string
+          ],
+          env: test-env
+        }
+      },
+      ResponseType: RetryFailedEmailNotificationsResponse,
+      Response: {
+        RetryRequestId: Guid_1,
+        Selected: 7,
+        Skipped: {
+          sample-key: 7
+        },
+        Replayed: true,
+        Warning: test-warning,
         ResponseStatus: {
           IsSuccess: true
         }
@@ -2253,6 +2303,8 @@
           Batches: 7,
           Sent: 7,
           Failed: 7,
+          FailedRetryable: 7,
+          Cancelled: 7,
           SuccessRate: 3.14
         },
         ResponseStatus: {
@@ -2284,6 +2336,54 @@
         Title: test-title,
         Body: test-body,
         Subtitle: test-subtitle,
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: notifications,
+      MethodName: RetryFailedPushNotificationsAsync,
+      RequestType: RetryFailedPushNotificationsRequest,
+      HttpMethod: POST,
+      Path: /{version}/notifications/push/campaigns/{Id}/retry-failed,
+      PathParams: [
+        Id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/notifications/push/campaigns/{guid}/retry-failed,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        },
+        Body: {
+          databaseIntegrationId: Guid_1,
+          idempotencyKey: test-idempotencyKey,
+          notificationIds: [
+            test-string
+          ],
+          includeAmbiguous: true,
+          categories: [
+            test-string
+          ],
+          env: test-env
+        }
+      },
+      ResponseType: RetryFailedPushNotificationsResponse,
+      Response: {
+        RetryRequestId: Guid_1,
+        Selected: 7,
+        Skipped: {
+          sample-key: 7
+        },
+        Replayed: true,
+        Warning: test-warning,
         ResponseStatus: {
           IsSuccess: true
         }
@@ -3614,6 +3714,8 @@
           Batches: 7,
           Sent: 7,
           Failed: 7,
+          FailedRetryable: 7,
+          Cancelled: 7,
           SuccessRate: 3.14
         },
         ResponseStatus: {
@@ -3643,6 +3745,54 @@
       ResponseType: PreviewSmsNotificationResponse,
       Response: {
         Body: test-body,
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: notifications,
+      MethodName: RetryFailedSmsNotificationsAsync,
+      RequestType: RetryFailedSmsNotificationsRequest,
+      HttpMethod: POST,
+      Path: /{version}/notifications/sms/campaigns/{Id}/retry-failed,
+      PathParams: [
+        Id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/notifications/sms/campaigns/{guid}/retry-failed,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        },
+        Body: {
+          databaseIntegrationId: Guid_1,
+          idempotencyKey: test-idempotencyKey,
+          notificationIds: [
+            test-string
+          ],
+          includeAmbiguous: true,
+          categories: [
+            test-string
+          ],
+          env: test-env
+        }
+      },
+      ResponseType: RetryFailedSmsNotificationsResponse,
+      Response: {
+        RetryRequestId: Guid_1,
+        Selected: 7,
+        Skipped: {
+          sample-key: 7
+        },
+        Replayed: true,
+        Warning: test-warning,
         ResponseStatus: {
           IsSuccess: true
         }

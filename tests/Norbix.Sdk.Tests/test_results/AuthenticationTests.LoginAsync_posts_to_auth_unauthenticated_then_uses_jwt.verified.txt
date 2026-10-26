@@ -3,7 +3,10 @@
     BearerToken: fresh-jwt,
     RefreshToken: r1,
     UserId: u1,
-    UserName: alice
+    UserName: alice,
+    Meta: {
+      credentialVersion: cv-1
+    }
   },
   ClientAuthenticated: true,
   AuthedAuthenticated: true,

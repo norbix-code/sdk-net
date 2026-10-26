@@ -1,5 +1,5 @@
 ﻿{
-  Count: 50,
+  Count: 51,
   Endpoints: [
     DELETE /{version}/notifications/email/campaigns/{Id} -> DeleteEmailCampaignAsync,
     DELETE /{version}/notifications/email/footers/{id} -> DeleteEmailFooterAsync,
@@ -30,6 +30,7 @@
     GET /{version}/notifications/emails/campaigns/{campaignId}/messages -> GetEmailCampaignMessagesAsync,
     POST /{version}/email/one-click-unsubscribe -> OneClickUnsubscribeAsync,
     POST /{version}/notifications/email/campaigns -> CreateEmailCampaignAsync,
+    POST /{version}/notifications/email/campaigns/{Id}/retry-failed -> RetryFailedEmailNotificationsAsync,
     POST /{version}/notifications/email/campaigns/{Id}/stop -> StopEmailCampaignAsync,
     POST /{version}/notifications/email/footers -> SaveEmailFooterAsync,
     POST /{version}/notifications/email/integrations -> SaveEmailIntegrationAsync,

@@ -1,0 +1,48 @@
+﻿{
+  Target: Hub,
+  Group: notifications,
+  MethodName: RetryFailedPushNotificationsAsync,
+  RequestType: RetryFailedPushNotificationsRequest,
+  HttpMethod: POST,
+  Path: /{version}/notifications/push/campaigns/{Id}/retry-failed,
+  PathParams: [
+    Id
+  ],
+  IsAccountScoped: false,
+  IsUnauthenticated: false,
+  Sent: {
+    Method: POST,
+    Path: /v2/notifications/push/campaigns/{guid}/retry-failed,
+    Headers: {
+      Authorization: Bearer test-bearer,
+      Content-Type: application/json; charset=utf-8,
+      norbix-account-id: test-account,
+      norbix-project-id: test-project
+    },
+    Body: {
+      databaseIntegrationId: Guid_1,
+      idempotencyKey: test-idempotencyKey,
+      notificationIds: [
+        test-string
+      ],
+      includeAmbiguous: true,
+      categories: [
+        test-string
+      ],
+      env: test-env
+    }
+  },
+  ResponseType: RetryFailedPushNotificationsResponse,
+  Response: {
+    RetryRequestId: Guid_1,
+    Selected: 7,
+    Skipped: {
+      sample-key: 7
+    },
+    Replayed: true,
+    Warning: test-warning,
+    ResponseStatus: {
+      IsSuccess: true
+    }
+  }
+}

@@ -94,6 +94,7 @@ public sealed class AuthenticationTests
             refreshToken = "r1",
             userId = "u1",
             userName = "alice",
+            meta = new { credentialVersion = "cv-1" },
         });
 
         var session = await fixture.Client.LoginAsync(new LoginCredentials

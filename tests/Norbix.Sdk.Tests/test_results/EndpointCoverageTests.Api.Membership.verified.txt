@@ -521,8 +521,10 @@
           env: test-env
         }
       },
-      ResponseType: PasskeyOkResponse,
+      ResponseType: CredentialChangedResponse,
       Response: {
+        AuthId: Guid_1,
+        CredentialVersion: test-credentialVersion,
         ResponseStatus: {
           IsSuccess: true
         }
@@ -553,8 +555,10 @@
           env: test-env
         }
       },
-      ResponseType: PasskeyOkResponse,
+      ResponseType: CredentialChangedResponse,
       Response: {
+        AuthId: Guid_1,
+        CredentialVersion: test-credentialVersion,
         ResponseStatus: {
           IsSuccess: true
         }
