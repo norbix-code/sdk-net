@@ -210,6 +210,15 @@ namespace Norbix.Sdk.Types.Hub;
         ChatPlatform,
     }
 
+    public enum DeliveryEventOutcome
+    {
+        Delivered,
+        Bounced,
+        Complained,
+        Rejected,
+        Deferred,
+    }
+
     public enum DeploymentMode
     {
         Managed,
@@ -248,6 +257,7 @@ namespace Norbix.Sdk.Types.Hub;
         MailGun,
         AwsSes,
         Fake,
+        AzureCommunication,
     }
 
     public enum EmailTemplateEngine
@@ -338,6 +348,30 @@ namespace Norbix.Sdk.Types.Hub;
         OnBlocked,
         OnReactivated,
         OnUserCreated,
+    }
+
+    public enum NotificationAttemptOutcome
+    {
+        Accepted,
+        Failed,
+    }
+
+    public enum NotificationAttemptTrigger
+    {
+        Initial,
+        AutoRetry,
+        ManualRetry,
+    }
+
+    public enum NotificationDeliveryState
+    {
+        Pending,
+        Sending,
+        Retrying,
+        Accepted,
+        Failed,
+        Blocked,
+        Cancelled,
     }
 
     public enum NotificationMedium
@@ -478,6 +512,14 @@ namespace Norbix.Sdk.Types.Hub;
         Bearer,
         Basic,
         Prefixed,
+    }
+
+    public enum SendErrorCategory
+    {
+        Unknown,
+        Transient,
+        Permanent,
+        Ambiguous,
     }
 
     public enum SmsCampaignRecipientsSourceTypes
@@ -686,6 +728,7 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual AwsSesEmailIntegrationRequest? Typegen_1_AwsSesEmailIntegrationRequest { get; set; }
         public virtual SendGridEmailIntegrationRequest? Typegen_2_SendGridEmailIntegrationRequest { get; set; }
         public virtual MailGunEmailIntegrationRequest? Typegen_3_MailGunEmailIntegrationRequest { get; set; }
+        public virtual AzureCommunicationEmailIntegrationRequest? Typegen_3a_AzureCommunicationEmailIntegrationRequest { get; set; }
         public virtual EmailToAllUsersDeliverySettingsRequest? Typegen_4_EmailToAllUsersDeliverySettingsRequest { get; set; }
         public virtual EmailToAccountUsersDeliverySettingsRequest? Typegen_5_EmailToAccountUsersDeliverySettingsRequest { get; set; }
         public virtual EmailToCollectionRecordsDeliverySettingsRequest? Typegen_6_EmailToCollectionRecordsDeliverySettingsRequest { get; set; }
@@ -3020,6 +3063,24 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual HashSet<NotificationStatusChangeEntryDto> StatusHistory { get; set; } = [];
 
         [DataMember]
+        public virtual NotificationDeliveryState? State { get; set; }
+
+        [DataMember]
+        public virtual DateTime? StateChangedAt { get; set; }
+
+        [DataMember]
+        public virtual List<NotificationAttemptDto>? Attempts { get; set; }
+
+        [DataMember]
+        public virtual List<NotificationDeliveryEventDto>? DeliveryEvents { get; set; }
+
+        [DataMember]
+        public virtual DeliveryEventOutcome? DeliveryOutcome { get; set; }
+
+        [DataMember]
+        public virtual int? DeliveryOutcomeRank { get; set; }
+
+        [DataMember]
         public virtual string Id { get; set; }
     }
 
@@ -3078,6 +3139,12 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember]
         public virtual int Failed { get; set; }
+
+        [DataMember]
+        public virtual int FailedRetryable { get; set; }
+
+        [DataMember]
+        public virtual int Cancelled { get; set; }
 
         [DataMember]
         public virtual decimal SuccessRate { get; set; }
@@ -3297,6 +3364,80 @@ namespace Norbix.Sdk.Types.Hub;
     public partial interface IHasResponsibleUserId
     {
         string UserId { get; set; }
+    }
+
+    [DataContract]
+    public partial class NotificationAttemptDto
+    {
+        [DataMember]
+        public virtual string AttemptId { get; set; }
+
+        [DataMember]
+        public virtual int Number { get; set; }
+
+        [DataMember]
+        public virtual DateTime StartedAt { get; set; }
+
+        [DataMember]
+        public virtual DateTime? FinishedAt { get; set; }
+
+        [DataMember]
+        public virtual NotificationAttemptOutcome Outcome { get; set; }
+
+        [DataMember]
+        public virtual SendErrorCategory? Category { get; set; }
+
+        [DataMember]
+        public virtual int? StatusCode { get; set; }
+
+        [DataMember]
+        public virtual string? ErrorCode { get; set; }
+
+        [DataMember]
+        public virtual string? Message { get; set; }
+
+        [DataMember]
+        public virtual string? ProviderRef { get; set; }
+
+        [DataMember]
+        public virtual int? RetryAfterSeconds { get; set; }
+
+        [DataMember]
+        public virtual bool? Exhausted { get; set; }
+
+        [DataMember]
+        public virtual DateTime? NextRetryAt { get; set; }
+
+        [DataMember]
+        public virtual string? CorrelationId { get; set; }
+
+        [DataMember]
+        public virtual NotificationAttemptTrigger Trigger { get; set; }
+
+        [DataMember]
+        public virtual string? RetryRequestId { get; set; }
+    }
+
+    [DataContract]
+    public partial class NotificationDeliveryEventDto
+    {
+        [DataMember]
+        public virtual string? EventId { get; set; }
+
+        [DataMember]
+        public virtual DeliveryEventOutcome Outcome { get; set; }
+
+        [DataMember]
+        public virtual DateTime At { get; set; }
+
+        [DataMember]
+        public virtual string Provider { get; set; }
+
+        [DataMember]
+        public virtual string? ProviderRef { get; set; }
+
+        [DataMember]
+        public virtual string? Reason { get; set; }
     }
 
     [DataContract]
@@ -6368,6 +6509,7 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual AuthStatus Status { get; set; }
         public virtual DateTime CreatedOn { get; set; }
         public virtual DateTime ModifiedOn { get; set; }
+        public virtual string? CredentialVersion { get; set; }
     }
 
     [DataContract]
@@ -7069,6 +7211,8 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual string Region { get; set; }
         public virtual string IdentityArn { get; set; }
         public virtual string? ConfigurationSetName { get; set; }
+        public virtual bool? DeliveryEventsEnabled { get; set; }
+        public virtual string? SnsTopicArn { get; set; }
     }
 
     public partial class FakeEmailIntegrationDto
@@ -7086,6 +7230,8 @@ namespace Norbix.Sdk.Types.Hub;
     public partial class SendGridEmailIntegrationDto
         : EmailIntegrationDto
     {
+        public virtual bool? DeliveryEventsEnabled { get; set; }
+        public virtual string? EventWebhookPublicKey { get; set; }
     }
 
     public partial class SmtpEmailIntegrationDto
@@ -7411,6 +7557,11 @@ namespace Norbix.Sdk.Types.Hub;
     {
         public virtual string AccountSid { get; set; }
         public virtual string FromPhoneNumber { get; set; }
+        [DataMember]
+        public virtual bool? DeliveryEventsEnabled { get; set; }
+
+        [DataMember]
+        public virtual string? StatusCallbackUrl { get; set; }
     }
 
     public partial class VonageSmsIntegrationDto
@@ -15820,6 +15971,71 @@ namespace Norbix.Sdk.Types.Hub;
     }
 
     ///<summary>
+    ///Retries the failed recipients of an email campaign
+    ///</summary>
+    [NorbixRoute("/{version}/notifications/email/campaigns/{Id}/retry-failed", "POST")]
+    [DataContract]
+    public partial class RetryFailedEmailNotificationsRequest
+        : CodeMashRequestBase, INorbixRequest<RetryFailedEmailNotificationsResponse>
+    {
+        ///<summary>
+        ///The campaign id. Get it from get_email_campaigns.
+        ///</summary>
+        [DataMember]
+        public virtual string Id { get; set; }
+
+        ///<summary>
+        ///Optional. Omit to use the project default database integration (resolved per environment).
+        ///</summary>
+        [DataMember]
+        public virtual string? DatabaseIntegrationId { get; set; }
+
+        ///<summary>
+        ///Your key for this request, at most 64 characters. The same key again returns the first answer and sends nothing; the same key with another body is refused (409).
+        ///</summary>
+        [DataMember]
+        public virtual string IdempotencyKey { get; set; }
+
+        ///<summary>
+        ///Optional. Only these notification ids. Default: every failed recipient of the campaign.
+        ///</summary>
+        [DataMember]
+        public virtual List<string>? NotificationIds { get; set; }
+
+        ///<summary>
+        ///Optional, default false. Also retry recipients whose failure is Ambiguous (a timeout after the request was sent) — this MAY SEND A DUPLICATE.
+        ///</summary>
+        [DataMember]
+        public virtual bool? IncludeAmbiguous { get; set; }
+
+        ///<summary>
+        ///Optional. Only these failure classes: Transient, Permanent, Unknown. Default: all three (Ambiguous only through includeAmbiguous).
+        ///</summary>
+        [DataMember]
+        public virtual List<string>? Categories { get; set; }
+    }
+
+    [DataContract]
+    public partial class RetryFailedEmailNotificationsResponse
+        : ResponseBase
+    {
+        [DataMember]
+        public virtual string? RetryRequestId { get; set; }
+
+        [DataMember]
+        public virtual int Selected { get; set; }
+
+        [DataMember]
+        public virtual Dictionary<string, int>? Skipped { get; set; }
+
+        [DataMember]
+        public virtual bool Replayed { get; set; }
+
+        [DataMember]
+        public virtual string? Warning { get; set; }
+    }
+
+    ///<summary>
     ///Stops a running email campaign
     ///</summary>
     [NorbixRoute("/{version}/notifications/email/campaigns/{Id}/stop", "POST")]
@@ -15894,6 +16110,18 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual string? ExternalId { get; set; }
         public virtual string? AccessKey { get; set; }
         public virtual string? SecretKey { get; set; }
+        public virtual bool? DeliveryEventsEnabled { get; set; }
+        public virtual string? SnsTopicArn { get; set; }
+    }
+
+    public partial class AzureCommunicationEmailIntegrationRequest
+        : EmailIntegrationRequest
+    {
+        public virtual EmailProvider Provider { get; set; }
+        public virtual string Endpoint { get; set; }
+        public virtual string AccessKey { get; set; }
+        public virtual bool? DeliveryEventsEnabled { get; set; }
+        public virtual string? EventGridKey { get; set; }
     }
 
     ///<summary>
@@ -16047,6 +16275,8 @@ namespace Norbix.Sdk.Types.Hub;
     {
         public virtual EmailProvider Provider { get; set; }
         public virtual string ApiKey { get; set; }
+        public virtual bool? DeliveryEventsEnabled { get; set; }
+        public virtual string? EventWebhookPublicKey { get; set; }
     }
 
     ///<summary>
@@ -19035,6 +19265,71 @@ namespace Norbix.Sdk.Types.Hub;
     }
 
     ///<summary>
+    ///Retries the failed recipients of a push campaign
+    ///</summary>
+    [NorbixRoute("/{version}/notifications/push/campaigns/{Id}/retry-failed", "POST")]
+    [DataContract]
+    public partial class RetryFailedPushNotificationsRequest
+        : CodeMashRequestBase, INorbixRequest<RetryFailedPushNotificationsResponse>
+    {
+        ///<summary>
+        ///The campaign id. Get it from get_push_campaigns.
+        ///</summary>
+        [DataMember]
+        public virtual string Id { get; set; }
+
+        ///<summary>
+        ///Optional. Omit to use the project default database integration (resolved per environment).
+        ///</summary>
+        [DataMember]
+        public virtual string? DatabaseIntegrationId { get; set; }
+
+        ///<summary>
+        ///Your key for this request, at most 64 characters. The same key again returns the first answer and sends nothing; the same key with another body is refused (409).
+        ///</summary>
+        [DataMember]
+        public virtual string IdempotencyKey { get; set; }
+
+        ///<summary>
+        ///Optional. Only these notification ids. Default: every failed recipient of the campaign.
+        ///</summary>
+        [DataMember]
+        public virtual List<string>? NotificationIds { get; set; }
+
+        ///<summary>
+        ///Optional, default false. Also retry recipients whose failure is Ambiguous (a timeout after the request was sent) — this MAY SEND A DUPLICATE.
+        ///</summary>
+        [DataMember]
+        public virtual bool? IncludeAmbiguous { get; set; }
+
+        ///<summary>
+        ///Optional. Only these failure classes: Transient, Permanent, Unknown. Default: all three (Ambiguous only through includeAmbiguous).
+        ///</summary>
+        [DataMember]
+        public virtual List<string>? Categories { get; set; }
+    }
+
+    [DataContract]
+    public partial class RetryFailedPushNotificationsResponse
+        : ResponseBase
+    {
+        [DataMember]
+        public virtual string? RetryRequestId { get; set; }
+
+        [DataMember]
+        public virtual int Selected { get; set; }
+
+        [DataMember]
+        public virtual Dictionary<string, int>? Skipped { get; set; }
+
+        [DataMember]
+        public virtual bool Replayed { get; set; }
+
+        [DataMember]
+        public virtual string? Warning { get; set; }
+    }
+
+    ///<summary>
     ///Stops a running push campaign
     ///</summary>
     [NorbixRoute("/{version}/notifications/push/campaigns/{Id}/stop", "POST")]
@@ -20176,6 +20471,71 @@ namespace Norbix.Sdk.Types.Hub;
         : ResponseBase
     {
         public virtual string? Body { get; set; }
+    }
+
+    ///<summary>
+    ///Retries the failed recipients of an SMS campaign
+    ///</summary>
+    [NorbixRoute("/{version}/notifications/sms/campaigns/{Id}/retry-failed", "POST")]
+    [DataContract]
+    public partial class RetryFailedSmsNotificationsRequest
+        : CodeMashRequestBase, INorbixRequest<RetryFailedSmsNotificationsResponse>
+    {
+        ///<summary>
+        ///The campaign id. Get it from get_sms_campaigns.
+        ///</summary>
+        [DataMember]
+        public virtual string Id { get; set; }
+
+        ///<summary>
+        ///Optional. Omit to use the project default database integration (resolved per environment).
+        ///</summary>
+        [DataMember]
+        public virtual string? DatabaseIntegrationId { get; set; }
+
+        ///<summary>
+        ///Your key for this request, at most 64 characters. The same key again returns the first answer and sends nothing; the same key with another body is refused (409).
+        ///</summary>
+        [DataMember]
+        public virtual string IdempotencyKey { get; set; }
+
+        ///<summary>
+        ///Optional. Only these notification ids. Default: every failed recipient of the campaign.
+        ///</summary>
+        [DataMember]
+        public virtual List<string>? NotificationIds { get; set; }
+
+        ///<summary>
+        ///Optional, default false. Also retry recipients whose failure is Ambiguous (a timeout after the request was sent) — this MAY SEND A DUPLICATE.
+        ///</summary>
+        [DataMember]
+        public virtual bool? IncludeAmbiguous { get; set; }
+
+        ///<summary>
+        ///Optional. Only these failure classes: Transient, Permanent, Unknown. Default: all three (Ambiguous only through includeAmbiguous).
+        ///</summary>
+        [DataMember]
+        public virtual List<string>? Categories { get; set; }
+    }
+
+    [DataContract]
+    public partial class RetryFailedSmsNotificationsResponse
+        : ResponseBase
+    {
+        [DataMember]
+        public virtual string? RetryRequestId { get; set; }
+
+        [DataMember]
+        public virtual int Selected { get; set; }
+
+        [DataMember]
+        public virtual Dictionary<string, int>? Skipped { get; set; }
+
+        [DataMember]
+        public virtual bool Replayed { get; set; }
+
+        [DataMember]
+        public virtual string? Warning { get; set; }
     }
 
     ///<summary>

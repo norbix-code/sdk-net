@@ -1664,7 +1664,7 @@ namespace Norbix.Sdk.Types.Api;
     [NorbixRoute("/{version}/membership/userauth/password/change", "POST")]
     [DataContract]
     public partial class ChangePasswordRequest
-        : CodeMashRequestBase, INorbixRequest<PasskeyOkResponse>
+        : CodeMashRequestBase, INorbixRequest<CredentialChangedResponse>
     {
         ///<summary>
         ///The member's current password.
@@ -1691,7 +1691,7 @@ namespace Norbix.Sdk.Types.Api;
     [NorbixRoute("/{version}/membership/userauth/password/reset/confirm", "POST")]
     [DataContract]
     public partial class ConfirmPasswordResetRequest
-        : CodeMashRequestBase, INorbixRequest<PasskeyOkResponse>, INorbixOptionalAuth
+        : CodeMashRequestBase, INorbixRequest<CredentialChangedResponse>, INorbixOptionalAuth
     {
         ///<summary>
         ///One-time reset token from the email link.
@@ -1710,6 +1710,17 @@ namespace Norbix.Sdk.Types.Api;
         ///</summary>
         [DataMember]
         public virtual string? DatabaseIntegrationId { get; set; }
+    }
+
+    [DataContract]
+    public partial class CredentialChangedResponse
+        : ResponseBase
+    {
+        [DataMember]
+        public virtual string? AuthId { get; set; }
+
+        [DataMember]
+        public virtual string? CredentialVersion { get; set; }
     }
 
     ///<summary>
@@ -3424,6 +3435,7 @@ namespace Norbix.Sdk.Types.Api;
         public virtual AuthStatus Status { get; set; }
         public virtual DateTime CreatedOn { get; set; }
         public virtual DateTime ModifiedOn { get; set; }
+        public virtual string? CredentialVersion { get; set; }
     }
 
     public partial class LoginDto

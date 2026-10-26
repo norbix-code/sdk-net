@@ -30,5 +30,13 @@ public sealed class LoginResponse
     public string? UserName { get; set; }
     public string? DisplayName { get; set; }
     public string? SessionId { get; set; }
+
+    /// <summary>
+    /// Extra values the gateway attaches to the sign-in answer, e.g.
+    /// <c>credentialVersion</c> — the version of the credential that was used
+    /// (it changes when the password is changed or reset).
+    /// </summary>
+    public Dictionary<string, string>? Meta { get; set; }
+
     public Dictionary<string, object?>? Extras { get; set; }
 }
