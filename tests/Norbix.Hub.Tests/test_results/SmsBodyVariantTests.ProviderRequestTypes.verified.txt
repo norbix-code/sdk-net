@@ -1,7 +1,14 @@
 ﻿{
   Base: SmsIntegrationRequest,
   ProviderRequestTypes: [
-    (none — only the base request exists)
+    BirdSmsIntegrationRequest,
+    FakeSmsIntegrationRequest,
+    PlivoSmsIntegrationRequest,
+    SinchSmsIntegrationRequest,
+    TelesignSmsIntegrationRequest,
+    TelnyxSmsIntegrationRequest,
+    TwilioSmsIntegrationRequest,
+    VonageSmsIntegrationRequest
   ],
   ProvidersTheGatewayKnows: [
     Twilio,
