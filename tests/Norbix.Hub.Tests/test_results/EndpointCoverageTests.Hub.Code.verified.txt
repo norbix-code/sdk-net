@@ -1,7 +1,7 @@
 ﻿{
   Target: Hub,
   Group: code,
-  Count: 44,
+  Count: 68,
   Endpoints: [
     {
       Target: Hub,
@@ -1650,6 +1650,987 @@
           StartingAfter: cursor-start,
           EndingBefore: cursor-end
         },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: code,
+      MethodName: CancelCodeWorkflowRunAsync,
+      RequestType: CancelCodeWorkflowRun,
+      HttpMethod: POST,
+      Path: /{version}/code/workflows/runs/{RunId}/cancel,
+      PathParams: [
+        RunId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/code/workflows/runs/{guid}/cancel,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        },
+        Body: {
+          reason: test-reason,
+          env: test-env
+        }
+      },
+      ResponseType: WorkflowRunResponse,
+      Response: {
+        Run: {
+          RunId: Guid_1,
+          WorkflowId: Guid_1,
+          Version: 7,
+          IsDraft: true,
+          Status: test-status,
+          Source: test-source,
+          StartedBy: {},
+          TriggerId: Guid_1
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: code,
+      MethodName: DeleteCodeWorkflowAsync,
+      RequestType: DeleteCodeWorkflow,
+      HttpMethod: DELETE,
+      Path: /{version}/code/workflows/{Id},
+      PathParams: [
+        Id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: DELETE,
+        Path: /v2/code/workflows/{guid},
+        Query: ?env=test-env,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: code,
+      MethodName: DisableCodeWorkflowAsync,
+      RequestType: DisableCodeWorkflow,
+      HttpMethod: PUT,
+      Path: /{version}/code/workflows/{Id}/disable,
+      PathParams: [
+        Id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: PUT,
+        Path: /v2/code/workflows/{guid}/disable,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        },
+        Body: {
+          env: test-env
+        }
+      },
+      ResponseType: WorkflowResponse,
+      Response: {
+        Workflow: {
+          WorkflowId: Guid_1,
+          Env: test-env,
+          Definition: {
+            IsEnabled: false
+          },
+          Version: 7,
+          IsPublished: true,
+          HasDraft: true,
+          IsEnabled: true,
+          DisabledReason: test-disabledReason
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: code,
+      MethodName: DisableCodeWorkflowsAsync,
+      RequestType: DisableCodeWorkflows,
+      HttpMethod: PUT,
+      Path: /{version}/code/workflows/disable,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: PUT,
+        Path: /v2/code/workflows/disable,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        },
+        Body: {
+          env: test-env
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: code,
+      MethodName: DiscardCodeWorkflowDraftAsync,
+      RequestType: DiscardCodeWorkflowDraft,
+      HttpMethod: DELETE,
+      Path: /{version}/code/workflows/{Id}/draft,
+      PathParams: [
+        Id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: DELETE,
+        Path: /v2/code/workflows/{guid}/draft,
+        Query: ?env=test-env,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: code,
+      MethodName: EnableCodeWorkflowAsync,
+      RequestType: EnableCodeWorkflow,
+      HttpMethod: PUT,
+      Path: /{version}/code/workflows/{Id}/enable,
+      PathParams: [
+        Id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: PUT,
+        Path: /v2/code/workflows/{guid}/enable,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        },
+        Body: {
+          env: test-env
+        }
+      },
+      ResponseType: WorkflowResponse,
+      Response: {
+        Workflow: {
+          WorkflowId: Guid_1,
+          Env: test-env,
+          Definition: {
+            IsEnabled: false
+          },
+          Version: 7,
+          IsPublished: true,
+          HasDraft: true,
+          IsEnabled: true,
+          DisabledReason: test-disabledReason
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: code,
+      MethodName: EnableCodeWorkflowsAsync,
+      RequestType: EnableCodeWorkflows,
+      HttpMethod: PUT,
+      Path: /{version}/code/workflows/enable,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: PUT,
+        Path: /v2/code/workflows/enable,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        },
+        Body: {
+          env: test-env
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: code,
+      MethodName: GetCodeWorkflowAsync,
+      RequestType: GetCodeWorkflow,
+      HttpMethod: GET,
+      Path: /{version}/code/workflows/{Id},
+      PathParams: [
+        Id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/code/workflows/{guid},
+        Query: ?pinnedVersion=1&env=test-env,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        }
+      },
+      ResponseType: WorkflowResponse,
+      Response: {
+        Workflow: {
+          WorkflowId: Guid_1,
+          Env: test-env,
+          Definition: {
+            IsEnabled: false
+          },
+          Version: 7,
+          IsPublished: true,
+          HasDraft: true,
+          IsEnabled: true,
+          DisabledReason: test-disabledReason
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: code,
+      MethodName: GetCodeWorkflowDraftAsync,
+      RequestType: GetCodeWorkflowDraft,
+      HttpMethod: GET,
+      Path: /{version}/code/workflows/{Id}/draft,
+      PathParams: [
+        Id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/code/workflows/{guid}/draft,
+        Query: ?env=test-env,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        }
+      },
+      ResponseType: WorkflowResponse,
+      Response: {
+        Workflow: {
+          WorkflowId: Guid_1,
+          Env: test-env,
+          Definition: {
+            IsEnabled: false
+          },
+          Version: 7,
+          IsPublished: true,
+          HasDraft: true,
+          IsEnabled: true,
+          DisabledReason: test-disabledReason
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: code,
+      MethodName: GetCodeWorkflowRunAsync,
+      RequestType: GetCodeWorkflowRun,
+      HttpMethod: GET,
+      Path: /{version}/code/workflows/runs/{RunId},
+      PathParams: [
+        RunId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/code/workflows/runs/{guid},
+        Query: ?env=test-env,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        }
+      },
+      ResponseType: WorkflowRunResponse,
+      Response: {
+        Run: {
+          RunId: Guid_1,
+          WorkflowId: Guid_1,
+          Version: 7,
+          IsDraft: true,
+          Status: test-status,
+          Source: test-source,
+          StartedBy: {},
+          TriggerId: Guid_1
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: code,
+      MethodName: GetCodeWorkflowRunLogsAsync,
+      RequestType: GetCodeWorkflowRunLogs,
+      HttpMethod: GET,
+      Path: /{version}/code/workflows/runs/{RunId}/logs,
+      PathParams: [
+        RunId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/code/workflows/runs/{guid}/logs,
+        Query: ?stepId={guid}&level=test-level&env=test-env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        }
+      },
+      ResponseType: WorkflowRunLogsResponse,
+      Response: {
+        List: {
+          Items: [
+            {}
+          ],
+          HasMore: false,
+          HasPrevious: false,
+          StartingAfter: cursor-start,
+          EndingBefore: cursor-end
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: code,
+      MethodName: GetCodeWorkflowRunsAsync,
+      RequestType: GetCodeWorkflowRuns,
+      HttpMethod: GET,
+      Path: /{version}/code/workflows/{Id}/runs,
+      PathParams: [
+        Id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/code/workflows/{guid}/runs,
+        Query: ?status=test-status&from=2026-04-27T12%3a00%3a00.0000000Z&to=2026-04-27T12%3a00%3a00.0000000Z&env=test-env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        }
+      },
+      ResponseType: WorkflowRunsResponse,
+      Response: {
+        List: {
+          Items: [
+            {
+              IsDraft: false
+            }
+          ],
+          HasMore: false,
+          HasPrevious: false,
+          StartingAfter: cursor-start,
+          EndingBefore: cursor-end
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: code,
+      MethodName: GetCodeWorkflowsAsync,
+      RequestType: GetCodeWorkflows,
+      HttpMethod: GET,
+      Path: /{version}/code/workflows,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/code/workflows,
+        Query: ?isEnabled=True&env=test-env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        }
+      },
+      ResponseType: WorkflowsResponse,
+      Response: {
+        List: {
+          Items: [
+            {
+              IsPublished: false,
+              HasDraft: false,
+              IsEnabled: false
+            }
+          ],
+          HasMore: false,
+          HasPrevious: false,
+          StartingAfter: cursor-start,
+          EndingBefore: cursor-end
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: code,
+      MethodName: GetCodeWorkflowSchemaAsync,
+      RequestType: GetCodeWorkflowSchema,
+      HttpMethod: GET,
+      Path: /{version}/code/workflows/schema,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/code/workflows/schema,
+        Query: ?env=test-env,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        }
+      },
+      ResponseType: WorkflowSchemaResponse,
+      Response: {
+        Schema: {
+          SchemaVersion: test-schemaVersion,
+          Definition: {
+            sample-key: {
+              ValueKind: Object
+            }
+          },
+          StepKinds: [
+            {}
+          ],
+          Bindings: [
+            {}
+          ]
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: code,
+      MethodName: GetCodeWorkflowVersionDiffAsync,
+      RequestType: GetCodeWorkflowVersionDiff,
+      HttpMethod: GET,
+      Path: /{version}/code/workflows/{Id}/versions/diff,
+      PathParams: [
+        Id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/code/workflows/{guid}/versions/diff,
+        Query: ?fromVersion=1&toVersion=1&env=test-env,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        }
+      },
+      ResponseType: WorkflowVersionDiffResponse,
+      Response: {
+        Diff: {
+          FromVersion: 7,
+          ToVersion: 7,
+          AddedSteps: [
+            test-string
+          ],
+          RemovedSteps: [
+            test-string
+          ],
+          ChangedSteps: [
+            {}
+          ],
+          ChangedFields: [
+            test-string
+          ]
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: code,
+      MethodName: GetCodeWorkflowVersionsAsync,
+      RequestType: GetCodeWorkflowVersions,
+      HttpMethod: GET,
+      Path: /{version}/code/workflows/{Id}/versions,
+      PathParams: [
+        Id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/code/workflows/{guid}/versions,
+        Query: ?env=test-env,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        }
+      },
+      ResponseType: WorkflowVersionsResponse,
+      Response: {
+        Items: [
+          {}
+        ],
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: code,
+      MethodName: GetCodeWorkflowWaitingRunsAsync,
+      RequestType: GetCodeWorkflowWaitingRuns,
+      HttpMethod: GET,
+      Path: /{version}/code/workflows/runs,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/code/workflows/runs,
+        Query: ?status=test-status&waitingKind=test-waitingKind&assignee=test-assignee&workflowId={guid}&key=test-key&env=test-env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        }
+      },
+      ResponseType: WorkflowRunsResponse,
+      Response: {
+        List: {
+          Items: [
+            {
+              IsDraft: false
+            }
+          ],
+          HasMore: false,
+          HasPrevious: false,
+          StartingAfter: cursor-start,
+          EndingBefore: cursor-end
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: code,
+      MethodName: InvokeCodeWorkflowAsync,
+      RequestType: InvokeCodeWorkflow,
+      HttpMethod: POST,
+      Path: /{version}/code/workflows/{Id}/invoke,
+      PathParams: [
+        Id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/code/workflows/{guid}/invoke,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        },
+        Body: {
+          payload: {
+            test-key: null
+          },
+          waitSeconds: 1.0,
+          runVersion: test-runVersion,
+          env: test-env
+        }
+      },
+      ResponseType: InvokeCodeWorkflowResponse,
+      Response: {
+        RunId: Guid_1,
+        Status: test-status,
+        Output: {
+          ValueKind: Object
+        },
+        DurationMs: 42,
+        Error: {
+          Code: test-code,
+          StepId: Guid_1,
+          Reason: test-reason,
+          Message: test-message
+        },
+        Run: {
+          RunId: Guid_1,
+          WorkflowId: Guid_1,
+          Version: 7,
+          IsDraft: true,
+          Status: test-status,
+          Source: test-source,
+          StartedBy: {},
+          TriggerId: Guid_1
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: code,
+      MethodName: PublishCodeWorkflowAsync,
+      RequestType: PublishCodeWorkflow,
+      HttpMethod: POST,
+      Path: /{version}/code/workflows/{Id}/publish,
+      PathParams: [
+        Id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/code/workflows/{guid}/publish,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        },
+        Body: {
+          env: test-env
+        }
+      },
+      ResponseType: WorkflowResponse,
+      Response: {
+        Workflow: {
+          WorkflowId: Guid_1,
+          Env: test-env,
+          Definition: {
+            IsEnabled: false
+          },
+          Version: 7,
+          IsPublished: true,
+          HasDraft: true,
+          IsEnabled: true,
+          DisabledReason: test-disabledReason
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: code,
+      MethodName: ResumeCodeWorkflowRunAsync,
+      RequestType: ResumeCodeWorkflowRun,
+      HttpMethod: POST,
+      Path: /{version}/code/workflows/runs/{RunId}/resume,
+      PathParams: [
+        RunId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/code/workflows/runs/{guid}/resume,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        },
+        Body: {
+          stepId: Guid_1,
+          decision: test-decision,
+          payload: {
+            test-key: null
+          },
+          env: test-env
+        }
+      },
+      ResponseType: WorkflowRunResponse,
+      Response: {
+        Run: {
+          RunId: Guid_1,
+          WorkflowId: Guid_1,
+          Version: 7,
+          IsDraft: true,
+          Status: test-status,
+          Source: test-source,
+          StartedBy: {},
+          TriggerId: Guid_1
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: code,
+      MethodName: ResumeCodeWorkflowRunByKeyAsync,
+      RequestType: ResumeCodeWorkflowRunByKey,
+      HttpMethod: POST,
+      Path: /{version}/code/workflows/{Id}/resume,
+      PathParams: [
+        Id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/code/workflows/{guid}/resume,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        },
+        Body: {
+          key: test-key,
+          stepId: Guid_1,
+          decision: test-decision,
+          payload: {
+            test-key: null
+          },
+          env: test-env
+        }
+      },
+      ResponseType: WorkflowRunResponse,
+      Response: {
+        Run: {
+          RunId: Guid_1,
+          WorkflowId: Guid_1,
+          Version: 7,
+          IsDraft: true,
+          Status: test-status,
+          Source: test-source,
+          StartedBy: {},
+          TriggerId: Guid_1
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: code,
+      MethodName: RetryCodeWorkflowRunStepAsync,
+      RequestType: RetryCodeWorkflowRunStep,
+      HttpMethod: POST,
+      Path: /{version}/code/workflows/runs/{RunId}/retry,
+      PathParams: [
+        RunId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/code/workflows/runs/{guid}/retry,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        },
+        Body: {
+          stepId: Guid_1,
+          env: test-env
+        }
+      },
+      ResponseType: WorkflowRunResponse,
+      Response: {
+        Run: {
+          RunId: Guid_1,
+          WorkflowId: Guid_1,
+          Version: 7,
+          IsDraft: true,
+          Status: test-status,
+          Source: test-source,
+          StartedBy: {},
+          TriggerId: Guid_1
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: code,
+      MethodName: SaveCodeWorkflowAsync,
+      RequestType: SaveCodeWorkflow,
+      HttpMethod: PUT,
+      Path: /{version}/code/workflows,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: PUT,
+        Path: /v2/code/workflows,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        },
+        Body: {
+          definition: {
+            schemaVersion: test-schemaVersion,
+            workflowId: Guid_1,
+            name: test-name,
+            description: test-description,
+            version: 1.0,
+            isEnabled: true,
+            executionIdentityId: Guid_1,
+            inputs: {
+              test-key: null
+            }
+          },
+          env: test-env
+        }
+      },
+      ResponseType: WorkflowResponse,
+      Response: {
+        Workflow: {
+          WorkflowId: Guid_1,
+          Env: test-env,
+          Definition: {
+            IsEnabled: false
+          },
+          Version: 7,
+          IsPublished: true,
+          HasDraft: true,
+          IsEnabled: true,
+          DisabledReason: test-disabledReason
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: code,
+      MethodName: ValidateCodeWorkflowAsync,
+      RequestType: ValidateCodeWorkflow,
+      HttpMethod: POST,
+      Path: /{version}/code/workflows/validate,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/code/workflows/validate,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        },
+        Body: {
+          definition: {
+            schemaVersion: test-schemaVersion,
+            workflowId: Guid_1,
+            name: test-name,
+            description: test-description,
+            version: 1.0,
+            isEnabled: true,
+            executionIdentityId: Guid_1,
+            inputs: {
+              test-key: null
+            }
+          },
+          env: test-env
+        }
+      },
+      ResponseType: ValidateCodeWorkflowResponse,
+      Response: {
+        IsValid: true,
+        Errors: [
+          {}
+        ],
+        Warnings: [
+          {}
+        ],
         ResponseStatus: {
           IsSuccess: true
         }
