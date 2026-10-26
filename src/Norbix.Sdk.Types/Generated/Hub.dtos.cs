@@ -729,6 +729,7 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual SendGridEmailIntegrationRequest? Typegen_2_SendGridEmailIntegrationRequest { get; set; }
         public virtual MailGunEmailIntegrationRequest? Typegen_3_MailGunEmailIntegrationRequest { get; set; }
         public virtual AzureCommunicationEmailIntegrationRequest? Typegen_3a_AzureCommunicationEmailIntegrationRequest { get; set; }
+        public virtual FakeEmailIntegrationRequest? Typegen_297_FakeEmailIntegrationRequest { get; set; }
         public virtual EmailToAllUsersDeliverySettingsRequest? Typegen_4_EmailToAllUsersDeliverySettingsRequest { get; set; }
         public virtual EmailToAccountUsersDeliverySettingsRequest? Typegen_5_EmailToAccountUsersDeliverySettingsRequest { get; set; }
         public virtual EmailToCollectionRecordsDeliverySettingsRequest? Typegen_6_EmailToCollectionRecordsDeliverySettingsRequest { get; set; }
@@ -793,6 +794,15 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual FirefoxWebPushIntegrationRequest? Typegen_60_FirefoxWebPushIntegrationRequest { get; set; }
         public virtual AndroidFirebasePushIntegrationRequest? Typegen_61_AndroidFirebasePushIntegrationRequest { get; set; }
         public virtual AppleApnsPushIntegrationRequest? Typegen_62_AppleApnsPushIntegrationRequest { get; set; }
+        public virtual FakePushIntegrationRequest? Typegen_298_FakePushIntegrationRequest { get; set; }
+        public virtual BirdSmsIntegrationRequest? Typegen_299_BirdSmsIntegrationRequest { get; set; }
+        public virtual PlivoSmsIntegrationRequest? Typegen_300_PlivoSmsIntegrationRequest { get; set; }
+        public virtual SinchSmsIntegrationRequest? Typegen_301_SinchSmsIntegrationRequest { get; set; }
+        public virtual TelesignSmsIntegrationRequest? Typegen_302_TelesignSmsIntegrationRequest { get; set; }
+        public virtual TelnyxSmsIntegrationRequest? Typegen_303_TelnyxSmsIntegrationRequest { get; set; }
+        public virtual TwilioSmsIntegrationRequest? Typegen_304_TwilioSmsIntegrationRequest { get; set; }
+        public virtual VonageSmsIntegrationRequest? Typegen_305_VonageSmsIntegrationRequest { get; set; }
+        public virtual FakeSmsIntegrationRequest? Typegen_306_FakeSmsIntegrationRequest { get; set; }
         public virtual AwsLambdaCodeIntegrationRequest? Typegen_65_AwsLambdaCodeIntegrationRequest { get; set; }
         public virtual AzureFunctionsCodeIntegrationRequest? Typegen_66_AzureFunctionsCodeIntegrationRequest { get; set; }
         public virtual GoogleCloudFunctionsCodeIntegrationRequest? Typegen_67_GoogleCloudFunctionsCodeIntegrationRequest { get; set; }
@@ -926,6 +936,7 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual MailGunEmailIntegrationDto? Typegen_181_MailGunEmailIntegrationDto { get; set; }
         public virtual SendGridEmailIntegrationDto? Typegen_182_SendGridEmailIntegrationDto { get; set; }
         public virtual SmtpEmailIntegrationDto? Typegen_183_SmtpEmailIntegrationDto { get; set; }
+        public virtual AzureCommunicationEmailIntegrationDto? Typegen_307_AzureCommunicationEmailIntegrationDto { get; set; }
         public virtual FakeEmailIntegrationDto? Typegen_248_FakeEmailIntegrationDto { get; set; }
         public virtual WebhookIntegrationDto? Typegen_192_WebhookIntegrationDto { get; set; }
         public virtual WebhookDestinationDto? Typegen_193_WebhookDestinationDto { get; set; }
@@ -7213,6 +7224,17 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual string? ConfigurationSetName { get; set; }
         public virtual bool? DeliveryEventsEnabled { get; set; }
         public virtual string? SnsTopicArn { get; set; }
+    }
+
+    [DataContract]
+    public partial class AzureCommunicationEmailIntegrationDto
+        : EmailIntegrationDto
+    {
+        [DataMember]
+        public virtual string Endpoint { get; set; }
+
+        [DataMember]
+        public virtual bool? DeliveryEventsEnabled { get; set; }
     }
 
     public partial class FakeEmailIntegrationDto
@@ -16216,6 +16238,12 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual string Id { get; set; }
     }
 
+    public partial class FakeEmailIntegrationRequest
+        : EmailIntegrationRequest
+    {
+        public virtual EmailProvider Provider { get; set; }
+    }
+
     ///<summary>
     ///Get an email integration
     ///</summary>
@@ -19632,6 +19660,12 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual string Id { get; set; }
     }
 
+    public partial class FakePushIntegrationRequest
+        : PushIntegrationRequest
+    {
+        public virtual PushProvider Provider { get; set; }
+    }
+
     public partial class FirefoxWebPushIntegrationRequest
         : PushIntegrationRequest
     {
@@ -20585,6 +20619,15 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual PaginatedResponse<SmsCampaignBatchNotificationDto>? List { get; set; }
     }
 
+    public partial class BirdSmsIntegrationRequest
+        : SmsIntegrationRequest
+    {
+        public virtual SmsProvider Provider { get; set; }
+        public virtual string Originator { get; set; }
+        public virtual string Region { get; set; }
+        public virtual string ApiKey { get; set; }
+    }
+
     ///<summary>
     ///Confirm that you received the test SMS delivery.
     ///</summary>
@@ -20639,6 +20682,12 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual string Id { get; set; }
     }
 
+    public partial class FakeSmsIntegrationRequest
+        : SmsIntegrationRequest
+    {
+        public virtual SmsProvider Provider { get; set; }
+    }
+
     ///<summary>
     ///Gets integration by specified Id
     ///</summary>
@@ -20674,6 +20723,15 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual PaginatedResponse<SmsIntegrationListProjection>? List { get; set; }
     }
 
+    public partial class PlivoSmsIntegrationRequest
+        : SmsIntegrationRequest
+    {
+        public virtual SmsProvider Provider { get; set; }
+        public virtual string AuthId { get; set; }
+        public virtual string FromPhoneNumber { get; set; }
+        public virtual string AuthToken { get; set; }
+    }
+
     [NorbixRoute("/{version}/notifications/sms/integrations", "POST")]
     [DataContract]
     public partial class SaveSmsIntegration
@@ -20696,12 +20754,40 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual string Id { get; set; }
     }
 
+    public partial class SinchSmsIntegrationRequest
+        : SmsIntegrationRequest
+    {
+        public virtual SmsProvider Provider { get; set; }
+        public virtual string ServicePlanId { get; set; }
+        public virtual string FromPhoneNumber { get; set; }
+        public virtual string ApiKey { get; set; }
+        public virtual string ApiSecret { get; set; }
+    }
+
     public partial class SmsIntegrationRequest
     {
         public virtual string? IntegrationId { get; set; }
         public virtual SmsProvider Provider { get; set; }
         public virtual string IntegrationName { get; set; }
         public virtual bool IsEnabled { get; set; }
+    }
+
+    public partial class TelesignSmsIntegrationRequest
+        : SmsIntegrationRequest
+    {
+        public virtual SmsProvider Provider { get; set; }
+        public virtual string CustomerId { get; set; }
+        public virtual string FromSender { get; set; }
+        public virtual string ApiKey { get; set; }
+    }
+
+    public partial class TelnyxSmsIntegrationRequest
+        : SmsIntegrationRequest
+    {
+        public virtual SmsProvider Provider { get; set; }
+        public virtual string MessagingProfileId { get; set; }
+        public virtual string FromPhoneNumber { get; set; }
+        public virtual string ApiKey { get; set; }
     }
 
     ///<summary>
@@ -20720,6 +20806,26 @@ namespace Norbix.Sdk.Types.Hub;
         ///Optional phone number (international format) to send the test SMS to.
         ///</summary>
         public virtual string? To { get; set; }
+    }
+
+    public partial class TwilioSmsIntegrationRequest
+        : SmsIntegrationRequest
+    {
+        public virtual SmsProvider Provider { get; set; }
+        public virtual string AccountSid { get; set; }
+        public virtual string FromPhoneNumber { get; set; }
+        public virtual string AuthToken { get; set; }
+        public virtual bool? DeliveryEventsEnabled { get; set; }
+        public virtual string? StatusCallbackUrl { get; set; }
+    }
+
+    public partial class VonageSmsIntegrationRequest
+        : SmsIntegrationRequest
+    {
+        public virtual SmsProvider Provider { get; set; }
+        public virtual string ApiKey { get; set; }
+        public virtual string FromSender { get; set; }
+        public virtual string ApiSecret { get; set; }
     }
 
     ///<summary>
