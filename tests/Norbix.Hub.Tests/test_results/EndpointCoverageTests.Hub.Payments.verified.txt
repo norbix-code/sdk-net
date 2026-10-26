@@ -1,7 +1,7 @@
 ﻿{
   Target: Hub,
   Group: payments,
-  Count: 17,
+  Count: 19,
   Endpoints: [
     {
       Target: Hub,
@@ -583,6 +583,76 @@
         List: [
           {}
         ],
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: payments,
+      MethodName: GetPaymentsWebhookRunAsync,
+      RequestType: GetPaymentsWebhookRun,
+      HttpMethod: GET,
+      Path: /{version}/payments/webhooks/runs/{Id},
+      PathParams: [
+        Id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/payments/webhooks/runs/{guid},
+        Query: ?env=test-env,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        }
+      },
+      ResponseType: GetPaymentsWebhookRunResponse,
+      Response: {
+        Item: {
+          Run: {},
+          Raw: {
+            Truncated: false
+          }
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: payments,
+      MethodName: GetPaymentsWebhookRunsAsync,
+      RequestType: GetPaymentsWebhookRuns,
+      HttpMethod: GET,
+      Path: /{version}/payments/webhooks/runs,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/payments/webhooks/runs,
+        Query: ?integrationId={guid}&eventName=test-eventName&triggerId={guid}&outcome=test-outcome&fromUtc=2026-04-27T12%3a00%3a00.0000000Z&toUtc=2026-04-27T12%3a00%3a00.0000000Z&env=test-env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        }
+      },
+      ResponseType: GetPaymentsWebhookRunsResponse,
+      Response: {
+        List: {
+          Items: [
+            {}
+          ],
+          HasMore: false,
+          HasPrevious: false,
+          StartingAfter: cursor-start,
+          EndingBefore: cursor-end
+        },
         ResponseStatus: {
           IsSuccess: true
         }

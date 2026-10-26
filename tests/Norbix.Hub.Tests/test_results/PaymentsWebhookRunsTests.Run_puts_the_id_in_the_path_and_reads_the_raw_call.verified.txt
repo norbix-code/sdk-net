@@ -1,0 +1,66 @@
+﻿{
+  Sent: {
+    Method: GET,
+    Path: /v2/payments/webhooks/runs/pwr_1p4R3gTobGZpD6fXvHT4rd,
+    Headers: {
+      Authorization: Bearer test-api-key,
+      norbix-project-id: test-project
+    }
+  },
+  Item: {
+    Run: {
+      Id: pwr_1p4R3gTobGZpD6fXvHT4rd,
+      CallId: pwc_7Hq2mN4bV8cX1zL6kP3rT9,
+      Env: PROD,
+      IntegrationId: int_stripe,
+      Source: Stripe,
+      ReceivedOn: DateTime_1,
+      StatusCode: 200,
+      Outcome: Applied,
+      Reason: processed,
+      Description: Processed.,
+      EventName: payment_intent.succeeded,
+      ProviderEventId: evt_1,
+      Order: {
+        OrderId: ord_1,
+        Kind: Applied,
+        From: Pending,
+        To: Paid,
+        Reason: paid
+      },
+      Actions: [
+        {
+          TriggerId: trg_email,
+          TriggerName: Receipt,
+          Action: Email,
+          Status: Sent,
+          NorbixEvent: payments.order.paid,
+          At: DateTime_2
+        },
+        {
+          TriggerId: trg_code,
+          Action: Code,
+          Status: Skipped,
+          Reason: condition false,
+          NorbixEvent: payments.webhook.received,
+          At: DateTime_2
+        }
+      ],
+      Part: 1,
+      Parts: 1
+    },
+    Raw: {
+      CallId: pwc_7Hq2mN4bV8cX1zL6kP3rT9,
+      ReceivedOn: DateTime_1,
+      ContentType: application/json,
+      Body: {"id":"evt_1","type":"payment_intent.succeeded"},
+      Truncated: false,
+      MaskedFields: 2,
+      Headers: {
+        Stripe-Signature: t=…
+      },
+      AnswerStatus: 200,
+      Parts: 1
+    }
+  }
+}

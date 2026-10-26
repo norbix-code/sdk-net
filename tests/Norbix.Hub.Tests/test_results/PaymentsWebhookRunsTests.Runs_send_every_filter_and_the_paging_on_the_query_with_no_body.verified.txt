@@ -1,0 +1,59 @@
+﻿{
+  Sent: {
+    Method: GET,
+    Path: /v2/payments/webhooks/runs,
+    Query: ?integrationId=int_stripe&eventName=payment_intent.succeeded&triggerId=trg_email&outcome=applied&fromUtc=2026-10-25T00%3a00%3a00.0000000Z&toUtc=2026-10-26T00%3a00%3a00.0000000Z&startingAfter=pwr_previous&pageSize=20,
+    Headers: {
+      Authorization: Bearer test-api-key,
+      norbix-project-id: test-project
+    }
+  },
+  List: {
+    Items: [
+      {
+        Id: pwr_1p4R3gTobGZpD6fXvHT4rd,
+        CallId: pwc_7Hq2mN4bV8cX1zL6kP3rT9,
+        Env: PROD,
+        IntegrationId: int_stripe,
+        Source: Stripe,
+        ReceivedOn: DateTime_1,
+        StatusCode: 200,
+        Outcome: Applied,
+        Reason: processed,
+        Description: Processed.,
+        EventName: payment_intent.succeeded,
+        ProviderEventId: evt_1,
+        Order: {
+          OrderId: ord_1,
+          Kind: Applied,
+          From: Pending,
+          To: Paid,
+          Reason: paid
+        },
+        Actions: [
+          {
+            TriggerId: trg_email,
+            TriggerName: Receipt,
+            Action: Email,
+            Status: Sent,
+            NorbixEvent: payments.order.paid,
+            At: DateTime_2
+          },
+          {
+            TriggerId: trg_code,
+            Action: Code,
+            Status: Skipped,
+            Reason: condition false,
+            NorbixEvent: payments.webhook.received,
+            At: DateTime_2
+          }
+        ],
+        Part: 1,
+        Parts: 1
+      }
+    ],
+    HasMore: true,
+    HasPrevious: false,
+    StartingAfter: pwr_1p4R3gTobGZpD6fXvHT4rd
+  }
+}
