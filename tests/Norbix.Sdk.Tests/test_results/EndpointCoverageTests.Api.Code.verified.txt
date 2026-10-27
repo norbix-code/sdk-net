@@ -1,0 +1,167 @@
+﻿{
+  Target: Api,
+  Group: code,
+  Count: 4,
+  Endpoints: [
+    {
+      Target: Api,
+      Group: code,
+      MethodName: GetCodeWorkflowWaitingRunsAsync,
+      RequestType: GetCodeWorkflowWaitingRuns,
+      HttpMethod: GET,
+      Path: /{version}/code/workflows/runs,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/code/workflows/runs,
+        Query: ?status=test-status&waitingKind=test-waitingKind&assignee=test-assignee&workflowId={guid}&key=test-key&env=test-env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        }
+      },
+      ResponseType: WorkflowRunsResponse,
+      Response: {
+        List: {
+          Items: [
+            {
+              IsDraft: false
+            }
+          ],
+          HasMore: false,
+          HasPrevious: false,
+          StartingAfter: cursor-start,
+          EndingBefore: cursor-end
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: code,
+      MethodName: OpenCodeWorkflowResumeLinkAsync,
+      RequestType: OpenCodeWorkflowResumeLink,
+      HttpMethod: GET,
+      Path: /{version}/code/workflows/resume/{Token},
+      PathParams: [
+        Token
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/code/workflows/resume/test-token,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        }
+      },
+      ResponseType: CodeWorkflowResumeLinkResponse,
+      Response: {
+        RunId: Guid_1,
+        WorkflowId: Guid_1,
+        WorkflowName: test-workflowName,
+        StepId: Guid_1,
+        StepName: test-stepName,
+        Mode: test-mode,
+        Decision: test-decision,
+        Key: test-key,
+        AssigneeUserId: Guid_1,
+        ExpiresAt: DateTime_1,
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: code,
+      MethodName: ResumeCodeWorkflowRunAsync,
+      RequestType: ResumeCodeWorkflowRun,
+      HttpMethod: POST,
+      Path: /{version}/code/workflows/runs/{RunId}/resume,
+      PathParams: [
+        RunId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/code/workflows/runs/{guid}/resume,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        },
+        Body: {
+          stepId: Guid_1,
+          decision: test-decision,
+          payload: {
+            test-key: null
+          },
+          env: test-env
+        }
+      },
+      ResponseType: WorkflowRunResponse,
+      Response: {
+        Run: {
+          RunId: Guid_1,
+          WorkflowId: Guid_1,
+          Version: 7,
+          IsDraft: true,
+          Status: test-status,
+          Source: test-source,
+          StartedBy: {},
+          TriggerId: Guid_1
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: code,
+      MethodName: UseCodeWorkflowResumeLinkAsync,
+      RequestType: UseCodeWorkflowResumeLink,
+      HttpMethod: POST,
+      Path: /{version}/code/workflows/resume/{Token},
+      PathParams: [
+        Token
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/code/workflows/resume/test-token,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        }
+      },
+      ResponseType: WorkflowRunResponse,
+      Response: {
+        Run: {
+          RunId: Guid_1,
+          WorkflowId: Guid_1,
+          Version: 7,
+          IsDraft: true,
+          Status: test-status,
+          Source: test-source,
+          StartedBy: {},
+          TriggerId: Guid_1
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    }
+  ]
+}
