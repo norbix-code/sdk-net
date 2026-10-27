@@ -1,7 +1,7 @@
 ﻿{
   Target: Hub,
   Group: payments,
-  Count: 19,
+  Count: 22,
   Endpoints: [
     {
       Target: Hub,
@@ -209,15 +209,15 @@
       ResponseType: GetPaymentsIntegrationResponse,
       Response: {
         Item: {
+          Connection: {
+            IsConnected: false
+          },
           ViewId: Guid_1,
           IntegrationName: test-integrationName,
           IsEnabled: true,
           Env: test-env,
           LastIntegrationTestAtUtc: DateTime_1,
           LastIntegrationTestSucceeded: true,
-          LastIntegrationTestErrors: [
-            test-string
-          ],
           RequiresHumanDeliveryConfirmation: false
         },
         ResponseStatus: {
@@ -331,6 +331,119 @@
         Items: [
           {}
         ],
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: payments,
+      MethodName: CompletePaymentsIntegrationConnectAsync,
+      RequestType: CompletePaymentsIntegrationConnect,
+      HttpMethod: POST,
+      Path: /{version}/payments/integrations/connect/{ConnectId}/complete,
+      PathParams: [
+        ConnectId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/payments/integrations/connect/{guid}/complete,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        },
+        Body: {
+          targetId: Guid_1,
+          isEnabled: true,
+          env: test-env
+        }
+      },
+      ResponseType: IdResponse,
+      Response: {
+        Id: Guid_1,
+        Status: test-status,
+        Warnings: [
+          test-string
+        ],
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: payments,
+      MethodName: DisconnectPaymentsIntegrationConnectAsync,
+      RequestType: DisconnectPaymentsIntegrationConnect,
+      HttpMethod: POST,
+      Path: /{version}/payments/integrations/{Id}/connect/disconnect,
+      PathParams: [
+        Id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/payments/integrations/{guid}/connect/disconnect,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        },
+        Body: {
+          env: test-env
+        }
+      },
+      ResponseType: DisconnectPaymentsIntegrationConnectResponse,
+      Response: {
+        WasConnected: true,
+        ProviderAnswered: true,
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: payments,
+      MethodName: StartPaymentsIntegrationConnectAsync,
+      RequestType: StartPaymentsIntegrationConnect,
+      HttpMethod: POST,
+      Path: /{version}/payments/integrations/connect/start,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/payments/integrations/connect/start,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        },
+        Body: {
+          provider: test-provider,
+          integrationName: test-integrationName,
+          mode: test-mode,
+          input: {
+            test-key: test-string
+          },
+          integrationId: Guid_1,
+          env: test-env
+        }
+      },
+      ResponseType: StartIntegrationConnectResponse,
+      Response: {
+        AuthorizeUrl: https://example.test/authorizeUrl,
+        ConnectId: Guid_1,
+        RedirectUrl: https://example.test/redirectUrl,
+        ExpiresAt: DateTime_1,
         ResponseStatus: {
           IsSuccess: true
         }

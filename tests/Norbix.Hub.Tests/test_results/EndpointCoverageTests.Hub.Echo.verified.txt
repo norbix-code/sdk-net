@@ -48,6 +48,13 @@
         HostingPlatform: {
           Provider: test-provider,
           IsAws: true
+        },
+        Connect: {
+          Providers: [
+            {
+              Available: false
+            }
+          ]
         }
       }
     }

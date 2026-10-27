@@ -1,0 +1,75 @@
+﻿{
+  Target: Hub,
+  Group: integrations,
+  Count: 2,
+  Endpoints: [
+    {
+      Target: Hub,
+      Group: integrations,
+      MethodName: GetIntegrationConnectTargetsAsync,
+      RequestType: GetIntegrationConnectTargets,
+      HttpMethod: GET,
+      Path: /{version}/integrations/connect/{ConnectId}/targets,
+      PathParams: [
+        ConnectId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/integrations/connect/{guid}/targets,
+        Query: ?env=test-env,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        }
+      },
+      ResponseType: GetIntegrationConnectTargetsResponse,
+      Response: {
+        ConnectId: Guid_1,
+        Module: test-module,
+        Provider: test-provider,
+        IntegrationName: test-integrationName,
+        AccountName: test-accountName,
+        Targets: [
+          {}
+        ],
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: integrations,
+      MethodName: GetQuickConnectProvidersAsync,
+      RequestType: GetQuickConnectProviders,
+      HttpMethod: GET,
+      Path: /{version}/integrations/connect/providers,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/integrations/connect/providers,
+        Query: ?module=test-module,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        }
+      },
+      ResponseType: GetQuickConnectProvidersResponse,
+      Response: {
+        Providers: [
+          {
+            Available: false
+          }
+        ],
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    }
+  ]
+}
