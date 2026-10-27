@@ -834,6 +834,7 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual TriggerActionSmsDto? Typegen_236_TriggerActionSmsDto { get; set; }
         public virtual TriggerActionSseDto? Typegen_237_TriggerActionSseDto { get; set; }
         public virtual TriggerActionMarketplaceDto? Typegen_238_TriggerActionMarketplaceDto { get; set; }
+        public virtual TriggerActionWorkflowDto? Typegen_308_TriggerActionWorkflowDto { get; set; }
         public virtual SseDeliverySettingsDto? Typegen_239_SseDeliverySettingsDto { get; set; }
         public virtual GetTriggers? Typegen_240_GetTriggers { get; set; }
         public virtual GetTriggersResponse? Typegen_241_GetTriggersResponse { get; set; }
@@ -1011,8 +1012,17 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual FakeCodeIntegrationRequest? Typegen_282_FakeCodeIntegrationRequest { get; set; }
         public virtual CodeFunctionSchedulerTaskRequest? Typegen_283_CodeFunctionSchedulerTaskRequest { get; set; }
         public virtual MarketplaceFunctionSchedulerTaskRequest? Typegen_284_MarketplaceFunctionSchedulerTaskRequest { get; set; }
+        public virtual WorkflowSchedulerTaskRequest? Typegen_309_WorkflowSchedulerTaskRequest { get; set; }
         public virtual AwsCloudWatchLoggingIntegrationRequest? Typegen_285_AwsCloudWatchLoggingIntegrationRequest { get; set; }
         public virtual AwsCloudWatchLoggingIntegrationDto? Typegen_286_AwsCloudWatchLoggingIntegrationDto { get; set; }
+        public virtual GetQuickConnectProviders? Typegen_310_GetQuickConnectProviders { get; set; }
+        public virtual StartPaymentsIntegrationConnect? Typegen_311_StartPaymentsIntegrationConnect { get; set; }
+        public virtual GetIntegrationConnectTargets? Typegen_312_GetIntegrationConnectTargets { get; set; }
+        public virtual CompletePaymentsIntegrationConnect? Typegen_313_CompletePaymentsIntegrationConnect { get; set; }
+        public virtual QuickConnectProviderDto? Typegen_314_QuickConnectProviderDto { get; set; }
+        public virtual QuickConnectTargetDto? Typegen_315_QuickConnectTargetDto { get; set; }
+        public virtual DisconnectPaymentsIntegrationConnect? Typegen_316_DisconnectPaymentsIntegrationConnect { get; set; }
+        public virtual PaymentsIntegrationConnectionDto? Typegen_317_PaymentsIntegrationConnectionDto { get; set; }
     }
 
     [DataContract]
@@ -6994,6 +7004,47 @@ namespace Norbix.Sdk.Types.Hub;
     }
 
     [DataContract]
+    public partial class QuickConnectProviderDto
+    {
+        [DataMember]
+        public virtual string Module { get; set; }
+
+        [DataMember]
+        public virtual string Provider { get; set; }
+
+        [DataMember]
+        public virtual bool Available { get; set; }
+
+        [DataMember]
+        public virtual string CallbackKind { get; set; }
+
+        [DataMember]
+        public virtual List<string> RequiredInputs { get; set; } = [];
+
+        [DataMember]
+        public virtual List<string> Modes { get; set; } = [];
+
+        [DataMember]
+        public virtual string RedirectUrl { get; set; }
+
+        [DataMember]
+        public virtual List<string> PlatformWebhookUrls { get; set; } = [];
+    }
+
+    [DataContract]
+    public partial class QuickConnectTargetDto
+    {
+        [DataMember]
+        public virtual string Id { get; set; }
+
+        [DataMember]
+        public virtual string Name { get; set; }
+
+        [DataMember]
+        public virtual string? Detail { get; set; }
+    }
+
+    [DataContract]
     public partial class LoggingDto
     {
         [DataMember]
@@ -8295,10 +8346,23 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual DateTime ReceivedOn { get; set; }
     }
 
+    public partial class PaymentsIntegrationConnectionDto
+    {
+        public virtual string Provider { get; set; }
+        public virtual string? AccountId { get; set; }
+        public virtual string? AccountName { get; set; }
+        public virtual string ConnectedBy { get; set; }
+        public virtual DateTime ConnectedAtUtc { get; set; }
+        public virtual bool IsConnected { get; set; }
+        public virtual DateTime? DisconnectedAtUtc { get; set; }
+        public virtual string? DisconnectReason { get; set; }
+    }
+
     public partial class PaymentsIntegrationDto
         : IntegrationDto
     {
         public virtual PaymentGatewayPlatform GatewayPlatform { get; set; }
+        public virtual PaymentsIntegrationConnectionDto? Connection { get; set; }
     }
 
     public partial class PaymentsIntegrationListProjection
@@ -9736,6 +9800,17 @@ namespace Norbix.Sdk.Types.Hub;
     {
         [DataMember]
         public virtual WebhookDeliverySettingsDto? DeliverySettings { get; set; }
+    }
+
+    [DataContract]
+    public partial class TriggerActionWorkflowDto
+        : TriggerActionDto
+    {
+        [DataMember]
+        public virtual string? WorkflowRef { get; set; }
+
+        [DataMember]
+        public virtual Dictionary<string, string>? Payload { get; set; }
     }
 
     [DataContract]
@@ -13970,6 +14045,41 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual string? Reason { get; set; }
     }
 
+    [DataContract]
+    public partial class CodeWorkflowResumeLinkResponse
+        : ResponseBase
+    {
+        [DataMember]
+        public virtual string? RunId { get; set; }
+
+        [DataMember]
+        public virtual string? WorkflowId { get; set; }
+
+        [DataMember]
+        public virtual string? WorkflowName { get; set; }
+
+        [DataMember]
+        public virtual string? StepId { get; set; }
+
+        [DataMember]
+        public virtual string? StepName { get; set; }
+
+        [DataMember]
+        public virtual string? Mode { get; set; }
+
+        [DataMember]
+        public virtual string? Decision { get; set; }
+
+        [DataMember]
+        public virtual string? Key { get; set; }
+
+        [DataMember]
+        public virtual string? AssigneeUserId { get; set; }
+
+        [DataMember]
+        public virtual DateTime? ExpiresAt { get; set; }
+    }
+
     [NorbixRoute("/{version}/code/workflows/{Id}", "DELETE")]
     [DataContract]
     public partial class DeleteCodeWorkflow
@@ -14195,7 +14305,7 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual string? WaitingKind { get; set; }
 
         ///<summary>
-        ///"me" or a usr_… id: only approvals assigned to that user.
+        ///"me" or a usr_… id: only approvals assigned to that user. Without code:read only "me" (the default then).
         ///</summary>
         [DataMember]
         public virtual string? Assignee { get; set; }
@@ -14264,6 +14374,21 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember]
         public virtual WorkflowRunDto? Run { get; set; }
+    }
+
+    ///<summary>
+    ///Beta: what a workflow's one-click link will do — no sign-in, nothing changes. POST the same URL to answer.
+    ///</summary>
+    [NorbixRoute("/{version}/code/workflows/resume/{Token}", "GET")]
+    [DataContract]
+    public partial class OpenCodeWorkflowResumeLink
+        : RequestBase, INorbixRequest<CodeWorkflowResumeLinkResponse>, INorbixOptionalAuth
+    {
+        ///<summary>
+        ///The signed link token from the wait's notification (@Model.Wait.ApproveUrl / RejectUrl / ResumeUrl).
+        ///</summary>
+        [DataMember]
+        public virtual string Token { get; set; }
     }
 
     [NorbixRoute("/{version}/code/workflows/{Id}/publish", "POST")]
@@ -14363,6 +14488,21 @@ namespace Norbix.Sdk.Types.Hub;
         ///</summary>
         [DataMember]
         public virtual WorkflowDefinitionDto Definition { get; set; }
+    }
+
+    ///<summary>
+    ///Beta: answers a workflow's waiting step with a one-click link — no sign-in; the run goes on as the workflow's execution identity.
+    ///</summary>
+    [NorbixRoute("/{version}/code/workflows/resume/{Token}", "POST")]
+    [DataContract]
+    public partial class UseCodeWorkflowResumeLink
+        : RequestBase, INorbixRequest<WorkflowRunResponse>, INorbixOptionalAuth
+    {
+        ///<summary>
+        ///The signed link token.
+        ///</summary>
+        [DataMember]
+        public virtual string Token { get; set; }
     }
 
     [NorbixRoute("/{version}/code/workflows/validate", "POST")]
@@ -20128,6 +20268,8 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual PaymentGatewayPlatform Provider { get; set; }
         public virtual string StoreUrl { get; set; }
         public virtual string WebhookSecret { get; set; }
+        public virtual string? ConsumerKey { get; set; }
+        public virtual string? ConsumerSecret { get; set; }
     }
 
     public partial class WorldpayPaymentIntegrationRequest
@@ -20138,6 +20280,109 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual string Environment { get; set; }
         public virtual string ApiKey { get; set; }
         public virtual string WebhookSecret { get; set; }
+    }
+
+    [NorbixRoute("/{version}/payments/integrations/connect/{ConnectId}/complete", "POST")]
+    public partial class CompletePaymentsIntegrationConnect
+        : CodeMashRequestBase, INorbixRequest<IdResponse>
+    {
+        public virtual string ConnectId { get; set; }
+        ///<summary>
+        ///The id of the account (profile, shop) from the targets list.
+        ///</summary>
+        public virtual string TargetId { get; set; }
+
+        ///<summary>
+        ///Enable the integration right away.
+        ///</summary>
+        public virtual bool IsEnabled { get; set; }
+    }
+
+    [NorbixRoute("/{version}/payments/integrations/{Id}/connect/disconnect", "POST")]
+    public partial class DisconnectPaymentsIntegrationConnect
+        : CodeMashRequestBase, INorbixRequest<DisconnectPaymentsIntegrationConnectResponse>
+    {
+        ///<summary>
+        ///Integration view id.
+        ///</summary>
+        public virtual string Id { get; set; }
+    }
+
+    public partial class DisconnectPaymentsIntegrationConnectResponse
+        : ResponseBase
+    {
+        public virtual bool WasConnected { get; set; }
+        public virtual bool ProviderAnswered { get; set; }
+    }
+
+    [NorbixRoute("/{version}/integrations/connect/{ConnectId}/targets", "GET")]
+    public partial class GetIntegrationConnectTargets
+        : CodeMashRequestBase, INorbixRequest<GetIntegrationConnectTargetsResponse>
+    {
+        public virtual string ConnectId { get; set; }
+    }
+
+    public partial class GetIntegrationConnectTargetsResponse
+        : ResponseBase
+    {
+        public virtual string? ConnectId { get; set; }
+        public virtual string? Module { get; set; }
+        public virtual string? Provider { get; set; }
+        public virtual string? IntegrationName { get; set; }
+        public virtual string? AccountName { get; set; }
+        public virtual List<QuickConnectTargetDto> Targets { get; set; } = [];
+    }
+
+    [NorbixRoute("/{version}/integrations/connect/providers", "GET")]
+    public partial class GetQuickConnectProviders
+        : RequestBase, INorbixRequest<GetQuickConnectProvidersResponse>, INorbixOptionalAuth
+    {
+        public virtual string? Module { get; set; }
+    }
+
+    public partial class GetQuickConnectProvidersResponse
+        : ResponseBase
+    {
+        public virtual List<QuickConnectProviderDto> Providers { get; set; } = [];
+    }
+
+    public partial class StartIntegrationConnectResponse
+        : ResponseBase
+    {
+        public virtual string? AuthorizeUrl { get; set; }
+        public virtual string? ConnectId { get; set; }
+        public virtual string? RedirectUrl { get; set; }
+        public virtual DateTime? ExpiresAt { get; set; }
+    }
+
+    [NorbixRoute("/{version}/payments/integrations/connect/start", "POST")]
+    public partial class StartPaymentsIntegrationConnect
+        : CodeMashRequestBase, INorbixRequest<StartIntegrationConnectResponse>
+    {
+        ///<summary>
+        ///Provider key from get_quick_connect_providers, e.g. woocommerce.
+        ///</summary>
+        public virtual string Provider { get; set; }
+
+        ///<summary>
+        ///The name the new integration gets.
+        ///</summary>
+        public virtual string IntegrationName { get; set; }
+
+        ///<summary>
+        ///The provider's mode (test or live) when the provider has modes.
+        ///</summary>
+        public virtual string? Mode { get; set; }
+
+        ///<summary>
+        ///The inputs the provider needs before its page opens, e.g. { "storeUrl": "https://shop.example.com" }.
+        ///</summary>
+        public virtual Dictionary<string, string>? Input { get; set; }
+
+        ///<summary>
+        ///Reconnect: the integration view id the new connection replaces.
+        ///</summary>
+        public virtual string? IntegrationId { get; set; }
     }
 
     ///<summary>
@@ -21488,6 +21733,14 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual SchedulerTaskType Type { get; set; }
         public virtual CreateSmsCampaignRequest? Campaign { get; set; }
         public virtual string? DatabaseIntegrationId { get; set; }
+    }
+
+    public partial class WorkflowSchedulerTaskRequest
+        : SchedulerTaskRequest
+    {
+        public virtual SchedulerTaskType Type { get; set; }
+        public virtual string? WorkflowRef { get; set; }
+        public virtual Dictionary<string, string>? Payload { get; set; }
     }
 
     ///<summary>
@@ -22895,6 +23148,11 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual string Config { get; set; }
     }
 
+    public partial class EchoConnectDto
+    {
+        public virtual List<QuickConnectProviderDto> Providers { get; set; } = [];
+    }
+
     public partial class EchoHostingPlatformDto
     {
         public virtual string Provider { get; set; }
@@ -22925,6 +23183,7 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual List<EchoRegionDto>? Regions { get; set; }
         public virtual EchoAgentDto? Agent { get; set; }
         public virtual EchoHostingPlatformDto? HostingPlatform { get; set; }
+        public virtual EchoConnectDto? Connect { get; set; }
     }
 
     [NorbixRoute("/{version}/public/projects/{ProjectId}/brand/{Kind}", "GET")]
