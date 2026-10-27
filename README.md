@@ -317,6 +317,7 @@ The public endpoint surface is generated from gateway DTOs at compile time. The 
 | Module | Endpoints | Description |
 | --- | ---: | --- |
 | `ai` | 18 | End-user AI chat for a signed-in project user: availability, sessions, entries, feedback, attachments, memory, `StartEndUserChatTurnAsync` (answers at once with a turn id; the answer streams on the user's channel `ai-chat:{projectId}:{authId}`), plus the end-user tools. |
+| `code` | 4 | Beta: workflows for a signed-in project user — the waiting inbox (`GetCodeWorkflowWaitingRunsAsync`), `ResumeCodeWorkflowRunAsync`, and the signed resume links (`OpenCodeWorkflowResumeLinkAsync`, `UseCodeWorkflowResumeLinkAsync` — no key needed, the link's token is the key). See [Workflows (beta)](#workflows-beta). |
 | `database` | 22 | Collection CRUD (`FindAsync`, `FindOneAsync`, `FindOwnAsync`, insert / update / replace / delete one or many), count, distinct, aggregate, saved aggregate execution (`ExecuteAggregateAsync`), `ChangeResponsibilityAsync`, schema reads, taxonomy and term reads (`FindTermsAsync`, `FindTermsChildrenAsync`, `FindTaxonomyTreeAsync`, `FindTermTreeAsync`, `FindMergedTermTreeAsync`). |
 | `echo` | 1 | Smoke-test echo endpoint. |
 | `files` | 13 | List, info, signed URL, upload URL + commit, download, delete one / many, public links, and a file by its stored id (`GetFileByIdAsync`). |
@@ -331,6 +332,7 @@ The public endpoint surface is generated from gateway DTOs at compile time. The 
 | --- | ---: | --- |
 | `account` | 110 | Account profile, status, projects, regions, team invites, billing, verification; your own account user (`GetMyAccountUserProfileAsync`, `UpdateMyAccountUserPhoneAsync` — the phone "Account users" SMS campaigns send to); the team list (`GetAccountCollaboratorsAsync`: flat `PageSize` / `StartingAfter` / `EndingBefore`, optional `ProjectId`); project AI settings and assistants (`GetProjectAiSettingsAsync`, `UpdateProjectAiSettingsAsync`, `CreateProjectAiAssistantAsync`, `UpdateProjectAiAssistantAsync`, `DeleteProjectAiAssistantAsync`), AI wallet usage (`GetProjectAiUsageAsync`), the Admin Portal switch (`SetAdminPortalEnabledAsync`), `CheckProjectLanguagesAsync` (which email, push and SMS templates miss a proposed project language — call it before changing the languages). Project settings, CORS, admin portal, legal, AI service users: [docs/hub/project.md](./docs/hub/project.md). |
 | `ai` | 20 | LLM, MCP and embedding integration configuration and tests (`SaveEmbeddingIntegrationAsync`, `TestEmbeddingIntegrationAsync`, …); `SetLlmIntegrationAsDefaultAsync`. LLM and MCP: [docs/hub/project.md](./docs/hub/project.md#llm-integrations). |
+| `code` | 70 | Cloud functions, code integrations, the function marketplace, and the beta workflows: save / validate / publish / drafts / versions and diff, invoke, runs, run logs, the waiting inbox, resume / resume by key / retry / cancel, signed resume links (no key needed), the schema, and the beta switch (`EnableCodeWorkflowsAsync`, `DisableCodeWorkflowsAsync`). See [Workflows (beta)](#workflows-beta). |
 | `database` | 73 | Module on / off (`EnableDatabaseAsync`, `DisableDatabaseAsync`); schemas with drafts, versions and diff, publish, rename, settings, list settings, embed (`UpdateDatabaseSchemaEmbedAsync`) and `ApplyDatabaseSchemaBundleAsync`; collection records from the dashboard (`FindRecordsAsync`, `InsertRecordAsync`, `UpdateManyRecordsAsync`, `AggregateRecordsAsync`, `SeedCollectionRecordsAsync`, `GetCollectionIndexesAsync`, …); taxonomies and terms with trees (`GetDatabaseTaxonomyTreeAsync`, `GetDatabaseTaxonomyTermTreeAsync`, `GetDatabaseMergedTermTreeAsync`); schema triggers; database integrations (including `GetAllowedFlexTiersAsync`, `TestDatabaseIntegrationAsync`, `RevealManagedFlexConnectionStringAsync`); saved aggregates (`TestDatabaseAggregateAsync`); collection imports. |
 | `echo` | 1 | Smoke-test echo endpoint. |
 | `email` | 2 | Public e-mail link endpoints: `OneClickUnsubscribeAsync` and `GetEmailPreferencesByLinkAsync` (reads the marketing preferences behind a signed unsubscribe link; pass the link's `Token`). Both are public links: they work on a client with no API key (the key is sent only when there is one), like the three `Preview*NotificationAsync` methods. |
@@ -1068,6 +1070,45 @@ foreach (var run in runs?.Runs ?? [])
     if (!run.HasDetails || run.CorrelationId is null) continue; // logs were off
     var details = await hub.GetMarketplaceFunctionRunDetailsAsync(run.CorrelationId);
     // details.Items: marketplace:run:started → marketplace:run:step … → completed | failed | skipped
+}
+```
+
+## Workflows (beta)
+
+Workflows are in beta; bugs may occur. Every workflow route is a generated
+method on `hub.Code` (save, validate, publish, invoke, runs, logs, waiting
+inbox, resume, retry, cancel, …); the project API (`Norbix.Api`) has the
+waiting inbox, `ResumeCodeWorkflowRunAsync` and the signed resume links.
+The signed links (`OpenCodeWorkflowResumeLinkAsync`,
+`UseCodeWorkflowResumeLinkAsync`) work on a client with no API key — the
+token in the link is the key; a key is sent only when there is one.
+
+Two hand-written helpers in `Norbix.Hub`:
+
+- `hub.WaitForWorkflowRunAsync(runId, options)` reads the run
+  (`GET /{version}/code/workflows/runs/{RunId}`) every `PollInterval`
+  (default 1 s) and returns it once its `Status` is `succeeded`, `failed`,
+  `cancelled` or `waiting`. Still `running` after `Timeout` (default 60 s) →
+  `WorkflowRunTimeoutException` with `LastRun`.
+- `run.StepOutput<T>(stepId)` reads the output of the step's latest
+  succeeded execution (highest `Pass`, then highest `Attempt`); `default`
+  when the step never succeeded.
+
+```csharp
+var started = await hub.Code.InvokeCodeWorkflowAsync(
+    new InvokeCodeWorkflow { Id = "wf_…", Payload = new Dictionary<string, object> { ["orderId"] = "ord_1" } });
+
+var run = await hub.WaitForWorkflowRunAsync(
+    started!.RunId!,
+    new WaitForWorkflowRunOptions { Timeout = TimeSpan.FromSeconds(30) });
+
+if (run.Status == "succeeded")
+{
+    var invoice = run.StepOutput<Invoice>("create-invoice");
+}
+else if (run.Status == "waiting")
+{
+    // run.WaitingOn: the approval / event / delay the run is parked on
 }
 ```
 

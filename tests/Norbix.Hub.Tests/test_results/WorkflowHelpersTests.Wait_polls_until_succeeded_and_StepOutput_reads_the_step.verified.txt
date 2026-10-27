@@ -1,0 +1,12 @@
+﻿{
+  Status: succeeded,
+  Output: {
+    Message: hello,
+    Count: 3
+  },
+  Requests: [
+    GET /v2/code/workflows/runs/wfr_7Qk2abc,
+    GET /v2/code/workflows/runs/wfr_7Qk2abc,
+    GET /v2/code/workflows/runs/wfr_7Qk2abc
+  ]
+}
