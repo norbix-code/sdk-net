@@ -2929,6 +2929,219 @@ namespace Norbix.Sdk.Types.Api;
         string ProjectId { get; set; }
     }
 
+    [DataContract]
+    public partial class WorkflowRunActorDto
+    {
+        [DataMember]
+        public virtual string? UserId { get; set; }
+
+        [DataMember]
+        public virtual string Kind { get; set; }
+    }
+
+    [DataContract]
+    public partial class WorkflowRunDto
+    {
+        [DataMember]
+        public virtual string RunId { get; set; }
+
+        [DataMember]
+        public virtual string WorkflowId { get; set; }
+
+        [DataMember]
+        public virtual int? Version { get; set; }
+
+        [DataMember]
+        public virtual bool IsDraft { get; set; }
+
+        [DataMember]
+        public virtual string Status { get; set; }
+
+        [DataMember]
+        public virtual string Source { get; set; }
+
+        [DataMember]
+        public virtual WorkflowRunActorDto? StartedBy { get; set; }
+
+        [DataMember]
+        public virtual string? TriggerId { get; set; }
+
+        [DataMember]
+        public virtual string? TaskId { get; set; }
+
+        [DataMember]
+        public virtual string? ParentRunId { get; set; }
+
+        [DataMember]
+        public virtual int Depth { get; set; }
+
+        [DataMember]
+        public virtual string Env { get; set; }
+
+        [DataMember]
+        public virtual string? CorrelationId { get; set; }
+
+        [DataMember]
+        public virtual string? ExecutionIdentityId { get; set; }
+
+        [DataMember]
+        public virtual DateTime StartedAt { get; set; }
+
+        [DataMember]
+        public virtual DateTime? FinishedAt { get; set; }
+
+        [DataMember]
+        public virtual long? DurationMs { get; set; }
+
+        [DataMember]
+        public virtual List<WorkflowWaitingOnDto> WaitingOn { get; set; } = [];
+
+        [DataMember]
+        public virtual WorkflowRunErrorDto? Error { get; set; }
+
+        [DataMember]
+        public virtual Object? Output { get; set; }
+
+        [DataMember]
+        public virtual int StepRuns { get; set; }
+
+        [DataMember]
+        public virtual List<WorkflowRunStepDto> Steps { get; set; } = [];
+
+        [DataMember]
+        public virtual Dictionary<string, Object>? Request { get; set; }
+
+        [DataMember]
+        public virtual Dictionary<string, Object>? Trigger { get; set; }
+    }
+
+    [DataContract]
+    public partial class WorkflowRunErrorDto
+    {
+        [DataMember]
+        public virtual string? Code { get; set; }
+
+        [DataMember]
+        public virtual string? StepId { get; set; }
+
+        [DataMember]
+        public virtual string? Reason { get; set; }
+
+        [DataMember]
+        public virtual string? Message { get; set; }
+    }
+
+    [DataContract]
+    public partial class WorkflowRunListProjection
+    {
+        [DataMember]
+        public virtual string RunId { get; set; }
+
+        [DataMember]
+        public virtual string WorkflowId { get; set; }
+
+        [DataMember]
+        public virtual int? Version { get; set; }
+
+        [DataMember]
+        public virtual bool IsDraft { get; set; }
+
+        [DataMember]
+        public virtual string Status { get; set; }
+
+        [DataMember]
+        public virtual string Source { get; set; }
+
+        [DataMember]
+        public virtual DateTime StartedAt { get; set; }
+
+        [DataMember]
+        public virtual DateTime? FinishedAt { get; set; }
+
+        [DataMember]
+        public virtual long? DurationMs { get; set; }
+
+        [DataMember]
+        public virtual List<string> CurrentStepIds { get; set; } = [];
+
+        [DataMember]
+        public virtual List<WorkflowWaitingOnDto> WaitingOn { get; set; } = [];
+
+        [DataMember]
+        public virtual WorkflowRunErrorDto? Error { get; set; }
+    }
+
+    [DataContract]
+    public partial class WorkflowRunStepDto
+    {
+        [DataMember]
+        public virtual string StepId { get; set; }
+
+        [DataMember]
+        public virtual string Kind { get; set; }
+
+        [DataMember]
+        public virtual string? Name { get; set; }
+
+        [DataMember]
+        public virtual string Status { get; set; }
+
+        [DataMember]
+        public virtual int Attempt { get; set; }
+
+        [DataMember]
+        public virtual int Pass { get; set; }
+
+        [DataMember]
+        public virtual DateTime? StartedAt { get; set; }
+
+        [DataMember]
+        public virtual DateTime? FinishedAt { get; set; }
+
+        [DataMember]
+        public virtual long? DurationMs { get; set; }
+
+        [DataMember]
+        public virtual Object? Input { get; set; }
+
+        [DataMember]
+        public virtual bool InputTruncated { get; set; }
+
+        [DataMember]
+        public virtual Object? Output { get; set; }
+
+        [DataMember]
+        public virtual bool OutputTruncated { get; set; }
+
+        [DataMember]
+        public virtual WorkflowRunErrorDto? Error { get; set; }
+
+        [DataMember]
+        public virtual WorkflowRunActorDto? ResumedBy { get; set; }
+
+        [DataMember]
+        public virtual string? Decision { get; set; }
+    }
+
+    [DataContract]
+    public partial class WorkflowWaitingOnDto
+    {
+        [DataMember]
+        public virtual string StepId { get; set; }
+
+        [DataMember]
+        public virtual string Kind { get; set; }
+
+        [DataMember]
+        public virtual DateTime? Until { get; set; }
+
+        [DataMember]
+        public virtual string? Key { get; set; }
+
+        [DataMember]
+        public virtual List<string>? Assignees { get; set; }
+    }
+
     public partial class ArrayFieldDto
         : JsonSchemaFieldDto
     {
@@ -3413,6 +3626,34 @@ namespace Norbix.Sdk.Types.Api;
         public virtual List<TermTreeDto>? Children { get; set; }
     }
 
+    [DataContract]
+    public partial class QuickConnectProviderDto
+    {
+        [DataMember]
+        public virtual string Module { get; set; }
+
+        [DataMember]
+        public virtual string Provider { get; set; }
+
+        [DataMember]
+        public virtual bool Available { get; set; }
+
+        [DataMember]
+        public virtual string CallbackKind { get; set; }
+
+        [DataMember]
+        public virtual List<string> RequiredInputs { get; set; } = [];
+
+        [DataMember]
+        public virtual List<string> Modes { get; set; } = [];
+
+        [DataMember]
+        public virtual string RedirectUrl { get; set; }
+
+        [DataMember]
+        public virtual List<string> PlatformWebhookUrls { get; set; } = [];
+    }
+
     public partial class AccessInformationDto
     {
         public virtual string? Ip { get; set; }
@@ -3784,6 +4025,150 @@ namespace Norbix.Sdk.Types.Api;
         public virtual string? SavedByAuthId { get; set; }
     }
 
+    [DataContract]
+    public partial class CodeWorkflowResumeLinkResponse
+        : ResponseBase
+    {
+        [DataMember]
+        public virtual string? RunId { get; set; }
+
+        [DataMember]
+        public virtual string? WorkflowId { get; set; }
+
+        [DataMember]
+        public virtual string? WorkflowName { get; set; }
+
+        [DataMember]
+        public virtual string? StepId { get; set; }
+
+        [DataMember]
+        public virtual string? StepName { get; set; }
+
+        [DataMember]
+        public virtual string? Mode { get; set; }
+
+        [DataMember]
+        public virtual string? Decision { get; set; }
+
+        [DataMember]
+        public virtual string? Key { get; set; }
+
+        [DataMember]
+        public virtual string? AssigneeUserId { get; set; }
+
+        [DataMember]
+        public virtual DateTime? ExpiresAt { get; set; }
+    }
+
+    [NorbixRoute("/{version}/code/workflows/runs", "GET")]
+    [DataContract]
+    public partial class GetCodeWorkflowWaitingRuns
+        : CodeMashListPaginationRequestBase, INorbixRequest<WorkflowRunsResponse>
+    {
+        ///<summary>
+        ///running | waiting (default) | succeeded | failed | cancelled
+        ///</summary>
+        [DataMember]
+        public virtual string? Status { get; set; }
+
+        ///<summary>
+        ///approval | event | delay
+        ///</summary>
+        [DataMember]
+        public virtual string? WaitingKind { get; set; }
+
+        ///<summary>
+        ///"me" or a usr_… id: only approvals assigned to that user. Without code:read only "me" (the default then).
+        ///</summary>
+        [DataMember]
+        public virtual string? Assignee { get; set; }
+
+        ///<summary>
+        ///Only runs of this workflow (wf_…).
+        ///</summary>
+        [DataMember]
+        public virtual string? WorkflowId { get; set; }
+
+        ///<summary>
+        ///The wait's rendered key, exact match.
+        ///</summary>
+        [DataMember]
+        public virtual string? Key { get; set; }
+    }
+
+    ///<summary>
+    ///Beta: what a workflow's one-click link will do — no sign-in, nothing changes. POST the same URL to answer.
+    ///</summary>
+    [NorbixRoute("/{version}/code/workflows/resume/{Token}", "GET")]
+    [DataContract]
+    public partial class OpenCodeWorkflowResumeLink
+        : RequestBase, INorbixRequest<CodeWorkflowResumeLinkResponse>, INorbixOptionalAuth
+    {
+        ///<summary>
+        ///The signed link token from the wait's notification (@Model.Wait.ApproveUrl / RejectUrl / ResumeUrl).
+        ///</summary>
+        [DataMember]
+        public virtual string Token { get; set; }
+    }
+
+    [NorbixRoute("/{version}/code/workflows/runs/{RunId}/resume", "POST")]
+    [DataContract]
+    public partial class ResumeCodeWorkflowRun
+        : CodeMashRequestBase, INorbixRequest<WorkflowRunResponse>
+    {
+        ///<summary>
+        ///wfr_…
+        ///</summary>
+        [DataMember]
+        public virtual string RunId { get; set; }
+
+        ///<summary>
+        ///Required when several steps wait.
+        ///</summary>
+        [DataMember]
+        public virtual string? StepId { get; set; }
+
+        ///<summary>
+        ///approved | rejected — required for an approval wait.
+        ///</summary>
+        [DataMember]
+        public virtual string? Decision { get; set; }
+
+        [DataMember]
+        public virtual Dictionary<string, Object>? Payload { get; set; }
+    }
+
+    ///<summary>
+    ///Beta: answers a workflow's waiting step with a one-click link — no sign-in; the run goes on as the workflow's execution identity.
+    ///</summary>
+    [NorbixRoute("/{version}/code/workflows/resume/{Token}", "POST")]
+    [DataContract]
+    public partial class UseCodeWorkflowResumeLink
+        : RequestBase, INorbixRequest<WorkflowRunResponse>, INorbixOptionalAuth
+    {
+        ///<summary>
+        ///The signed link token.
+        ///</summary>
+        [DataMember]
+        public virtual string Token { get; set; }
+    }
+
+    [DataContract]
+    public partial class WorkflowRunResponse
+        : ResponseBase
+    {
+        [DataMember]
+        public virtual WorkflowRunDto? Run { get; set; }
+    }
+
+    [DataContract]
+    public partial class WorkflowRunsResponse
+        : ResponseBase
+    {
+        [DataMember]
+        public virtual PaginatedResponse<WorkflowRunListProjection>? List { get; set; }
+    }
+
     [NorbixRoute("/{version}/notifications/inbox", "GET")]
     public partial class GetNotificationInboxRequest
         : CodeMashListPaginationRequestBase, INorbixRequest<GetNotificationInboxResponse>
@@ -3883,6 +4268,11 @@ namespace Norbix.Sdk.Types.Api;
         public virtual string Config { get; set; }
     }
 
+    public partial class EchoConnectDto
+    {
+        public virtual List<QuickConnectProviderDto> Providers { get; set; } = [];
+    }
+
     public partial class EchoHostingPlatformDto
     {
         public virtual string Provider { get; set; }
@@ -3913,6 +4303,7 @@ namespace Norbix.Sdk.Types.Api;
         public virtual List<EchoRegionDto>? Regions { get; set; }
         public virtual EchoAgentDto? Agent { get; set; }
         public virtual EchoHostingPlatformDto? HostingPlatform { get; set; }
+        public virtual EchoConnectDto? Connect { get; set; }
     }
 
     [NorbixRoute("/{version}/public/projects/{ProjectId}/brand/{Kind}", "GET")]
