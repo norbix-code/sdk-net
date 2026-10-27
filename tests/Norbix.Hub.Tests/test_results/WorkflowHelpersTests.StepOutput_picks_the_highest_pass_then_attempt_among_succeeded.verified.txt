@@ -1,0 +1,9 @@
+﻿{
+  Loop: {
+    Message: pass 2 attempt 2,
+    Count: 3
+  },
+  NeverSucceededIsDefault: true,
+  MissingStepIsDefault: true,
+  NeverSucceededIntIsDefault: true
+}

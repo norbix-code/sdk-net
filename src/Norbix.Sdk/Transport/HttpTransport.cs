@@ -47,7 +47,7 @@ internal sealed class HttpTransport : INorbixTransport, IDisposable
                 "Norbix network error {Method} {Url}");
     }
 
-    private static readonly JsonSerializerOptions JsonOptions = new()
+    internal static readonly JsonSerializerOptions JsonOptions = new()
     {
         DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
         PropertyNamingPolicy = JsonNamingPolicy.CamelCase,

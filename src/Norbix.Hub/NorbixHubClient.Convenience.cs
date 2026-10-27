@@ -44,4 +44,55 @@ public sealed partial class NorbixHubClient
             new GetLogsByCorrelationId { TargetCorrelationId = correlationId },
             cancellationToken);
     }
+
+    /// <summary>
+    /// Beta: wait for a workflow run to finish or park. Reads the run
+    /// (GET /{version}/code/workflows/runs/{RunId}, <c>Code.GetCodeWorkflowRunAsync</c>) every
+    /// <see cref="WaitForWorkflowRunOptions.PollInterval"/> (default 1 s) and returns it as soon
+    /// as its <c>Status</c> is <c>succeeded</c>, <c>failed</c>, <c>cancelled</c> or
+    /// <c>waiting</c>. Still running after <see cref="WaitForWorkflowRunOptions.Timeout"/>
+    /// (default 60 s) → <see cref="WorkflowRunTimeoutException"/> with the last run read.
+    /// An answer with no run → <see cref="NorbixException"/>.
+    /// Workflows are in beta; bugs may occur.
+    /// </summary>
+    public async Task<WorkflowRunDto> WaitForWorkflowRunAsync(
+        string runId,
+        WaitForWorkflowRunOptions? options = null,
+        CancellationToken cancellationToken = default)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(runId);
+        var timeout = options?.Timeout ?? TimeSpan.FromSeconds(60);
+        var pollInterval = options?.PollInterval ?? TimeSpan.FromSeconds(1);
+        var started = System.Diagnostics.Stopwatch.GetTimestamp();
+
+        while (true)
+        {
+            var response = await Code
+                .GetCodeWorkflowRunAsync(new GetCodeWorkflowRun { RunId = runId }, cancellationToken)
+                .ConfigureAwait(false);
+            var run = response?.Run
+                ?? throw new NorbixException($"The answer for workflow run '{runId}' has no run.");
+
+            if (IsSettledWorkflowRunStatus(run.Status))
+            {
+                return run;
+            }
+
+            var elapsed = System.Diagnostics.Stopwatch.GetElapsedTime(started);
+            if (elapsed >= timeout)
+            {
+                throw new WorkflowRunTimeoutException(run, timeout);
+            }
+
+            var pause = timeout - elapsed < pollInterval ? timeout - elapsed : pollInterval;
+            await Task.Delay(pause, cancellationToken).ConfigureAwait(false);
+        }
+    }
+
+    private static bool IsSettledWorkflowRunStatus(string? status) =>
+        status is not null
+        && (string.Equals(status, "succeeded", StringComparison.OrdinalIgnoreCase)
+            || string.Equals(status, "failed", StringComparison.OrdinalIgnoreCase)
+            || string.Equals(status, "cancelled", StringComparison.OrdinalIgnoreCase)
+            || string.Equals(status, "waiting", StringComparison.OrdinalIgnoreCase));
 }
