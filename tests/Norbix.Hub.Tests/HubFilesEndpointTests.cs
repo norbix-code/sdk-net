@@ -110,6 +110,10 @@ public sealed class HubFilesEndpointTests
                     IsEnabled = true,
                     BucketName = "norbix-invoices",
                     Region = "eu-central-1",
+                    // Set the mode explicitly: an unset C# enum is AccessKey (value 0),
+                    // which the gateway refuses without AcceptKeyRisk.
+                    AuthMode = CloudAuthMode.Keyless,
+                    RoleArn = "arn:aws:iam::123456789012:role/norbix-files",
                 },
             });
 

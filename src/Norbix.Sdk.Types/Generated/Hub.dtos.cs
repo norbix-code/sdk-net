@@ -154,6 +154,12 @@ namespace Norbix.Sdk.Types.Hub;
         Duplicate,
     }
 
+    public enum CloudAuthMode
+    {
+        AccessKey,
+        Keyless,
+    }
+
     public enum CodeInvocationType
     {
         Sync,
@@ -864,7 +870,7 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual DockerMcpIntegrationDto? Typegen_111_DockerMcpIntegrationDto { get; set; }
         public virtual GoogleCalendarMcpIntegrationDto? Typegen_112_GoogleCalendarMcpIntegrationDto { get; set; }
         public virtual ObsidianMcpIntegrationDto? Typegen_113_ObsidianMcpIntegrationDto { get; set; }
-        public virtual AwsLambdaCrossAccountRoleCodeIntegrationDto? Typegen_114_AwsLambdaCrossAccountRoleCodeIntegrationDto { get; set; }
+        public virtual AwsLambdaKeylessCodeIntegrationDto? Typegen_114_AwsLambdaKeylessCodeIntegrationDto { get; set; }
         public virtual AwsLambdaIamCodeIntegrationDto? Typegen_115_AwsLambdaIamCodeIntegrationDto { get; set; }
         public virtual AzureFunctionsCodeIntegrationDto? Typegen_116_AzureFunctionsCodeIntegrationDto { get; set; }
         public virtual GoogleCloudFunctionsCodeIntegrationDto? Typegen_118_GoogleCloudFunctionsCodeIntegrationDto { get; set; }
@@ -909,7 +915,7 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual PrometheusLoggingIntegrationDto? Typegen_149_PrometheusLoggingIntegrationDto { get; set; }
         public virtual SplunkLoggingIntegrationDto? Typegen_150_SplunkLoggingIntegrationDto { get; set; }
         public virtual AppleICloudFilesIntegrationDto? Typegen_153_AppleICloudFilesIntegrationDto { get; set; }
-        public virtual AwsS3CrossAccountRoleFilesIntegrationDto? Typegen_154_AwsS3CrossAccountRoleFilesIntegrationDto { get; set; }
+        public virtual AwsS3KeylessFilesIntegrationDto? Typegen_154_AwsS3KeylessFilesIntegrationDto { get; set; }
         public virtual AwsS3IamFilesIntegrationDto? Typegen_155_AwsS3IamFilesIntegrationDto { get; set; }
         public virtual AzureBlobFilesIntegrationDto? Typegen_156_AzureBlobFilesIntegrationDto { get; set; }
         public virtual DropBoxFilesIntegrationDto? Typegen_157_DropBoxFilesIntegrationDto { get; set; }
@@ -935,7 +941,7 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual FirefoxWebPushIntegrationDto? Typegen_177_FirefoxWebPushIntegrationDto { get; set; }
         public virtual SafariPushIntegrationDto? Typegen_178_SafariPushIntegrationDto { get; set; }
         public virtual FakePushIntegrationDto? Typegen_247_FakePushIntegrationDto { get; set; }
-        public virtual AwsCrossAccountRoleEmailIntegrationDto? Typegen_179_AwsCrossAccountRoleEmailIntegrationDto { get; set; }
+        public virtual AwsKeylessEmailIntegrationDto? Typegen_179_AwsKeylessEmailIntegrationDto { get; set; }
         public virtual AwsIamEmailIntegrationDto? Typegen_180_AwsIamEmailIntegrationDto { get; set; }
         public virtual MailGunEmailIntegrationDto? Typegen_181_MailGunEmailIntegrationDto { get; set; }
         public virtual SendGridEmailIntegrationDto? Typegen_182_SendGridEmailIntegrationDto { get; set; }
@@ -4259,18 +4265,19 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual CodeProvider Provider { get; set; }
     }
 
-    public partial class AwsLambdaCrossAccountRoleCodeIntegrationDto
-        : CodeIntegrationDto
-    {
-        public virtual string Region { get; set; }
-        public virtual string RoleArn { get; set; }
-        public virtual string ExternalId { get; set; }
-    }
-
     public partial class AwsLambdaIamCodeIntegrationDto
         : CodeIntegrationDto
     {
         public virtual string Region { get; set; }
+        public virtual CloudAuthMode AuthMode { get; set; }
+    }
+
+    public partial class AwsLambdaKeylessCodeIntegrationDto
+        : CodeIntegrationDto
+    {
+        public virtual string Region { get; set; }
+        public virtual string RoleArn { get; set; }
+        public virtual CloudAuthMode AuthMode { get; set; }
     }
 
     public partial class AzureFunctionsCodeIntegrationDto
@@ -4278,6 +4285,10 @@ namespace Norbix.Sdk.Types.Hub;
     {
         public virtual string FunctionAppName { get; set; }
         public virtual string? ResourceGroup { get; set; }
+        public virtual CloudAuthMode AuthMode { get; set; }
+        public virtual string? SubscriptionId { get; set; }
+        public virtual string? TenantId { get; set; }
+        public virtual string? ClientId { get; set; }
     }
 
     public partial class FakeCodeIntegrationDto
@@ -5057,10 +5068,10 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual bool IsEnabled { get; set; }
 
         ///<summary>
-        ///usr_… — the service user every step runs as.
+        ///usr_… — the service user every step runs as (the execution identity). Optional: absent = the env's default identity; until that exists the save is refused CM-ERRORS-WORKFLOWS-009.
         ///</summary>
         [DataMember]
-        public virtual string ExecutionIdentityId { get; set; }
+        public virtual string? ExecutionIdentityId { get; set; }
 
         ///<summary>
         ///Optional JSON Schema (draft 2020-12, type object) of the manual-invoke payload.
@@ -6934,26 +6945,31 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual string? RelativePath { get; set; }
     }
 
-    public partial class AwsS3CrossAccountRoleFilesIntegrationDto
-        : FilesIntegrationDto
-    {
-        public virtual string BucketName { get; set; }
-        public virtual string Region { get; set; }
-        public virtual string RoleArn { get; set; }
-        public virtual string ExternalId { get; set; }
-    }
-
     public partial class AwsS3IamFilesIntegrationDto
         : FilesIntegrationDto
     {
         public virtual string BucketName { get; set; }
         public virtual string Region { get; set; }
+        public virtual CloudAuthMode AuthMode { get; set; }
+    }
+
+    public partial class AwsS3KeylessFilesIntegrationDto
+        : FilesIntegrationDto
+    {
+        public virtual string BucketName { get; set; }
+        public virtual string Region { get; set; }
+        public virtual string RoleArn { get; set; }
+        public virtual CloudAuthMode AuthMode { get; set; }
     }
 
     public partial class AzureBlobFilesIntegrationDto
         : FilesIntegrationDto
     {
         public virtual string BlobName { get; set; }
+        public virtual CloudAuthMode AuthMode { get; set; }
+        public virtual string? StorageAccount { get; set; }
+        public virtual string? TenantId { get; set; }
+        public virtual string? ClientId { get; set; }
     }
 
     public partial class DropBoxFilesIntegrationDto
@@ -7936,16 +7952,17 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual bool RequiresHumanDeliveryConfirmation { get; set; }
     }
 
-    public partial class AwsCrossAccountRoleEmailIntegrationDto
-        : AwsSesEmailIntegrationDto
-    {
-        public virtual string RoleArn { get; set; }
-        public virtual string ExternalId { get; set; }
-    }
-
     public partial class AwsIamEmailIntegrationDto
         : AwsSesEmailIntegrationDto
     {
+        public virtual CloudAuthMode AuthMode { get; set; }
+    }
+
+    public partial class AwsKeylessEmailIntegrationDto
+        : AwsSesEmailIntegrationDto
+    {
+        public virtual string RoleArn { get; set; }
+        public virtual CloudAuthMode AuthMode { get; set; }
     }
 
     public partial class AwsSesEmailIntegrationDto
@@ -7967,6 +7984,15 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember]
         public virtual bool? DeliveryEventsEnabled { get; set; }
+
+        [DataMember]
+        public virtual CloudAuthMode AuthMode { get; set; }
+
+        [DataMember]
+        public virtual string? TenantId { get; set; }
+
+        [DataMember]
+        public virtual string? ClientId { get; set; }
     }
 
     public partial class FakeEmailIntegrationDto
@@ -13321,21 +13347,45 @@ namespace Norbix.Sdk.Types.Hub;
         : CodeIntegrationRequest
     {
         public virtual CodeProvider Provider { get; set; }
-        public virtual AwsLambdaIntegrationType IntegrationType { get; set; }
+        ///<summary>
+        ///Keyless (default, no stored secret) or AccessKey (a stored IAM access key, less secure).
+        ///</summary>
+        public virtual CloudAuthMode AuthMode { get; set; }
+
         public virtual string Region { get; set; }
+        ///<summary>
+        ///Keyless: the ARN of the role that trusts this integration's Norbix token.
+        ///</summary>
         public virtual string? RoleArn { get; set; }
-        public virtual string? ExternalId { get; set; }
+
+        ///<summary>
+        ///AccessKey: the IAM access key id.
+        ///</summary>
         public virtual string? AccessKey { get; set; }
+
+        ///<summary>
+        ///AccessKey: the IAM secret access key.
+        ///</summary>
         public virtual string? SecretKey { get; set; }
+
+        ///<summary>
+        ///AccessKey: true = I accept that Norbix stores this long-lived secret (required with AuthMode AccessKey).
+        ///</summary>
+        public virtual bool AcceptKeyRisk { get; set; }
     }
 
     public partial class AzureFunctionsCodeIntegrationRequest
         : CodeIntegrationRequest
     {
         public virtual CodeProvider Provider { get; set; }
+        public virtual CloudAuthMode AuthMode { get; set; }
         public virtual string FunctionAppName { get; set; }
         public virtual string? ResourceGroup { get; set; }
+        public virtual string? SubscriptionId { get; set; }
+        public virtual string? TenantId { get; set; }
+        public virtual string? ClientId { get; set; }
         public virtual string ConnectionStringOrKey { get; set; }
+        public virtual bool AcceptKeyRisk { get; set; }
     }
 
     public partial class CodeIntegrationRequest
@@ -17508,14 +17558,34 @@ namespace Norbix.Sdk.Types.Hub;
         : EmailIntegrationRequest
     {
         public virtual EmailProvider Provider { get; set; }
-        public virtual AwsIntegrationType IntegrationType { get; set; }
+        ///<summary>
+        ///Keyless (default, no stored secret) or AccessKey (a stored IAM access key, less secure).
+        ///</summary>
+        public virtual CloudAuthMode AuthMode { get; set; }
+
         public virtual string AwsRegion { get; set; }
         public virtual string EmailIdentityArn { get; set; }
         public virtual string? ConfigurationSet { get; set; }
+        ///<summary>
+        ///Keyless: the ARN of the role that trusts this integration's Norbix token.
+        ///</summary>
         public virtual string? RoleArn { get; set; }
-        public virtual string? ExternalId { get; set; }
+
+        ///<summary>
+        ///AccessKey: the IAM access key id.
+        ///</summary>
         public virtual string? AccessKey { get; set; }
+
+        ///<summary>
+        ///AccessKey: the IAM secret access key.
+        ///</summary>
         public virtual string? SecretKey { get; set; }
+
+        ///<summary>
+        ///AccessKey: true = I accept that Norbix stores this long-lived secret (required with AuthMode AccessKey).
+        ///</summary>
+        public virtual bool AcceptKeyRisk { get; set; }
+
         public virtual bool? DeliveryEventsEnabled { get; set; }
         public virtual string? SnsTopicArn { get; set; }
     }
@@ -17524,7 +17594,11 @@ namespace Norbix.Sdk.Types.Hub;
         : EmailIntegrationRequest
     {
         public virtual EmailProvider Provider { get; set; }
+        public virtual CloudAuthMode AuthMode { get; set; }
         public virtual string Endpoint { get; set; }
+        public virtual string? TenantId { get; set; }
+        public virtual string? ClientId { get; set; }
+        public virtual bool AcceptKeyRisk { get; set; }
         public virtual string AccessKey { get; set; }
         public virtual bool? DeliveryEventsEnabled { get; set; }
         public virtual string? EventGridKey { get; set; }
@@ -18315,21 +18389,72 @@ namespace Norbix.Sdk.Types.Hub;
         : FilesIntegrationRequest
     {
         public virtual FileProvider Provider { get; set; }
-        public virtual AwsS3IntegrationType IntegrationType { get; set; }
+        ///<summary>
+        ///Keyless (default, no stored secret) or AccessKey (a stored IAM access key, less secure).
+        ///</summary>
+        public virtual CloudAuthMode AuthMode { get; set; }
+
         public virtual string BucketName { get; set; }
         public virtual string Region { get; set; }
+        ///<summary>
+        ///Keyless: the ARN of the role that trusts this integration's Norbix token (arn:aws:iam::<account>:role/<name>).
+        ///</summary>
         public virtual string? RoleArn { get; set; }
-        public virtual string? ExternalId { get; set; }
+
+        ///<summary>
+        ///AccessKey: the IAM access key id.
+        ///</summary>
         public virtual string? AccessKey { get; set; }
+
+        ///<summary>
+        ///AccessKey: the IAM secret access key.
+        ///</summary>
         public virtual string? SecretKey { get; set; }
+
+        ///<summary>
+        ///AccessKey: true = I accept that Norbix stores this long-lived secret (required with AuthMode AccessKey).
+        ///</summary>
+        public virtual bool AcceptKeyRisk { get; set; }
     }
 
     public partial class AzureBlobFilesIntegrationRequest
         : FilesIntegrationRequest
     {
         public virtual FileProvider Provider { get; set; }
+        ///<summary>
+        ///Keyless (default, no stored secret) or AccessKey (a stored connection string, less secure).
+        ///</summary>
+        public virtual CloudAuthMode AuthMode { get; set; }
+
+        ///<summary>
+        ///The container.
+        ///</summary>
         public virtual string BlobName { get; set; }
+
+        ///<summary>
+        ///Keyless: the storage account name (3–24 lowercase letters and digits).
+        ///</summary>
+        public virtual string? StorageAccount { get; set; }
+
+        ///<summary>
+        ///Keyless: the Entra tenant id of the managed identity.
+        ///</summary>
+        public virtual string? TenantId { get; set; }
+
+        ///<summary>
+        ///Keyless: the managed identity's client id.
+        ///</summary>
+        public virtual string? ClientId { get; set; }
+
+        ///<summary>
+        ///AccessKey: the storage account connection string.
+        ///</summary>
         public virtual string ConnectionString { get; set; }
+
+        ///<summary>
+        ///AccessKey: true = I accept that Norbix stores this long-lived secret (required with AuthMode AccessKey).
+        ///</summary>
+        public virtual bool AcceptKeyRisk { get; set; }
     }
 
     [NorbixRoute("/{version}/files/integrations/{Id}", "DELETE")]
@@ -18424,6 +18549,41 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual string? DefaultIntegrationId { get; set; }
         public virtual PaginatedResponse<FilesIntegrationListProjection>? List { get; set; }
         public virtual List<FileProvider> AvailableProviders { get; set; } = [];
+    }
+
+    [NorbixRoute("/{version}/integrations/keyless/setup", "GET")]
+    public partial class GetKeylessIntegrationSetup
+        : CodeMashRequestBase, INorbixRequest<GetKeylessIntegrationSetupResponse>
+    {
+        ///<summary>
+        ///files, email or code.
+        ///</summary>
+        public virtual string Module { get; set; }
+
+        ///<summary>
+        ///azure, aws or google.
+        ///</summary>
+        public virtual string Cloud { get; set; }
+
+        ///<summary>
+        ///The integration view id; empty = a new one is made for the save.
+        ///</summary>
+        public virtual string? IntegrationId { get; set; }
+    }
+
+    public partial class GetKeylessIntegrationSetupResponse
+        : ResponseBase
+    {
+        public virtual string? IntegrationId { get; set; }
+        public virtual string? Env { get; set; }
+        public virtual string? Module { get; set; }
+        public virtual string? Cloud { get; set; }
+        public virtual string? Issuer { get; set; }
+        public virtual bool Available { get; set; }
+        public virtual string? UnavailableReason { get; set; }
+        public virtual string? Subject { get; set; }
+        public virtual string? Audience { get; set; }
+        public virtual string? Script { get; set; }
     }
 
     public partial class GoogleCloudFilesIntegrationRequest
@@ -23159,6 +23319,13 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual bool IsAws { get; set; }
     }
 
+    public partial class EchoKeylessDto
+    {
+        public virtual string Issuer { get; set; }
+        public virtual bool Available { get; set; }
+        public virtual string? UnavailableReason { get; set; }
+    }
+
     public partial class EchoRegionDto
     {
         public virtual string Code { get; set; }
@@ -23184,6 +23351,7 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual EchoAgentDto? Agent { get; set; }
         public virtual EchoHostingPlatformDto? HostingPlatform { get; set; }
         public virtual EchoConnectDto? Connect { get; set; }
+        public virtual EchoKeylessDto? Keyless { get; set; }
     }
 
     [NorbixRoute("/{version}/public/projects/{ProjectId}/brand/{Kind}", "GET")]
@@ -23340,12 +23508,6 @@ namespace Norbix.Sdk.Types.Hub;
         AccountUsers,
     }
 
-    public enum AwsLambdaIntegrationType
-    {
-        Iam,
-        CrossAccountRole,
-    }
-
     public enum SmtpPorts
     {
         Default = 25,
@@ -23354,22 +23516,10 @@ namespace Norbix.Sdk.Types.Hub;
         Fallback = 2525,
     }
 
-    public enum AwsIntegrationType
-    {
-        Iam,
-        CrossAccountRole,
-    }
-
     public enum MailGunRegion
     {
         Us,
         Eu,
-    }
-
-    public enum AwsS3IntegrationType
-    {
-        Iam,
-        CrossAccountRole,
     }
 
     public enum AwsS3LoggingIntegrationType

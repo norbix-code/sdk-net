@@ -4279,6 +4279,13 @@ namespace Norbix.Sdk.Types.Api;
         public virtual bool IsAws { get; set; }
     }
 
+    public partial class EchoKeylessDto
+    {
+        public virtual string Issuer { get; set; }
+        public virtual bool Available { get; set; }
+        public virtual string? UnavailableReason { get; set; }
+    }
+
     public partial class EchoRegionDto
     {
         public virtual string Code { get; set; }
@@ -4304,6 +4311,7 @@ namespace Norbix.Sdk.Types.Api;
         public virtual EchoAgentDto? Agent { get; set; }
         public virtual EchoHostingPlatformDto? HostingPlatform { get; set; }
         public virtual EchoConnectDto? Connect { get; set; }
+        public virtual EchoKeylessDto? Keyless { get; set; }
     }
 
     [NorbixRoute("/{version}/public/projects/{ProjectId}/brand/{Kind}", "GET")]
