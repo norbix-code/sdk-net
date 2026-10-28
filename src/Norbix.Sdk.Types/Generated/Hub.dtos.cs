@@ -13348,9 +13348,9 @@ namespace Norbix.Sdk.Types.Hub;
     {
         public virtual CodeProvider Provider { get; set; }
         ///<summary>
-        ///Keyless (default, no stored secret) or AccessKey (a stored IAM access key, less secure).
+        ///Keyless (the default when omitted; no stored secret) or AccessKey (a stored IAM access key, less secure).
         ///</summary>
-        public virtual CloudAuthMode AuthMode { get; set; }
+        public virtual CloudAuthMode? AuthMode { get; set; }
 
         public virtual string Region { get; set; }
         ///<summary>
@@ -13369,23 +13369,23 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual string? SecretKey { get; set; }
 
         ///<summary>
-        ///AccessKey: true = I accept that Norbix stores this long-lived secret (required with AuthMode AccessKey).
+        ///AccessKey: true = I accept that Norbix stores this long-lived secret (required with AuthMode AccessKey; may be omitted otherwise).
         ///</summary>
-        public virtual bool AcceptKeyRisk { get; set; }
+        public virtual bool? AcceptKeyRisk { get; set; }
     }
 
     public partial class AzureFunctionsCodeIntegrationRequest
         : CodeIntegrationRequest
     {
         public virtual CodeProvider Provider { get; set; }
-        public virtual CloudAuthMode AuthMode { get; set; }
+        public virtual CloudAuthMode? AuthMode { get; set; }
         public virtual string FunctionAppName { get; set; }
         public virtual string? ResourceGroup { get; set; }
         public virtual string? SubscriptionId { get; set; }
         public virtual string? TenantId { get; set; }
         public virtual string? ClientId { get; set; }
         public virtual string ConnectionStringOrKey { get; set; }
-        public virtual bool AcceptKeyRisk { get; set; }
+        public virtual bool? AcceptKeyRisk { get; set; }
     }
 
     public partial class CodeIntegrationRequest
@@ -17559,9 +17559,9 @@ namespace Norbix.Sdk.Types.Hub;
     {
         public virtual EmailProvider Provider { get; set; }
         ///<summary>
-        ///Keyless (default, no stored secret) or AccessKey (a stored IAM access key, less secure).
+        ///Keyless (the default when omitted; no stored secret) or AccessKey (a stored IAM access key, less secure).
         ///</summary>
-        public virtual CloudAuthMode AuthMode { get; set; }
+        public virtual CloudAuthMode? AuthMode { get; set; }
 
         public virtual string AwsRegion { get; set; }
         public virtual string EmailIdentityArn { get; set; }
@@ -17582,9 +17582,9 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual string? SecretKey { get; set; }
 
         ///<summary>
-        ///AccessKey: true = I accept that Norbix stores this long-lived secret (required with AuthMode AccessKey).
+        ///AccessKey: true = I accept that Norbix stores this long-lived secret (required with AuthMode AccessKey; may be omitted otherwise).
         ///</summary>
-        public virtual bool AcceptKeyRisk { get; set; }
+        public virtual bool? AcceptKeyRisk { get; set; }
 
         public virtual bool? DeliveryEventsEnabled { get; set; }
         public virtual string? SnsTopicArn { get; set; }
@@ -17594,11 +17594,11 @@ namespace Norbix.Sdk.Types.Hub;
         : EmailIntegrationRequest
     {
         public virtual EmailProvider Provider { get; set; }
-        public virtual CloudAuthMode AuthMode { get; set; }
+        public virtual CloudAuthMode? AuthMode { get; set; }
         public virtual string Endpoint { get; set; }
         public virtual string? TenantId { get; set; }
         public virtual string? ClientId { get; set; }
-        public virtual bool AcceptKeyRisk { get; set; }
+        public virtual bool? AcceptKeyRisk { get; set; }
         public virtual string AccessKey { get; set; }
         public virtual bool? DeliveryEventsEnabled { get; set; }
         public virtual string? EventGridKey { get; set; }
@@ -18390,9 +18390,9 @@ namespace Norbix.Sdk.Types.Hub;
     {
         public virtual FileProvider Provider { get; set; }
         ///<summary>
-        ///Keyless (default, no stored secret) or AccessKey (a stored IAM access key, less secure).
+        ///Keyless (the default when omitted; no stored secret) or AccessKey (a stored IAM access key, less secure).
         ///</summary>
-        public virtual CloudAuthMode AuthMode { get; set; }
+        public virtual CloudAuthMode? AuthMode { get; set; }
 
         public virtual string BucketName { get; set; }
         public virtual string Region { get; set; }
@@ -18412,9 +18412,9 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual string? SecretKey { get; set; }
 
         ///<summary>
-        ///AccessKey: true = I accept that Norbix stores this long-lived secret (required with AuthMode AccessKey).
+        ///AccessKey: true = I accept that Norbix stores this long-lived secret (required with AuthMode AccessKey; may be omitted otherwise).
         ///</summary>
-        public virtual bool AcceptKeyRisk { get; set; }
+        public virtual bool? AcceptKeyRisk { get; set; }
     }
 
     public partial class AzureBlobFilesIntegrationRequest
@@ -18422,9 +18422,9 @@ namespace Norbix.Sdk.Types.Hub;
     {
         public virtual FileProvider Provider { get; set; }
         ///<summary>
-        ///Keyless (default, no stored secret) or AccessKey (a stored connection string, less secure).
+        ///Keyless (the default when omitted; no stored secret) or AccessKey (a stored connection string, less secure).
         ///</summary>
-        public virtual CloudAuthMode AuthMode { get; set; }
+        public virtual CloudAuthMode? AuthMode { get; set; }
 
         ///<summary>
         ///The container.
@@ -18452,9 +18452,9 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual string ConnectionString { get; set; }
 
         ///<summary>
-        ///AccessKey: true = I accept that Norbix stores this long-lived secret (required with AuthMode AccessKey).
+        ///AccessKey: true = I accept that Norbix stores this long-lived secret (required with AuthMode AccessKey; may be omitted otherwise).
         ///</summary>
-        public virtual bool AcceptKeyRisk { get; set; }
+        public virtual bool? AcceptKeyRisk { get; set; }
     }
 
     [NorbixRoute("/{version}/files/integrations/{Id}", "DELETE")]

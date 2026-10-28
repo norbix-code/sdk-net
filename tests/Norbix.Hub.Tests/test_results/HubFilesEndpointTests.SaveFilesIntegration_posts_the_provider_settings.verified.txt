@@ -9,11 +9,9 @@
   Body: {
     integration: {
       provider: local,
-      authMode: keyless,
       bucketName: norbix-invoices,
       region: eu-central-1,
       roleArn: arn:aws:iam::123456789012:role/norbix-files,
-      acceptKeyRisk: false,
       integrationName: Invoices bucket,
       isEnabled: true
     }
