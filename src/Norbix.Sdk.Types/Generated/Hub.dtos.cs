@@ -4301,6 +4301,11 @@ namespace Norbix.Sdk.Types.Hub;
     {
         public virtual string ProjectId { get; set; }
         public virtual string? Region { get; set; }
+        public virtual CloudAuthMode AuthMode { get; set; }
+        public virtual string? ProjectNumber { get; set; }
+        public virtual string? PoolId { get; set; }
+        public virtual string? ProviderId { get; set; }
+        public virtual string? ServiceAccountEmail { get; set; }
     }
 
     [DataContract]
@@ -6991,6 +6996,11 @@ namespace Norbix.Sdk.Types.Hub;
         : FilesIntegrationDto
     {
         public virtual string BucketName { get; set; }
+        public virtual CloudAuthMode AuthMode { get; set; }
+        public virtual string? ProjectNumber { get; set; }
+        public virtual string? PoolId { get; set; }
+        public virtual string? ProviderId { get; set; }
+        public virtual string? ServiceAccountEmail { get; set; }
     }
 
     public partial class GoogleDriveFilesIntegrationDto
@@ -13476,9 +13486,46 @@ namespace Norbix.Sdk.Types.Hub;
         : CodeIntegrationRequest
     {
         public virtual CodeProvider Provider { get; set; }
+        ///<summary>
+        ///Keyless (the default when omitted; no stored secret) or AccessKey (a stored service-account JSON key, less secure).
+        ///</summary>
+        public virtual CloudAuthMode? AuthMode { get; set; }
+
+        ///<summary>
+        ///The Google Cloud project id the functions live in.
+        ///</summary>
         public virtual string ProjectId { get; set; }
+
         public virtual string? Region { get; set; }
-        public virtual string ServiceAccountJsonKey { get; set; }
+        ///<summary>
+        ///Keyless: the Google Cloud project NUMBER (digits) that holds the workload identity pool.
+        ///</summary>
+        public virtual string? ProjectNumber { get; set; }
+
+        ///<summary>
+        ///Keyless: the workload identity pool id (4–32 lowercase letters, digits and hyphens).
+        ///</summary>
+        public virtual string? PoolId { get; set; }
+
+        ///<summary>
+        ///Keyless: the workload identity pool provider id (4–32 lowercase letters, digits and hyphens).
+        ///</summary>
+        public virtual string? ProviderId { get; set; }
+
+        ///<summary>
+        ///Keyless: the email of the service account Norbix acts as (…@<project>.iam.gserviceaccount.com).
+        ///</summary>
+        public virtual string? ServiceAccountEmail { get; set; }
+
+        ///<summary>
+        ///AccessKey: the service-account JSON key.
+        ///</summary>
+        public virtual string? ServiceAccountJsonKey { get; set; }
+
+        ///<summary>
+        ///AccessKey: true = I accept that Norbix stores this long-lived secret (required with AuthMode AccessKey; may be omitted otherwise).
+        ///</summary>
+        public virtual bool? AcceptKeyRisk { get; set; }
     }
 
     [NorbixRoute("/{version}/code/integrations", "POST")]
@@ -18590,8 +18637,45 @@ namespace Norbix.Sdk.Types.Hub;
         : FilesIntegrationRequest
     {
         public virtual FileProvider Provider { get; set; }
+        ///<summary>
+        ///Keyless (the default when omitted; no stored secret) or AccessKey (a stored service-account JSON key, less secure).
+        ///</summary>
+        public virtual CloudAuthMode? AuthMode { get; set; }
+
+        ///<summary>
+        ///The Cloud Storage bucket.
+        ///</summary>
         public virtual string BucketName { get; set; }
+
+        ///<summary>
+        ///Keyless: the Google Cloud project NUMBER (digits) that holds the workload identity pool.
+        ///</summary>
+        public virtual string? ProjectNumber { get; set; }
+
+        ///<summary>
+        ///Keyless: the workload identity pool id (4–32 lowercase letters, digits and hyphens).
+        ///</summary>
+        public virtual string? PoolId { get; set; }
+
+        ///<summary>
+        ///Keyless: the workload identity pool provider id (4–32 lowercase letters, digits and hyphens).
+        ///</summary>
+        public virtual string? ProviderId { get; set; }
+
+        ///<summary>
+        ///Keyless: the email of the service account Norbix acts as (…@<project>.iam.gserviceaccount.com).
+        ///</summary>
+        public virtual string? ServiceAccountEmail { get; set; }
+
+        ///<summary>
+        ///AccessKey: the service-account JSON key.
+        ///</summary>
         public virtual string ServiceAccountJsonKey { get; set; }
+
+        ///<summary>
+        ///AccessKey: true = I accept that Norbix stores this long-lived secret (required with AuthMode AccessKey; may be omitted otherwise).
+        ///</summary>
+        public virtual bool? AcceptKeyRisk { get; set; }
     }
 
     public partial class GoogleDriveFilesIntegrationRequest
