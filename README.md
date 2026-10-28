@@ -364,14 +364,12 @@ matches.
 ### Keyless cloud connections
 
 The AWS (S3, SES, Lambda) and Azure (Blob, Communication Services, Functions)
-save requests take `AuthMode` (`CloudAuthMode.Keyless` or `CloudAuthMode.AccessKey`).
-Keyless stores no secret: call `GetKeylessIntegrationSetupAsync` first, run the
-script it returns in your cloud account, then save with the same `IntegrationId`
-and the role ARN (AWS) or tenant + client id (Azure). A key mode needs
-`AcceptKeyRisk = true`, or the save is refused (`CM-ERRORS-INTEGRATIONS-034`).
-
-**Always set `AuthMode`.** The gateway's default is Keyless, but an unset C#
-enum is `AccessKey` (value 0), so leaving it out sends `AccessKey`.
+save requests take `AuthMode` (`CloudAuthMode?`): leave it out for Keyless, or
+set `CloudAuthMode.AccessKey`. Keyless stores no secret: call
+`GetKeylessIntegrationSetupAsync` first, run the script it returns in your
+cloud account, then save with the same `IntegrationId` and the role ARN (AWS)
+or tenant + client id (Azure). A key mode needs `AcceptKeyRisk = true`, or the
+save is refused (`CM-ERRORS-INTEGRATIONS-034`).
 
 ```csharp
 var setup = await client.Integrations.GetKeylessIntegrationSetupAsync(
@@ -385,8 +383,22 @@ await client.Files.SaveFilesIntegrationAsync(new SaveFilesIntegration
         IntegrationName = "Invoices bucket",
         BucketName = "my-invoices",
         Region = "eu-central-1",
-        AuthMode = CloudAuthMode.Keyless,
-        RoleArn = "arn:aws:iam::123456789012:role/norbix-files",
+        RoleArn = "arn:aws:iam::123456789012:role/norbix-files", // keyless: no AuthMode
+    },
+});
+
+// Key mode (less secure: Norbix stores the key) — say so explicitly:
+await client.Files.SaveFilesIntegrationAsync(new SaveFilesIntegration
+{
+    Integration = new AwsS3FilesIntegrationRequest
+    {
+        IntegrationName = "Legacy bucket",
+        BucketName = "my-legacy",
+        Region = "eu-central-1",
+        AuthMode = CloudAuthMode.AccessKey,
+        AccessKey = "<access-key-id>",
+        SecretKey = "<secret-access-key>",
+        AcceptKeyRisk = true,
     },
 });
 ```
