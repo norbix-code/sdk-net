@@ -337,6 +337,7 @@ The public endpoint surface is generated from gateway DTOs at compile time. The 
 | `echo` | 1 | Smoke-test echo endpoint. |
 | `email` | 2 | Public e-mail link endpoints: `OneClickUnsubscribeAsync` and `GetEmailPreferencesByLinkAsync` (reads the marketing preferences behind a signed unsubscribe link; pass the link's `Token`). Both are public links: they work on a client with no API key (the key is sent only when there is one), like the three `Preview*NotificationAsync` methods. |
 | `files` | 23 | File storage integrations, triggers, public links, a file by its stored id (`GetFileByIdAsync`), and module settings. |
+| `integrations` | 3 | Shared integration helpers: quick connect (`GetQuickConnectProvidersAsync`, `GetIntegrationConnectTargetsAsync`) and the keyless cloud setup (`GetKeylessIntegrationSetupAsync` — `Module` files / email / code, `Cloud` azure / aws / google, optional `IntegrationId`; returns the integration id, issuer, subject, audience, `Available` / `UnavailableReason` and the setup script). See [Keyless cloud connections](#keyless-cloud-connections). |
 | `logs` | 15 | Module on / off, the log list (`GetLogsAsync`), one entry by id (`GetLogAsync`), one flow by correlation id (`GetLogsByCorrelationIdAsync`), `CleanLogsAsync`, log settings, and logging integrations (MongoDB, Datadog, AWS CloudWatch, …). After saving an integration call `TestLoggingIntegrationAsync`: nothing is delivered to an integration until its last test passed. |
 | `membership` | 25 | Roles, policies, users, preferences, integrations, triggers. |
 | `notifications` | 123 | Email, push and SMS templates, integrations, campaigns, devices, settings. Push: [docs/hub/push.md](./docs/hub/push.md). SMS: [docs/hub/sms.md](./docs/hub/sms.md). |
@@ -359,6 +360,36 @@ environment (`norbix-env` header or `Env`, `PROD` when neither is set); each row
 carries its `Env`. The paging cursors (`StartingAfter` / `EndingBefore`) are now
 schema view ids (`sch_…`), so a cursor saved from an older gateway no longer
 matches.
+
+### Keyless cloud connections
+
+The AWS (S3, SES, Lambda) and Azure (Blob, Communication Services, Functions)
+save requests take `AuthMode` (`CloudAuthMode.Keyless` or `CloudAuthMode.AccessKey`).
+Keyless stores no secret: call `GetKeylessIntegrationSetupAsync` first, run the
+script it returns in your cloud account, then save with the same `IntegrationId`
+and the role ARN (AWS) or tenant + client id (Azure). A key mode needs
+`AcceptKeyRisk = true`, or the save is refused (`CM-ERRORS-INTEGRATIONS-034`).
+
+**Always set `AuthMode`.** The gateway's default is Keyless, but an unset C#
+enum is `AccessKey` (value 0), so leaving it out sends `AccessKey`.
+
+```csharp
+var setup = await client.Integrations.GetKeylessIntegrationSetupAsync(
+    new GetKeylessIntegrationSetup { Module = "files", Cloud = "aws" });
+// run setup.Script in the AWS account, then:
+await client.Files.SaveFilesIntegrationAsync(new SaveFilesIntegration
+{
+    Id = setup.IntegrationId,
+    Integration = new AwsS3FilesIntegrationRequest
+    {
+        IntegrationName = "Invoices bucket",
+        BucketName = "my-invoices",
+        Region = "eu-central-1",
+        AuthMode = CloudAuthMode.Keyless,
+        RoleArn = "arn:aws:iam::123456789012:role/norbix-files",
+    },
+});
+```
 
 ### True-by-default switches are `bool?` — empty = true (gateway 2026-10-22)
 
