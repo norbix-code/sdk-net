@@ -1,0 +1,22 @@
+﻿{
+  Sent: {
+    Method: GET,
+    Path: /v2/integrations/keyless/setup,
+    Query: ?module=files&cloud=aws&integrationId={guid},
+    Headers: {
+      Authorization: Bearer test-api-key,
+      norbix-project-id: test-project
+    }
+  },
+  Response: {
+    IntegrationId: Guid_1,
+    Env: TEST,
+    Module: files,
+    Cloud: aws,
+    Issuer: https://issuer.example,
+    Available: true,
+    Subject: p/test-project/e/TEST/files/i/{guid},
+    Audience: sts.amazonaws.com,
+    Script: aws iam create-role ...
+  }
+}

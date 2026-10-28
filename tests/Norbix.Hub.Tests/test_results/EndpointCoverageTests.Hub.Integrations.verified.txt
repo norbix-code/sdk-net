@@ -1,8 +1,44 @@
 ﻿{
   Target: Hub,
   Group: integrations,
-  Count: 2,
+  Count: 3,
   Endpoints: [
+    {
+      Target: Hub,
+      Group: integrations,
+      MethodName: GetKeylessIntegrationSetupAsync,
+      RequestType: GetKeylessIntegrationSetup,
+      HttpMethod: GET,
+      Path: /{version}/integrations/keyless/setup,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/integrations/keyless/setup,
+        Query: ?module=test-module&cloud=test-cloud&integrationId={guid}&env=test-env,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        }
+      },
+      ResponseType: GetKeylessIntegrationSetupResponse,
+      Response: {
+        IntegrationId: Guid_1,
+        Env: test-env,
+        Module: test-module,
+        Cloud: test-cloud,
+        Issuer: test-issuer,
+        Available: true,
+        UnavailableReason: test-unavailableReason,
+        Subject: test-subject,
+        Audience: test-audience,
+        Script: test-script,
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
     {
       Target: Hub,
       Group: integrations,

@@ -1,0 +1,4 @@
+﻿{
+  Available: false,
+  UnavailableReason: no signing key
+}
