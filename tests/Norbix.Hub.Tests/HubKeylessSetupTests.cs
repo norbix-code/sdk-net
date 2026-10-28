@@ -8,7 +8,7 @@ namespace Norbix.Hub.Tests;
 /// <summary>
 /// The keyless cloud connection setup (<c>GET /{version}/integrations/keyless/setup</c>):
 /// the values a developer pastes into the cloud account before saving a keyless
-/// integration. A fake response only — no gateway and no cloud are contacted.
+/// integration, and the setup templates (CloudFormation / Bicep / Terraform). A fake response only — no gateway and no cloud are contacted.
 /// </summary>
 [TestFixture]
 public sealed class HubKeylessSetupTests
@@ -30,6 +30,10 @@ public sealed class HubKeylessSetupTests
             subject = $"p/test-project/e/TEST/files/i/{IntegrationId}",
             audience = "sts.amazonaws.com",
             script = "aws iam create-role ...",
+            templates = new[]
+            {
+                new { kind = "terraform", fileName = "norbix-files-aws.tf", content = "resource \"aws_iam_role\" ..." },
+            },
         });
 
         var response = await fixture.Client.Integrations.GetKeylessIntegrationSetupAsync(

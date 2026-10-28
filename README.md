@@ -337,7 +337,7 @@ The public endpoint surface is generated from gateway DTOs at compile time. The 
 | `echo` | 1 | Smoke-test echo endpoint. |
 | `email` | 2 | Public e-mail link endpoints: `OneClickUnsubscribeAsync` and `GetEmailPreferencesByLinkAsync` (reads the marketing preferences behind a signed unsubscribe link; pass the link's `Token`). Both are public links: they work on a client with no API key (the key is sent only when there is one), like the three `Preview*NotificationAsync` methods. |
 | `files` | 23 | File storage integrations, triggers, public links, a file by its stored id (`GetFileByIdAsync`), and module settings. |
-| `integrations` | 3 | Shared integration helpers: quick connect (`GetQuickConnectProvidersAsync`, `GetIntegrationConnectTargetsAsync`) and the keyless cloud setup (`GetKeylessIntegrationSetupAsync` — `Module` files / email / code, `Cloud` azure / aws / google, optional `IntegrationId`; returns the integration id, issuer, subject, audience, `Available` / `UnavailableReason` and the setup script). See [Keyless cloud connections](#keyless-cloud-connections). |
+| `integrations` | 3 | Shared integration helpers: quick connect (`GetQuickConnectProvidersAsync`, `GetIntegrationConnectTargetsAsync`) and the keyless cloud setup (`GetKeylessIntegrationSetupAsync` — `Module` files / email / code, `Cloud` azure / aws / google, optional `IntegrationId`; returns the integration id, issuer, subject, audience, `Available` / `UnavailableReason`, the setup script and `Templates`). See [Keyless cloud connections](#keyless-cloud-connections). |
 | `logs` | 15 | Module on / off, the log list (`GetLogsAsync`), one entry by id (`GetLogAsync`), one flow by correlation id (`GetLogsByCorrelationIdAsync`), `CleanLogsAsync`, log settings, and logging integrations (MongoDB, Datadog, AWS CloudWatch, …). After saving an integration call `TestLoggingIntegrationAsync`: nothing is delivered to an integration until its last test passed. |
 | `membership` | 25 | Roles, policies, users, preferences, integrations, triggers. |
 | `notifications` | 123 | Email, push and SMS templates, integrations, campaigns, devices, settings. Push: [docs/hub/push.md](./docs/hub/push.md). SMS: [docs/hub/sms.md](./docs/hub/sms.md). |
@@ -370,6 +370,7 @@ set `CloudAuthMode.AccessKey`. Keyless stores no secret: call
 cloud account, then save with the same `IntegrationId` and the role ARN (AWS)
 or tenant + client id (Azure). A key mode needs `AcceptKeyRisk = true`, or the
 save is refused (`CM-ERRORS-INTEGRATIONS-034`).
+`setup.Templates` — templates: ready CloudFormation / Bicep / Terraform files for this integration (`Kind`, `FileName`, `Content`).
 
 ```csharp
 var setup = await client.Integrations.GetKeylessIntegrationSetupAsync(

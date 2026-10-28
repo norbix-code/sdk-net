@@ -17,6 +17,13 @@
     Available: true,
     Subject: p/test-project/e/TEST/files/i/{guid},
     Audience: sts.amazonaws.com,
-    Script: aws iam create-role ...
+    Script: aws iam create-role ...,
+    Templates: [
+      {
+        Kind: terraform,
+        FileName: norbix-files-aws.tf,
+        Content: resource "aws_iam_role" ...
+      }
+    ]
   }
 }
