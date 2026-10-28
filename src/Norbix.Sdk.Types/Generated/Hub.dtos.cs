@@ -18631,6 +18631,7 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual string? Subject { get; set; }
         public virtual string? Audience { get; set; }
         public virtual string? Script { get; set; }
+        public virtual List<KeylessIntegrationSetupTemplate>? Templates { get; set; }
     }
 
     public partial class GoogleCloudFilesIntegrationRequest
@@ -18684,6 +18685,13 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual FileProvider Provider { get; set; }
         public virtual string? RootFolderId { get; set; }
         public virtual string ServiceAccountJsonKey { get; set; }
+    }
+
+    public partial class KeylessIntegrationSetupTemplate
+    {
+        public virtual string Kind { get; set; }
+        public virtual string FileName { get; set; }
+        public virtual string Content { get; set; }
     }
 
     public partial class LocalFilesIntegrationRequest
