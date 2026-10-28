@@ -18670,7 +18670,7 @@ namespace Norbix.Sdk.Types.Hub;
         ///<summary>
         ///AccessKey: the service-account JSON key.
         ///</summary>
-        public virtual string ServiceAccountJsonKey { get; set; }
+        public virtual string? ServiceAccountJsonKey { get; set; }
 
         ///<summary>
         ///AccessKey: true = I accept that Norbix stores this long-lived secret (required with AuthMode AccessKey; may be omitted otherwise).
