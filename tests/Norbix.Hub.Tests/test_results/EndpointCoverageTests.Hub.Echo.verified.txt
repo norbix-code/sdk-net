@@ -55,6 +55,11 @@
               Available: false
             }
           ]
+        },
+        Keyless: {
+          Issuer: test-issuer,
+          Available: true,
+          UnavailableReason: test-unavailableReason
         }
       }
     }
