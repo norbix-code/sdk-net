@@ -3295,8 +3295,13 @@
           env: test-env
         }
       },
-      ResponseType: EmptyResponse,
+      ResponseType: IdResponse,
       Response: {
+        Id: Guid_1,
+        Status: test-status,
+        Warnings: [
+          test-string
+        ],
         ResponseStatus: {
           IsSuccess: true
         }

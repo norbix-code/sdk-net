@@ -222,7 +222,9 @@
       Response: {
         LogsEnabled: true,
         Runs: [
-          {}
+          {
+            ExecutionIdentityIsDefault: false
+          }
         ],
         ResponseStatus: {
           IsSuccess: true

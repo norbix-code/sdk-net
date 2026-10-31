@@ -8,8 +8,8 @@
 #pragma warning disable CS0114, CS1570, CS0102, CS0108, CS0618
 
 using System;
-using System.IO;
 using System.Collections;
+using System.IO;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using Norbix.Sdk.Types;
@@ -3578,6 +3578,7 @@ namespace Norbix.Sdk.Types.Api;
     {
         OptedOut = 1,
         Compliance = 2,
+        Undeliverable = 3,
     }
 
     [DataContract]
@@ -3791,6 +3792,12 @@ namespace Norbix.Sdk.Types.Api;
         public virtual string? ExecutionIdentityId { get; set; }
 
         [DataMember]
+        public virtual string? ExecutionIdentityName { get; set; }
+
+        [DataMember]
+        public virtual bool ExecutionIdentityIsDefault { get; set; }
+
+        [DataMember]
         public virtual DateTime StartedAt { get; set; }
 
         [DataMember]
@@ -3866,6 +3873,18 @@ namespace Norbix.Sdk.Types.Api;
 
         [DataMember]
         public virtual long? DurationMs { get; set; }
+
+        [DataMember]
+        public virtual WorkflowRunActorDto? StartedBy { get; set; }
+
+        [DataMember]
+        public virtual string? ExecutionIdentityId { get; set; }
+
+        [DataMember]
+        public virtual string? ExecutionIdentityName { get; set; }
+
+        [DataMember]
+        public virtual bool ExecutionIdentityIsDefault { get; set; }
 
         [DataMember]
         public virtual List<string> CurrentStepIds { get; set; } = [];
@@ -6277,7 +6296,7 @@ namespace Norbix.Sdk.Types.Api;
     ///</summary>
     [NorbixRoute("/{version}/notifications/email/preview", "GET")]
     public partial class PreviewEmailNotification
-        : RequestBase, INorbixRequest<PreviewEmailNotificationResponse>
+        : RequestBase, INorbixRequest<PreviewEmailNotificationResponse>, INorbixOptionalAuth
     {
         ///<summary>
         ///The signed preview link hash. With it the preview opens without sign-in: exactly one notification, until the link expires (30 days after sending).
@@ -6821,7 +6840,7 @@ namespace Norbix.Sdk.Types.Api;
     ///</summary>
     [NorbixRoute("/{version}/notifications/push/preview", "GET")]
     public partial class PreviewPushNotification
-        : RequestBase, INorbixRequest<PreviewPushNotificationResponse>
+        : RequestBase, INorbixRequest<PreviewPushNotificationResponse>, INorbixOptionalAuth
     {
         ///<summary>
         ///The signed preview link hash. With it the preview opens without sign-in: exactly one notification, until the link expires (30 days after sending).
@@ -7250,7 +7269,7 @@ namespace Norbix.Sdk.Types.Api;
     ///</summary>
     [NorbixRoute("/{version}/notifications/sms/preview", "GET")]
     public partial class PreviewSmsNotification
-        : RequestBase, INorbixRequest<PreviewSmsNotificationResponse>
+        : RequestBase, INorbixRequest<PreviewSmsNotificationResponse>, INorbixOptionalAuth
     {
         ///<summary>
         ///The signed preview link hash. With it the preview opens without sign-in: exactly one notification, until the link expires (30 days after sending).
