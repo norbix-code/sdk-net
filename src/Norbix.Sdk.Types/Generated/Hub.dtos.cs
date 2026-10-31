@@ -158,6 +158,7 @@ namespace Norbix.Sdk.Types.Hub;
     {
         AccessKey,
         Keyless,
+        CrossAccountRole,
     }
 
     public enum CodeInvocationType
@@ -361,6 +362,7 @@ namespace Norbix.Sdk.Types.Hub;
     {
         Accepted,
         Failed,
+        Blocked,
     }
 
     public enum NotificationAttemptTrigger
@@ -733,7 +735,6 @@ namespace Norbix.Sdk.Types.Hub;
         Fake,
     }
 
-    [NorbixRoute("/internal/_typegen", "GET")]
     public partial class InternalsTypeGen
     {
         public virtual SmtpEmailIntegrationRequest? Typegen_0_SmtpEmailIntegrationRequest { get; set; }
@@ -877,6 +878,7 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual GoogleCalendarMcpIntegrationDto? Typegen_112_GoogleCalendarMcpIntegrationDto { get; set; }
         public virtual ObsidianMcpIntegrationDto? Typegen_113_ObsidianMcpIntegrationDto { get; set; }
         public virtual AwsLambdaKeylessCodeIntegrationDto? Typegen_114_AwsLambdaKeylessCodeIntegrationDto { get; set; }
+        public virtual AwsLambdaCrossAccountRoleCodeIntegrationDto? Typegen_321_AwsLambdaCrossAccountRoleCodeIntegrationDto { get; set; }
         public virtual AwsLambdaIamCodeIntegrationDto? Typegen_115_AwsLambdaIamCodeIntegrationDto { get; set; }
         public virtual AzureFunctionsCodeIntegrationDto? Typegen_116_AzureFunctionsCodeIntegrationDto { get; set; }
         public virtual GoogleCloudFunctionsCodeIntegrationDto? Typegen_118_GoogleCloudFunctionsCodeIntegrationDto { get; set; }
@@ -922,6 +924,7 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual SplunkLoggingIntegrationDto? Typegen_150_SplunkLoggingIntegrationDto { get; set; }
         public virtual AppleICloudFilesIntegrationDto? Typegen_153_AppleICloudFilesIntegrationDto { get; set; }
         public virtual AwsS3KeylessFilesIntegrationDto? Typegen_154_AwsS3KeylessFilesIntegrationDto { get; set; }
+        public virtual AwsS3CrossAccountRoleFilesIntegrationDto? Typegen_322_AwsS3CrossAccountRoleFilesIntegrationDto { get; set; }
         public virtual AwsS3IamFilesIntegrationDto? Typegen_155_AwsS3IamFilesIntegrationDto { get; set; }
         public virtual AzureBlobFilesIntegrationDto? Typegen_156_AzureBlobFilesIntegrationDto { get; set; }
         public virtual DropBoxFilesIntegrationDto? Typegen_157_DropBoxFilesIntegrationDto { get; set; }
@@ -948,6 +951,7 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual SafariPushIntegrationDto? Typegen_178_SafariPushIntegrationDto { get; set; }
         public virtual FakePushIntegrationDto? Typegen_247_FakePushIntegrationDto { get; set; }
         public virtual AwsKeylessEmailIntegrationDto? Typegen_179_AwsKeylessEmailIntegrationDto { get; set; }
+        public virtual AwsCrossAccountRoleEmailIntegrationDto? Typegen_323_AwsCrossAccountRoleEmailIntegrationDto { get; set; }
         public virtual AwsIamEmailIntegrationDto? Typegen_180_AwsIamEmailIntegrationDto { get; set; }
         public virtual MailGunEmailIntegrationDto? Typegen_181_MailGunEmailIntegrationDto { get; set; }
         public virtual SendGridEmailIntegrationDto? Typegen_182_SendGridEmailIntegrationDto { get; set; }
@@ -3767,6 +3771,7 @@ namespace Norbix.Sdk.Types.Hub;
     {
         OptedOut = 1,
         Compliance = 2,
+        Undeliverable = 3,
     }
 
     [DataContract]
@@ -4034,6 +4039,18 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember]
         public virtual string? Input { get; set; }
+
+        [DataMember]
+        public virtual string? ExecutionIdentityId { get; set; }
+
+        [DataMember]
+        public virtual string? ExecutionIdentityName { get; set; }
+
+        [DataMember]
+        public virtual bool ExecutionIdentityIsDefault { get; set; }
+
+        [DataMember]
+        public virtual string? TriggerRunId { get; set; }
     }
 
     [DataContract]
@@ -4396,6 +4413,15 @@ namespace Norbix.Sdk.Types.Hub;
     {
         [DataMember]
         public virtual CodeProvider Provider { get; set; }
+    }
+
+    public partial class AwsLambdaCrossAccountRoleCodeIntegrationDto
+        : CodeIntegrationDto
+    {
+        public virtual string Region { get; set; }
+        public virtual string RoleArn { get; set; }
+        public virtual string ExternalId { get; set; }
+        public virtual CloudAuthMode AuthMode { get; set; }
     }
 
     public partial class AwsLambdaIamCodeIntegrationDto
@@ -5445,6 +5471,12 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual string? ExecutionIdentityId { get; set; }
 
         [DataMember]
+        public virtual string? ExecutionIdentityName { get; set; }
+
+        [DataMember]
+        public virtual bool ExecutionIdentityIsDefault { get; set; }
+
+        [DataMember]
         public virtual DateTime StartedAt { get; set; }
 
         [DataMember]
@@ -5520,6 +5552,18 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember]
         public virtual long? DurationMs { get; set; }
+
+        [DataMember]
+        public virtual WorkflowRunActorDto? StartedBy { get; set; }
+
+        [DataMember]
+        public virtual string? ExecutionIdentityId { get; set; }
+
+        [DataMember]
+        public virtual string? ExecutionIdentityName { get; set; }
+
+        [DataMember]
+        public virtual bool ExecutionIdentityIsDefault { get; set; }
 
         [DataMember]
         public virtual List<string> CurrentStepIds { get; set; } = [];
@@ -7083,6 +7127,16 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual string? RelativePath { get; set; }
     }
 
+    public partial class AwsS3CrossAccountRoleFilesIntegrationDto
+        : FilesIntegrationDto
+    {
+        public virtual string BucketName { get; set; }
+        public virtual string Region { get; set; }
+        public virtual string RoleArn { get; set; }
+        public virtual string ExternalId { get; set; }
+        public virtual CloudAuthMode AuthMode { get; set; }
+    }
+
     public partial class AwsS3IamFilesIntegrationDto
         : FilesIntegrationDto
     {
@@ -8147,6 +8201,14 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual IReadOnlyList<string> LastIntegrationTestErrors { get; set; }
         public virtual DateTime? HumanDeliveryConfirmedAtUtc { get; set; }
         public virtual bool RequiresHumanDeliveryConfirmation { get; set; }
+    }
+
+    public partial class AwsCrossAccountRoleEmailIntegrationDto
+        : AwsSesEmailIntegrationDto
+    {
+        public virtual string RoleArn { get; set; }
+        public virtual string ExternalId { get; set; }
+        public virtual CloudAuthMode AuthMode { get; set; }
     }
 
     public partial class AwsIamEmailIntegrationDto
@@ -9334,6 +9396,15 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember]
         public virtual string? CorrelationId { get; set; }
+
+        [DataMember]
+        public virtual string? ExecutionIdentityId { get; set; }
+
+        [DataMember]
+        public virtual string? ExecutionIdentityName { get; set; }
+
+        [DataMember]
+        public virtual bool ExecutionIdentityIsDefault { get; set; }
     }
 
     public enum SchedulerTaskRunOutcome
@@ -9922,9 +9993,6 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual FunctionRefDto? FunctionRef { get; set; }
 
         [DataMember]
-        public virtual string? RunAsUserId { get; set; }
-
-        [DataMember]
         public virtual CodeInvocationType InvocationType { get; set; }
 
         [DataMember]
@@ -10129,6 +10197,97 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember]
         public virtual string? ExecutionIdentityId { get; set; }
+    }
+
+    [DataContract]
+    public partial class TriggerRunDto
+        : TriggerRunListProjection
+    {
+        [DataMember]
+        public virtual string? SchemaId { get; set; }
+
+        [DataMember]
+        public virtual string Env { get; set; }
+
+        [DataMember]
+        public virtual string? CorrelationId { get; set; }
+
+        [DataMember]
+        public virtual string? Queue { get; set; }
+
+        [DataMember]
+        public virtual string? MessageId { get; set; }
+
+        [DataMember]
+        public virtual string? MissingPermissions { get; set; }
+
+        [DataMember]
+        public virtual int? Deliveries { get; set; }
+
+        [DataMember]
+        public virtual int? RecordCount { get; set; }
+    }
+
+    [DataContract]
+    public partial class TriggerRunListProjection
+    {
+        [DataMember]
+        public virtual string RunId { get; set; }
+
+        [DataMember]
+        public virtual string TriggerId { get; set; }
+
+        [DataMember]
+        public virtual TriggerType TriggerType { get; set; }
+
+        [DataMember]
+        public virtual string? TriggerName { get; set; }
+
+        [DataMember]
+        public virtual string Event { get; set; }
+
+        [DataMember]
+        public virtual string? Action { get; set; }
+
+        [DataMember]
+        public virtual string Status { get; set; }
+
+        [DataMember]
+        public virtual DateTime StartedAt { get; set; }
+
+        [DataMember]
+        public virtual DateTime? FinishedAt { get; set; }
+
+        [DataMember]
+        public virtual long? DurationMs { get; set; }
+
+        [DataMember]
+        public virtual WorkflowRunActorDto? StartedBy { get; set; }
+
+        [DataMember]
+        public virtual string? ExecutionIdentityId { get; set; }
+
+        [DataMember]
+        public virtual string? ExecutionIdentityName { get; set; }
+
+        [DataMember]
+        public virtual bool ExecutionIdentityIsDefault { get; set; }
+
+        [DataMember]
+        public virtual WorkflowRunErrorDto? Error { get; set; }
+
+        [DataMember]
+        public virtual TriggerRunProducedDto? Produced { get; set; }
+    }
+
+    [DataContract]
+    public partial class TriggerRunProducedDto
+    {
+        [DataMember]
+        public virtual string Kind { get; set; }
+
+        [DataMember]
+        public virtual string? Id { get; set; }
     }
 
     [DataContract]
@@ -13563,15 +13722,20 @@ namespace Norbix.Sdk.Types.Hub;
     {
         public virtual CodeProvider Provider { get; set; }
         ///<summary>
-        ///Keyless (the default when omitted; no stored secret) or AccessKey (a stored IAM access key, less secure).
+        ///Keyless (the default when omitted; no stored secret), CrossAccountRole (no stored secret; the install must run on AWS) or AccessKey (a stored IAM access key, less secure).
         ///</summary>
         public virtual CloudAuthMode? AuthMode { get; set; }
 
         public virtual string Region { get; set; }
         ///<summary>
-        ///Keyless: the ARN of the role that trusts this integration's Norbix token.
+        ///Keyless: the ARN of the role that trusts this integration's Norbix token. CrossAccountRole: the ARN of the role that trusts this install's AWS account.
         ///</summary>
         public virtual string? RoleArn { get; set; }
+
+        ///<summary>
+        ///CrossAccountRole: this Norbix account's id (the role's trust names it as sts:ExternalId). Any other value is refused.
+        ///</summary>
+        public virtual string? ExternalId { get; set; }
 
         ///<summary>
         ///AccessKey: the IAM access key id.
@@ -17811,7 +17975,7 @@ namespace Norbix.Sdk.Types.Hub;
     {
         public virtual EmailProvider Provider { get; set; }
         ///<summary>
-        ///Keyless (the default when omitted; no stored secret) or AccessKey (a stored IAM access key, less secure).
+        ///Keyless (the default when omitted; no stored secret), CrossAccountRole (no stored secret; the install must run on AWS) or AccessKey (a stored IAM access key, less secure).
         ///</summary>
         public virtual CloudAuthMode? AuthMode { get; set; }
 
@@ -17819,9 +17983,14 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual string EmailIdentityArn { get; set; }
         public virtual string? ConfigurationSet { get; set; }
         ///<summary>
-        ///Keyless: the ARN of the role that trusts this integration's Norbix token.
+        ///Keyless: the ARN of the role that trusts this integration's Norbix token. CrossAccountRole: the ARN of the role that trusts this install's AWS account.
         ///</summary>
         public virtual string? RoleArn { get; set; }
+
+        ///<summary>
+        ///CrossAccountRole: this Norbix account's id (the role's trust names it as sts:ExternalId). Any other value is refused.
+        ///</summary>
+        public virtual string? ExternalId { get; set; }
 
         ///<summary>
         ///AccessKey: the IAM access key id.
@@ -18642,16 +18811,21 @@ namespace Norbix.Sdk.Types.Hub;
     {
         public virtual FileProvider Provider { get; set; }
         ///<summary>
-        ///Keyless (the default when omitted; no stored secret) or AccessKey (a stored IAM access key, less secure).
+        ///Keyless (the default when omitted; no stored secret), CrossAccountRole (no stored secret; the install must run on AWS) or AccessKey (a stored IAM access key, less secure).
         ///</summary>
         public virtual CloudAuthMode? AuthMode { get; set; }
 
         public virtual string BucketName { get; set; }
         public virtual string Region { get; set; }
         ///<summary>
-        ///Keyless: the ARN of the role that trusts this integration's Norbix token (arn:aws:iam::<account>:role/<name>).
+        ///Keyless: the ARN of the role that trusts this integration's Norbix token (arn:aws:iam::<account>:role/<name>). CrossAccountRole: the ARN of the role that trusts this install's AWS account.
         ///</summary>
         public virtual string? RoleArn { get; set; }
+
+        ///<summary>
+        ///CrossAccountRole: this Norbix account's id (the role's trust names it as sts:ExternalId). Any other value is refused.
+        ///</summary>
+        public virtual string? ExternalId { get; set; }
 
         ///<summary>
         ///AccessKey: the IAM access key id.
@@ -22027,7 +22201,7 @@ namespace Norbix.Sdk.Types.Hub;
     ///</summary>
     [NorbixRoute("/{version}/notifications/push/templates", "PUT")]
     public partial class UpdatePushTemplateRequest
-        : SavePushTemplate, INorbixRequest<EmptyResponse>
+        : SavePushTemplate, INorbixRequest<IdResponse>
     {
         ///<summary>
         ///The push template id to update. Get it from get_push_templates.
@@ -23373,6 +23547,59 @@ namespace Norbix.Sdk.Types.Hub;
     public partial class GetTriggerResponse
         : ResponseBase
     {
+    }
+
+    ///<summary>
+    ///Reads one trigger run
+    ///</summary>
+    [NorbixRoute("/{version}/triggers/runs/{Id}", "GET")]
+    public partial class GetTriggerRun
+        : CodeMashRequestBase, INorbixRequest<GetTriggerRunResponse>
+    {
+        ///<summary>
+        ///The run id (trr_…).
+        ///</summary>
+        public virtual string Id { get; set; }
+
+        ///<summary>
+        ///Which kind of trigger: Membership, Schema, Files, Payments or Ai.
+        ///</summary>
+        public virtual TriggerType TriggerType { get; set; }
+    }
+
+    public partial class GetTriggerRunResponse
+        : ResponseBase
+    {
+        public virtual TriggerRunDto? Item { get; set; }
+    }
+
+    ///<summary>
+    ///Lists one trigger's runs, newest first
+    ///</summary>
+    [NorbixRoute("/{version}/triggers/runs", "GET")]
+    public partial class GetTriggerRuns
+        : CodeMashListPaginationRequestBase, INorbixRequest<GetTriggerRunsResponse>
+    {
+        ///<summary>
+        ///Which kind of trigger: Membership, Schema, Files, Payments or Ai.
+        ///</summary>
+        public virtual TriggerType TriggerType { get; set; }
+
+        ///<summary>
+        ///The trigger (trg_…).
+        ///</summary>
+        public virtual string TriggerId { get; set; }
+
+        ///<summary>
+        ///Only runs in this state: queued, running, succeeded, failed or skipped.
+        ///</summary>
+        public virtual string? Status { get; set; }
+    }
+
+    public partial class GetTriggerRunsResponse
+        : ResponseBase
+    {
+        public virtual PaginatedResponse<TriggerRunListProjection>? List { get; set; }
     }
 
     [DataContract]

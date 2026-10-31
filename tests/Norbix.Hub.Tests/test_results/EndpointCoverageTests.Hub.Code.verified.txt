@@ -148,7 +148,8 @@
       Response: {
         Runs: [
           {
-            Succeeded: false
+            Succeeded: false,
+            ExecutionIdentityIsDefault: false
           }
         ],
         ResponseStatus: {
@@ -1691,7 +1692,8 @@
           Status: test-status,
           Source: test-source,
           StartedBy: {},
-          TriggerId: Guid_1
+          TriggerId: Guid_1,
+          ExecutionIdentityIsDefault: false
         },
         ResponseStatus: {
           IsSuccess: true
@@ -2016,7 +2018,8 @@
           Status: test-status,
           Source: test-source,
           StartedBy: {},
-          TriggerId: Guid_1
+          TriggerId: Guid_1,
+          ExecutionIdentityIsDefault: false
         },
         ResponseStatus: {
           IsSuccess: true
@@ -2088,7 +2091,8 @@
         List: {
           Items: [
             {
-              IsDraft: false
+              IsDraft: false,
+              ExecutionIdentityIsDefault: false
             }
           ],
           HasMore: false,
@@ -2281,7 +2285,8 @@
         List: {
           Items: [
             {
-              IsDraft: false
+              IsDraft: false,
+              ExecutionIdentityIsDefault: false
             }
           ],
           HasMore: false,
@@ -2346,7 +2351,8 @@
           Status: test-status,
           Source: test-source,
           StartedBy: {},
-          TriggerId: Guid_1
+          TriggerId: Guid_1,
+          ExecutionIdentityIsDefault: false
         },
         ResponseStatus: {
           IsSuccess: true
@@ -2475,7 +2481,8 @@
           Status: test-status,
           Source: test-source,
           StartedBy: {},
-          TriggerId: Guid_1
+          TriggerId: Guid_1,
+          ExecutionIdentityIsDefault: false
         },
         ResponseStatus: {
           IsSuccess: true
@@ -2523,7 +2530,8 @@
           Status: test-status,
           Source: test-source,
           StartedBy: {},
-          TriggerId: Guid_1
+          TriggerId: Guid_1,
+          ExecutionIdentityIsDefault: false
         },
         ResponseStatus: {
           IsSuccess: true
@@ -2566,7 +2574,8 @@
           Status: test-status,
           Source: test-source,
           StartedBy: {},
-          TriggerId: Guid_1
+          TriggerId: Guid_1,
+          ExecutionIdentityIsDefault: false
         },
         ResponseStatus: {
           IsSuccess: true
@@ -2657,7 +2666,8 @@
           Status: test-status,
           Source: test-source,
           StartedBy: {},
-          TriggerId: Guid_1
+          TriggerId: Guid_1,
+          ExecutionIdentityIsDefault: false
         },
         ResponseStatus: {
           IsSuccess: true
