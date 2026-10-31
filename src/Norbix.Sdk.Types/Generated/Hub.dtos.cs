@@ -362,6 +362,7 @@ namespace Norbix.Sdk.Types.Hub;
     {
         Accepted,
         Failed,
+        Blocked,
     }
 
     public enum NotificationAttemptTrigger
