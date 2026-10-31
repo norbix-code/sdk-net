@@ -1,7 +1,7 @@
 ﻿{
   Target: Hub,
   Group: triggers,
-  Count: 4,
+  Count: 6,
   Endpoints: [
     {
       Target: Hub,
@@ -82,6 +82,83 @@
           PreExecuteCode: test-preExecuteCode,
           Order: 7,
           BreakOnError: true
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: triggers,
+      MethodName: GetTriggerRunAsync,
+      RequestType: GetTriggerRun,
+      HttpMethod: GET,
+      Path: /{version}/triggers/runs/{Id},
+      PathParams: [
+        Id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/triggers/runs/{guid},
+        Query: ?triggerType=Membership&env=test-env,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        }
+      },
+      ResponseType: GetTriggerRunResponse,
+      Response: {
+        Item: {
+          SchemaId: Guid_1,
+          Env: test-env,
+          CorrelationId: Guid_1,
+          Queue: test-queue,
+          MessageId: Guid_1,
+          MissingPermissions: test-missingPermissions,
+          Deliveries: 7,
+          RecordCount: 7,
+          ExecutionIdentityIsDefault: false
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: triggers,
+      MethodName: GetTriggerRunsAsync,
+      RequestType: GetTriggerRuns,
+      HttpMethod: GET,
+      Path: /{version}/triggers/runs,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/triggers/runs,
+        Query: ?triggerType=Membership&triggerId={guid}&status=test-status&env=test-env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        }
+      },
+      ResponseType: GetTriggerRunsResponse,
+      Response: {
+        List: {
+          Items: [
+            {
+              ExecutionIdentityIsDefault: false
+            }
+          ],
+          HasMore: false,
+          HasPrevious: false,
+          StartingAfter: cursor-start,
+          EndingBefore: cursor-end
         },
         ResponseStatus: {
           IsSuccess: true
