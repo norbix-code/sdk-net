@@ -1,7 +1,7 @@
 ﻿{
   Target: Hub,
   Group: membership,
-  Count: 48,
+  Count: 50,
   Endpoints: [
     {
       Target: Hub,
@@ -662,6 +662,76 @@
       ResponseType: UpdatePasswordComplexityResponse,
       Response: {
         Result: true,
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: membership,
+      MethodName: CreateExecutionIdentityAsync,
+      RequestType: CreateExecutionIdentityRequest,
+      HttpMethod: POST,
+      Path: /{version}/membership/execution-identities,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/membership/execution-identities,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        },
+        Body: {
+          name: test-name,
+          roleIds: [
+            test-string
+          ],
+          env: test-env
+        }
+      },
+      ResponseType: IdResponse,
+      Response: {
+        Id: Guid_1,
+        Status: test-status,
+        Warnings: [
+          test-string
+        ],
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: membership,
+      MethodName: GetExecutionIdentitiesAsync,
+      RequestType: GetExecutionIdentitiesRequest,
+      HttpMethod: GET,
+      Path: /{version}/membership/execution-identities,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/membership/execution-identities,
+        Query: ?env=test-env,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        }
+      },
+      ResponseType: GetExecutionIdentitiesResponse,
+      Response: {
+        Identities: [
+          {
+            IsDefault: false,
+            CanAssign: false
+          }
+        ],
         ResponseStatus: {
           IsSuccess: true
         }

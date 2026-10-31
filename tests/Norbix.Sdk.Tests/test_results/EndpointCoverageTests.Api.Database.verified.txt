@@ -1,7 +1,7 @@
 ﻿{
   Target: Api,
   Group: database,
-  Count: 22,
+  Count: 28,
   Endpoints: [
     {
       Target: Api,
@@ -777,6 +777,249 @@
         Tree: [
           {}
         ],
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: database,
+      MethodName: AnalyzeImportFileAsync,
+      RequestType: AnalyzeImportFileRequest,
+      HttpMethod: POST,
+      Path: /{version}/database/imports/analyze,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/database/imports/analyze,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        },
+        Body: {
+          file: {
+            integrationId: Guid_1,
+            provider: local,
+            path: test-path,
+            publicUrl: https://example.test/publicUrl,
+            isPublic: true
+          },
+          delimiter: test-delimiter,
+          hasHeader: true,
+          env: test-env
+        }
+      },
+      ResponseType: AnalyzeImportFileResponse,
+      Response: {
+        Result: {
+          File: {
+            IsPublic: false
+          },
+          Columns: [
+            {}
+          ],
+          SampleRowCount: 7
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: database,
+      MethodName: CreateCollectionImportAsync,
+      RequestType: CreateCollectionImport,
+      HttpMethod: POST,
+      Path: /{version}/database/imports,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/database/imports,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        },
+        Body: {
+          file: {
+            integrationId: Guid_1,
+            provider: local,
+            path: test-path,
+            publicUrl: https://example.test/publicUrl,
+            isPublic: true
+          },
+          schemaId: Guid_1,
+          collectionName: test-collectionName,
+          databaseIntegrationId: Guid_1,
+          delimiter: test-delimiter,
+          hasHeader: true,
+          mapping: [
+            null
+          ],
+          env: test-env
+        }
+      },
+      ResponseType: IdResponse,
+      Response: {
+        Id: Guid_1,
+        Status: test-status,
+        Warnings: [
+          test-string
+        ],
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: database,
+      MethodName: DeleteCollectionImportAsync,
+      RequestType: DeleteCollectionImportRequest,
+      HttpMethod: DELETE,
+      Path: /{version}/database/imports/{Id},
+      PathParams: [
+        Id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: DELETE,
+        Path: /v2/database/imports/{guid},
+        Query: ?databaseIntegrationId={guid}&env=test-env,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: database,
+      MethodName: GetCollectionImportAsync,
+      RequestType: GetCollectionImport,
+      HttpMethod: GET,
+      Path: /{version}/database/imports/{Id},
+      PathParams: [
+        Id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/database/imports/{guid},
+        Query: ?databaseIntegrationId={guid}&env=test-env,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        }
+      },
+      ResponseType: GetCollectionImportResponse,
+      Response: {
+        Result: {
+          Id: Guid_1,
+          Schema: {},
+          File: {
+            IsPublic: false
+          },
+          ErrorFile: {
+            IsPublic: false
+          },
+          Delimiter: test-delimiter,
+          HasHeader: true,
+          Status: test-status,
+          TotalRows: 42
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: database,
+      MethodName: GetCollectionImportsAsync,
+      RequestType: GetCollectionImports,
+      HttpMethod: GET,
+      Path: /{version}/database/imports,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/database/imports,
+        Query: ?databaseIntegrationId={guid}&env=test-env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        }
+      },
+      ResponseType: GetCollectionImportsResponse,
+      Response: {
+        Result: {
+          Items: [
+            {
+              HasHeader: false
+            }
+          ],
+          HasMore: false,
+          HasPrevious: false,
+          StartingAfter: cursor-start,
+          EndingBefore: cursor-end
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: database,
+      MethodName: RequestImportUploadUrlAsync,
+      RequestType: RequestImportUploadUrlRequest,
+      HttpMethod: POST,
+      Path: /{version}/database/imports/upload-url,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/database/imports/upload-url,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        },
+        Body: {
+          fileAccountId: Guid_1,
+          fileName: test-fileName,
+          env: test-env
+        }
+      },
+      ResponseType: RequestImportUploadUrlResponse,
+      Response: {
+        Result: {
+          Url: https://example.test/url,
+          ContentType: test-contentType,
+          File: {
+            IsPublic: false
+          }
+        },
         ResponseStatus: {
           IsSuccess: true
         }

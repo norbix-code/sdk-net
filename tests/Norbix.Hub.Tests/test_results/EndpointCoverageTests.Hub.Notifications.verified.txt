@@ -285,12 +285,14 @@
           Recipients: {
             HasMore: false
           },
+          RemovedRecipients: [
+            {}
+          ],
           Content: {},
           TransactionalKind: test-transactionalKind,
           CampaignId: Guid_1,
           BatchId: Guid_1,
-          NotificationId: Guid_1,
-          RefNotificationId: Guid_1
+          NotificationId: Guid_1
         },
         ResponseStatus: {
           IsSuccess: true
@@ -404,7 +406,9 @@
           Failed: 7,
           FailedRetryable: 7,
           Cancelled: 7,
-          SuccessRate: 3.14
+          Blocked: 7,
+          InProgress: 7,
+          RemovedRecipients: 7
         },
         ResponseStatus: {
           IsSuccess: true
@@ -1518,8 +1522,13 @@
           env: test-env
         }
       },
-      ResponseType: EmptyResponse,
+      ResponseType: IdResponse,
       Response: {
+        Id: Guid_1,
+        Status: test-status,
+        Warnings: [
+          test-string
+        ],
         ResponseStatus: {
           IsSuccess: true
         }
@@ -2305,7 +2314,9 @@
           Failed: 7,
           FailedRetryable: 7,
           Cancelled: 7,
-          SuccessRate: 3.14
+          Blocked: 7,
+          InProgress: 7,
+          RemovedRecipients: 7
         },
         ResponseStatus: {
           IsSuccess: true
@@ -3716,7 +3727,9 @@
           Failed: 7,
           FailedRetryable: 7,
           Cancelled: 7,
-          SuccessRate: 3.14
+          Blocked: 7,
+          InProgress: 7,
+          RemovedRecipients: 7
         },
         ResponseStatus: {
           IsSuccess: true
@@ -4537,8 +4550,13 @@
           env: test-env
         }
       },
-      ResponseType: EmptyResponse,
+      ResponseType: IdResponse,
       Response: {
+        Id: Guid_1,
+        Status: test-status,
+        Warnings: [
+          test-string
+        ],
         ResponseStatus: {
           IsSuccess: true
         }

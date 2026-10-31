@@ -1,7 +1,7 @@
 ﻿{
   Target: Api,
   Group: files,
-  Count: 15,
+  Count: 20,
   Endpoints: [
     {
       Target: Api,
@@ -451,41 +451,6 @@
     {
       Target: Api,
       Group: files,
-      MethodName: TestFilesIntegrationAsync,
-      RequestType: TestFilesIntegrationRequest,
-      HttpMethod: POST,
-      Path: /{version}/files/{filesIntegrationId}/test,
-      PathParams: [
-        filesIntegrationId
-      ],
-      IsAccountScoped: false,
-      IsUnauthenticated: false,
-      Sent: {
-        Method: POST,
-        Path: /v2/files/{guid}/test,
-        Headers: {
-          Authorization: Bearer test-bearer,
-          Content-Type: application/json; charset=utf-8,
-          norbix-account-id: test-account,
-          norbix-project-id: test-project
-        },
-        Body: {
-          env: test-env
-        }
-      },
-      ResponseType: TestFilesIntegrationResponse,
-      Response: {
-        Items: [
-          {}
-        ],
-        ResponseStatus: {
-          IsSuccess: true
-        }
-      }
-    },
-    {
-      Target: Api,
-      Group: files,
       MethodName: UseFileAsync,
       RequestType: UseFileRequest,
       HttpMethod: POST,
@@ -508,6 +473,220 @@
           path: test-path,
           ownerUserId: Guid_1,
           reassignOwner: true,
+          env: test-env
+        }
+      },
+      ResponseType: IdResponse,
+      Response: {
+        Id: Guid_1,
+        Status: test-status,
+        Warnings: [
+          test-string
+        ],
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: files,
+      MethodName: GetFileAsync,
+      RequestType: GetFile,
+      HttpMethod: GET,
+      Path: /{version}/files/item,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/files/item,
+        Query: ?filesIntegrationId={guid}&path=test-path&env=test-env,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        }
+      },
+      ResponseType: GetFileResponse,
+      Response: {
+        File: {
+          Resource: {},
+          IntegrationId: Guid_1,
+          Path: test-path,
+          PublicUrl: https://example.test/publicUrl,
+          IsPublic: true
+        },
+        IsPublic: true,
+        PublicUrl: https://example.test/publicUrl,
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: files,
+      MethodName: GetFolderFilesAsync,
+      RequestType: GetFolderFiles,
+      HttpMethod: GET,
+      Path: /{version}/files/folder,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/files/folder,
+        Query: ?filesIntegrationId={guid}&path=test-path&env=test-env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        }
+      },
+      ResponseType: GetFolderFilesResponse,
+      Response: {
+        List: {
+          Items: [
+            {
+              IsPublic: false
+            }
+          ],
+          HasMore: false,
+          HasPrevious: false,
+          StartingAfter: cursor-start,
+          EndingBefore: cursor-end
+        },
+        Folders: [
+          test-string
+        ],
+        PublicFolders: [
+          {
+            Inherited: false
+          }
+        ],
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: files,
+      MethodName: MakeFilePrivateAsync,
+      RequestType: MakeFilePrivateRequest,
+      HttpMethod: POST,
+      Path: /{version}/files/item/private,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/files/item/private,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        },
+        Body: {
+          filesIntegrationId: Guid_1,
+          path: test-path,
+          env: test-env
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: files,
+      MethodName: MakeFilePublicAsync,
+      RequestType: MakeFilePublicRequest,
+      HttpMethod: POST,
+      Path: /{version}/files/item/public,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/files/item/public,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        },
+        Body: {
+          filesIntegrationId: Guid_1,
+          path: test-path,
+          env: test-env
+        }
+      },
+      ResponseType: IdResponse,
+      Response: {
+        Id: Guid_1,
+        Status: test-status,
+        Warnings: [
+          test-string
+        ],
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: files,
+      MethodName: MakeFolderPrivateAsync,
+      RequestType: MakeFolderPrivateRequest,
+      HttpMethod: POST,
+      Path: /{version}/files/folder/private,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/files/folder/private,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        },
+        Body: {
+          filesIntegrationId: Guid_1,
+          path: test-path,
+          env: test-env
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: files,
+      MethodName: MakeFolderPublicAsync,
+      RequestType: MakeFolderPublicRequest,
+      HttpMethod: POST,
+      Path: /{version}/files/folder/public,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/files/folder/public,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        },
+        Body: {
+          filesIntegrationId: Guid_1,
+          path: test-path,
           env: test-env
         }
       },

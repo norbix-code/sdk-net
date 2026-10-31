@@ -28,7 +28,9 @@
       Failed: 7,
       FailedRetryable: 7,
       Cancelled: 7,
-      SuccessRate: 3.14
+      Blocked: 7,
+      InProgress: 7,
+      RemovedRecipients: 7
     },
     ResponseStatus: {
       IsSuccess: true

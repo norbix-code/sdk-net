@@ -253,6 +253,7 @@ namespace Norbix.Sdk.Types.Hub;
         AccountUsers,
         Email,
         Collection,
+        TriggerSubject,
     }
 
     [DataContract]
@@ -536,6 +537,7 @@ namespace Norbix.Sdk.Types.Hub;
         AccountUsers,
         PhoneNumbers,
         Collection,
+        TriggerSubject,
     }
 
     public enum SubscriptionType
@@ -731,6 +733,7 @@ namespace Norbix.Sdk.Types.Hub;
         Fake,
     }
 
+    [NorbixRoute("/internal/_typegen", "GET")]
     public partial class InternalsTypeGen
     {
         public virtual SmtpEmailIntegrationRequest? Typegen_0_SmtpEmailIntegrationRequest { get; set; }
@@ -859,6 +862,9 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual SmsToAccountUsersDeliverySettingsDto? Typegen_249_SmsToAccountUsersDeliverySettingsDto { get; set; }
         public virtual SmsToCollectionRecordsDeliverySettingsDto? Typegen_101_SmsToCollectionRecordsDeliverySettingsDto { get; set; }
         public virtual SmsToPhoneNumbersDeliverySettingsDto? Typegen_102_SmsToPhoneNumbersDeliverySettingsDto { get; set; }
+        public virtual EmailToTriggerSubjectDeliverySettingsDto? Typegen_318_EmailToTriggerSubjectDeliverySettingsDto { get; set; }
+        public virtual PushToTriggerSubjectDeliverySettingsDto? Typegen_319_PushToTriggerSubjectDeliverySettingsDto { get; set; }
+        public virtual SmsToTriggerSubjectDeliverySettingsDto? Typegen_320_SmsToTriggerSubjectDeliverySettingsDto { get; set; }
         public virtual OpenAiLlmIntegrationDto? Typegen_103_OpenAiLlmIntegrationDto { get; set; }
         public virtual AnthropicLlmIntegrationDto? Typegen_104_AnthropicLlmIntegrationDto { get; set; }
         public virtual OllamaLlmIntegrationDto? Typegen_105_OllamaLlmIntegrationDto { get; set; }
@@ -1647,6 +1653,9 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual List<ProjectEnvironmentAdminUrlDto>? EnvironmentAdminUrls { get; set; }
 
         [DataMember]
+        public virtual List<ProjectEnvironmentExecutionIdentityDto>? DefaultExecutionIdentities { get; set; }
+
+        [DataMember]
         public virtual bool ExposeBrandToAdminPortal { get; set; }
 
         [DataMember]
@@ -1763,6 +1772,16 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember]
         public virtual string Url { get; set; }
+    }
+
+    [DataContract]
+    public partial class ProjectEnvironmentExecutionIdentityDto
+    {
+        [DataMember]
+        public virtual string Env { get; set; }
+
+        [DataMember]
+        public virtual string UserId { get; set; }
     }
 
     [DataContract]
@@ -3155,7 +3174,38 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual string UserId { get; set; }
 
         [DataMember]
+        public virtual string? TriggerId { get; set; }
+
+        [DataMember]
+        public virtual TriggerType? TriggerType { get; set; }
+
+        [DataMember]
+        public virtual CampaignOutcomeDto? Outcome { get; set; }
+
+        [DataMember]
         public virtual string? Id { get; set; }
+    }
+
+    [DataContract]
+    public partial class CampaignOutcomeDto
+    {
+        [DataMember]
+        public virtual int Sent { get; set; }
+
+        [DataMember]
+        public virtual int Failed { get; set; }
+
+        [DataMember]
+        public virtual int Blocked { get; set; }
+
+        [DataMember]
+        public virtual int Cancelled { get; set; }
+
+        [DataMember]
+        public virtual int RemovedRecipients { get; set; }
+
+        [DataMember]
+        public virtual string? BlockedReason { get; set; }
     }
 
     [DataContract]
@@ -3175,6 +3225,15 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember]
         public virtual int Cancelled { get; set; }
+
+        [DataMember]
+        public virtual int Blocked { get; set; }
+
+        [DataMember]
+        public virtual int InProgress { get; set; }
+
+        [DataMember]
+        public virtual int RemovedRecipients { get; set; }
 
         [DataMember]
         public virtual decimal SuccessRate { get; set; }
@@ -3204,6 +3263,9 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember]
         public virtual EmailRecipientsDto Recipients { get; set; }
+
+        [DataMember]
+        public virtual List<RemovedRecipientDto>? RemovedRecipients { get; set; }
 
         [DataMember]
         public virtual EmailMessageContentDto? Content { get; set; }
@@ -3270,6 +3332,16 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember]
         public virtual DateTime CreatedOn { get; set; }
+
+        [DataMember]
+        public virtual CampaignOutcomeDto? Outcome { get; set; }
+    }
+
+    public enum EmailRecipientField
+    {
+        To = 1,
+        Cc = 2,
+        Bcc = 3,
     }
 
     [DataContract]
@@ -3357,6 +3429,20 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember]
         public virtual bool SingleEmailStrategy { get; set; }
+    }
+
+    [DataContract]
+    public partial class EmailToTriggerSubjectDeliverySettingsDto
+        : EmailCampaignDeliverySettingsDto
+    {
+        [DataMember]
+        public virtual string? SubjectAuthId { get; set; }
+
+        [DataMember]
+        public virtual string? SubjectEmail { get; set; }
+
+        [DataMember]
+        public virtual string? SubjectLanguage { get; set; }
     }
 
     [DataContract]
@@ -3659,11 +3745,44 @@ namespace Norbix.Sdk.Types.Hub;
     }
 
     [DataContract]
+    public partial class PushToTriggerSubjectDeliverySettingsDto
+        : PushCampaignDeliverySettingsDto
+    {
+        [DataMember]
+        public virtual string? SubjectAuthId { get; set; }
+
+        [DataMember]
+        public virtual string? SubjectLanguage { get; set; }
+    }
+
+    [DataContract]
     public partial class PushToUsersDeliverySettingsDto
         : PushCampaignDeliverySettingsDto
     {
         [DataMember]
         public virtual HashSet<string> Recipients { get; set; } = [];
+    }
+
+    public enum RecipientRemovalReason
+    {
+        OptedOut = 1,
+        Compliance = 2,
+    }
+
+    [DataContract]
+    public partial class RemovedRecipientDto
+    {
+        [DataMember]
+        public virtual string Address { get; set; }
+
+        [DataMember]
+        public virtual EmailRecipientField Field { get; set; }
+
+        [DataMember]
+        public virtual RecipientRemovalReason Reason { get; set; }
+
+        [DataMember]
+        public virtual string? Tag { get; set; }
     }
 
     [DataContract]
@@ -3795,6 +3914,20 @@ namespace Norbix.Sdk.Types.Hub;
     {
         [DataMember]
         public virtual HashSet<string> PhoneNumbers { get; set; } = [];
+    }
+
+    [DataContract]
+    public partial class SmsToTriggerSubjectDeliverySettingsDto
+        : SmsCampaignDeliverySettingsDto
+    {
+        [DataMember]
+        public virtual string? SubjectAuthId { get; set; }
+
+        [DataMember]
+        public virtual string? SubjectPhone { get; set; }
+
+        [DataMember]
+        public virtual string? SubjectLanguage { get; set; }
     }
 
     [DataContract]
@@ -7294,6 +7427,60 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual List<string>? AllowedProviderRegisterRoles { get; set; }
     }
 
+    [DataContract]
+    public partial class ExecutionIdentityDto
+    {
+        [DataMember]
+        public virtual string Id { get; set; }
+
+        [DataMember]
+        public virtual string Name { get; set; }
+
+        [DataMember]
+        public virtual bool IsDefault { get; set; }
+
+        [DataMember]
+        public virtual string Status { get; set; }
+
+        [DataMember]
+        public virtual List<string> RoleIds { get; set; } = [];
+
+        [DataMember]
+        public virtual bool CanAssign { get; set; }
+
+        [DataMember]
+        public virtual ExecutionIdentityUsageDto UsedBy { get; set; }
+    }
+
+    [DataContract]
+    public partial class ExecutionIdentitySummaryDto
+    {
+        [DataMember]
+        public virtual string Id { get; set; }
+
+        [DataMember]
+        public virtual string Name { get; set; }
+
+        [DataMember]
+        public virtual bool IsDefault { get; set; }
+
+        [DataMember]
+        public virtual string Status { get; set; }
+    }
+
+    [DataContract]
+    public partial class ExecutionIdentityUsageDto
+    {
+        [DataMember]
+        public virtual int Triggers { get; set; }
+
+        [DataMember]
+        public virtual int Tasks { get; set; }
+
+        [DataMember]
+        public virtual int Workflows { get; set; }
+    }
+
     public partial class LoginDto
     {
         public virtual bool NeedChangePasswordOnNextLogin { get; set; }
@@ -9065,6 +9252,12 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual long? EndsAtUnix { get; set; }
 
         [DataMember]
+        public virtual string? ExecutionIdentityId { get; set; }
+
+        [DataMember]
+        public virtual ExecutionIdentitySummaryDto? ExecutionIdentity { get; set; }
+
+        [DataMember]
         public virtual bool HasEnded { get; set; }
 
         [DataMember]
@@ -9110,6 +9303,9 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember]
         public virtual bool HasEnded { get; set; }
+
+        [DataMember]
+        public virtual string? ExecutionIdentityId { get; set; }
 
         [DataMember]
         public virtual string ViewId { get; set; }
@@ -9898,6 +10094,12 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember]
         public virtual string? SavedByAuthId { get; set; }
+
+        [DataMember]
+        public virtual string? ExecutionIdentityId { get; set; }
+
+        [DataMember]
+        public virtual ExecutionIdentitySummaryDto? ExecutionIdentity { get; set; }
     }
 
     [DataContract]
@@ -9924,6 +10126,9 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember]
         public virtual bool BreakOnError { get; set; }
+
+        [DataMember]
+        public virtual string? ExecutionIdentityId { get; set; }
     }
 
     [DataContract]
@@ -18179,7 +18384,7 @@ namespace Norbix.Sdk.Types.Hub;
     ///</summary>
     [NorbixRoute("/{version}/notifications/email/templates", "PUT")]
     public partial class UpdateEmailTemplateRequest
-        : SaveEmailTemplate, INorbixRequest<EmptyResponse>
+        : SaveEmailTemplate, INorbixRequest<IdResponse>
     {
         ///<summary>
         ///The email template id to update. Get it from get_email_templates.
@@ -19491,6 +19696,39 @@ namespace Norbix.Sdk.Types.Hub;
         : ResponseBase
     {
         public virtual bool Result { get; set; }
+    }
+
+    ///<summary>
+    ///Creates an execution identity: a project service user with roles, in one call.
+    ///</summary>
+    [NorbixRoute("/{version}/membership/execution-identities", "POST")]
+    public partial class CreateExecutionIdentityRequest
+        : CodeMashRequestBase, INorbixRequest<IdResponse>
+    {
+        ///<summary>
+        ///Display name of the identity, e.g. 'Orders bot'.
+        ///</summary>
+        public virtual string Name { get; set; }
+
+        ///<summary>
+        ///Roles to give: role ids (pr_…_nr_…) or role names from GET membership/roles.
+        ///</summary>
+        public virtual List<string> RoleIds { get; set; } = [];
+    }
+
+    ///<summary>
+    ///Lists the execution identities (project service users) of an environment.
+    ///</summary>
+    [NorbixRoute("/{version}/membership/execution-identities", "GET")]
+    public partial class GetExecutionIdentitiesRequest
+        : CodeMashRequestBase, INorbixRequest<GetExecutionIdentitiesResponse>
+    {
+    }
+
+    public partial class GetExecutionIdentitiesResponse
+        : ResponseBase
+    {
+        public virtual List<ExecutionIdentityDto> Identities { get; set; } = [];
     }
 
     public partial class AppleMembershipIntegrationRequest
@@ -21962,6 +22200,9 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual string InitiatorUserId { get; set; }
 
         [DataMember]
+        public virtual string? ExecutionIdentityId { get; set; }
+
+        [DataMember]
         public virtual bool IsEnabled { get; set; }
 
         [DataMember]
@@ -22839,7 +23080,7 @@ namespace Norbix.Sdk.Types.Hub;
     ///</summary>
     [NorbixRoute("/{version}/notifications/sms/templates", "PUT")]
     public partial class UpdateSmsTemplateRequest
-        : SaveSmsTemplate, INorbixRequest<EmptyResponse>
+        : SaveSmsTemplate, INorbixRequest<IdResponse>
     {
         ///<summary>
         ///The SMS template id to update. Get it from get_sms_templates.
@@ -22915,6 +23156,56 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual CaseResolutionDto? Resolution { get; set; }
     }
 
+    ///<summary>
+    ///Check a trigger action's execution identity
+    ///</summary>
+    [NorbixRoute("/{version}/triggers/execution-identity/check", "POST")]
+    [DataContract]
+    public partial class CheckTriggerExecutionIdentityRequest
+        : CodeMashRequestBase, INorbixRequest<CheckTriggerExecutionIdentityResponse>
+    {
+        ///<summary>
+        ///Which kind of trigger: Schema, Membership, Files, Payments or Ai.
+        ///</summary>
+        [DataMember]
+        public virtual TriggerType TriggerType { get; set; }
+
+        ///<summary>
+        ///The service user id (usr_…) to run as. Empty or 'default' = the env's default identity.
+        ///</summary>
+        [DataMember]
+        public virtual string? ExecutionIdentityId { get; set; }
+
+        ///<summary>
+        ///The trigger action, as on the trigger save.
+        ///</summary>
+        [DataMember]
+        public virtual TriggerActionDto Action { get; set; }
+    }
+
+    [DataContract]
+    public partial class CheckTriggerExecutionIdentityResponse
+        : ResponseBase
+    {
+        [DataMember]
+        public virtual string? ExecutionIdentityId { get; set; }
+
+        [DataMember]
+        public virtual bool IsDefault { get; set; }
+
+        [DataMember]
+        public virtual bool CanAssign { get; set; }
+
+        [DataMember]
+        public virtual List<string> MissingPermissions { get; set; } = [];
+
+        [DataMember]
+        public virtual List<string> CallerMissingPermissions { get; set; } = [];
+
+        [DataMember]
+        public virtual List<ExecutionIdentityRefusalDto> Refusals { get; set; } = [];
+    }
+
     [DataContract]
     public partial class DeleteTrigger
         : CodeMashRequestBase
@@ -22955,6 +23246,16 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember]
         public virtual string? SchemaId { get; set; }
+    }
+
+    [DataContract]
+    public partial class ExecutionIdentityRefusalDto
+    {
+        [DataMember]
+        public virtual string ErrorCode { get; set; }
+
+        [DataMember]
+        public virtual string Message { get; set; }
     }
 
     public partial class FilesTriggerRequest
@@ -23146,6 +23447,7 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual int? Order { get; set; }
         public virtual bool BreakOnError { get; set; }
         public virtual TriggerActionDto Action { get; set; }
+        public virtual string? ExecutionIdentityId { get; set; }
     }
 
     public partial class SchemaTriggerRequest
@@ -23598,6 +23900,7 @@ namespace Norbix.Sdk.Types.Hub;
         Collection,
         Devices,
         AccountUsers,
+        TriggerSubject,
     }
 
     public enum SmtpPorts

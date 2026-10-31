@@ -1,7 +1,7 @@
 ﻿{
   Target: Api,
   Group: notifications,
-  Count: 11,
+  Count: 48,
   Endpoints: [
     {
       Target: Api,
@@ -235,6 +235,467 @@
     {
       Target: Api,
       Group: notifications,
+      MethodName: CreateEmailCampaignAsync,
+      RequestType: CreateEmailCampaignRequest,
+      HttpMethod: POST,
+      Path: /{version}/notifications/email/campaigns,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/notifications/email/campaigns,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        },
+        Body: {
+          campaign: {
+            source: allUsers,
+            templateId: Guid_1,
+            integrationId: Guid_1,
+            validationIntegrationId: Guid_1,
+            language: test-language,
+            initiatorId: Guid_1,
+            notes: test-notes
+          },
+          databaseIntegrationId: Guid_1,
+          sendNow: true,
+          env: test-env
+        }
+      },
+      ResponseType: IdResponse,
+      Response: {
+        Id: Guid_1,
+        Status: test-status,
+        Warnings: [
+          test-string
+        ],
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: notifications,
+      MethodName: DeleteEmailCampaignAsync,
+      RequestType: DeleteEmailCampaignRequest,
+      HttpMethod: DELETE,
+      Path: /{version}/notifications/email/campaigns/{Id},
+      PathParams: [
+        Id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: DELETE,
+        Path: /v2/notifications/email/campaigns/{guid},
+        Query: ?databaseIntegrationId={guid}&env=test-env,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: notifications,
+      MethodName: GetEmailCampaignAsync,
+      RequestType: GetEmailCampaign,
+      HttpMethod: GET,
+      Path: /{version}/notifications/email/campaigns/{id},
+      PathParams: [
+        id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/notifications/email/campaigns/{guid},
+        Query: ?databaseIntegrationId={guid}&env=test-env,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        }
+      },
+      ResponseType: GetEmailCampaignResponse,
+      Response: {
+        Item: {
+          DeliverySettings: {},
+          Template: {
+            IsActive: false
+          },
+          ValidationIntegrationId: Guid_1,
+          TemplateIsSystem: true,
+          ViewId: Guid_1,
+          CreatedOn: DateTime_1,
+          Language: test-language,
+          ForceCampaignLanguage: true
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: notifications,
+      MethodName: GetEmailCampaignBatchesAsync,
+      RequestType: GetEmailCampaignBatches,
+      HttpMethod: GET,
+      Path: /{version}/notifications/email/campaigns/{id}/batches,
+      PathParams: [
+        id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/notifications/email/campaigns/{guid}/batches,
+        Query: ?databaseIntegrationId={guid}&batchId={guid}&emailAddress=user%40example.test&env=test-env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        }
+      },
+      ResponseType: GetEmailCampaignBatchesResponse,
+      Response: {
+        List: {
+          Items: [
+            {}
+          ],
+          HasMore: false,
+          HasPrevious: false,
+          StartingAfter: cursor-start,
+          EndingBefore: cursor-end
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: notifications,
+      MethodName: GetEmailCampaignBatchNotificationAsync,
+      RequestType: GetEmailCampaignBatchNotification,
+      HttpMethod: GET,
+      Path: /{version}/notifications/email/campaigns/{id}/batches/{batchId}/{notificationId},
+      PathParams: [
+        id,
+        batchId,
+        notificationId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/notifications/email/campaigns/{guid}/batches/{guid}/{guid},
+        Query: ?databaseIntegrationId={guid}&env=test-env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        }
+      },
+      ResponseType: GetEmailCampaignBatchNotificationResponse,
+      Response: {
+        CampaignNotification: {
+          Subject: test-subject,
+          Recipients: {
+            HasMore: false
+          },
+          RemovedRecipients: [
+            {}
+          ],
+          Content: {},
+          TransactionalKind: test-transactionalKind,
+          CampaignId: Guid_1,
+          BatchId: Guid_1,
+          NotificationId: Guid_1
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: notifications,
+      MethodName: GetEmailCampaignBatchNotificationsAsync,
+      RequestType: GetEmailCampaignBatchNotifications,
+      HttpMethod: GET,
+      Path: /{version}/notifications/email/campaigns/{id}/batches/{batchId},
+      PathParams: [
+        id,
+        batchId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/notifications/email/campaigns/{guid}/batches/{guid},
+        Query: ?databaseIntegrationId={guid}&env=test-env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        }
+      },
+      ResponseType: GetEmailCampaignBatchNotificationsResponse,
+      Response: {
+        BatchStatusHistory: [
+          {}
+        ],
+        List: {
+          Items: [
+            {}
+          ],
+          HasMore: false,
+          HasPrevious: false,
+          StartingAfter: cursor-start,
+          EndingBefore: cursor-end
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: notifications,
+      MethodName: GetEmailCampaignsAsync,
+      RequestType: GetEmailCampaigns,
+      HttpMethod: GET,
+      Path: /{version}/notifications/email/campaigns,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/notifications/email/campaigns,
+        Query: ?databaseIntegrationId={guid}&campaignId={guid}&emailAddress=user%40example.test&templateId={guid}&from=1&to=1&env=test-env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        }
+      },
+      ResponseType: GetEmailCampaignsResponse,
+      Response: {
+        List: {
+          Items: [
+            {}
+          ],
+          HasMore: false,
+          HasPrevious: false,
+          StartingAfter: cursor-start,
+          EndingBefore: cursor-end
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: notifications,
+      MethodName: GetEmailCampaignStatisticsAsync,
+      RequestType: GetEmailCampaignStatistics,
+      HttpMethod: GET,
+      Path: /{version}/notifications/email/campaigns/{id}/stats,
+      PathParams: [
+        id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/notifications/email/campaigns/{guid}/stats,
+        Query: ?databaseIntegrationId={guid}&env=test-env,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        }
+      },
+      ResponseType: GetEmailCampaignStatisticsResponse,
+      Response: {
+        Stats: {
+          Batches: 7,
+          Sent: 7,
+          Failed: 7,
+          FailedRetryable: 7,
+          Cancelled: 7,
+          Blocked: 7,
+          InProgress: 7,
+          RemovedRecipients: 7
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: notifications,
+      MethodName: PreviewEmailNotificationAsync,
+      RequestType: PreviewEmailNotification,
+      HttpMethod: GET,
+      Path: /{version}/notifications/email/preview,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/notifications/email/preview,
+        Query: ?hash=test-hash&notificationId={guid},
+        Headers: {
+          Authorization: Bearer test-bearer,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        }
+      },
+      ResponseType: PreviewEmailNotificationResponse,
+      Response: {
+        Subject: test-subject,
+        Body: test-body,
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: notifications,
+      MethodName: RetryFailedEmailNotificationsAsync,
+      RequestType: RetryFailedEmailNotificationsRequest,
+      HttpMethod: POST,
+      Path: /{version}/notifications/email/campaigns/{Id}/retry-failed,
+      PathParams: [
+        Id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/notifications/email/campaigns/{guid}/retry-failed,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        },
+        Body: {
+          databaseIntegrationId: Guid_1,
+          idempotencyKey: test-idempotencyKey,
+          notificationIds: [
+            test-string
+          ],
+          includeAmbiguous: true,
+          categories: [
+            test-string
+          ],
+          env: test-env
+        }
+      },
+      ResponseType: RetryFailedEmailNotificationsResponse,
+      Response: {
+        RetryRequestId: Guid_1,
+        Selected: 7,
+        Skipped: {
+          sample-key: 7
+        },
+        Replayed: true,
+        Warning: test-warning,
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: notifications,
+      MethodName: StopEmailCampaignAsync,
+      RequestType: StopEmailCampaignRequest,
+      HttpMethod: POST,
+      Path: /{version}/notifications/email/campaigns/{Id}/stop,
+      PathParams: [
+        Id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/notifications/email/campaigns/{guid}/stop,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        },
+        Body: {
+          databaseIntegrationId: Guid_1,
+          env: test-env
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: notifications,
+      MethodName: GetEmailCampaignMessagesAsync,
+      RequestType: GetEmailCampaignMessagesRequest,
+      HttpMethod: GET,
+      Path: /{version}/notifications/emails/campaigns/{campaignId}/messages,
+      PathParams: [
+        campaignId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/notifications/emails/campaigns/{guid}/messages,
+        Query: ?campaignBatchId={guid}&databaseIntegrationId={guid}&env=test-env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        }
+      },
+      ResponseType: GetEmailCampaignMessagesResponse,
+      Response: {
+        List: {
+          Items: [
+            {}
+          ],
+          HasMore: false,
+          HasPrevious: false,
+          StartingAfter: cursor-start,
+          EndingBefore: cursor-end
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: notifications,
       MethodName: GetNotificationInboxAsync,
       RequestType: GetNotificationInboxRequest,
       HttpMethod: GET,
@@ -352,6 +813,996 @@
       },
       ResponseType: MarkNotificationReadResponse,
       Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: notifications,
+      MethodName: CreatePushCampaignAsync,
+      RequestType: CreatePushCampaignRequest,
+      HttpMethod: POST,
+      Path: /{version}/notifications/push/campaigns,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/notifications/push/campaigns,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        },
+        Body: {
+          campaign: {
+            source: allUsers,
+            templateId: Guid_1,
+            integrationId: Guid_1,
+            language: test-language,
+            initiatorId: Guid_1,
+            notes: test-notes,
+            campaignTime: 1.0
+          },
+          databaseIntegrationId: Guid_1,
+          sendNow: true,
+          env: test-env
+        }
+      },
+      ResponseType: IdResponse,
+      Response: {
+        Id: Guid_1,
+        Status: test-status,
+        Warnings: [
+          test-string
+        ],
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: notifications,
+      MethodName: DeletePushCampaignAsync,
+      RequestType: DeletePushCampaignRequest,
+      HttpMethod: DELETE,
+      Path: /{version}/notifications/push/campaigns/{Id},
+      PathParams: [
+        Id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: DELETE,
+        Path: /v2/notifications/push/campaigns/{guid},
+        Query: ?databaseIntegrationId={guid}&env=test-env,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: notifications,
+      MethodName: GetPushCampaignAsync,
+      RequestType: GetPushCampaign,
+      HttpMethod: GET,
+      Path: /{version}/notifications/push/campaigns/{id},
+      PathParams: [
+        id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/notifications/push/campaigns/{guid},
+        Query: ?databaseIntegrationId={guid}&env=test-env,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        }
+      },
+      ResponseType: GetPushCampaignResponse,
+      Response: {
+        Item: {
+          Recipients: {},
+          Template: {
+            IsActive: false
+          },
+          ViewId: Guid_1,
+          CreatedOn: DateTime_1,
+          Language: test-language,
+          ForceCampaignLanguage: true,
+          CampaignProcessingIntegrationId: Guid_1
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: notifications,
+      MethodName: GetPushCampaignAudienceCountAsync,
+      RequestType: GetPushCampaignAudienceCountRequest,
+      HttpMethod: POST,
+      Path: /{version}/notifications/push/campaigns/audience-count,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/notifications/push/campaigns/audience-count,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        },
+        Body: {
+          campaign: {
+            source: allUsers,
+            templateId: Guid_1,
+            integrationId: Guid_1,
+            language: test-language,
+            initiatorId: Guid_1,
+            notes: test-notes,
+            campaignTime: 1.0
+          },
+          databaseIntegrationId: Guid_1,
+          env: test-env
+        }
+      },
+      ResponseType: GetPushCampaignAudienceCountResponse,
+      Response: {
+        Result: {
+          Devices: 7,
+          Recipients: 7,
+          SkippedUserIds: 7,
+          IsCapped: true
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: notifications,
+      MethodName: GetPushCampaignBatchesAsync,
+      RequestType: GetPushCampaignBatches,
+      HttpMethod: GET,
+      Path: /{version}/notifications/push/campaigns/{id}/batches,
+      PathParams: [
+        id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/notifications/push/campaigns/{guid}/batches,
+        Query: ?databaseIntegrationId={guid}&batchId={guid}&env=test-env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        }
+      },
+      ResponseType: GetPushCampaignBatchesResponse,
+      Response: {
+        List: {
+          Items: [
+            {}
+          ],
+          HasMore: false,
+          HasPrevious: false,
+          StartingAfter: cursor-start,
+          EndingBefore: cursor-end
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: notifications,
+      MethodName: GetPushCampaignBatchNotificationAsync,
+      RequestType: GetPushCampaignBatchNotification,
+      HttpMethod: GET,
+      Path: /{version}/notifications/push/campaigns/{id}/batches/{batchId}/{notificationId},
+      PathParams: [
+        id,
+        batchId,
+        notificationId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/notifications/push/campaigns/{guid}/batches/{guid}/{guid},
+        Query: ?databaseIntegrationId={guid}&env=test-env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        }
+      },
+      ResponseType: GetPushCampaignBatchNotificationResponse,
+      Response: {
+        CampaignNotification: {
+          Subject: test-subject,
+          Recipients: {
+            HasMore: false
+          },
+          Content: {},
+          ReadBy: [
+            {}
+          ],
+          CampaignId: Guid_1,
+          BatchId: Guid_1,
+          NotificationId: Guid_1,
+          RefNotificationId: Guid_1
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: notifications,
+      MethodName: GetPushCampaignBatchNotificationsAsync,
+      RequestType: GetPushCampaignBatchNotifications,
+      HttpMethod: GET,
+      Path: /{version}/notifications/push/campaigns/{id}/batches/{batchId},
+      PathParams: [
+        id,
+        batchId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/notifications/push/campaigns/{guid}/batches/{guid},
+        Query: ?databaseIntegrationId={guid}&env=test-env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        }
+      },
+      ResponseType: GetPushCampaignBatchNotificationsResponse,
+      Response: {
+        BatchStatusHistory: [
+          {}
+        ],
+        List: {
+          Items: [
+            {}
+          ],
+          HasMore: false,
+          HasPrevious: false,
+          StartingAfter: cursor-start,
+          EndingBefore: cursor-end
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: notifications,
+      MethodName: GetPushCampaignsAsync,
+      RequestType: GetPushCampaigns,
+      HttpMethod: GET,
+      Path: /{version}/notifications/push/campaigns,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/notifications/push/campaigns,
+        Query: ?databaseIntegrationId={guid}&templateId={guid}&from=1&to=1&env=test-env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        }
+      },
+      ResponseType: GetPushCampaignsResponse,
+      Response: {
+        List: {
+          Items: [
+            {
+              ForceCampaignLanguage: false
+            }
+          ],
+          HasMore: false,
+          HasPrevious: false,
+          StartingAfter: cursor-start,
+          EndingBefore: cursor-end
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: notifications,
+      MethodName: GetPushCampaignStatisticsAsync,
+      RequestType: GetPushCampaignStatistics,
+      HttpMethod: GET,
+      Path: /{version}/notifications/push/campaigns/{id}/stats,
+      PathParams: [
+        id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/notifications/push/campaigns/{guid}/stats,
+        Query: ?databaseIntegrationId={guid}&env=test-env,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        }
+      },
+      ResponseType: GetPushCampaignStatisticsResponse,
+      Response: {
+        Stats: {
+          Batches: 7,
+          Sent: 7,
+          Failed: 7,
+          FailedRetryable: 7,
+          Cancelled: 7,
+          Blocked: 7,
+          InProgress: 7,
+          RemovedRecipients: 7
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: notifications,
+      MethodName: PreviewPushNotificationAsync,
+      RequestType: PreviewPushNotification,
+      HttpMethod: GET,
+      Path: /{version}/notifications/push/preview,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/notifications/push/preview,
+        Query: ?hash=test-hash&notificationId={guid},
+        Headers: {
+          Authorization: Bearer test-bearer,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        }
+      },
+      ResponseType: PreviewPushNotificationResponse,
+      Response: {
+        Title: test-title,
+        Body: test-body,
+        Subtitle: test-subtitle,
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: notifications,
+      MethodName: RetryFailedPushNotificationsAsync,
+      RequestType: RetryFailedPushNotificationsRequest,
+      HttpMethod: POST,
+      Path: /{version}/notifications/push/campaigns/{Id}/retry-failed,
+      PathParams: [
+        Id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/notifications/push/campaigns/{guid}/retry-failed,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        },
+        Body: {
+          databaseIntegrationId: Guid_1,
+          idempotencyKey: test-idempotencyKey,
+          notificationIds: [
+            test-string
+          ],
+          includeAmbiguous: true,
+          categories: [
+            test-string
+          ],
+          env: test-env
+        }
+      },
+      ResponseType: RetryFailedPushNotificationsResponse,
+      Response: {
+        RetryRequestId: Guid_1,
+        Selected: 7,
+        Skipped: {
+          sample-key: 7
+        },
+        Replayed: true,
+        Warning: test-warning,
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: notifications,
+      MethodName: StopPushCampaignAsync,
+      RequestType: StopPushCampaignRequest,
+      HttpMethod: POST,
+      Path: /{version}/notifications/push/campaigns/{Id}/stop,
+      PathParams: [
+        Id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/notifications/push/campaigns/{guid}/stop,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        },
+        Body: {
+          databaseIntegrationId: Guid_1,
+          env: test-env
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: notifications,
+      MethodName: GetPushCampaignMessagesAsync,
+      RequestType: GetPushCampaignMessagesRequest,
+      HttpMethod: GET,
+      Path: /{version}/notifications/push/campaigns/{campaignId}/messages,
+      PathParams: [
+        campaignId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/notifications/push/campaigns/{guid}/messages,
+        Query: ?campaignBatchId={guid}&databaseIntegrationId={guid}&env=test-env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        }
+      },
+      ResponseType: GetPushCampaignMessagesResponse,
+      Response: {
+        List: {
+          Items: [
+            {}
+          ],
+          HasMore: false,
+          HasPrevious: false,
+          StartingAfter: cursor-start,
+          EndingBefore: cursor-end
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: notifications,
+      MethodName: CreateSmsCampaignAsync,
+      RequestType: CreateSmsCampaignRequest,
+      HttpMethod: POST,
+      Path: /{version}/notifications/sms/campaigns,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/notifications/sms/campaigns,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        },
+        Body: {
+          templateId: Guid_1,
+          databaseIntegrationId: Guid_1,
+          integrationId: Guid_1,
+          language: test-language,
+          initiatorId: Guid_1,
+          deliveryType: allUsers,
+          allUsers: {
+            recipientsSourceType: allUsers,
+            campaignTime: 1.0,
+            respectTimeZoneSettings: respectToLastLoginZone
+          },
+          specifiedUsers: {
+            recipientsSourceType: allUsers,
+            campaignTime: 1.0,
+            respectTimeZoneSettings: respectToLastLoginZone
+          },
+          accountUsers: {
+            recipientsSourceType: allUsers,
+            campaignTime: 1.0,
+            respectTimeZoneSettings: respectToLastLoginZone
+          },
+          collection: {
+            fieldType: user,
+            schemaName: test-schemaName,
+            recipientsSourceType: allUsers
+          },
+          phoneNumbers: {
+            recipientsSourceType: allUsers,
+            campaignTime: 1.0,
+            respectTimeZoneSettings: respectToLastLoginZone
+          },
+          sendNow: true,
+          env: test-env
+        }
+      },
+      ResponseType: IdResponse,
+      Response: {
+        Id: Guid_1,
+        Status: test-status,
+        Warnings: [
+          test-string
+        ],
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: notifications,
+      MethodName: DeleteSmsCampaignAsync,
+      RequestType: DeleteSmsCampaign,
+      HttpMethod: DELETE,
+      Path: /{version}/notifications/sms/campaigns/{id},
+      PathParams: [
+        id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: DELETE,
+        Path: /v2/notifications/sms/campaigns/{guid},
+        Query: ?databaseIntegrationId={guid}&env=test-env,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: notifications,
+      MethodName: GetSmsCampaignAsync,
+      RequestType: GetSmsCampaign,
+      HttpMethod: GET,
+      Path: /{version}/notifications/sms/campaigns/{id},
+      PathParams: [
+        id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/notifications/sms/campaigns/{guid},
+        Query: ?databaseIntegrationId={guid}&env=test-env,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        }
+      },
+      ResponseType: GetSmsCampaignResponse,
+      Response: {
+        SmsCampaign: {
+          Recipients: {},
+          Template: {
+            IsActive: false
+          },
+          ViewId: Guid_1,
+          CreatedOn: DateTime_1,
+          Language: test-language,
+          ForceCampaignLanguage: true,
+          CampaignProcessingIntegrationId: Guid_1
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: notifications,
+      MethodName: GetSmsCampaignBatchesAsync,
+      RequestType: GetSmsCampaignBatches,
+      HttpMethod: GET,
+      Path: /{version}/notifications/sms/campaigns/{id}/batches,
+      PathParams: [
+        id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/notifications/sms/campaigns/{guid}/batches,
+        Query: ?databaseIntegrationId={guid}&env=test-env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        }
+      },
+      ResponseType: GetSmsCampaignBatchesResponse,
+      Response: {
+        List: {
+          Items: [
+            {}
+          ],
+          HasMore: false,
+          HasPrevious: false,
+          StartingAfter: cursor-start,
+          EndingBefore: cursor-end
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: notifications,
+      MethodName: GetSmsCampaignBatchNotificationAsync,
+      RequestType: GetSmsCampaignBatchNotification,
+      HttpMethod: GET,
+      Path: /{version}/notifications/sms/campaigns/{id}/batches/{batchId}/{notificationId},
+      PathParams: [
+        id,
+        batchId,
+        notificationId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/notifications/sms/campaigns/{guid}/batches/{guid}/{guid},
+        Query: ?databaseIntegrationId={guid}&env=test-env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        }
+      },
+      ResponseType: GetSmsCampaignBatchNotificationResponse,
+      Response: {
+        CampaignNotification: {
+          Recipients: {
+            HasMore: false
+          },
+          Content: {},
+          CampaignId: Guid_1,
+          BatchId: Guid_1,
+          NotificationId: Guid_1,
+          RefNotificationId: Guid_1,
+          Body: test-body,
+          Model: {
+            sample-key: test-string
+          }
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: notifications,
+      MethodName: GetSmsCampaignBatchNotificationsAsync,
+      RequestType: GetSmsCampaignBatchNotifications,
+      HttpMethod: GET,
+      Path: /{version}/notifications/sms/campaigns/{id}/batches/{batchId},
+      PathParams: [
+        id,
+        batchId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/notifications/sms/campaigns/{guid}/batches/{guid},
+        Query: ?databaseIntegrationId={guid}&env=test-env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        }
+      },
+      ResponseType: GetSmsCampaignBatchNotificationsResponse,
+      Response: {
+        BatchStatusHistory: [
+          {}
+        ],
+        List: {
+          Items: [
+            {}
+          ],
+          HasMore: false,
+          HasPrevious: false,
+          StartingAfter: cursor-start,
+          EndingBefore: cursor-end
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: notifications,
+      MethodName: GetSmsCampaignsAsync,
+      RequestType: GetSmsCampaigns,
+      HttpMethod: GET,
+      Path: /{version}/notifications/sms/campaigns,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/notifications/sms/campaigns,
+        Query: ?databaseIntegrationId={guid}&campaignId={guid}&templateId={guid}&from=1&to=1&env=test-env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        }
+      },
+      ResponseType: GetSmsCampaignsResponse,
+      Response: {
+        List: {
+          Items: [
+            {
+              ForceCampaignLanguage: false
+            }
+          ],
+          HasMore: false,
+          HasPrevious: false,
+          StartingAfter: cursor-start,
+          EndingBefore: cursor-end
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: notifications,
+      MethodName: GetSmsCampaignStatisticsAsync,
+      RequestType: GetSmsCampaignStatistics,
+      HttpMethod: GET,
+      Path: /{version}/notifications/sms/campaigns/{id}/stats,
+      PathParams: [
+        id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/notifications/sms/campaigns/{guid}/stats,
+        Query: ?databaseIntegrationId={guid}&env=test-env,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        }
+      },
+      ResponseType: GetSmsCampaignStatisticsResponse,
+      Response: {
+        Stats: {
+          Batches: 7,
+          Sent: 7,
+          Failed: 7,
+          FailedRetryable: 7,
+          Cancelled: 7,
+          Blocked: 7,
+          InProgress: 7,
+          RemovedRecipients: 7
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: notifications,
+      MethodName: PreviewSmsNotificationAsync,
+      RequestType: PreviewSmsNotification,
+      HttpMethod: GET,
+      Path: /{version}/notifications/sms/preview,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/notifications/sms/preview,
+        Query: ?hash=test-hash&notificationId={guid},
+        Headers: {
+          Authorization: Bearer test-bearer,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        }
+      },
+      ResponseType: PreviewSmsNotificationResponse,
+      Response: {
+        Body: test-body,
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: notifications,
+      MethodName: RetryFailedSmsNotificationsAsync,
+      RequestType: RetryFailedSmsNotificationsRequest,
+      HttpMethod: POST,
+      Path: /{version}/notifications/sms/campaigns/{Id}/retry-failed,
+      PathParams: [
+        Id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/notifications/sms/campaigns/{guid}/retry-failed,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        },
+        Body: {
+          databaseIntegrationId: Guid_1,
+          idempotencyKey: test-idempotencyKey,
+          notificationIds: [
+            test-string
+          ],
+          includeAmbiguous: true,
+          categories: [
+            test-string
+          ],
+          env: test-env
+        }
+      },
+      ResponseType: RetryFailedSmsNotificationsResponse,
+      Response: {
+        RetryRequestId: Guid_1,
+        Selected: 7,
+        Skipped: {
+          sample-key: 7
+        },
+        Replayed: true,
+        Warning: test-warning,
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: notifications,
+      MethodName: StopSmsCampaignAsync,
+      RequestType: StopSmsCampaignRequest,
+      HttpMethod: POST,
+      Path: /{version}/notifications/sms/campaigns/{Id}/stop,
+      PathParams: [
+        Id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/notifications/sms/campaigns/{guid}/stop,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        },
+        Body: {
+          databaseIntegrationId: Guid_1,
+          env: test-env
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: notifications,
+      MethodName: GetSmsCampaignMessagesAsync,
+      RequestType: GetSmsCampaignMessagesRequest,
+      HttpMethod: GET,
+      Path: /{version}/notifications/sms/campaigns/{campaignId}/messages,
+      PathParams: [
+        campaignId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/notifications/sms/campaigns/{guid}/messages,
+        Query: ?campaignBatchId={guid}&databaseIntegrationId={guid}&env=test-env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        }
+      },
+      ResponseType: GetSmsCampaignMessagesResponse,
+      Response: {
+        List: {
+          Items: [
+            {}
+          ],
+          HasMore: false,
+          HasPrevious: false,
+          StartingAfter: cursor-start,
+          EndingBefore: cursor-end
+        },
         ResponseStatus: {
           IsSuccess: true
         }
