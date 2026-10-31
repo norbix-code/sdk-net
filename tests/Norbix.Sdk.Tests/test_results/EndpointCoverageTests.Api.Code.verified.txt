@@ -1,8 +1,168 @@
 ﻿{
   Target: Api,
   Group: code,
-  Count: 4,
+  Count: 10,
   Endpoints: [
+    {
+      Target: Api,
+      Group: code,
+      MethodName: CancelCodeWorkflowRunAsync,
+      RequestType: CancelCodeWorkflowRun,
+      HttpMethod: POST,
+      Path: /{version}/code/workflows/runs/{RunId}/cancel,
+      PathParams: [
+        RunId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/code/workflows/runs/{guid}/cancel,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        },
+        Body: {
+          reason: test-reason,
+          env: test-env
+        }
+      },
+      ResponseType: WorkflowRunResponse,
+      Response: {
+        Run: {
+          RunId: Guid_1,
+          WorkflowId: Guid_1,
+          Version: 7,
+          IsDraft: true,
+          Status: test-status,
+          Source: test-source,
+          StartedBy: {},
+          TriggerId: Guid_1
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: code,
+      MethodName: GetCodeWorkflowRunAsync,
+      RequestType: GetCodeWorkflowRun,
+      HttpMethod: GET,
+      Path: /{version}/code/workflows/runs/{RunId},
+      PathParams: [
+        RunId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/code/workflows/runs/{guid},
+        Query: ?env=test-env,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        }
+      },
+      ResponseType: WorkflowRunResponse,
+      Response: {
+        Run: {
+          RunId: Guid_1,
+          WorkflowId: Guid_1,
+          Version: 7,
+          IsDraft: true,
+          Status: test-status,
+          Source: test-source,
+          StartedBy: {},
+          TriggerId: Guid_1
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: code,
+      MethodName: GetCodeWorkflowRunLogsAsync,
+      RequestType: GetCodeWorkflowRunLogs,
+      HttpMethod: GET,
+      Path: /{version}/code/workflows/runs/{RunId}/logs,
+      PathParams: [
+        RunId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/code/workflows/runs/{guid}/logs,
+        Query: ?stepId={guid}&level=test-level&env=test-env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        }
+      },
+      ResponseType: WorkflowRunLogsResponse,
+      Response: {
+        List: {
+          Items: [
+            {}
+          ],
+          HasMore: false,
+          HasPrevious: false,
+          StartingAfter: cursor-start,
+          EndingBefore: cursor-end
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: code,
+      MethodName: GetCodeWorkflowRunsAsync,
+      RequestType: GetCodeWorkflowRuns,
+      HttpMethod: GET,
+      Path: /{version}/code/workflows/{Id}/runs,
+      PathParams: [
+        Id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/code/workflows/{guid}/runs,
+        Query: ?status=test-status&from=2026-04-27T12%3a00%3a00.0000000Z&to=2026-04-27T12%3a00%3a00.0000000Z&env=test-env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        }
+      },
+      ResponseType: WorkflowRunsResponse,
+      Response: {
+        List: {
+          Items: [
+            {
+              IsDraft: false
+            }
+          ],
+          HasMore: false,
+          HasPrevious: false,
+          StartingAfter: cursor-start,
+          EndingBefore: cursor-end
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
     {
       Target: Api,
       Group: code,
@@ -105,6 +265,97 @@
           payload: {
             test-key: null
           },
+          env: test-env
+        }
+      },
+      ResponseType: WorkflowRunResponse,
+      Response: {
+        Run: {
+          RunId: Guid_1,
+          WorkflowId: Guid_1,
+          Version: 7,
+          IsDraft: true,
+          Status: test-status,
+          Source: test-source,
+          StartedBy: {},
+          TriggerId: Guid_1
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: code,
+      MethodName: ResumeCodeWorkflowRunByKeyAsync,
+      RequestType: ResumeCodeWorkflowRunByKey,
+      HttpMethod: POST,
+      Path: /{version}/code/workflows/{Id}/resume,
+      PathParams: [
+        Id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/code/workflows/{guid}/resume,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        },
+        Body: {
+          key: test-key,
+          stepId: Guid_1,
+          decision: test-decision,
+          payload: {
+            test-key: null
+          },
+          env: test-env
+        }
+      },
+      ResponseType: WorkflowRunResponse,
+      Response: {
+        Run: {
+          RunId: Guid_1,
+          WorkflowId: Guid_1,
+          Version: 7,
+          IsDraft: true,
+          Status: test-status,
+          Source: test-source,
+          StartedBy: {},
+          TriggerId: Guid_1
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: code,
+      MethodName: RetryCodeWorkflowRunStepAsync,
+      RequestType: RetryCodeWorkflowRunStep,
+      HttpMethod: POST,
+      Path: /{version}/code/workflows/runs/{RunId}/retry,
+      PathParams: [
+        RunId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/code/workflows/runs/{guid}/retry,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        },
+        Body: {
+          stepId: Guid_1,
           env: test-env
         }
       },

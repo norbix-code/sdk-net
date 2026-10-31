@@ -1,7 +1,7 @@
 ﻿{
   Target: Api,
   Group: membership,
-  Count: 44,
+  Count: 55,
   Endpoints: [
     {
       Target: Api,
@@ -1664,6 +1664,390 @@
         Warnings: [
           test-string
         ],
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: membership,
+      MethodName: CreateContactAsync,
+      RequestType: CreateContactRequest,
+      HttpMethod: POST,
+      Path: /{version}/membership/users,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/membership/users,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        },
+        Body: {
+          primaryEmail: user@example.test,
+          primaryPhone: test-primaryPhone,
+          displayName: test-displayName,
+          firstName: test-firstName,
+          lastName: test-lastName,
+          tags: [
+            test-string
+          ],
+          env: test-env
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: membership,
+      MethodName: DeleteContactAsync,
+      RequestType: DeleteContact,
+      HttpMethod: DELETE,
+      Path: /{version}/membership/users/{contactId},
+      PathParams: [
+        contactId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: DELETE,
+        Path: /v2/membership/users/{guid},
+        Query: ?env=test-env,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: membership,
+      MethodName: GetAllContactsAsync,
+      RequestType: GetAllContacts,
+      HttpMethod: GET,
+      Path: /{version}/membership/users,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/membership/users,
+        Query: ?startingAfter=test-startingAfter&pageSize=1&search=test-search&email=user%40example.test&userName=test-userName&statuses=test-string&types=test-string&roleNames=test-string&env=test-env,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        }
+      },
+      ResponseType: GetAllContactsResponse,
+      Response: {
+        Items: [
+          {}
+        ],
+        NextCursor: test-nextCursor,
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: membership,
+      MethodName: GetContactAsync,
+      RequestType: GetContact,
+      HttpMethod: GET,
+      Path: /{version}/membership/users/{contactId},
+      PathParams: [
+        contactId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/membership/users/{guid},
+        Query: ?env=test-env,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        }
+      },
+      ResponseType: GetContactResponse,
+      Response: {
+        Item: {
+          Id: Guid_1,
+          ProjectId: Guid_1,
+          PrimaryEmail: user@example.test,
+          PrimaryPhone: test-primaryPhone,
+          DisplayName: test-displayName,
+          FirstName: test-firstName,
+          LastName: test-lastName,
+          FullName: test-fullName
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: membership,
+      MethodName: MergeContactsAsync,
+      RequestType: MergeContactsRequest,
+      HttpMethod: POST,
+      Path: /{version}/membership/users/merge,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/membership/users/merge,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        },
+        Body: {
+          survivorId: Guid_1,
+          mergedIds: [
+            test-string
+          ],
+          env: test-env
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: membership,
+      MethodName: RepairContactRolesAsync,
+      RequestType: RepairContactRolesRequest,
+      HttpMethod: POST,
+      Path: /{version}/membership/users/repair-roles,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/membership/users/repair-roles,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        },
+        Body: {
+          dryRun: true,
+          env: test-env
+        }
+      },
+      ResponseType: RepairContactRolesResponse,
+      Response: {
+        Result: {
+          dryRun: true,
+          contactsWithoutRoles: 7,
+          contactsToRepair: 7,
+          contactsRepaired: 7,
+          contactsWithoutLoginRoleIds: 7,
+          legacyRoleNamesIgnored: 7
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: membership,
+      MethodName: SetUserAiPlanAsync,
+      RequestType: SetUserAiPlan,
+      HttpMethod: PUT,
+      Path: /{version}/membership/users/{userId}/ai-plan,
+      PathParams: [
+        userId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: PUT,
+        Path: /v2/membership/users/{guid}/ai-plan,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        },
+        Body: {
+          planId: Guid_1,
+          databaseIntegrationId: Guid_1,
+          env: test-env
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: membership,
+      MethodName: UpdateContactAsync,
+      RequestType: UpdateContactRequest,
+      HttpMethod: PATCH,
+      Path: /{version}/membership/users/{contactId},
+      PathParams: [
+        contactId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: PATCH,
+        Path: /v2/membership/users/{guid},
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        },
+        Body: {
+          displayName: test-displayName,
+          firstName: test-firstName,
+          lastName: test-lastName,
+          fullName: test-fullName,
+          company: test-company,
+          notes: test-notes,
+          gender: test-gender,
+          birthDate: 1.0,
+          timeZone: test-timeZone,
+          language: test-language,
+          addressLine1: test-addressLine1,
+          addressLine2: test-addressLine2,
+          country: test-country,
+          city: test-city,
+          state: test-state,
+          postalCode: test-postalCode,
+          env: test-env
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: membership,
+      MethodName: AddContactIdentityAsync,
+      RequestType: AddContactIdentityRequest,
+      HttpMethod: POST,
+      Path: /{version}/membership/users/{contactId}/identities,
+      PathParams: [
+        contactId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/membership/users/{guid}/identities,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        },
+        Body: {
+          authId: Guid_1,
+          env: test-env
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: membership,
+      MethodName: PromoteContactIdentityAsync,
+      RequestType: PromoteContactIdentityRequest,
+      HttpMethod: POST,
+      Path: /{version}/membership/users/{contactId}/identities/{authId}/promote,
+      PathParams: [
+        contactId,
+        authId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/membership/users/{guid}/identities/{guid}/promote,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        },
+        Body: {
+          env: test-env
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: membership,
+      MethodName: RemoveContactIdentityAsync,
+      RequestType: RemoveContactIdentityRequest,
+      HttpMethod: DELETE,
+      Path: /{version}/membership/users/{contactId}/identities/{authId},
+      PathParams: [
+        contactId,
+        authId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: DELETE,
+        Path: /v2/membership/users/{guid}/identities/{guid},
+        Query: ?env=test-env,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
         ResponseStatus: {
           IsSuccess: true
         }

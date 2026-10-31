@@ -292,6 +292,7 @@
           description: test-description,
           cron: test-cron,
           initiatorUserId: Guid_1,
+          executionIdentityId: Guid_1,
           isEnabled: true,
           stopOnError: true,
           endsAtUnix: 1.0,

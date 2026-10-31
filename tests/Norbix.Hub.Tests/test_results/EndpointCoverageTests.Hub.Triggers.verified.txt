@@ -1,8 +1,55 @@
 ﻿{
   Target: Hub,
   Group: triggers,
-  Count: 3,
+  Count: 4,
   Endpoints: [
+    {
+      Target: Hub,
+      Group: triggers,
+      MethodName: CheckTriggerExecutionIdentityAsync,
+      RequestType: CheckTriggerExecutionIdentityRequest,
+      HttpMethod: POST,
+      Path: /{version}/triggers/execution-identity/check,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/triggers/execution-identity/check,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        },
+        Body: {
+          triggerType: membership,
+          executionIdentityId: Guid_1,
+          action: {
+            type: code,
+            integrationId: Guid_1
+          },
+          env: test-env
+        }
+      },
+      ResponseType: CheckTriggerExecutionIdentityResponse,
+      Response: {
+        ExecutionIdentityId: Guid_1,
+        IsDefault: true,
+        CanAssign: true,
+        MissingPermissions: [
+          test-string
+        ],
+        CallerMissingPermissions: [
+          test-string
+        ],
+        Refusals: [
+          {}
+        ],
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
     {
       Target: Hub,
       Group: triggers,
