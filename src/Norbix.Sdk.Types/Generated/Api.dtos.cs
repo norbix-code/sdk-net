@@ -96,6 +96,7 @@ namespace Norbix.Sdk.Types.Api;
     {
         Accepted,
         Failed,
+        Blocked,
     }
 
     public enum NotificationAttemptTrigger
