@@ -5425,7 +5425,7 @@ namespace Norbix.Sdk.Types.Api;
         public virtual string? Status { get; set; }
 
         ///<summary>
-        ///approval | event | delay
+        ///approval | event | delay | child
         ///</summary>
         [DataMember]
         public virtual string? WaitingKind { get; set; }
