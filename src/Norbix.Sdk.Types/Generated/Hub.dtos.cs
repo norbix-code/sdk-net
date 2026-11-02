@@ -1031,6 +1031,8 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual WorkflowSchedulerTaskRequest? Typegen_309_WorkflowSchedulerTaskRequest { get; set; }
         public virtual AwsCloudWatchLoggingIntegrationRequest? Typegen_285_AwsCloudWatchLoggingIntegrationRequest { get; set; }
         public virtual AwsCloudWatchLoggingIntegrationDto? Typegen_286_AwsCloudWatchLoggingIntegrationDto { get; set; }
+        public virtual AzureMonitorLogsLoggingIntegrationRequest? Typegen_324_AzureMonitorLogsLoggingIntegrationRequest { get; set; }
+        public virtual AzureMonitorLogsLoggingIntegrationDto? Typegen_325_AzureMonitorLogsLoggingIntegrationDto { get; set; }
         public virtual GetQuickConnectProviders? Typegen_310_GetQuickConnectProviders { get; set; }
         public virtual StartPaymentsIntegrationConnect? Typegen_311_StartPaymentsIntegrationConnect { get; set; }
         public virtual GetIntegrationConnectTargets? Typegen_312_GetIntegrationConnectTargets { get; set; }
@@ -5196,7 +5198,7 @@ namespace Norbix.Sdk.Types.Hub;
     public partial class WorkflowDefinitionDto
     {
         ///<summary>
-        ///The version of this shape: "1".
+        ///Optional: the version of this shape; absent = "1".
         ///</summary>
         [DataMember]
         public virtual string SchemaVersion { get; set; }
@@ -5232,7 +5234,7 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual bool IsEnabled { get; set; }
 
         ///<summary>
-        ///usr_… — the service user every step runs as (the execution identity). Optional: absent = the env's default identity; until that exists the save is refused CM-ERRORS-WORKFLOWS-009.
+        ///usr_… — the service user every step runs as (the execution identity). Optional: absent = the env's default identity "Project triggers"; the caller then needs what every step needs. Naming another one needs membership:assign on it.
         ///</summary>
         [DataMember]
         public virtual string? ExecutionIdentityId { get; set; }
@@ -5353,6 +5355,18 @@ namespace Norbix.Sdk.Types.Hub;
         ///</summary>
         [DataMember]
         public virtual int? MaxDepth { get; set; }
+
+        ///<summary>
+        ///Elements one foreach accepts; a longer list fails the step. Default 100, cap 1000.
+        ///</summary>
+        [DataMember]
+        public virtual int? MaxForeachItems { get; set; }
+
+        ///<summary>
+        ///Elements of one foreach queued or running at once; default 5, cap 20.
+        ///</summary>
+        [DataMember]
+        public virtual int? MaxForeachConcurrency { get; set; }
     }
 
     [DataContract]
@@ -5588,6 +5602,12 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual string? Name { get; set; }
 
         [DataMember]
+        public virtual string? ForeachStepId { get; set; }
+
+        [DataMember]
+        public virtual int? ItemIndex { get; set; }
+
+        [DataMember]
         public virtual string Status { get; set; }
 
         [DataMember]
@@ -5663,7 +5683,7 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual string Id { get; set; }
 
         ///<summary>
-        ///email.send | sms.send | push.send | code.invoke | webhook.call | sse.publish | marketplace.invoke | condition | transform | log | delay | wait | parallel | join | workflow.start
+        ///email.send | sms.send | push.send | code.invoke | webhook.call | sse.publish | marketplace.invoke | condition | transform | log | delay | wait | parallel | join | workflow.start | database.find | database.insert | database.update | database.replace | database.delete | ai.invoke | foreach
         ///</summary>
         [DataMember]
         public virtual string Kind { get; set; }
@@ -5720,7 +5740,7 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual Dictionary<string, Object>? Action { get; set; }
 
         ///<summary>
-        ///Flow kinds: expression | level, message, meta | seconds, until | mode, key, inputs, assignees, timeoutSeconds | branches, join | mode | workflowRef, payload.
+        ///Flow kinds: expression | level, message, meta | seconds, until | mode, key, inputs, assignees, timeoutSeconds | branches, join | mode | workflowRef, payload | items, body, concurrency.
         ///</summary>
         [DataMember]
         public virtual Dictionary<string, Object>? Config { get; set; }
@@ -7339,6 +7359,8 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual string Region { get; set; }
         public virtual string LogGroup { get; set; }
         public virtual string LogStream { get; set; }
+        public virtual CloudAuthMode AuthMode { get; set; }
+        public virtual string? RoleArn { get; set; }
     }
 
     public partial class AwsKinesisLoggingIntegrationDto
@@ -7362,6 +7384,17 @@ namespace Norbix.Sdk.Types.Hub;
     {
         public virtual string BucketName { get; set; }
         public virtual string Region { get; set; }
+    }
+
+    public partial class AzureMonitorLogsLoggingIntegrationDto
+        : LoggingIntegrationDto
+    {
+        public virtual string IngestionEndpoint { get; set; }
+        public virtual string DataCollectionRuleId { get; set; }
+        public virtual string StreamName { get; set; }
+        public virtual string TenantId { get; set; }
+        public virtual string ClientId { get; set; }
+        public virtual CloudAuthMode AuthMode { get; set; }
     }
 
     public partial class AzureOtelLoggingIntegrationDto
@@ -8076,6 +8109,15 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember]
         public virtual Dictionary<string, string[]> BlockedTags { get; set; } = new();
+
+        [DataMember]
+        public virtual string BounceState { get; set; }
+
+        [DataMember]
+        public virtual DateTime? LastBounceAt { get; set; }
+
+        [DataMember]
+        public virtual bool SpamComplaint { get; set; }
     }
 
     [DataContract]
@@ -8471,6 +8513,11 @@ namespace Norbix.Sdk.Types.Hub;
     {
         public virtual string ProjectId { get; set; }
         public virtual string ClientEmail { get; set; }
+        public virtual CloudAuthMode AuthMode { get; set; }
+        public virtual string? ProjectNumber { get; set; }
+        public virtual string? PoolId { get; set; }
+        public virtual string? ProviderId { get; set; }
+        public virtual string? ServiceAccountEmail { get; set; }
     }
 
     public partial class AppleApnsPushIntegrationDto
@@ -8703,6 +8750,11 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual string? MerchantName { get; set; }
         public virtual string? Gateway { get; set; }
         public virtual string? GatewayMerchantId { get; set; }
+        public virtual CloudAuthMode AuthMode { get; set; }
+        public virtual string? ProjectNumber { get; set; }
+        public virtual string? PoolId { get; set; }
+        public virtual string? ProviderId { get; set; }
+        public virtual string? ServiceAccountEmail { get; set; }
     }
 
     public partial class LemonSqueezyPaymentIntegrationDto
@@ -15227,6 +15279,24 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual ProjectComplianceDto? Settings { get; set; }
     }
 
+    ///<summary>
+    ///Clear a contact's hard bounce
+    ///</summary>
+    [NorbixRoute("/{version}/membership/users/{contactId}/marketing-state/{channel}/clear-bounce", "POST")]
+    public partial class ClearContactBounceRequest
+        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
+    {
+        ///<summary>
+        ///The contact id (ct_…) whose hard bounce is cleared.
+        ///</summary>
+        public virtual string ContactId { get; set; }
+
+        ///<summary>
+        ///Delivery channel: Email, Sms, or Push.
+        ///</summary>
+        public virtual string Channel { get; set; }
+    }
+
     [DataContract]
     public partial class ContactRolesRepairDto
     {
@@ -18982,7 +19052,7 @@ namespace Norbix.Sdk.Types.Hub;
         : CodeMashRequestBase, INorbixRequest<GetKeylessIntegrationSetupResponse>
     {
         ///<summary>
-        ///files, email or code.
+        ///files, email, code, logs, push or payments (logs: aws or azure; push and payments: google).
         ///</summary>
         public virtual string Module { get; set; }
 
@@ -19415,8 +19485,30 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual string Region { get; set; }
         public virtual string LogGroup { get; set; }
         public virtual string LogStream { get; set; }
-        public virtual string AccessKey { get; set; }
-        public virtual string SecretKey { get; set; }
+        ///<summary>
+        ///Keyless (the default when omitted; no stored secret) or AccessKey (a stored IAM access key, less secure).
+        ///</summary>
+        public virtual CloudAuthMode? AuthMode { get; set; }
+
+        ///<summary>
+        ///Keyless: the ARN of the role that trusts this integration's Norbix token (arn:aws:iam::<account>:role/<name>).
+        ///</summary>
+        public virtual string? RoleArn { get; set; }
+
+        ///<summary>
+        ///AccessKey: the IAM access key id.
+        ///</summary>
+        public virtual string? AccessKey { get; set; }
+
+        ///<summary>
+        ///AccessKey: the IAM secret access key.
+        ///</summary>
+        public virtual string? SecretKey { get; set; }
+
+        ///<summary>
+        ///AccessKey: true = I accept that Norbix stores this long-lived secret (required with AuthMode AccessKey; may be omitted otherwise).
+        ///</summary>
+        public virtual bool? AcceptKeyRisk { get; set; }
     }
 
     public partial class AwsKinesisLoggingIntegrationRequest
@@ -19440,6 +19532,41 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual string? ExternalId { get; set; }
         public virtual string? AccessKey { get; set; }
         public virtual string? SecretKey { get; set; }
+    }
+
+    public partial class AzureMonitorLogsLoggingIntegrationRequest
+        : LoggingIntegrationRequest
+    {
+        public virtual LoggingProvider Provider { get; set; }
+        ///<summary>
+        ///Keyless, or omit it. This destination has no other mode.
+        ///</summary>
+        public virtual CloudAuthMode? AuthMode { get; set; }
+
+        ///<summary>
+        ///The Entra tenant id of the managed identity.
+        ///</summary>
+        public virtual string? TenantId { get; set; }
+
+        ///<summary>
+        ///The managed identity's client id.
+        ///</summary>
+        public virtual string? ClientId { get; set; }
+
+        ///<summary>
+        ///The data collection rule's logs ingestion endpoint or a data collection endpoint: https://<name>.ingest.monitor.azure.com.
+        ///</summary>
+        public virtual string? IngestionEndpoint { get; set; }
+
+        ///<summary>
+        ///The data collection rule's immutable id: dcr- and 32 hex digits.
+        ///</summary>
+        public virtual string? DataCollectionRuleId { get; set; }
+
+        ///<summary>
+        ///The rule's stream: Custom-<table>_CL.
+        ///</summary>
+        public virtual string? StreamName { get; set; }
     }
 
     public partial class AzureOtelLoggingIntegrationRequest
@@ -20796,12 +20923,45 @@ namespace Norbix.Sdk.Types.Hub;
         : PaymentIntegrationRequest
     {
         public virtual PaymentGatewayPlatform Provider { get; set; }
+        ///<summary>
+        ///Keyless (the default when omitted; no stored secret) or AccessKey (a stored service-account JSON key, less secure).
+        ///</summary>
+        public virtual CloudAuthMode? AuthMode { get; set; }
+
         public virtual string WebhookPackageName { get; set; }
         public virtual string? MerchantId { get; set; }
         public virtual string? MerchantName { get; set; }
         public virtual string? Gateway { get; set; }
+        ///<summary>
+        ///Keyless: the Google Cloud project NUMBER (digits) that holds the workload identity pool.
+        ///</summary>
+        public virtual string? ProjectNumber { get; set; }
+
+        ///<summary>
+        ///Keyless: the workload identity pool id (4–32 lowercase letters, digits and hyphens).
+        ///</summary>
+        public virtual string? PoolId { get; set; }
+
+        ///<summary>
+        ///Keyless: the workload identity pool provider id (4–32 lowercase letters, digits and hyphens).
+        ///</summary>
+        public virtual string? ProviderId { get; set; }
+
+        ///<summary>
+        ///Keyless: the email of the service account Norbix acts as (…@<project>.iam.gserviceaccount.com).
+        ///</summary>
+        public virtual string? ServiceAccountEmail { get; set; }
+
+        ///<summary>
+        ///AccessKey: the service-account JSON key. A Google Pay gateway token may also go here, in either mode.
+        ///</summary>
         public virtual string? PrivateKeyOrToken { get; set; }
+
         public virtual string? GatewayMerchantId { get; set; }
+        ///<summary>
+        ///AccessKey: true = I accept that Norbix stores this long-lived secret (required with AuthMode AccessKey; may be omitted otherwise).
+        ///</summary>
+        public virtual bool? AcceptKeyRisk { get; set; }
     }
 
     public partial class LemonSqueezyPaymentIntegrationRequest
@@ -21741,9 +21901,50 @@ namespace Norbix.Sdk.Types.Hub;
         : PushIntegrationRequest
     {
         public virtual PushProvider Provider { get; set; }
+        ///<summary>
+        ///Keyless (the default when omitted; no stored secret) or AccessKey (a stored service-account JSON key, less secure).
+        ///</summary>
+        public virtual CloudAuthMode? AuthMode { get; set; }
+
+        ///<summary>
+        ///The Firebase project id.
+        ///</summary>
         public virtual string ProjectId { get; set; }
+
+        ///<summary>
+        ///AccessKey: the client_email of the service-account key. Keyless: leave empty.
+        ///</summary>
         public virtual string ClientEmail { get; set; }
-        public virtual string ServiceAccountJson { get; set; }
+
+        ///<summary>
+        ///Keyless: the Google Cloud project NUMBER (digits) that holds the workload identity pool.
+        ///</summary>
+        public virtual string? ProjectNumber { get; set; }
+
+        ///<summary>
+        ///Keyless: the workload identity pool id (4–32 lowercase letters, digits and hyphens).
+        ///</summary>
+        public virtual string? PoolId { get; set; }
+
+        ///<summary>
+        ///Keyless: the workload identity pool provider id (4–32 lowercase letters, digits and hyphens).
+        ///</summary>
+        public virtual string? ProviderId { get; set; }
+
+        ///<summary>
+        ///Keyless: the email of the service account Norbix acts as (…@<project>.iam.gserviceaccount.com).
+        ///</summary>
+        public virtual string? ServiceAccountEmail { get; set; }
+
+        ///<summary>
+        ///AccessKey: the service-account JSON key.
+        ///</summary>
+        public virtual string? ServiceAccountJson { get; set; }
+
+        ///<summary>
+        ///AccessKey: true = I accept that Norbix stores this long-lived secret (required with AuthMode AccessKey; may be omitted otherwise).
+        ///</summary>
+        public virtual bool? AcceptKeyRisk { get; set; }
     }
 
     public partial class AppleApnsPushIntegrationRequest
@@ -21990,7 +22191,7 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual string IntegrationId { get; set; }
 
         ///<summary>
-        ///The device token the test is sent to — a device registered for the person receiving the test (get it from get_push_devices). Required for every real provider (only the Sandbox integration tests without one). For a web device it is the browser subscription JSON. Requires DeliveryFamily.
+        ///The device token the test is sent to — a device registered for the person receiving the test (get it from get_push_devices). Required for every real provider, except that Firebase without one checks the connection and sends nothing (the Sandbox integration also tests without one). For a web device it is the browser subscription JSON. Requires DeliveryFamily.
         ///</summary>
         [DataMember]
         public virtual string? TestToken { get; set; }
@@ -24148,6 +24349,7 @@ namespace Norbix.Sdk.Types.Hub;
     {
         Iam,
         CrossAccountRole,
+        Keyless,
     }
 
     public partial class OAuthModeConfig

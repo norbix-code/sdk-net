@@ -3910,6 +3910,12 @@ namespace Norbix.Sdk.Types.Api;
         public virtual string? Name { get; set; }
 
         [DataMember]
+        public virtual string? ForeachStepId { get; set; }
+
+        [DataMember]
+        public virtual int? ItemIndex { get; set; }
+
+        [DataMember]
         public virtual string Status { get; set; }
 
         [DataMember]
@@ -4751,6 +4757,15 @@ namespace Norbix.Sdk.Types.Api;
 
         [DataMember]
         public virtual Dictionary<string, string[]> BlockedTags { get; set; } = new();
+
+        [DataMember]
+        public virtual string BounceState { get; set; }
+
+        [DataMember]
+        public virtual DateTime? LastBounceAt { get; set; }
+
+        [DataMember]
+        public virtual bool SpamComplaint { get; set; }
     }
 
     [DataContract]
@@ -5558,6 +5573,24 @@ namespace Norbix.Sdk.Types.Api;
     {
         [DataMember]
         public virtual PaginatedResponse<WorkflowRunListProjection>? List { get; set; }
+    }
+
+    ///<summary>
+    ///Clear a contact's hard bounce
+    ///</summary>
+    [NorbixRoute("/{version}/membership/users/{contactId}/marketing-state/{channel}/clear-bounce", "POST")]
+    public partial class ClearContactBounceRequest
+        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
+    {
+        ///<summary>
+        ///The contact id (ct_…) whose hard bounce is cleared.
+        ///</summary>
+        public virtual string ContactId { get; set; }
+
+        ///<summary>
+        ///Delivery channel: Email, Sms, or Push.
+        ///</summary>
+        public virtual string Channel { get; set; }
     }
 
     [DataContract]

@@ -1,7 +1,7 @@
 ﻿{
   Target: Api,
   Group: membership,
-  Count: 55,
+  Count: 56,
   Endpoints: [
     {
       Target: Api,
@@ -1664,6 +1664,39 @@
         Warnings: [
           test-string
         ],
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: membership,
+      MethodName: ClearContactBounceAsync,
+      RequestType: ClearContactBounceRequest,
+      HttpMethod: POST,
+      Path: /{version}/membership/users/{contactId}/marketing-state/{channel}/clear-bounce,
+      PathParams: [
+        contactId,
+        channel
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/membership/users/{guid}/marketing-state/test-channel/clear-bounce,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        },
+        Body: {
+          env: test-env
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
         ResponseStatus: {
           IsSuccess: true
         }
