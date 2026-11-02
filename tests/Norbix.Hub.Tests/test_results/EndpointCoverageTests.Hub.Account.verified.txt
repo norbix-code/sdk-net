@@ -178,7 +178,10 @@
           },
           IngestionFailures: [
             {}
-          ]
+          ],
+          Workflows: {
+            sample-key: {}
+          }
         },
         ResponseStatus: {
           IsSuccess: true

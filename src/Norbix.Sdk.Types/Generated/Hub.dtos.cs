@@ -2615,6 +2615,9 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember]
         public virtual List<UsageBillingIngestionFailureDto> IngestionFailures { get; set; } = [];
+
+        [DataMember]
+        public virtual Dictionary<string, UsageWorkflowPeriodDto> Workflows { get; set; } = new();
     }
 
     [DataContract]
@@ -2650,6 +2653,38 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember]
         public virtual DateTime RecordedAtUtc { get; set; }
+    }
+
+    [DataContract]
+    public partial class UsageWorkflowPeriodDto
+    {
+        [DataMember]
+        public virtual string Period { get; set; }
+
+        [DataMember]
+        public virtual long Runs { get; set; }
+
+        [DataMember]
+        public virtual long StepRuns { get; set; }
+
+        [DataMember]
+        public virtual List<UsageWorkflowProjectDto> PerProject { get; set; } = [];
+    }
+
+    [DataContract]
+    public partial class UsageWorkflowProjectDto
+    {
+        [DataMember]
+        public virtual string ProjectId { get; set; }
+
+        [DataMember]
+        public virtual string Env { get; set; }
+
+        [DataMember]
+        public virtual long Runs { get; set; }
+
+        [DataMember]
+        public virtual long StepRuns { get; set; }
     }
 
     public partial class ActionPendingEntryWireDto
@@ -14820,7 +14855,7 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual string? Status { get; set; }
 
         ///<summary>
-        ///approval | event | delay
+        ///approval | event | delay | child
         ///</summary>
         [DataMember]
         public virtual string? WaitingKind { get; set; }
