@@ -5449,6 +5449,59 @@ namespace Norbix.Sdk.Types.Api;
         public virtual string? Key { get; set; }
     }
 
+    [NorbixRoute("/{version}/code/workflows/{Id}/invoke", "POST")]
+    [DataContract]
+    public partial class InvokeCodeWorkflow
+        : CodeMashRequestBase, INorbixRequest<InvokeCodeWorkflowResponse>
+    {
+        ///<summary>
+        ///wf_…
+        ///</summary>
+        [DataMember]
+        public virtual string Id { get; set; }
+
+        ///<summary>
+        ///The @Model.Request object; checked against the definition's inputs when it has one.
+        ///</summary>
+        [DataMember]
+        public virtual Dictionary<string, Object>? Payload { get; set; }
+
+        ///<summary>
+        ///0–30 seconds to wait for the run; default 10; 0 answers 202 at once.
+        ///</summary>
+        [DataMember]
+        public virtual int? WaitSeconds { get; set; }
+
+        ///<summary>
+        ///"draft" to test the draft, a version number to pin one; absent = the latest published.
+        ///</summary>
+        [DataMember]
+        public virtual string? RunVersion { get; set; }
+    }
+
+    [DataContract]
+    public partial class InvokeCodeWorkflowResponse
+        : ResponseBase
+    {
+        [DataMember]
+        public virtual string? RunId { get; set; }
+
+        [DataMember]
+        public virtual string? Status { get; set; }
+
+        [DataMember]
+        public virtual Object? Output { get; set; }
+
+        [DataMember]
+        public virtual long? DurationMs { get; set; }
+
+        [DataMember]
+        public virtual WorkflowRunErrorDto? Error { get; set; }
+
+        [DataMember]
+        public virtual WorkflowRunDto? Run { get; set; }
+    }
+
     ///<summary>
     ///Beta: what a workflow's one-click link will do — no sign-in, nothing changes. POST the same URL to answer.
     ///</summary>

@@ -1,7 +1,7 @@
 ﻿{
   Target: Api,
   Group: code,
-  Count: 10,
+  Count: 11,
   Endpoints: [
     {
       Target: Api,
@@ -198,6 +198,66 @@
           HasPrevious: false,
           StartingAfter: cursor-start,
           EndingBefore: cursor-end
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: code,
+      MethodName: InvokeCodeWorkflowAsync,
+      RequestType: InvokeCodeWorkflow,
+      HttpMethod: POST,
+      Path: /{version}/code/workflows/{Id}/invoke,
+      PathParams: [
+        Id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/code/workflows/{guid}/invoke,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        },
+        Body: {
+          payload: {
+            test-key: null
+          },
+          waitSeconds: 1.0,
+          runVersion: test-runVersion,
+          env: test-env
+        }
+      },
+      ResponseType: InvokeCodeWorkflowResponse,
+      Response: {
+        RunId: Guid_1,
+        Status: test-status,
+        Output: {
+          ValueKind: Object
+        },
+        DurationMs: 42,
+        Error: {
+          Code: test-code,
+          StepId: Guid_1,
+          Reason: test-reason,
+          Message: test-message
+        },
+        Run: {
+          RunId: Guid_1,
+          WorkflowId: Guid_1,
+          Version: 7,
+          IsDraft: true,
+          Status: test-status,
+          Source: test-source,
+          StartedBy: {},
+          TriggerId: Guid_1,
+          ExecutionIdentityIsDefault: false
         },
         ResponseStatus: {
           IsSuccess: true

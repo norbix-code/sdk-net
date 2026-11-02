@@ -5043,6 +5043,12 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual string? OAuthRedirectUrl { get; set; }
 
         [DataMember]
+        public virtual MarketplaceListingKind Kind { get; set; }
+
+        [DataMember]
+        public virtual MarketplaceWorkflowTemplateDto? Workflow { get; set; }
+
+        [DataMember]
         public virtual bool IsOfficial { get; set; }
 
         [DataMember]
@@ -5065,6 +5071,12 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember]
         public virtual IReadOnlyList<MarketplaceFunctionDefinitionDto> Functions { get; set; }
+    }
+
+    public enum MarketplaceListingKind
+    {
+        Connector,
+        Workflow,
     }
 
     [DataContract]
@@ -5103,6 +5115,9 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember]
         public virtual MarketplaceAvailability Availability { get; set; }
+
+        [DataMember]
+        public virtual MarketplaceListingKind Kind { get; set; }
 
         [DataMember]
         public virtual string? VideoUrl { get; set; }
@@ -5217,6 +5232,32 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember]
         public virtual string? ErrorCode { get; set; }
+    }
+
+    [DataContract]
+    public partial class MarketplaceWorkflowReferenceDto
+    {
+        [DataMember]
+        public virtual string Key { get; set; }
+
+        [DataMember]
+        public virtual string Kind { get; set; }
+
+        [DataMember]
+        public virtual string Label { get; set; }
+
+        [DataMember]
+        public virtual string? Description { get; set; }
+    }
+
+    [DataContract]
+    public partial class MarketplaceWorkflowTemplateDto
+    {
+        [DataMember]
+        public virtual string DefinitionJson { get; set; }
+
+        [DataMember]
+        public virtual IReadOnlyList<MarketplaceWorkflowReferenceDto> References { get; set; }
     }
 
     [DataContract]
@@ -14572,6 +14613,11 @@ namespace Norbix.Sdk.Types.Hub;
         ///Filter by curated tag slugs (e.g. ai-llm, messaging, crm). Matches listings carrying any of the given tags.
         ///</summary>
         public virtual HashSet<string>? Tags { get; set; }
+
+        ///<summary>
+        ///Connector (the default) or Workflow: a curated workflow to install as a draft with install_marketplace_workflow.
+        ///</summary>
+        public virtual MarketplaceListingKind? Kind { get; set; }
     }
 
     public partial class GetMarketplaceListingsResponse
@@ -14584,6 +14630,36 @@ namespace Norbix.Sdk.Types.Hub;
         : ResponseBase
     {
         public virtual List<string>? Tokens { get; set; }
+    }
+
+    [NorbixRoute("/{version}/code/marketplace/listings/{ListingViewId}/install-workflow", "POST")]
+    [DataContract]
+    public partial class InstallMarketplaceWorkflow
+        : CodeMashRequestBase, INorbixRequest<WorkflowResponse>
+    {
+        ///<summary>
+        ///ml_… a listing of kind Workflow.
+        ///</summary>
+        [DataMember]
+        public virtual string ListingViewId { get; set; }
+
+        ///<summary>
+        ///The new workflow's name; absent = the listing's.
+        ///</summary>
+        [DataMember]
+        public virtual string? Name { get; set; }
+
+        ///<summary>
+        ///usr_… the execution identity; absent = the env's default.
+        ///</summary>
+        [DataMember]
+        public virtual string? ExecutionIdentityId { get; set; }
+
+        ///<summary>
+        ///A value for every reference the listing declares, by key: a collection name, a template id, an integration id.
+        ///</summary>
+        [DataMember]
+        public virtual Dictionary<string, string> References { get; set; } = new();
     }
 
     [NorbixRoute("/{version}/code/workflows/runs/{RunId}/cancel", "POST")]
