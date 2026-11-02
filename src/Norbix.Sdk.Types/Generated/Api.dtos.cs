@@ -3972,6 +3972,9 @@ namespace Norbix.Sdk.Types.Api;
 
         [DataMember]
         public virtual List<string>? Assignees { get; set; }
+
+        [DataMember]
+        public virtual string? ChildRunId { get; set; }
     }
 
     public partial class CollectionImportDto

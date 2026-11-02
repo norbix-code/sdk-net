@@ -5740,7 +5740,7 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual Dictionary<string, Object>? Action { get; set; }
 
         ///<summary>
-        ///Flow kinds: expression | level, message, meta | seconds, until | mode, key, inputs, assignees, timeoutSeconds | branches, join | mode | workflowRef, payload | items, body, concurrency.
+        ///Flow kinds: expression | level, message, meta | seconds, until | mode, key, inputs, assignees, timeoutSeconds | branches, join | mode | workflowRef, payload, wait, timeoutSeconds | items, body, concurrency.
         ///</summary>
         [DataMember]
         public virtual Dictionary<string, Object>? Config { get; set; }
@@ -5861,6 +5861,9 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember]
         public virtual List<string>? Assignees { get; set; }
+
+        [DataMember]
+        public virtual string? ChildRunId { get; set; }
     }
 
     public partial class AccountComplianceDto
