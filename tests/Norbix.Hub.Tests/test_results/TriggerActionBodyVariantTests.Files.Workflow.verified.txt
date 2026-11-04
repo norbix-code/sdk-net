@@ -1,0 +1,27 @@
+﻿{
+  Method: POST,
+  Path: /v2/files/triggers,
+  Headers: {
+    Authorization: Bearer test-bearer,
+    Content-Type: application/json; charset=utf-8,
+    norbix-account-id: test-account,
+    norbix-project-id: test-project
+  },
+  Body: {
+    trigger: {
+      type: files,
+      when: onFileUploaded,
+      name: run Workflow,
+      isEnabled: true,
+      breakOnError: false,
+      action: {
+        workflowRef: wf_onboard,
+        payload: {
+          source: net
+        },
+        type: workflow
+      },
+      executionIdentityId: usr_1
+    }
+  }
+}
