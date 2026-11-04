@@ -1,0 +1,30 @@
+﻿{
+  Method: POST,
+  Path: /v2/files/triggers,
+  Headers: {
+    Authorization: Bearer test-bearer,
+    Content-Type: application/json; charset=utf-8,
+    norbix-account-id: test-account,
+    norbix-project-id: test-project
+  },
+  Body: {
+    trigger: {
+      type: files,
+      when: onFileUploaded,
+      name: run Code,
+      isEnabled: true,
+      breakOnError: false,
+      action: {
+        functionRef: {
+          integrationId: int_lambda,
+          functionId: notify-sales,
+          qualifier: live
+        },
+        invocationType: async,
+        config: {"source":"net"},
+        type: code
+      },
+      executionIdentityId: usr_1
+    }
+  }
+}
