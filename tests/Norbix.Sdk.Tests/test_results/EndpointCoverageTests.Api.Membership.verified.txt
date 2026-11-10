@@ -1780,7 +1780,7 @@
       Sent: {
         Method: GET,
         Path: /v2/membership/users,
-        Query: ?startingAfter=test-startingAfter&pageSize=1&search=test-search&email=user%40example.test&userName=test-userName&statuses=test-string&types=test-string&roleNames=test-string&env=test-env,
+        Query: ?startingAfter=test-startingAfter&pageSize=1&search=test-search&email=user%40example.test&userName=test-userName&statuses=test-string&types=test-string&roleNames=test-string&tags=test-string&env=test-env,
         Headers: {
           Authorization: Bearer test-bearer,
           norbix-account-id: test-account,

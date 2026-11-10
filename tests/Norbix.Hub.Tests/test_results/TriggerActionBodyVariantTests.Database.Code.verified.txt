@@ -14,7 +14,6 @@
       when: onInserted,
       name: run Code,
       isEnabled: true,
-      breakOnError: false,
       action: {
         functionRef: {
           integrationId: int_lambda,

@@ -80,8 +80,8 @@
           Description: test-description,
           IsEnabled: true,
           PreExecuteCode: test-preExecuteCode,
-          Order: 7,
-          BreakOnError: true
+          Action: {},
+          ExecutionIdentityId: Guid_1
         },
         ResponseStatus: {
           IsSuccess: true

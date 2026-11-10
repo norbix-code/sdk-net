@@ -89,6 +89,7 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual string Id { get; set; }
         public virtual string Email { get; set; }
         public virtual List<string> Roles { get; set; } = [];
+        public virtual Dictionary<string, List<String>> RoleProjects { get; set; } = new();
         public virtual DateTime SentOn { get; set; }
         public virtual DateTime ExpiresOn { get; set; }
     }
@@ -3277,6 +3278,18 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual int RemovedRecipients { get; set; }
 
         [DataMember]
+        public virtual int Delivered { get; set; }
+
+        [DataMember]
+        public virtual int Bounced { get; set; }
+
+        [DataMember]
+        public virtual int Complained { get; set; }
+
+        [DataMember]
+        public virtual int Rejected { get; set; }
+
+        [DataMember]
         public virtual decimal SuccessRate { get; set; }
     }
 
@@ -3380,9 +3393,10 @@ namespace Norbix.Sdk.Types.Hub;
 
     public enum EmailRecipientField
     {
-        To = 1,
-        Cc = 2,
-        Bcc = 3,
+        NotSet,
+        To,
+        Cc,
+        Bcc,
     }
 
     [DataContract]
@@ -3806,9 +3820,10 @@ namespace Norbix.Sdk.Types.Hub;
 
     public enum RecipientRemovalReason
     {
-        OptedOut = 1,
-        Compliance = 2,
-        Undeliverable = 3,
+        NotSet,
+        OptedOut,
+        Compliance,
+        Undeliverable,
     }
 
     [DataContract]
@@ -6253,6 +6268,9 @@ namespace Norbix.Sdk.Types.Hub;
         : DatabaseIntegrationDto
     {
         public virtual string? DatabaseName { get; set; }
+        public virtual CloudAuthMode AuthMode { get; set; }
+        public virtual string? Audience { get; set; }
+        public virtual string? ProjectViewId { get; set; }
     }
 
     [DataContract]
@@ -7364,6 +7382,22 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember]
         public virtual bool IsEstablished { get; set; }
+
+        [DataMember]
+        public virtual LogSettingsDto? Settings { get; set; }
+    }
+
+    [DataContract]
+    public partial class LogSettingsDto
+    {
+        [DataMember]
+        public virtual bool SkipCloudDashboardLogs { get; set; }
+
+        [DataMember]
+        public virtual bool SkipHttpBodyMeta { get; set; }
+
+        [DataMember]
+        public virtual bool AiChatLoggingEnabled { get; set; }
     }
 
     [DataContract]
@@ -7420,6 +7454,9 @@ namespace Norbix.Sdk.Types.Hub;
     {
         [DataMember]
         public virtual LoggingProvider Provider { get; set; }
+
+        [DataMember]
+        public virtual string? Env { get; set; }
     }
 
     public partial class AmqpLoggingIntegrationDto
@@ -7488,7 +7525,6 @@ namespace Norbix.Sdk.Types.Hub;
     {
         public virtual string Site { get; set; }
         public virtual string ServiceName { get; set; }
-        public virtual string Environment { get; set; }
     }
 
     public partial class ElasticSearchLoggingIntegrationDto
@@ -8353,6 +8389,7 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual string? ConfigurationSetName { get; set; }
         public virtual bool? DeliveryEventsEnabled { get; set; }
         public virtual string? SnsTopicArn { get; set; }
+        public virtual string? DeliveryEventsQueueUrl { get; set; }
     }
 
     [DataContract]
@@ -8510,6 +8547,12 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember]
         public virtual string UserId { get; set; }
+
+        [DataMember]
+        public virtual string? UserDisplayName { get; set; }
+
+        [DataMember]
+        public virtual string? UserEmail { get; set; }
 
         [DataMember]
         public virtual string DeviceOs { get; set; }
@@ -9150,6 +9193,97 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember]
         public virtual List<string> MissingLanguages { get; set; } = [];
+    }
+
+    [DataContract]
+    public partial class ProjectHealthDto
+    {
+        [DataMember]
+        public virtual DateTime CheckedAtUtc { get; set; }
+
+        [DataMember]
+        public virtual string Env { get; set; }
+
+        [DataMember]
+        public virtual List<ProjectHealthWarningDto> Warnings { get; set; } = [];
+
+        [DataMember]
+        public virtual ProjectHealthStatsDto Stats { get; set; }
+
+        [DataMember]
+        public virtual List<ProjectHealthSkippedCheckDto> SkippedChecks { get; set; } = [];
+    }
+
+    public enum ProjectHealthSeverity
+    {
+        Warning,
+        Error,
+    }
+
+    [DataContract]
+    public partial class ProjectHealthSkippedCheckDto
+    {
+        [DataMember]
+        public virtual string Check { get; set; }
+
+        [DataMember]
+        public virtual string Reason { get; set; }
+    }
+
+    [DataContract]
+    public partial class ProjectHealthStatsDto
+    {
+        [DataMember]
+        public virtual long? UsersTotal { get; set; }
+
+        [DataMember]
+        public virtual long? UsersNew30d { get; set; }
+
+        [DataMember]
+        public virtual long? UsersNewPrev30d { get; set; }
+
+        [DataMember]
+        public virtual long? EmailsSent30d { get; set; }
+
+        [DataMember]
+        public virtual long? EmailsSentPrev30d { get; set; }
+
+        [DataMember]
+        public virtual long? EmailsFailed30d { get; set; }
+
+        [DataMember]
+        public virtual long? EmailsFailedPrev30d { get; set; }
+
+        [DataMember]
+        public virtual long? ApiCallsThisMonth { get; set; }
+
+        [DataMember]
+        public virtual long? ApiCallsPrevMonth { get; set; }
+    }
+
+    [DataContract]
+    public partial class ProjectHealthWarningDto
+    {
+        [DataMember]
+        public virtual string Code { get; set; }
+
+        [DataMember]
+        public virtual ProjectHealthSeverity Severity { get; set; }
+
+        [DataMember]
+        public virtual ApplicationModule Module { get; set; }
+
+        [DataMember]
+        public virtual string Title { get; set; }
+
+        [DataMember]
+        public virtual string Detail { get; set; }
+
+        [DataMember]
+        public virtual string FixPath { get; set; }
+
+        [DataMember]
+        public virtual string? ItemId { get; set; }
     }
 
     public partial class DocumentRefDto
@@ -10012,8 +10146,6 @@ namespace Norbix.Sdk.Types.Hub;
     {
         string ViewId { get; set; }
         string Name { get; set; }
-        int? Order { get; set; }
-        bool BreakOnError { get; set; }
     }
 
     [DataContract]
@@ -10286,12 +10418,6 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual string? ActivationCode { get; set; }
 
         [DataMember]
-        public virtual int? Order { get; set; }
-
-        [DataMember]
-        public virtual bool BreakOnError { get; set; }
-
-        [DataMember]
         public virtual string? SavedByAuthId { get; set; }
 
         [DataMember]
@@ -10319,12 +10445,6 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember]
         public virtual bool IsEnabled { get; set; }
-
-        [DataMember]
-        public virtual int? Order { get; set; }
-
-        [DataMember]
-        public virtual bool BreakOnError { get; set; }
 
         [DataMember]
         public virtual string? ExecutionIdentityId { get; set; }
@@ -11146,6 +11266,7 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual string? DisplayName { get; set; }
         public virtual string? Password { get; set; }
         public virtual HashSet<string>? Roles { get; set; }
+        public virtual Dictionary<string, List<String>>? RoleProjects { get; set; }
         public virtual bool SendInvitation { get; set; }
     }
 
@@ -11303,6 +11424,11 @@ namespace Norbix.Sdk.Types.Hub;
         ///Account role ids (GUIDs from get_account_team_roles) the member gets on accepting. Omit for the default member role.
         ///</summary>
         public virtual HashSet<string>? Roles { get; set; }
+
+        ///<summary>
+        ///Optional, per role: the projects (pr_… ids) the role applies to, keyed by the role id (GUID from get_account_team_roles, or acc_…_nr_…). Each key must also be in `roles`. A role with no entry (or an empty list) applies to every project. The Account Administrator role can not be limited.
+        ///</summary>
+        public virtual Dictionary<string, List<String>>? RoleProjects { get; set; }
     }
 
     [NorbixRoute("/{version}/account/team/member/role-environments", "PUT")]
@@ -11325,6 +11451,26 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual List<string>? Environments { get; set; }
     }
 
+    [NorbixRoute("/{version}/account/team/member/role-projects", "PUT")]
+    public partial class SetTeamMemberRoleProjectsRequest
+        : RequestBase, INorbixRequest<IdResponse>
+    {
+        ///<summary>
+        ///The team member's id (usr_…), as GET /account/collaborators lists it.
+        ///</summary>
+        public virtual string MemberId { get; set; }
+
+        ///<summary>
+        ///The account role the member holds: its id (acc_…_nr_…) or its template id (GUID, as GetAccountTeamRoles lists it).
+        ///</summary>
+        public virtual string RoleId { get; set; }
+
+        ///<summary>
+        ///Project ids (pr_…) of this account. Empty = every project.
+        ///</summary>
+        public virtual List<string>? Projects { get; set; }
+    }
+
     public partial class TeamMemberRoleInput
     {
         ///<summary>
@@ -11336,6 +11482,11 @@ namespace Norbix.Sdk.Types.Hub;
         ///Environment names the role applies in, e.g. ["TEST"]. Empty or omitted = every environment.
         ///</summary>
         public virtual List<string>? Environments { get; set; }
+
+        ///<summary>
+        ///Project ids (pr_…) the role applies to. Empty or omitted = every project. Not allowed on the Account Administrator role.
+        ///</summary>
+        public virtual List<string>? Projects { get; set; }
     }
 
     [NorbixRoute("/{version}/account/team/policies", "PUT")]
@@ -11530,6 +11681,29 @@ namespace Norbix.Sdk.Types.Hub;
         : ResponseBase
     {
         public virtual ProjectEnvironmentsDto? Item { get; set; }
+    }
+
+    ///<summary>
+    ///Gets the project health: problems with fix links, and home screen stats.
+    ///</summary>
+    [NorbixRoute("/{version}/account/projects/{projectId}/health", "GET")]
+    [DataContract]
+    public partial class GetProjectHealth
+        : CodeMashRequestBase, INorbixRequest<GetProjectHealthResponse>
+    {
+        ///<summary>
+        ///Compute the health now instead of reading the last result (at most every 6 hours old).
+        ///</summary>
+        [DataMember]
+        public virtual bool Refresh { get; set; }
+    }
+
+    [DataContract]
+    public partial class GetProjectHealthResponse
+        : ResponseBase
+    {
+        [DataMember]
+        public virtual ProjectHealthDto? Item { get; set; }
     }
 
     public partial class GetProjectResponse
@@ -12531,6 +12705,7 @@ namespace Norbix.Sdk.Types.Hub;
     public partial class GetAgentOnboardingRequest
         : RequestBase, INorbixRequest<GetAgentOnboardingResponse>
     {
+        public virtual string? ProjectId { get; set; }
     }
 
     public partial class GetAgentOnboardingResponse
@@ -15502,7 +15677,7 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual int? PageSize { get; set; }
 
         ///<summary>
-        ///Free text, case-insensitive: matches the email, phone, display / first / last / full name, or any login's user name or email.
+        ///Free text, case-insensitive: matches the email, phone, display / first / last / full name, or any login's user name or email; an exact contact id (ct_…) or login id (usr_…) finds that contact.
         ///</summary>
         public virtual string? Search { get; set; }
 
@@ -15530,6 +15705,11 @@ namespace Norbix.Sdk.Types.Hub;
         ///Composite project-role ids (pr_{project}_nr_{role}); the contact holds any of them.
         ///</summary>
         public virtual string[]? RoleNames { get; set; }
+
+        ///<summary>
+        ///Contact tags; the contact carries any of them.
+        ///</summary>
+        public virtual string[]? Tags { get; set; }
     }
 
     public partial class GetAllContactsResponse
@@ -16170,20 +16350,9 @@ namespace Norbix.Sdk.Types.Hub;
     {
         public virtual DatabaseProvider Provider { get; set; }
         public virtual string? DatabaseName { get; set; }
+        public virtual CloudAuthMode? AuthMode { get; set; }
+        public virtual string? Audience { get; set; }
         public virtual string ConnectionString { get; set; }
-    }
-
-    [NorbixRoute("/{version}/database/integrations/{Id}/connection-string", "GET")]
-    public partial class RevealManagedFlexConnectionString
-        : CodeMashRequestBase, INorbixRequest<RevealManagedFlexConnectionStringResponse>
-    {
-        public virtual string Id { get; set; }
-    }
-
-    public partial class RevealManagedFlexConnectionStringResponse
-        : ResponseBase
-    {
-        public virtual string? ConnectionString { get; set; }
     }
 
     ///<summary>
@@ -18193,6 +18362,10 @@ namespace Norbix.Sdk.Types.Hub;
 
         public virtual bool? DeliveryEventsEnabled { get; set; }
         public virtual string? SnsTopicArn { get; set; }
+        ///<summary>
+        ///The SQS queue URL (https://sqs.<region>.amazonaws.com/<account>/<name>) the configuration set's SNS topic delivers to. Norbix polls it with this integration's credentials. Requires ConfigurationSet.
+        ///</summary>
+        public virtual string? DeliveryEventsQueueUrl { get; set; }
     }
 
     public partial class AzureCommunicationEmailIntegrationRequest
@@ -19166,12 +19339,12 @@ namespace Norbix.Sdk.Types.Hub;
         : CodeMashRequestBase, INorbixRequest<GetKeylessIntegrationSetupResponse>
     {
         ///<summary>
-        ///files, email, code, logs, push or payments (logs: aws or azure; push and payments: google).
+        ///files, email, code, logs, push, payments or database (logs: aws or azure; push and payments: google; database: atlas).
         ///</summary>
         public virtual string Module { get; set; }
 
         ///<summary>
-        ///azure, aws or google.
+        ///azure, aws, google or atlas (MongoDB Atlas M10+, module database).
         ///</summary>
         public virtual string Cloud { get; set; }
 
@@ -19701,8 +19874,11 @@ namespace Norbix.Sdk.Types.Hub;
         ///</summary>
         public virtual string Site { get; set; }
 
-        public virtual string ServiceName { get; set; }
-        public virtual string Environment { get; set; }
+        ///<summary>
+        ///The Datadog service tag of the forwarded logs. Optional: empty = the project id (pr_…). The env tag is not asked: it is the Norbix environment of the entry, lower-cased (prod, test, …).
+        ///</summary>
+        public virtual string? ServiceName { get; set; }
+
         public virtual string ApiKey { get; set; }
     }
 
@@ -23986,8 +24162,6 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual string? Description { get; set; }
         public virtual bool IsEnabled { get; set; }
         public virtual string? PreExecuteCode { get; set; }
-        public virtual int? Order { get; set; }
-        public virtual bool BreakOnError { get; set; }
         public virtual TriggerActionDto Action { get; set; }
         public virtual string? ExecutionIdentityId { get; set; }
     }
@@ -24228,6 +24402,7 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual string InstallationType { get; set; }
         public virtual string OnboardingDocsUrl { get; set; }
         public virtual string ToolsUrl { get; set; }
+        public virtual string? OpenApiUrl { get; set; }
         public virtual string CliPackage { get; set; }
         public virtual string CliInstallCommand { get; set; }
         public virtual string DeviceAuthorizationUrl { get; set; }

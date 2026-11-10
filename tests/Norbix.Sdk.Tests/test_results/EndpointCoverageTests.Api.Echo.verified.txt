@@ -41,9 +41,9 @@
           InstallationType: test-installationType,
           OnboardingDocsUrl: https://example.test/onboardingDocsUrl,
           ToolsUrl: https://example.test/toolsUrl,
+          OpenApiUrl: https://example.test/openApiUrl,
           CliPackage: test-cliPackage,
-          CliInstallCommand: test-cliInstallCommand,
-          DeviceAuthorizationUrl: https://example.test/deviceAuthorizationUrl
+          CliInstallCommand: test-cliInstallCommand
         },
         HostingPlatform: {
           Provider: test-provider,

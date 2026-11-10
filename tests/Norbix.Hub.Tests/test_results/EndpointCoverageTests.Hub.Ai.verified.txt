@@ -852,8 +852,7 @@
           ThenAction: {},
           Description: test-description,
           IsEnabled: true,
-          ActivationCode: test-activationCode,
-          BreakOnError: false
+          ActivationCode: test-activationCode
         },
         ResponseStatus: {
           IsSuccess: true
@@ -885,8 +884,7 @@
           Items: [
             {
               HasPreExecuteCode: false,
-              IsEnabled: false,
-              BreakOnError: false
+              IsEnabled: false
             }
           ],
           HasMore: false,
@@ -925,8 +923,7 @@
             description: test-description,
             isEnabled: true,
             preExecuteCode: test-preExecuteCode,
-            order: 1.0,
-            breakOnError: true
+            executionIdentityId: Guid_1
           },
           env: test-env
         }

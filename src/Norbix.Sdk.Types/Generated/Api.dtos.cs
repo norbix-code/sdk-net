@@ -3227,6 +3227,18 @@ namespace Norbix.Sdk.Types.Api;
         public virtual int RemovedRecipients { get; set; }
 
         [DataMember]
+        public virtual int Delivered { get; set; }
+
+        [DataMember]
+        public virtual int Bounced { get; set; }
+
+        [DataMember]
+        public virtual int Complained { get; set; }
+
+        [DataMember]
+        public virtual int Rejected { get; set; }
+
+        [DataMember]
         public virtual decimal SuccessRate { get; set; }
     }
 
@@ -3330,9 +3342,10 @@ namespace Norbix.Sdk.Types.Api;
 
     public enum EmailRecipientField
     {
-        To = 1,
-        Cc = 2,
-        Bcc = 3,
+        NotSet,
+        To,
+        Cc,
+        Bcc,
     }
 
     [DataContract]
@@ -3577,9 +3590,10 @@ namespace Norbix.Sdk.Types.Api;
 
     public enum RecipientRemovalReason
     {
-        OptedOut = 1,
-        Compliance = 2,
-        Undeliverable = 3,
+        NotSet,
+        OptedOut,
+        Compliance,
+        Undeliverable,
     }
 
     [DataContract]
@@ -5248,8 +5262,6 @@ namespace Norbix.Sdk.Types.Api;
     {
         string ViewId { get; set; }
         string Name { get; set; }
-        int? Order { get; set; }
-        bool BreakOnError { get; set; }
     }
 
     [DataContract]
@@ -5286,12 +5298,6 @@ namespace Norbix.Sdk.Types.Api;
 
         [DataMember]
         public virtual string? ActivationCode { get; set; }
-
-        [DataMember]
-        public virtual int? Order { get; set; }
-
-        [DataMember]
-        public virtual bool BreakOnError { get; set; }
 
         [DataMember]
         public virtual string? SavedByAuthId { get; set; }
@@ -5740,7 +5746,7 @@ namespace Norbix.Sdk.Types.Api;
         public virtual int? PageSize { get; set; }
 
         ///<summary>
-        ///Free text, case-insensitive: matches the email, phone, display / first / last / full name, or any login's user name or email.
+        ///Free text, case-insensitive: matches the email, phone, display / first / last / full name, or any login's user name or email; an exact contact id (ct_…) or login id (usr_…) finds that contact.
         ///</summary>
         public virtual string? Search { get; set; }
 
@@ -5768,6 +5774,11 @@ namespace Norbix.Sdk.Types.Api;
         ///Composite project-role ids (pr_{project}_nr_{role}); the contact holds any of them.
         ///</summary>
         public virtual string[]? RoleNames { get; set; }
+
+        ///<summary>
+        ///Contact tags; the contact carries any of them.
+        ///</summary>
+        public virtual string[]? Tags { get; set; }
     }
 
     public partial class GetAllContactsResponse
@@ -7529,6 +7540,7 @@ namespace Norbix.Sdk.Types.Api;
         public virtual string InstallationType { get; set; }
         public virtual string OnboardingDocsUrl { get; set; }
         public virtual string ToolsUrl { get; set; }
+        public virtual string? OpenApiUrl { get; set; }
         public virtual string CliPackage { get; set; }
         public virtual string CliInstallCommand { get; set; }
         public virtual string DeviceAuthorizationUrl { get; set; }
