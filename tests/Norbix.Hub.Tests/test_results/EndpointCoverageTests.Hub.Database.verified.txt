@@ -1,7 +1,7 @@
 ﻿{
   Target: Hub,
   Group: database,
-  Count: 75,
+  Count: 74,
   Endpoints: [
     {
       Target: Hub,
@@ -681,36 +681,6 @@
           StartingAfter: cursor-start,
           EndingBefore: cursor-end
         },
-        ResponseStatus: {
-          IsSuccess: true
-        }
-      }
-    },
-    {
-      Target: Hub,
-      Group: database,
-      MethodName: RevealManagedFlexConnectionStringAsync,
-      RequestType: RevealManagedFlexConnectionString,
-      HttpMethod: GET,
-      Path: /{version}/database/integrations/{Id}/connection-string,
-      PathParams: [
-        Id
-      ],
-      IsAccountScoped: false,
-      IsUnauthenticated: false,
-      Sent: {
-        Method: GET,
-        Path: /v2/database/integrations/{guid}/connection-string,
-        Query: ?env=test-env,
-        Headers: {
-          Authorization: Bearer test-bearer,
-          norbix-account-id: test-account,
-          norbix-project-id: test-project
-        }
-      },
-      ResponseType: RevealManagedFlexConnectionStringResponse,
-      Response: {
-        ConnectionString: test-connectionString,
         ResponseStatus: {
           IsSuccess: true
         }
@@ -2615,8 +2585,7 @@
           ViewId: Guid_1,
           Name: test-name,
           ThenAction: {},
-          IsEnabled: false,
-          BreakOnError: false
+          IsEnabled: false
         },
         ResponseStatus: {
           IsSuccess: true
@@ -2648,8 +2617,7 @@
           Items: [
             {
               HasPreExecuteCode: false,
-              IsEnabled: false,
-              BreakOnError: false
+              IsEnabled: false
             }
           ],
           HasMore: false,
@@ -2688,8 +2656,7 @@
             description: test-description,
             isEnabled: true,
             preExecuteCode: test-preExecuteCode,
-            order: 1.0,
-            breakOnError: true
+            executionIdentityId: Guid_1
           },
           env: test-env
         }

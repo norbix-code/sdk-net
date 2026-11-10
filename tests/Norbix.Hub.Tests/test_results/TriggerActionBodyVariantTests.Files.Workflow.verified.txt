@@ -13,7 +13,6 @@
       when: onFileUploaded,
       name: run Workflow,
       isEnabled: true,
-      breakOnError: false,
       action: {
         workflowRef: wf_onboard,
         payload: {

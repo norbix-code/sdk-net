@@ -13,7 +13,6 @@
       when: onRegistered,
       name: Welcome message,
       isEnabled: true,
-      breakOnError: false,
       action: {
         templateId: tpl-welcome,
         deliverySettings: {

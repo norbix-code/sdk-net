@@ -1,7 +1,7 @@
 ﻿{
   Target: Hub,
   Group: account,
-  Count: 130,
+  Count: 132,
   Endpoints: [
     {
       Target: Hub,
@@ -1267,6 +1267,11 @@
           email: user@example.test,
           displayName: test-displayName,
           password: test-password,
+          roleProjects: {
+            test-key: [
+              test-string
+            ]
+          },
           sendInvitation: true
         }
       },
@@ -1558,7 +1563,12 @@
           norbix-project-id: test-project
         },
         Body: {
-          email: user@example.test
+          email: user@example.test,
+          roleProjects: {
+            test-key: [
+              test-string
+            ]
+          }
         }
       },
       ResponseType: EmptyResponse,
@@ -1590,6 +1600,44 @@
           memberId: Guid_1,
           roleId: Guid_1,
           environments: [
+            test-string
+          ]
+        }
+      },
+      ResponseType: IdResponse,
+      Response: {
+        Id: Guid_1,
+        Status: test-status,
+        Warnings: [
+          test-string
+        ],
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: account,
+      MethodName: SetTeamMemberRoleProjectsAsync,
+      RequestType: SetTeamMemberRoleProjectsRequest,
+      HttpMethod: PUT,
+      Path: /{version}/account/team/member/role-projects,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: PUT,
+        Path: /v2/account/team/member/role-projects,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        },
+        Body: {
+          memberId: Guid_1,
+          roleId: Guid_1,
+          projects: [
             test-string
           ]
         }
@@ -1996,6 +2044,46 @@
             test-string
           ],
           AdminUrls: [
+            {}
+          ]
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: account,
+      MethodName: GetProjectHealthAsync,
+      RequestType: GetProjectHealth,
+      HttpMethod: GET,
+      Path: /{version}/account/projects/{projectId}/health,
+      PathParams: [
+        projectId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/account/projects/{guid}/health,
+        Query: ?refresh=True&env=test-env,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        }
+      },
+      ResponseType: GetProjectHealthResponse,
+      Response: {
+        Item: {
+          CheckedAtUtc: DateTime_1,
+          Env: test-env,
+          Warnings: [
+            {}
+          ],
+          Stats: {},
+          SkippedChecks: [
             {}
           ]
         },
