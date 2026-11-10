@@ -5,12 +5,19 @@ name: Release
 # `dotnet pack` and `dotnet nuget push` with the version semantic-release
 # computed from conventional commits.
 #
-# Required secrets:
-#   - NUGET_API_KEY  — push key for nuget.org. nuget.org keys expire (max 365
-#                      days); an expired key fails the push with 403.
-#   - GITHUB_TOKEN   — provided automatically; tags + GH release.
+# NuGet trusted publishing (OIDC): no stored NuGet key. Right before the push,
+# NuGet/login exchanges this job's GitHub OIDC token for a temporary API key
+# (valid 1 hour, one key per token) and the push uses it.
+# https://learn.microsoft.com/nuget/nuget-org/trusted-publishing
 #
-# NuGet trusted publishing (OIDC) is not used yet — keep an API key for now.
+# Setup on nuget.org (once, by the package owner): your username > Trusted
+# Publishing > add a policy — Repository Owner `norbix-code`, Repository
+# `sdk-net`, Workflow File `release.yml` (file name only), Environment empty.
+#
+# Required secrets:
+#   - NUGET_USER     — the nuget.org username (profile name, not the e-mail)
+#                      that owns the trusted publishing policy.
+#   - GITHUB_TOKEN   — provided automatically; tags + GH release.
 #
 # `main` is protected (changes only through pull requests), so the release does
 # NOT commit back: no CHANGELOG.md commit. The git tag is the source of truth for
@@ -79,20 +86,27 @@ jobs:
         if: github.event_name != 'workflow_dispatch' || inputs.republish != true
         run: ./scripts/install-semantic-release.sh
 
+      # Last step before the push: the temporary key lives one hour.
+      - name: NuGet login (trusted publishing → temporary API key)
+        id: nuget-login
+        uses: NuGet/login@v1
+        with:
+          user: ${{ secrets.NUGET_USER }}
+
       - name: Release
         if: github.event_name != 'workflow_dispatch' || inputs.republish != true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+          NUGET_API_KEY: ${{ steps.nuget-login.outputs.NUGET_API_KEY }}
         run: npx semantic-release
 
       - name: Republish to NuGet (recovery)
         if: github.event_name == 'workflow_dispatch' && inputs.republish == true
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+          NUGET_API_KEY: ${{ steps.nuget-login.outputs.NUGET_API_KEY }}
         run: |
-          test -n "$NUGET_API_KEY" || { echo "::error::NUGET_API_KEY is required"; exit 1; }
+          test -n "$NUGET_API_KEY" || { echo "::error::the NuGet login gave no key — check the trusted publishing policy and NUGET_USER"; exit 1; }
           TAG=$(git describe --tags --abbrev=0 --match 'v[0-9]*')
           VERSION="${TAG#v}"
           echo "Recovery publish: ${VERSION} (from tag ${TAG})"

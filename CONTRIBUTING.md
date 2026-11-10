@@ -119,7 +119,7 @@ Required secrets:
 
 | Secret | Where | What it's for |
 | --- | --- | --- |
-| `NUGET_API_KEY` | repo settings → Secrets → Actions | nuget.org push key. Keys expire (max 365 days) — renew before it lapses; an expired key fails the push with 403. |
+| `NUGET_USER` | repo settings → Secrets → Actions | the nuget.org username (profile name, not the e-mail) that owns the **trusted publishing** policy. No NuGet key is stored: the Release workflow's `NuGet/login` step trades the job's GitHub OIDC token for a temporary key (1 hour) right before the push. Policy on nuget.org → your username → Trusted Publishing: owner `norbix-code`, repository `sdk-net`, workflow file `release.yml`, no environment. |
 | `GITHUB_TOKEN` | provided automatically | tag + GH release. |
 
 semantic-release (installed with pinned versions by `scripts/install-semantic-release.sh`):
