@@ -324,6 +324,13 @@ namespace Norbix.Sdk.Types.Hub;
         Deprovisioning,
     }
 
+    public enum ManagedServiceBundle
+    {
+        Starter,
+        Growth,
+        Scale,
+    }
+
     public enum MarketingBlockReason
     {
         Unspecified,
@@ -541,6 +548,12 @@ namespace Norbix.Sdk.Types.Hub;
         PhoneNumbers,
         Collection,
         TriggerSubject,
+    }
+
+    public enum SubscriptionBillingPeriod
+    {
+        Monthly,
+        Annual,
     }
 
     public enum SubscriptionType
@@ -1098,6 +1111,21 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember]
         public virtual bool TrialWasIssued { get; set; }
+
+        [DataMember]
+        public virtual ManagedServiceBundle? Bundle { get; set; }
+
+        [DataMember]
+        public virtual SubscriptionBillingPeriod? BillingPeriod { get; set; }
+
+        [DataMember]
+        public virtual bool IsTrial { get; set; }
+
+        [DataMember]
+        public virtual DateTime? RenewsOn { get; set; }
+
+        [DataMember]
+        public virtual int EnabledProjects { get; set; }
 
         [DataMember]
         public virtual bool EmailVerified { get; set; }
@@ -2040,6 +2068,16 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual bool IsNoOp { get; set; }
     }
 
+    [DataContract]
+    public partial class BundlePriceDto
+    {
+        [DataMember]
+        public virtual long Amount { get; set; }
+
+        [DataMember]
+        public virtual string Currency { get; set; }
+    }
+
     public partial class CodeMashSubscriptionDto
     {
         public virtual string ViewId { get; set; }
@@ -2084,6 +2122,75 @@ namespace Norbix.Sdk.Types.Hub;
     }
 
     [DataContract]
+    public partial class FlexClusterDatabaseDto
+    {
+        [DataMember]
+        public virtual string ProjectId { get; set; }
+
+        [DataMember]
+        public virtual string ProjectName { get; set; }
+
+        [DataMember]
+        public virtual string Env { get; set; }
+
+        [DataMember]
+        public virtual string IntegrationId { get; set; }
+
+        [DataMember]
+        public virtual string IntegrationName { get; set; }
+
+        [DataMember]
+        public virtual string? DatabaseName { get; set; }
+    }
+
+    [DataContract]
+    public partial class FlexClusterDto
+    {
+        [DataMember]
+        public virtual string Id { get; set; }
+
+        [DataMember]
+        public virtual string DisplayName { get; set; }
+
+        [DataMember]
+        public virtual string AtlasClusterName { get; set; }
+
+        [DataMember]
+        public virtual string NorbixRegionCode { get; set; }
+
+        [DataMember]
+        public virtual string TierCode { get; set; }
+
+        [DataMember]
+        public virtual string Status { get; set; }
+
+        [DataMember]
+        public virtual List<FlexClusterDatabaseDto> Databases { get; set; } = [];
+
+        [DataMember]
+        public virtual FlexClusterUsageDto Usage { get; set; }
+
+        [DataMember]
+        public virtual List<string> NearLimits { get; set; } = [];
+    }
+
+    [DataContract]
+    public partial class FlexClusterUsageDto
+    {
+        [DataMember]
+        public virtual int DatabaseCount { get; set; }
+
+        [DataMember]
+        public virtual long? StorageBytes { get; set; }
+
+        [DataMember]
+        public virtual int? Connections { get; set; }
+
+        [DataMember]
+        public virtual double? OperationsPerSecond { get; set; }
+    }
+
+    [DataContract]
     public partial class InstallationLicenseDetailsDto
     {
         [DataMember(Name="domain")]
@@ -2105,7 +2212,7 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual bool IsTrial { get; set; }
 
         [DataMember(Name="cap")]
-        public virtual int ProjectsCap { get; set; }
+        public virtual int? ProjectsCap { get; set; }
     }
 
     [DataContract]
@@ -2255,7 +2362,7 @@ namespace Norbix.Sdk.Types.Hub;
         : CodeMashSubscriptionDto
     {
         public virtual bool IsEnterprise { get; set; }
-        public virtual int ProjectCap { get; set; }
+        public virtual int? ProjectCap { get; set; }
     }
 
     [DataContract]
@@ -2295,6 +2402,22 @@ namespace Norbix.Sdk.Types.Hub;
     {
         [DataMember]
         public virtual List<AiServiceUserDto> Items { get; set; } = [];
+    }
+
+    [DataContract]
+    public partial class ManagedServiceBundleDto
+    {
+        [DataMember]
+        public virtual ManagedServiceBundle Bundle { get; set; }
+
+        [DataMember]
+        public virtual int ProjectCap { get; set; }
+
+        [DataMember]
+        public virtual BundlePriceDto Monthly { get; set; }
+
+        [DataMember]
+        public virtual BundlePriceDto Annual { get; set; }
     }
 
     [DataContract]
@@ -6261,6 +6384,7 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual IntegrationStatus Status { get; set; }
         public virtual string? AtlasProjectId { get; set; }
         public virtual string? AtlasClusterName { get; set; }
+        public virtual string? FlexClusterId { get; set; }
         public virtual string? FailureReason { get; set; }
     }
 
@@ -10590,6 +10714,18 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual IReadOnlyDictionary<string, string>? ExtraHeaders { get; set; }
     }
 
+    [NorbixRoute("/{version}/account/stripe/change-bundle", "POST")]
+    [DataContract]
+    public partial class ChangeManagedServiceBundle
+        : RequestBase, INorbixRequest<EmptyResponse>
+    {
+        [DataMember]
+        public virtual ManagedServiceBundle? Bundle { get; set; }
+
+        [DataMember]
+        public virtual SubscriptionBillingPeriod? BillingPeriod { get; set; }
+    }
+
     [NorbixRoute("/{version}/account/stripe/create-checkout-session", "POST")]
     [DataContract]
     public partial class CreateStripeCheckoutSession
@@ -10599,10 +10735,13 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual SubscriptionType SubscriptionType { get; set; }
 
         [DataMember]
-        public virtual string? Domain { get; set; }
+        public virtual ManagedServiceBundle? Bundle { get; set; }
 
         [DataMember]
-        public virtual int ProjectCap { get; set; }
+        public virtual SubscriptionBillingPeriod? BillingPeriod { get; set; }
+
+        [DataMember]
+        public virtual string? Domain { get; set; }
 
         [DataMember]
         public virtual Guid? NewProjectSessionId { get; set; }
@@ -10692,6 +10831,42 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual UsageBillingDto? Item { get; set; }
     }
 
+    [NorbixRoute("/{version}/account/flex-clusters", "GET")]
+    [DataContract]
+    public partial class GetFlexClusters
+        : RequestBase, INorbixRequest<GetFlexClustersResponse>
+    {
+    }
+
+    [DataContract]
+    public partial class GetFlexClustersResponse
+        : ResponseBase
+    {
+        [DataMember]
+        public virtual IReadOnlyList<FlexClusterDto>? Clusters { get; set; }
+
+        [DataMember]
+        public virtual bool CanCreateNew { get; set; }
+
+        [DataMember]
+        public virtual string? CannotCreateReason { get; set; }
+    }
+
+    [NorbixRoute("/{version}/account/stripe/bundles", "GET")]
+    [DataContract]
+    public partial class GetManagedServiceBundles
+        : RequestBase, INorbixRequest<GetManagedServiceBundlesResponse>
+    {
+    }
+
+    [DataContract]
+    public partial class GetManagedServiceBundlesResponse
+        : ResponseBase
+    {
+        [DataMember]
+        public virtual IReadOnlyList<ManagedServiceBundleDto>? Bundles { get; set; }
+    }
+
     [NorbixRoute("/{version}/account/stripe/get-portal-url", "POST")]
     [DataContract]
     public partial class GetStripeBillingPortalUrl
@@ -10750,6 +10925,18 @@ namespace Norbix.Sdk.Types.Hub;
         ///</summary>
         [DataMember]
         public virtual string? SecurityEmail { get; set; }
+    }
+
+    [NorbixRoute("/{version}/account/flex-clusters/{flexClusterId}/upgrade", "POST")]
+    [DataContract]
+    public partial class UpgradeFlexCluster
+        : RequestBase, INorbixRequest<EmptyResponse>
+    {
+        [DataMember]
+        public virtual string? FlexClusterId { get; set; }
+
+        [DataMember]
+        public virtual string? TierCode { get; set; }
     }
 
     [NorbixRoute("/{version}/account/verify", "POST")]
@@ -13953,6 +14140,16 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual string? TaskId { get; set; }
 
         ///<summary>
+        ///The Code integration of the function (int_…). With functionId: every call of that function.
+        ///</summary>
+        public virtual string? IntegrationId { get; set; }
+
+        ///<summary>
+        ///The provider's function id (name or ARN), as GET /code/functions lists it. Needs integrationId.
+        ///</summary>
+        public virtual string? FunctionId { get; set; }
+
+        ///<summary>
         ///How many runs, newest first: 1-50. Default 20.
         ///</summary>
         public virtual int? Limit { get; set; }
@@ -16343,6 +16540,8 @@ namespace Norbix.Sdk.Types.Hub;
     {
         public virtual DatabaseProvider Provider { get; set; }
         public virtual string NorbixRegionCode { get; set; }
+        public virtual string? FlexClusterId { get; set; }
+        public virtual string? ClusterDisplayName { get; set; }
     }
 
     public partial class MongoDbConnectionStringDatabaseIntegrationRequest

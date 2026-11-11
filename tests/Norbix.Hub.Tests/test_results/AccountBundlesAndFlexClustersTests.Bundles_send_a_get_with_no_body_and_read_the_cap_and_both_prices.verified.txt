@@ -1,0 +1,36 @@
+﻿{
+  Sent: {
+    Method: GET,
+    Path: /v2/account/stripe/bundles,
+    Headers: {
+      Authorization: Bearer test-bearer,
+      norbix-project-id: test-project
+    }
+  },
+  Bundles: [
+    {
+      Bundle: Growth,
+      ProjectCap: 10,
+      Monthly: {
+        Amount: 4900,
+        Currency: usd
+      },
+      Annual: {
+        Amount: 49000,
+        Currency: usd
+      }
+    },
+    {
+      Bundle: Scale,
+      ProjectCap: 50,
+      Monthly: {
+        Amount: 5000000000,
+        Currency: usd
+      },
+      Annual: {
+        Amount: 50000000000,
+        Currency: usd
+      }
+    }
+  ]
+}

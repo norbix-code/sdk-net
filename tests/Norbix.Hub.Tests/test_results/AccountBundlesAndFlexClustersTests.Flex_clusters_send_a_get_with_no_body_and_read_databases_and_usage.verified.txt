@@ -1,0 +1,41 @@
+﻿{
+  Sent: {
+    Method: GET,
+    Path: /v2/account/flex-clusters,
+    Headers: {
+      Authorization: Bearer test-bearer,
+      norbix-project-id: test-project
+    }
+  },
+  Clusters: [
+    {
+      Id: fc_7Hq2mN4bV8cX1zL6kP3rT9,
+      DisplayName: Main cluster,
+      AtlasClusterName: nbx-flex-1,
+      NorbixRegionCode: eu-central,
+      TierCode: FLEX,
+      Status: Active,
+      Databases: [
+        {
+          ProjectId: proj-1,
+          ProjectName: Shop,
+          Env: PROD,
+          IntegrationId: int_db,
+          IntegrationName: Main database,
+          DatabaseName: shop_prod
+        }
+      ],
+      Usage: {
+        DatabaseCount: 1,
+        StorageBytes: 4294967296,
+        Connections: 12,
+        OperationsPerSecond: 3.5
+      },
+      NearLimits: [
+        storage
+      ]
+    }
+  ],
+  CanCreateNew: false,
+  CannotCreateReason: ClusterLimitReached
+}

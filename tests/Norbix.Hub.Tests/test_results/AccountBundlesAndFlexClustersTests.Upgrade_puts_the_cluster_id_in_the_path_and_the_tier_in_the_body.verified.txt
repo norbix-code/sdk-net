@@ -1,0 +1,12 @@
+﻿{
+  Method: POST,
+  Path: /v2/account/flex-clusters/fc_7Hq2mN4bV8cX1zL6kP3rT9/upgrade,
+  Headers: {
+    Authorization: Bearer test-bearer,
+    Content-Type: application/json; charset=utf-8,
+    norbix-project-id: test-project
+  },
+  Body: {
+    tierCode: M10
+  }
+}
