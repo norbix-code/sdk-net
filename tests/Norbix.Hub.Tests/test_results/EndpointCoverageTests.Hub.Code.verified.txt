@@ -137,7 +137,7 @@
       Sent: {
         Method: GET,
         Path: /v2/code/functions/runs,
-        Query: ?triggerId={guid}&taskId={guid}&limit=1&env=test-env,
+        Query: ?triggerId={guid}&taskId={guid}&integrationId={guid}&functionId={guid}&limit=1&env=test-env,
         Headers: {
           Authorization: Bearer test-bearer,
           norbix-account-id: test-account,
