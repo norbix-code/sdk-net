@@ -2254,6 +2254,12 @@ namespace Norbix.Sdk.Types.Api;
         public virtual string? Salutation { get; set; }
 
         ///<summary>
+        ///Optional. Roles the invited user gets, by name ("Editor") or role id. Empty = the project's default registration role. The same rules as creating a user: an administrator may give any role, anyone else only the allowed registration roles.
+        ///</summary>
+        [DataMember]
+        public virtual List<string>? Roles { get; set; }
+
+        ///<summary>
         ///Database integration id. Optional — defaults to the request environment's default integration.
         ///</summary>
         [DataMember]

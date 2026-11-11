@@ -939,6 +939,9 @@
           email: user@example.test,
           fullName: test-fullName,
           salutation: test-salutation,
+          roles: [
+            test-string
+          ],
           databaseIntegrationId: Guid_1,
           env: test-env
         }
