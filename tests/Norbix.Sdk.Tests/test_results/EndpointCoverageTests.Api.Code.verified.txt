@@ -1,8 +1,48 @@
 ﻿{
   Target: Api,
   Group: code,
-  Count: 11,
+  Count: 12,
   Endpoints: [
+    {
+      Target: Api,
+      Group: code,
+      MethodName: InvokeMarketplaceFunctionAsync,
+      RequestType: InvokeMarketplaceFunction,
+      HttpMethod: POST,
+      Path: /{version}/code/marketplace/functions/{FunctionViewId}/invoke,
+      PathParams: [
+        FunctionViewId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/code/marketplace/functions/{guid}/invoke,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        },
+        Body: {
+          payload: {
+            test-key: null
+          },
+          env: test-env
+        }
+      },
+      ResponseType: InvokeMarketplaceFunctionResponse,
+      Response: {
+        IsSuccess: true,
+        Output: {
+          ValueKind: Object
+        },
+        VendorRequestId: Guid_1,
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
     {
       Target: Api,
       Group: code,

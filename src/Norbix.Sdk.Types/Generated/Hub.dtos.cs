@@ -5181,6 +5181,12 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual string? OAuthRedirectUrl { get; set; }
 
         [DataMember]
+        public virtual bool OAuthSignIn { get; set; }
+
+        [DataMember]
+        public virtual bool? OAuthInstallAppReady { get; set; }
+
+        [DataMember]
         public virtual MarketplaceListingKind Kind { get; set; }
 
         [DataMember]
@@ -5345,6 +5351,9 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember]
         public virtual MarketplaceHttpRequestSpecDto? Probe { get; set; }
+
+        [DataMember]
+        public virtual List<string>? AuthKinds { get; set; }
     }
 
     [DataContract]

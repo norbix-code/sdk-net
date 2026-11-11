@@ -1579,6 +1579,7 @@
           Vendor: test-vendor,
           Description: test-description,
           IconUrl: https://example.test/iconUrl,
+          OAuthSignIn: false,
           IsOfficial: false
         },
         ResponseStatus: {
