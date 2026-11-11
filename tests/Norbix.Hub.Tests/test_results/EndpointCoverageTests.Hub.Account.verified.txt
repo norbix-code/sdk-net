@@ -2116,6 +2116,7 @@
           HostLabel: test-hostLabel,
           ApiHost: test-apiHost,
           IsMultiRegionEligible: false,
+          EmailClickTracking: false,
           ExposeBrandToAdminPortal: false,
           ExposeAuthToAdminPortal: false,
           AdminPortalEnabled: false,
