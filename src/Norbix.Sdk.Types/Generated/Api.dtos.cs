@@ -3479,6 +3479,8 @@ namespace Norbix.Sdk.Types.Api;
         public virtual string? SourceId { get; set; }
         public virtual HashSet<ErrorDto>? Errors { get; set; }
         public virtual HashSet<string>? Tags { get; set; }
+        public virtual string? Flag { get; set; }
+        public virtual string? FlagReason { get; set; }
     }
 
     [DataContract]

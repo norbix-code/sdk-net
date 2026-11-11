@@ -1685,6 +1685,9 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual HashSet<string>? AllowedOrigins { get; set; }
 
         [DataMember]
+        public virtual bool EmailClickTracking { get; set; }
+
+        [DataMember]
         public virtual List<ProjectEnvironmentAdminUrlDto>? EnvironmentAdminUrls { get; set; }
 
         [DataMember]
@@ -3751,6 +3754,8 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual string? SourceId { get; set; }
         public virtual HashSet<ErrorDto>? Errors { get; set; }
         public virtual HashSet<string>? Tags { get; set; }
+        public virtual string? Flag { get; set; }
+        public virtual string? FlagReason { get; set; }
     }
 
     [DataContract]
@@ -18518,6 +18523,100 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual PaginatedResponse<EmailCampaignBatchNotificationDto>? List { get; set; }
     }
 
+    [DataContract]
+    public partial class EmailClickDto
+    {
+        ///<summary>
+        ///The nblid value from the clicked link's query string.
+        ///</summary>
+        [DataMember]
+        public virtual string Nblid { get; set; }
+
+        ///<summary>
+        ///Optional. The page that was opened (kept on the click, at most 2048 characters).
+        ///</summary>
+        [DataMember]
+        public virtual string? Url { get; set; }
+
+        ///<summary>
+        ///Optional. When the link was opened (UTC; a time with no zone is taken as UTC). Default: now. The same nblid, url and time sent again is recorded once.
+        ///</summary>
+        [DataMember]
+        public virtual DateTime? ClickedAt { get; set; }
+
+        ///<summary>
+        ///Optional. The browser's user agent. A known mail scanner or bot is flagged suspected-scanner.
+        ///</summary>
+        [DataMember]
+        public virtual string? UserAgent { get; set; }
+    }
+
+    [DataContract]
+    public partial class EmailClickResultDto
+    {
+        [DataMember]
+        public virtual int Index { get; set; }
+
+        [DataMember]
+        public virtual string Status { get; set; }
+
+        [DataMember]
+        public virtual string? Reason { get; set; }
+
+        [DataMember]
+        public virtual string? Flag { get; set; }
+
+        [DataMember]
+        public virtual string? FlagReason { get; set; }
+
+        [DataMember]
+        public virtual string? CampaignId { get; set; }
+
+        [DataMember]
+        public virtual string? NotificationId { get; set; }
+
+        [DataMember]
+        public virtual int? LinkIndex { get; set; }
+
+        [DataMember]
+        public virtual List<string>? To { get; set; }
+    }
+
+    ///<summary>
+    ///Records email clicks handed back with their click ids (nblid).
+    ///</summary>
+    [NorbixRoute("/{version}/notifications/email/clicks", "POST")]
+    [DataContract]
+    public partial class RecordEmailClicksRequest
+        : CodeMashRequestBase, INorbixRequest<RecordEmailClicksResponse>
+    {
+        ///<summary>
+        ///1 to 500 clicks.
+        ///</summary>
+        [DataMember]
+        public virtual List<EmailClickDto> Clicks { get; set; } = [];
+    }
+
+    [DataContract]
+    public partial class RecordEmailClicksResponse
+        : ResponseBase
+    {
+        [DataMember]
+        public virtual int Recorded { get; set; }
+
+        [DataMember]
+        public virtual int Duplicates { get; set; }
+
+        [DataMember]
+        public virtual int Flagged { get; set; }
+
+        [DataMember]
+        public virtual int Rejected { get; set; }
+
+        [DataMember]
+        public virtual List<EmailClickResultDto>? Clicks { get; set; }
+    }
+
     ///<summary>
     ///Archive an email template
     ///</summary>
@@ -18823,6 +18922,19 @@ namespace Norbix.Sdk.Types.Hub;
     {
         public virtual EmailSettings? Settings { get; set; }
         public virtual HashSet<GroupDefinitionDto>? SystemTags { get; set; }
+    }
+
+    ///<summary>
+    ///Switches email click ids on or off. When on, every web link in the project's marketing emails gets ?nblid=<click id>. Clicks come back only from sites you own: your pages, server logs or analytics hand the nblid back with POST /notifications/email/clicks.
+    ///</summary>
+    [NorbixRoute("/{version}/notifications/email/settings/click-tracking", "PATCH")]
+    public partial class UpdateEmailClickTracking
+        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
+    {
+        ///<summary>
+        ///true: links of marketing emails get ?nblid=<click id>. false: links are sent as written.
+        ///</summary>
+        public virtual bool Enabled { get; set; }
     }
 
     ///<summary>

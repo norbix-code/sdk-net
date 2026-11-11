@@ -1,0 +1,39 @@
+﻿{
+  Target: Hub,
+  Group: notifications,
+  MethodName: RecordEmailClicksAsync,
+  RequestType: RecordEmailClicksRequest,
+  HttpMethod: POST,
+  Path: /{version}/notifications/email/clicks,
+  IsAccountScoped: false,
+  IsUnauthenticated: false,
+  Sent: {
+    Method: POST,
+    Path: /v2/notifications/email/clicks,
+    Headers: {
+      Authorization: Bearer test-bearer,
+      Content-Type: application/json; charset=utf-8,
+      norbix-account-id: test-account,
+      norbix-project-id: test-project
+    },
+    Body: {
+      clicks: [
+        null
+      ],
+      env: test-env
+    }
+  },
+  ResponseType: RecordEmailClicksResponse,
+  Response: {
+    Recorded: 7,
+    Duplicates: 7,
+    Flagged: 7,
+    Rejected: 7,
+    Clicks: [
+      {}
+    ],
+    ResponseStatus: {
+      IsSuccess: true
+    }
+  }
+}

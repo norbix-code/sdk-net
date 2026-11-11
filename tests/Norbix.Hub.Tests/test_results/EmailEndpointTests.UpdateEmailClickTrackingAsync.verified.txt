@@ -1,0 +1,30 @@
+﻿{
+  Target: Hub,
+  Group: notifications,
+  MethodName: UpdateEmailClickTrackingAsync,
+  RequestType: UpdateEmailClickTracking,
+  HttpMethod: PATCH,
+  Path: /{version}/notifications/email/settings/click-tracking,
+  IsAccountScoped: false,
+  IsUnauthenticated: false,
+  Sent: {
+    Method: PATCH,
+    Path: /v2/notifications/email/settings/click-tracking,
+    Headers: {
+      Authorization: Bearer test-bearer,
+      Content-Type: application/json; charset=utf-8,
+      norbix-account-id: test-account,
+      norbix-project-id: test-project
+    },
+    Body: {
+      enabled: true,
+      env: test-env
+    }
+  },
+  ResponseType: EmptyResponse,
+  Response: {
+    ResponseStatus: {
+      IsSuccess: true
+    }
+  }
+}

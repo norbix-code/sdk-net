@@ -1,7 +1,7 @@
 ﻿{
   Target: Hub,
   Group: notifications,
-  Count: 128,
+  Count: 130,
   Endpoints: [
     {
       Target: Hub,
@@ -565,6 +565,45 @@
     {
       Target: Hub,
       Group: notifications,
+      MethodName: RecordEmailClicksAsync,
+      RequestType: RecordEmailClicksRequest,
+      HttpMethod: POST,
+      Path: /{version}/notifications/email/clicks,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/notifications/email/clicks,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        },
+        Body: {
+          clicks: [
+            null
+          ],
+          env: test-env
+        }
+      },
+      ResponseType: RecordEmailClicksResponse,
+      Response: {
+        Recorded: 7,
+        Duplicates: 7,
+        Flagged: 7,
+        Rejected: 7,
+        Clicks: [
+          {}
+        ],
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: notifications,
       MethodName: ArchiveEmailTemplateAsync,
       RequestType: ArchiveEmailTemplateRequest,
       HttpMethod: PUT,
@@ -1035,6 +1074,36 @@
             {}
           ]
         },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: notifications,
+      MethodName: UpdateEmailClickTrackingAsync,
+      RequestType: UpdateEmailClickTracking,
+      HttpMethod: PATCH,
+      Path: /{version}/notifications/email/settings/click-tracking,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: PATCH,
+        Path: /v2/notifications/email/settings/click-tracking,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        },
+        Body: {
+          enabled: true,
+          env: test-env
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
         ResponseStatus: {
           IsSuccess: true
         }
