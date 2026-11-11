@@ -20415,6 +20415,26 @@ namespace Norbix.Sdk.Types.Hub;
         ///</summary>
         public virtual bool? AllowAnyoneToSignUp { get; set; }
 
+        ///<summary>
+        ///Setting = 'AllowPasswordReset': true = a reset request sends the e-mail, false = it sends nothing (the answer stays the same).
+        ///</summary>
+        public virtual bool? AllowResetPassword { get; set; }
+
+        ///<summary>
+        ///Setting = 'PasswordResetTemplate': the project's e-mail template id (tmpl_…); empty = the built-in "Password reset" template.
+        ///</summary>
+        public virtual string? ResetPasswordEmailTemplate { get; set; }
+
+        ///<summary>
+        ///Setting = 'PasswordResetExpiration': how many minutes the reset link works (5–1440); empty = 30.
+        ///</summary>
+        public virtual int? ResetPasswordTokenExpiration { get; set; }
+
+        ///<summary>
+        ///Setting = 'PasswordResetCallback': your own "choose a new password" page (https://…, http only for localhost); the link is it + #token=…. Empty = the portal page.
+        ///</summary>
+        public virtual string? ResetPasswordCallback { get; set; }
+
         public virtual int MinLength { get; set; }
         public virtual int? MaxLength { get; set; }
         public virtual int? MinNumbers { get; set; }
