@@ -5309,6 +5309,29 @@ namespace Norbix.Sdk.Types.Api;
         public virtual ExecutionIdentitySummaryDto? ExecutionIdentity { get; set; }
     }
 
+    [NorbixRoute("/{version}/code/marketplace/functions/{FunctionViewId}/invoke", "POST")]
+    [DataContract]
+    public partial class InvokeMarketplaceFunction
+        : CodeMashRequestBase, INorbixRequest<InvokeMarketplaceFunctionResponse>
+    {
+        ///<summary>
+        ///Function view id (func_…), from get_marketplace_functions.
+        ///</summary>
+        [DataMember]
+        public virtual string FunctionViewId { get; set; }
+
+        [DataMember]
+        public virtual Dictionary<string, Object> Payload { get; set; } = new();
+    }
+
+    public partial class InvokeMarketplaceFunctionResponse
+        : ResponseBase
+    {
+        public virtual bool IsSuccess { get; set; }
+        public virtual Object? Output { get; set; }
+        public virtual string? VendorRequestId { get; set; }
+    }
+
     [NorbixRoute("/{version}/code/workflows/runs/{RunId}/cancel", "POST")]
     [DataContract]
     public partial class CancelCodeWorkflowRun
