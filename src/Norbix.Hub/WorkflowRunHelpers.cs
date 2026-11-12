@@ -62,6 +62,10 @@ public static class WorkflowRunExtensions
     /// (loops), then the highest <c>Attempt</c> (retries) among the executions whose
     /// <c>Status</c> is <c>succeeded</c> — read as <typeparamref name="T"/> with the SDK's
     /// JSON options. <c>default</c> when the step never succeeded or has no output.
+    /// Group approval (a wait step with <c>require</c>): a resume answers the run still
+    /// <c>waiting</c> until enough people answered, and this method gives <c>default</c> for
+    /// that step until then — read <c>WaitingOn[].Answers</c> on the run. Once the wait is decided its output also carries
+    /// <c>require</c>, <c>approvals</c>, <c>rejections</c>, <c>answers</c> and <c>pending</c>.
     /// </summary>
     public static T? StepOutput<T>(this WorkflowRunDto run, string stepId)
     {

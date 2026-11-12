@@ -3978,6 +3978,19 @@ namespace Norbix.Sdk.Types.Api;
     }
 
     [DataContract]
+    public partial class WorkflowWaitAnswerDto
+    {
+        [DataMember]
+        public virtual string UserId { get; set; }
+
+        [DataMember]
+        public virtual string Decision { get; set; }
+
+        [DataMember]
+        public virtual DateTime At { get; set; }
+    }
+
+    [DataContract]
     public partial class WorkflowWaitingOnDto
     {
         [DataMember]
@@ -3994,6 +4007,12 @@ namespace Norbix.Sdk.Types.Api;
 
         [DataMember]
         public virtual List<string>? Assignees { get; set; }
+
+        [DataMember]
+        public virtual int? Require { get; set; }
+
+        [DataMember]
+        public virtual List<WorkflowWaitAnswerDto>? Answers { get; set; }
 
         [DataMember]
         public virtual string? ChildRunId { get; set; }
