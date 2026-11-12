@@ -1156,6 +1156,12 @@ else if (run.Status == "waiting")
 }
 ```
 
+Group approval (a wait step with `"require": "all"` or a number): a resume
+records the caller's answer and answers the run still `waiting` until enough
+people answered. Read `run.WaitingOn[].Require` (how many must approve) and
+`run.WaitingOn[].Answers` (`UserId`, `Decision`, `At`). A second answer by the
+same person is `CM-ERRORS-WORKFLOWS-016`.
+
 ## Marketplace MCP connections — tool catalog
 
 An MCP connection (a Marketplace connection whose listing uses the MCP

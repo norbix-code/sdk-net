@@ -53,6 +53,11 @@ public sealed partial class NorbixHubClient
     /// <c>waiting</c>. Still running after <see cref="WaitForWorkflowRunOptions.Timeout"/>
     /// (default 60 s) → <see cref="WorkflowRunTimeoutException"/> with the last run read.
     /// An answer with no run → <see cref="NorbixException"/>.
+    /// Group approval (a wait step with <c>require</c>): <c>Code.ResumeCodeWorkflowRunAsync</c>
+    /// records the caller's answer and answers the run still <c>waiting</c> until enough people
+    /// answered, so this method returns such a run at once — it does not wait for the other
+    /// approvers. Read <c>WaitingOn[].Require</c> (how many must approve) and
+    /// <c>WaitingOn[].Answers</c> (who answered so far).
     /// Workflows are in beta; bugs may occur.
     /// </summary>
     public async Task<WorkflowRunDto> WaitForWorkflowRunAsync(

@@ -30,6 +30,8 @@ public sealed class WorkflowHelpersTests
         PollInterval = TimeSpan.FromMilliseconds(1),
     };
 
+    private static readonly string[] Approvers = ["usr_ann", "usr_bob", "usr_cid"];
+
     private sealed record Greeting(string Message, int Count);
 
     private static NorbixTestFixture NewFixture() =>
@@ -175,6 +177,62 @@ public sealed class WorkflowHelpersTests
                 NeverSucceededIntIsDefault = run.StepOutput<int>("never") == 0,
             },
             VerifyConfig.VerifySettings);
+    }
+
+    /// <summary>
+    /// Group approval (Code.Workflows.md §3.3b): a resume records the caller's answer and
+    /// answers the run still <c>waiting</c> until enough people answered. The waiting record
+    /// carries <c>require</c> and the answers so far; both land in the typed fields.
+    /// </summary>
+    [Test]
+    public async Task Resume_of_a_group_approval_answers_the_run_still_waiting_with_the_answers()
+    {
+        using var fixture = NewFixture();
+        fixture.RespondNext(new
+        {
+            run = new
+            {
+                runId = RunId,
+                workflowId = "wf_1",
+                status = "waiting",
+                waitingOn = new[]
+                {
+                    new
+                    {
+                        stepId = "approve",
+                        kind = "approval",
+                        assignees = Approvers,
+                        require = 2,
+                        answers = new[]
+                        {
+                            new { userId = "usr_ann", decision = "approved", at = "2026-11-12T09:30:15Z" },
+                        },
+                    },
+                },
+            },
+        });
+
+        var answer = await fixture.Client.Code.ResumeCodeWorkflowRunAsync(
+            new ResumeCodeWorkflowRun { RunId = RunId, StepId = "approve", Decision = "approved" });
+
+        var sent = fixture.LastRequest!;
+        Assert.That(sent.Method, Is.EqualTo("POST"));
+        Assert.That(sent.Path, Does.EndWith($"/code/workflows/runs/{RunId}/resume"));
+
+        var run = answer!.Run!;
+        Assert.That(run.Status, Is.EqualTo("waiting"));
+        Assert.That(run.WaitingOn, Has.Count.EqualTo(1));
+
+        var wait = run.WaitingOn[0];
+        Assert.That(wait.StepId, Is.EqualTo("approve"));
+        Assert.That(wait.Assignees, Is.EqualTo(Approvers));
+        Assert.That(wait.Require, Is.EqualTo(2));
+        Assert.That(wait.Answers, Has.Count.EqualTo(1));
+        Assert.That(wait.Answers![0].UserId, Is.EqualTo("usr_ann"));
+        Assert.That(wait.Answers[0].Decision, Is.EqualTo("approved"));
+        Assert.That(
+            wait.Answers[0].At.ToUniversalTime(),
+            Is.EqualTo(new DateTime(2026, 11, 12, 9, 30, 15, DateTimeKind.Utc)));
     }
 
     /// <summary>
