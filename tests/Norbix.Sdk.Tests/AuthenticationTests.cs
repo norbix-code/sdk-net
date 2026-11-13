@@ -117,6 +117,39 @@ public sealed class AuthenticationTests
     }
 
     [Test]
+    public async Task LoginAsync_reads_passwordChangeRequired_from_meta()
+    {
+        using var fixture = NorbixTestFixture.Create(o => o.ProjectId = "p1");
+        fixture.Respond("/auth", new
+        {
+            bearerToken = "fresh-jwt",
+            userId = "u1",
+            meta = new { credentialVersion = "cv-1", passwordChangeRequired = "true" },
+        });
+
+        var session = await fixture.Client.LoginAsync(new LoginCredentials { UserName = "alice", Password = "abc" });
+
+        Assert.That(session.BearerToken, Is.EqualTo("fresh-jwt"));
+        Assert.That(session.PasswordChangeRequired, Is.True);
+    }
+
+    [Test]
+    public async Task LoginAsync_passwordChangeRequired_is_false_when_meta_has_no_such_key()
+    {
+        using var fixture = NorbixTestFixture.Create(o => o.ProjectId = "p1");
+        fixture.Respond("/auth", new
+        {
+            bearerToken = "fresh-jwt",
+            userId = "u1",
+            meta = new { credentialVersion = "cv-1" },
+        });
+
+        var session = await fixture.Client.LoginAsync(new LoginCredentials { UserName = "alice", Password = "long-enough" });
+
+        Assert.That(session.PasswordChangeRequired, Is.False);
+    }
+
+    [Test]
     public async Task LoginAsync_defaults_provider_to_credentials()
     {
         using var fixture = NorbixTestFixture.Create(o =>
