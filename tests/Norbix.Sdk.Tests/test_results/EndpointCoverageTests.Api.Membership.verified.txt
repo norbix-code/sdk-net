@@ -756,6 +756,7 @@
         },
         Body: {
           code: test-code,
+          codeVerifier: test-codeVerifier,
           env: test-env
         }
       },
@@ -1015,6 +1016,7 @@
         },
         Body: {
           code: test-code,
+          codeVerifier: test-codeVerifier,
           env: test-env
         }
       },
@@ -1582,6 +1584,7 @@
           provider: test-provider,
           mode: test-mode,
           returnUrl: https://example.test/returnUrl,
+          codeChallenge: test-codeChallenge,
           env: test-env
         }
       },
