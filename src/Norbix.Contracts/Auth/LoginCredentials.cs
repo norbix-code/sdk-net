@@ -38,5 +38,16 @@ public sealed class LoginResponse
     /// </summary>
     public Dictionary<string, string>? Meta { get; set; }
 
+    /// <summary>
+    /// True when the typed password breaks the project's current password rules
+    /// (the rules got stricter after the password was set): the gateway answers
+    /// <c>meta.passwordChangeRequired = "true"</c>. The sign-in still succeeded;
+    /// send the user to change their password. False when the key is absent.
+    /// </summary>
+    public bool PasswordChangeRequired =>
+        Meta is not null
+        && Meta.TryGetValue("passwordChangeRequired", out var value)
+        && value == "true";
+
     public Dictionary<string, object?>? Extras { get; set; }
 }

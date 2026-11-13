@@ -6,7 +6,8 @@
     UserName: alice,
     Meta: {
       credentialVersion: cv-1
-    }
+    },
+    PasswordChangeRequired: false
   },
   ClientAuthenticated: true,
   AuthedAuthenticated: true,

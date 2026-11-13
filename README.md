@@ -51,11 +51,14 @@ using var client = new NorbixApiClient(new NorbixClientOptions
     ProjectId = "proj_123",
 });
 
-await client.LoginAsync(new()
+var login = await client.LoginAsync(new()
 {
     UserName = "alice@team.io",
     Password = "secret",
 });
+// Signed in, but the password breaks the project's current password rules:
+// send the user to change it.
+if (login.PasswordChangeRequired) { /* show your change-password screen */ }
 
 await client.Database.FindAsync(new FindRequest { CollectionName = "orders" }); // acts as Alice
 ```
