@@ -105,6 +105,30 @@ var asService = client.WithoutBearerToken(); // falls back to ApiKey if configur
 var forOtherProject = client.WithScope("proj_456");
 ```
 
+### Social sign-in
+
+Project users can sign in with Google, Apple, Microsoft, GitHub, Facebook, X or Okta. The project's enabled providers are in the public config (`GetPublicProjectConfigAsync` → `Auth.SocialSignIn`: `Provider`, `DisplayName`, `StartPath`).
+
+```csharp
+// 1. Send the browser (on a phone: the system browser) to the start URL. Not a call: it redirects.
+var url = client.SocialSignInUrl("google", returnUrl: "https://app.example.com/oauth/callback");
+
+// 2. The return page gets ?code=…&provider=google (or ?error=…). Trade the code within 2 minutes:
+var token = await client.Membership.ExchangeSocialSignInCodeAsync(
+    new ExchangeSocialSignInCodeRequest { Provider = "google", Code = code });
+var asUser = client.WithBearerToken(token!.BearerToken); // 14 days, no refresh token
+
+// Link another provider to the signed-in user (for yourself only):
+var start = await asUser.Membership.StartLinkIdentityAsync(
+    new StartLinkIdentityRequest { UserId = "usr_…", Provider = "github", ReturnUrl = "https://app.example.com/settings" });
+// send the browser to start.AuthorizeUrl; it comes back with ?intent=link&code=…
+await asUser.Membership.LinkIdentityAsync(new LinkIdentityRequest { UserId = "usr_…", Code = linkCode });
+```
+
+- `SocialSignInUrl(provider, mode, returnUrl)` puts the project id and a non-PROD env (`WithEnv`) in the query, because a navigation sends no headers. `returnUrl` must be absolute https (http only on localhost) with an allowed origin; without it the mode's pages are used.
+- The start and the provider callback have no `…Async` method: they are browser navigations.
+- Refusals: `CM-ERRORS-MEMBERSHIP-051` (code used, expired or unknown), `-055` (409, the provider account belongs to another user), `-056` (403, not yourself).
+
 ## Configuration from Environment
 
 Any field you do not set on `NorbixClientOptions` is read from environment variables.
@@ -325,7 +349,7 @@ The public endpoint surface is generated from gateway DTOs at compile time. The 
 | `echo` | 1 | Smoke-test echo endpoint. |
 | `files` | 13 | List, info, signed URL, upload URL + commit, download, delete one / many, public links, and a file by its stored id (`GetFileByIdAsync`). |
 | `logs` | 1 | `WriteLogsAsync` sends your app's own log entries to the project's logs: 1–100 `WriteLogEntry` per call (`Title` up to 200 characters; optional `Level` `information` / `warning` / `error`, `Message`, `EventCode` stored as `app:<code>`, `CorrelationId`, `Timestamp`, `Meta` up to 20 keys). It answers `Accepted` at once — the entries are queued. Over the project's per-minute quota it throws `NorbixException` with `HttpStatus` 429 and `CM-ERRORS-LOGGING-003`; `RetryAfterSeconds` says how many seconds to wait before sending again (the SDK never resends a POST itself); `CM-ERRORS-LOGGING-002` means the Logs module is off. |
-| `membership` | 18 | User CRUD, registration, preferences, roles, and permissions. |
+| `membership` | 18 | User CRUD, registration, preferences, roles, and permissions; social sign-in (`ExchangeSocialSignInCodeAsync`) and linking a social account (`StartLinkIdentityAsync`, `LinkIdentityAsync`). See [Social sign-in](#social-sign-in). |
 | `payments` | 4 | Payment orders and checkout: `CreatePaymentOrderAsync`, `GetPaymentOrderAsync`, `GetPaymentOrdersAsync`, `StartPaymentCheckoutAsync`. See [Payment orders and checkout](#payment-orders-and-checkout). |
 | `public` | 2 | The project's public config and legal documents, read by the Admin Portal before sign-in (`GetPublicProjectConfigAsync`, `GetPublicProjectLegalAsync`). See [docs/hub/project.md](./docs/hub/project.md#public-config-and-legal-no-sign-in). |
 

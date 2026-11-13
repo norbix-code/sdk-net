@@ -409,6 +409,34 @@ internal sealed class HttpTransport : INorbixTransport, IDisposable
         static string? Pick(string? value) => string.IsNullOrEmpty(value) ? null : value;
     }
 
+    /// <summary>
+    /// The full URL of a <c>GET</c> route that a browser navigates to (a link or
+    /// a redirect, not a call). A navigation carries no headers, so the project
+    /// id and a non-PROD env go into the query (<c>?projectId=…&amp;env=…</c>),
+    /// followed by <paramref name="query"/> in order; null values are left out.
+    /// </summary>
+    internal string NavigationUrl(
+        NorbixTarget target,
+        string path,
+        IEnumerable<KeyValuePair<string, string?>> query)
+    {
+        var baseUrl = ComposeRegionalBaseUrl(
+            target == NorbixTarget.Api ? _options.ApiBaseUrl : _options.HubBaseUrl,
+            target);
+        var version = target == NorbixTarget.Api ? _options.ApiVersion : _options.HubVersion;
+        var url = JoinUrl(baseUrl, path.Replace("{version}", Uri.EscapeDataString(version), StringComparison.Ordinal));
+
+        var parts = new List<string>();
+        void Add(string key, string? value)
+        {
+            if (value is not null) parts.Add($"{Uri.EscapeDataString(key)}={Uri.EscapeDataString(value)}");
+        }
+        Add("projectId", string.IsNullOrEmpty(_options.ProjectId) ? null : _options.ProjectId);
+        Add("env", string.IsNullOrEmpty(_options.Env) || string.Equals(_options.Env, "PROD", StringComparison.Ordinal) ? null : _options.Env);
+        foreach (var (key, value) in query) Add(key, value);
+        return parts.Count == 0 ? url : $"{url}?{string.Join("&", parts)}";
+    }
+
     private (string Url, string? Body) BuildUrlAndBody(in NorbixRequestSpec spec)
     {
         var baseUrl = ComposeRegionalBaseUrl(

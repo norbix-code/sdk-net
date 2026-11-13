@@ -264,6 +264,7 @@ public sealed class EndpointSourceGenerator : IIncrementalGenerator
         // owner 2026-10-22: /internal/* is not SDK surface
         endpoints = endpoints
             .Where(e => !e.Routes.All(r => r.Path.StartsWith("/internal/", StringComparison.Ordinal)))
+            .Where(e => !IsBrowserNavigation(e))
             .ToImmutableArray();
 
         var apiEndpoints = endpoints.Where(e => e.Target == EndpointTarget.Api).ToImmutableArray();
@@ -362,6 +363,17 @@ public sealed class EndpointSourceGenerator : IIncrementalGenerator
                 return v;
         return "POST";
     }
+
+    /// <summary>
+    /// Social sign-in start and callback (2026-11-13): the browser navigates to
+    /// the start and the gateway answers a 302 to the provider; the provider
+    /// calls the callback. Neither is a call an app makes, so neither gets a
+    /// method. <c>NorbixApiClient.SocialSignInUrl</c> builds the start URL.
+    /// </summary>
+    private static bool IsBrowserNavigation(EndpointModel e) =>
+        e.Routes.All(r =>
+            r.Path == "/{version}/membership/auth/social/{Provider}"
+            || r.Path == "/{version}/membership/auth/social/{Provider}/callback/{ProjectId}");
 
     private static string MethodNameFromClass(string className)
     {
