@@ -16175,15 +16175,6 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual string AuthId { get; set; }
     }
 
-    ///<summary>
-    ///Disable database service
-    ///</summary>
-    [NorbixRoute("/{version}/database/disable", "PUT")]
-    public partial class DisableDatabase
-        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
-    {
-    }
-
     [NorbixRoute("/{version}/database/enable", "PUT")]
     public partial class EnableDatabase
         : CodeMashRequestBase, INorbixRequest<EmptyResponse>
@@ -20415,12 +20406,6 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual string IntegrationId { get; set; }
     }
 
-    [NorbixRoute("/{version}/membership/disable", "PUT")]
-    public partial class DisableMembership
-        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
-    {
-    }
-
     [NorbixRoute("/{version}/membership/enable", "PUT")]
     public partial class EnableMembership
         : CodeMashRequestBase, INorbixRequest<EmptyResponse>
@@ -20814,16 +20799,6 @@ namespace Norbix.Sdk.Types.Hub;
     {
         [DataMember(Name="integration")]
         public virtual MembershipIntegrationRequest Integration { get; set; }
-    }
-
-    [NorbixRoute("/{version}/membership/integrations/{Id}/default", "PUT")]
-    public partial class SetMembershipIntegrationAsDefaultRequest
-        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
-    {
-        ///<summary>
-        ///Integration id, from get_membership_integrations.
-        ///</summary>
-        public virtual string Id { get; set; }
     }
 
     public partial class XMembershipIntegrationRequest
