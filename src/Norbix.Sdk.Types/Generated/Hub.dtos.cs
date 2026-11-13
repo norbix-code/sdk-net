@@ -749,6 +749,7 @@ namespace Norbix.Sdk.Types.Hub;
         Fake,
     }
 
+    [NorbixRoute("/internal/_typegen", "GET")]
     public partial class InternalsTypeGen
     {
         public virtual SmtpEmailIntegrationRequest? Typegen_0_SmtpEmailIntegrationRequest { get; set; }
@@ -5569,13 +5570,13 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual int? MaxStepRuns { get; set; }
 
         ///<summary>
-        ///Wall-clock from start, including parked time; default 604800 (7 days), cap 2592000.
+        ///Wall-clock from start, including parked time; default 604800 (7 days), cap 31536000 (one year).
         ///</summary>
         [DataMember]
         public virtual int? MaxDurationSeconds { get; set; }
 
         ///<summary>
-        ///The longest one delay / wait may park; default 604800, cap 2592000.
+        ///The longest one delay / wait may park; default 604800 (7 days), cap 31536000 (one year). A signed resume link still lives at most 7 days, so a longer wait is answered in the dashboard, the CLI or an SDK.
         ///</summary>
         [DataMember]
         public virtual int? MaxWaitSeconds { get; set; }
@@ -5976,7 +5977,7 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual Dictionary<string, Object>? Action { get; set; }
 
         ///<summary>
-        ///Flow kinds: expression | level, message, meta | seconds, until | mode, key, inputs, assignees, timeoutSeconds | branches, join | mode | workflowRef, payload, wait, timeoutSeconds | items, body, concurrency.
+        ///Flow kinds: expression | level, message, meta | seconds, until | mode, key, inputs, assignees, timeoutSeconds, notify | branches, join | mode | workflowRef, payload, wait, timeoutSeconds | items, body, concurrency. One assignees entry is a usr_ id, a @Model.* binding, or a rule: role:<name or id>, tag:<name>, the two joined with '+', or teamrole:<name>.
         ///</summary>
         [DataMember]
         public virtual Dictionary<string, Object>? Config { get; set; }
@@ -6087,7 +6088,22 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual string UserId { get; set; }
 
         [DataMember]
+        public virtual string? Kind { get; set; }
+
+        [DataMember]
         public virtual string Decision { get; set; }
+
+        ///<summary>
+        ///Which slots this answer filled (places in `slots`, from 0). One person who matches two rules fills both with one answer.
+        ///</summary>
+        [DataMember]
+        public virtual List<int>? Slots { get; set; }
+
+        ///<summary>
+        ///True = this person was not asked and answered on the override right.
+        ///</summary>
+        [DataMember]
+        public virtual bool? Override { get; set; }
 
         [DataMember]
         public virtual DateTime At { get; set; }
@@ -6108,17 +6124,72 @@ namespace Norbix.Sdk.Types.Hub;
         [DataMember]
         public virtual string? Key { get; set; }
 
+        ///<summary>
+        ///The people told when the wait parked. An approval addressed to a role tells everybody who held that role then, so this list can be longer or shorter than `slots` — count `slots`, never this.
+        ///</summary>
         [DataMember]
         public virtual List<string>? Assignees { get; set; }
 
+        ///<summary>
+        ///A group approval: how many of `slots` must approve. Absent = the first answer decides.
+        ///</summary>
         [DataMember]
         public virtual int? Require { get; set; }
+
+        ///<summary>
+        ///One entry per thing the approval asks for: a person or a rule, and whether it is filled. The unit `require`, `approvals` and `rejections` count.
+        ///</summary>
+        [DataMember]
+        public virtual List<WorkflowWaitSlotDto>? Slots { get; set; }
 
         [DataMember]
         public virtual List<WorkflowWaitAnswerDto>? Answers { get; set; }
 
+        ///<summary>
+        ///Inbox rows only: true = this approval is yours; false = none of it is yours, so answering it is an override, if you hold the right. Absent = nobody is asked for a slot here, or it was not worked out.
+        ///</summary>
+        [DataMember]
+        public virtual bool? Mine { get; set; }
+
         [DataMember]
         public virtual string? ChildRunId { get; set; }
+    }
+
+    [DataContract]
+    public partial class WorkflowWaitSlotDto
+    {
+        ///<summary>
+        ///As the author wrote it: a usr_ id, role:<name>, tag:<name>, role:<name>+tag:<name> or teamrole:<name>. Show this.
+        ///</summary>
+        [DataMember]
+        public virtual string Label { get; set; }
+
+        [DataMember]
+        public virtual string? UserId { get; set; }
+
+        [DataMember]
+        public virtual string? Role { get; set; }
+
+        [DataMember]
+        public virtual string? Tag { get; set; }
+
+        [DataMember]
+        public virtual bool? TeamRole { get; set; }
+
+        [DataMember]
+        public virtual string? AnsweredBy { get; set; }
+
+        [DataMember]
+        public virtual string? Decision { get; set; }
+
+        [DataMember]
+        public virtual DateTime? At { get; set; }
+
+        ///<summary>
+        ///True = somebody who was not asked answered for this slot, using the override right.
+        ///</summary>
+        [DataMember]
+        public virtual bool? Override { get; set; }
     }
 
     public partial class AccountComplianceDto
@@ -7929,23 +8000,7 @@ namespace Norbix.Sdk.Types.Hub;
     public partial class MembershipCredentialsSettingsDto
     {
         [DataMember]
-        public virtual string? LogoutUrl { get; set; }
-
-        [DataMember]
         public virtual bool AllowUsernames { get; set; }
-
-        [DataMember]
-        public virtual List<MembershipCredentialsSettingsModeDto>? Modes { get; set; }
-    }
-
-    [DataContract]
-    public partial class MembershipCredentialsSettingsModeDto
-    {
-        [DataMember]
-        public virtual string? Name { get; set; }
-
-        [DataMember]
-        public virtual string? LogoutUrl { get; set; }
     }
 
     [DataContract]
@@ -10419,6 +10474,9 @@ namespace Norbix.Sdk.Types.Hub;
     {
         [DataMember]
         public virtual FunctionRefDto? FunctionRef { get; set; }
+
+        [DataMember]
+        public virtual string? RunAsUserId { get; set; }
 
         [DataMember]
         public virtual CodeInvocationType InvocationType { get; set; }
@@ -20408,12 +20466,6 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual string IntegrationId { get; set; }
     }
 
-    public partial class CredentialsSettingsModeDto
-    {
-        public virtual string? Name { get; set; }
-        public virtual string? LogoutUrl { get; set; }
-    }
-
     ///<summary>
     ///Gets the project's configured membership authentication sign-in flows.
     ///</summary>
@@ -20437,19 +20489,9 @@ namespace Norbix.Sdk.Types.Hub;
         : CodeMashRequestBase, INorbixRequest<EmptyResponse>
     {
         ///<summary>
-        ///Default URL to redirect end users to after logout.
-        ///</summary>
-        public virtual string? LogoutUrl { get; set; }
-
-        ///<summary>
         ///Whether end users may sign in with a username in addition to email.
         ///</summary>
         public virtual bool AllowUsernames { get; set; }
-
-        ///<summary>
-        ///Per-authentication-mode logout URL overrides.
-        ///</summary>
-        public virtual List<CredentialsSettingsModeDto>? Modes { get; set; }
     }
 
     ///<summary>
@@ -20568,7 +20610,7 @@ namespace Norbix.Sdk.Types.Hub;
         : CodeMashRequestBase, INorbixRequest<UpdatePasswordComplexityResponse>
     {
         ///<summary>
-        ///Minimum password length.
+        ///Minimum password length. Default 6 — the rule a project uses when it stores none.
         ///</summary>
         public virtual int MinLength { get; set; }
 
@@ -24976,7 +25018,6 @@ namespace Norbix.Sdk.Types.Hub;
     {
         public virtual DisplayName Name { get; set; }
         public virtual Uri CallbackUrl { get; set; }
-        public virtual Uri? LogoutUrl { get; set; }
         public virtual Uri? FailureRedirectUrl { get; set; }
         public virtual RoleName? RoleName { get; set; }
     }

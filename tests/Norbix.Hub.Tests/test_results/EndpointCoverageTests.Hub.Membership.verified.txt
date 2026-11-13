@@ -473,11 +473,7 @@
           norbix-project-id: test-project
         },
         Body: {
-          logoutUrl: https://example.test/logoutUrl,
           allowUsernames: true,
-          modes: [
-            null
-          ],
           env: test-env
         }
       },
