@@ -127,6 +127,7 @@ await asUser.Membership.LinkIdentityAsync(new LinkIdentityRequest { UserId = "us
 
 - `SocialSignInUrl(provider, mode, returnUrl)` puts the project id and a non-PROD env (`WithEnv`) in the query, because a navigation sends no headers. `returnUrl` must be absolute https (http only on localhost) with an allowed origin; without it the mode's pages are used.
 - The start and the provider callback have no `…Async` method: they are browser navigations.
+- `ExchangeSocialSignInCodeAsync` sends no `Authorization` header, even when the client has a key or a JWT: the gateway refuses an old token on any route, and the exchange is how a user signs in again.
 - Refusals: `CM-ERRORS-MEMBERSHIP-051` (code used, expired or unknown), `-055` (409, the provider account belongs to another user), `-056` (403, not yourself).
 
 ## Configuration from Environment

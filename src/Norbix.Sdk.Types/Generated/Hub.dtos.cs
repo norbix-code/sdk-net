@@ -1876,6 +1876,7 @@ namespace Norbix.Sdk.Types.Hub;
     public partial class PublicAuthDto
     {
         public virtual List<string> SocialProviders { get; set; } = [];
+        public virtual List<PublicSocialSignInDto> SocialSignIn { get; set; } = [];
         public virtual bool Passkey { get; set; }
         public virtual List<string>? Methods { get; set; }
         public virtual PublicPasswordPolicyDto? PasswordPolicy { get; set; }
@@ -1932,6 +1933,13 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual PublicBrandDto? Branding { get; set; }
         public virtual PublicAuthDto Auth { get; set; }
         public virtual PublicAiChatDto AiChat { get; set; }
+    }
+
+    public partial class PublicSocialSignInDto
+    {
+        public virtual string Provider { get; set; }
+        public virtual string DisplayName { get; set; }
+        public virtual string StartPath { get; set; }
     }
 
     [DataContract]
@@ -24798,9 +24806,10 @@ namespace Norbix.Sdk.Types.Hub;
 
     [NorbixRoute("/{version}/public/projects/{ProjectId}/config", "GET")]
     public partial class GetPublicProjectConfig
-        : RequestBase, INorbixRequest<PublicProjectConfigDto>, INorbixOptionalAuth
+        : RequestBase, INorbixRequest<PublicProjectConfigDto>, IHasEnv, INorbixOptionalAuth
     {
         public virtual string? ProjectId { get; set; }
+        public virtual string? Env { get; set; }
     }
 
     [NorbixRoute("/{version}/public/projects/{ProjectId}/legal/{Kind}", "GET")]
