@@ -8,8 +8,9 @@ namespace Norbix.Hub.Tests;
 
 /// <summary>
 /// <c>POST /scheduler/tasks</c> takes a polymorphic body twice over: the
-/// <c>task</c> is picked by its <c>type</c> discriminator (only
-/// <c>EmailCampaign</c> today), and the task's <c>campaign</c> is picked by
+/// <c>task</c> is picked by its <c>type</c> discriminator (email, SMS and
+/// push campaigns, <c>CodeFunctionalCall</c>, <c>WorkflowCall</c>, …), and an
+/// email task's <c>campaign</c> is picked by
 /// its <c>source</c> discriminator (all users, named users, a collection, …).
 /// <see cref="SaveSchedulerTaskRequest.Task"/> is typed as the base
 /// <see cref="SchedulerTaskRequest"/> and the campaign as the base
@@ -94,6 +95,74 @@ public sealed class SchedulerBodyVariantTests
                             TemplateId = "tpl_weekly_digest",
                             UserRecipients = new HashSet<string> { "usr_1", "usr_2" },
                         },
+                    },
+                }
+            )
+        );
+
+        await Verifier.Verify(sent, VerifyConfig.VerifySettings);
+    }
+
+    /// <summary>
+    /// A "Code call" task: the function reference, the invocation type and the
+    /// config (gateway <c>Hub.Scheduler/Tasks/Save.Code.cs</c>) reach the wire
+    /// under <c>task</c> with type <c>CodeFunctionalCall</c>. Twins: sdk-go
+    /// <c>TestSaveSchedulerTaskSendsCodeAndWorkflowTasks</c>, sdk-ts
+    /// <c>tests/hub/scheduler-task-bodies.test.ts</c>.
+    /// </summary>
+    [Test]
+    public async Task Save_code_call_task_carries_the_function_reference()
+    {
+        var sent = await SendAsync(client =>
+            client.Scheduler.SaveSchedulerTaskAsync(
+                new SaveSchedulerTaskRequest
+                {
+                    Name = "Nightly report",
+                    Cron = "0 2 * * *",
+                    InitiatorUserId = "usr_service_1",
+                    IsEnabled = true,
+                    StopOnError = false,
+                    Task = new CodeFunctionSchedulerTaskRequest
+                    {
+                        Type = SchedulerTaskType.CodeFunctionalCall,
+                        FunctionRef = new FunctionRefDto
+                        {
+                            IntegrationId = "int_lambda",
+                            FunctionId = "nightly-report",
+                            Qualifier = "live",
+                        },
+                        InvocationType = CodeInvocationType.Async,
+                        Config = "{\"source\":\"net\"}",
+                    },
+                }
+            )
+        );
+
+        await Verifier.Verify(sent, VerifyConfig.VerifySettings);
+    }
+
+    /// <summary>
+    /// A "Workflow call" task: the workflow reference and the string payload
+    /// (gateway <c>Hub.Scheduler/Tasks/Save.Workflow.cs</c>) reach the wire
+    /// under <c>task</c> with type <c>WorkflowCall</c>.
+    /// </summary>
+    [Test]
+    public async Task Save_workflow_call_task_carries_the_workflow_and_payload()
+    {
+        var sent = await SendAsync(client =>
+            client.Scheduler.SaveSchedulerTaskAsync(
+                new SaveSchedulerTaskRequest
+                {
+                    Name = "Nightly onboarding sweep",
+                    Cron = "0 3 * * *",
+                    InitiatorUserId = "usr_service_1",
+                    IsEnabled = true,
+                    StopOnError = false,
+                    Task = new WorkflowSchedulerTaskRequest
+                    {
+                        Type = SchedulerTaskType.WorkflowCall,
+                        WorkflowRef = "wf_3kQ9mZ2vXc8LpR4wT7yH1n",
+                        Payload = new Dictionary<string, string> { ["source"] = "net" },
                     },
                 }
             )

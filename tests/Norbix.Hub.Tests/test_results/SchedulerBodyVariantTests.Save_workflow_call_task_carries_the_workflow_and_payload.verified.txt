@@ -1,0 +1,24 @@
+﻿{
+  Method: POST,
+  Path: /v2/scheduler/tasks,
+  Headers: {
+    Authorization: Bearer test-bearer,
+    Content-Type: application/json; charset=utf-8,
+    norbix-account-id: test-account,
+    norbix-project-id: test-project
+  },
+  Body: {
+    name: Nightly onboarding sweep,
+    cron: 0 3 * * *,
+    initiatorUserId: usr_service_1,
+    isEnabled: true,
+    stopOnError: false,
+    task: {
+      type: workflowCall,
+      workflowRef: wf_3kQ9mZ2vXc8LpR4wT7yH1n,
+      payload: {
+        source: net
+      }
+    }
+  }
+}
