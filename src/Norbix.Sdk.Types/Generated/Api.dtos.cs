@@ -8,8 +8,8 @@
 #pragma warning disable CS0114, CS1570, CS0102, CS0108, CS0618
 
 using System;
-using System.Collections;
 using System.IO;
+using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using Norbix.Sdk.Types;
@@ -4128,7 +4128,22 @@ namespace Norbix.Sdk.Types.Api;
         public virtual string UserId { get; set; }
 
         [DataMember]
+        public virtual string? Kind { get; set; }
+
+        [DataMember]
         public virtual string Decision { get; set; }
+
+        ///<summary>
+        ///Which slots this answer filled (places in `slots`, from 0). One person who matches two rules fills both with one answer.
+        ///</summary>
+        [DataMember]
+        public virtual List<int>? Slots { get; set; }
+
+        ///<summary>
+        ///True = this person was not asked and answered on the override right.
+        ///</summary>
+        [DataMember]
+        public virtual bool? Override { get; set; }
 
         [DataMember]
         public virtual DateTime At { get; set; }
@@ -4149,17 +4164,72 @@ namespace Norbix.Sdk.Types.Api;
         [DataMember]
         public virtual string? Key { get; set; }
 
+        ///<summary>
+        ///The people told when the wait parked. An approval addressed to a role tells everybody who held that role then, so this list can be longer or shorter than `slots` — count `slots`, never this.
+        ///</summary>
         [DataMember]
         public virtual List<string>? Assignees { get; set; }
 
+        ///<summary>
+        ///A group approval: how many of `slots` must approve. Absent = the first answer decides.
+        ///</summary>
         [DataMember]
         public virtual int? Require { get; set; }
+
+        ///<summary>
+        ///One entry per thing the approval asks for: a person or a rule, and whether it is filled. The unit `require`, `approvals` and `rejections` count.
+        ///</summary>
+        [DataMember]
+        public virtual List<WorkflowWaitSlotDto>? Slots { get; set; }
 
         [DataMember]
         public virtual List<WorkflowWaitAnswerDto>? Answers { get; set; }
 
+        ///<summary>
+        ///Inbox rows only: true = this approval is yours; false = none of it is yours, so answering it is an override, if you hold the right. Absent = nobody is asked for a slot here, or it was not worked out.
+        ///</summary>
+        [DataMember]
+        public virtual bool? Mine { get; set; }
+
         [DataMember]
         public virtual string? ChildRunId { get; set; }
+    }
+
+    [DataContract]
+    public partial class WorkflowWaitSlotDto
+    {
+        ///<summary>
+        ///As the author wrote it: a usr_ id, role:<name>, tag:<name>, role:<name>+tag:<name> or teamrole:<name>. Show this.
+        ///</summary>
+        [DataMember]
+        public virtual string Label { get; set; }
+
+        [DataMember]
+        public virtual string? UserId { get; set; }
+
+        [DataMember]
+        public virtual string? Role { get; set; }
+
+        [DataMember]
+        public virtual string? Tag { get; set; }
+
+        [DataMember]
+        public virtual bool? TeamRole { get; set; }
+
+        [DataMember]
+        public virtual string? AnsweredBy { get; set; }
+
+        [DataMember]
+        public virtual string? Decision { get; set; }
+
+        [DataMember]
+        public virtual DateTime? At { get; set; }
+
+        ///<summary>
+        ///True = somebody who was not asked answered for this slot, using the override right.
+        ///</summary>
+        [DataMember]
+        public virtual bool? Override { get; set; }
     }
 
     public partial class CollectionImportDto
