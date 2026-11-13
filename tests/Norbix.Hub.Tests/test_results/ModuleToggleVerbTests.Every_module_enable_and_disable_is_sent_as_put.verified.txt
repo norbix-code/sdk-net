@@ -1,7 +1,6 @@
 ﻿{
-  Count: 16,
+  Count: 14,
   Sent: [
-    PUT /v2/database/enable,
     PUT /v2/files/enable,
     PUT /v2/files/disable,
     PUT /v2/notifications/email/enable,
@@ -14,7 +13,6 @@
     PUT /v2/payments/disable,
     PUT /v2/logs/enable,
     PUT /v2/logs/disable,
-    PUT /v2/membership/enable,
     PUT /v2/code/enable,
     PUT /v2/code/disable
   ]
