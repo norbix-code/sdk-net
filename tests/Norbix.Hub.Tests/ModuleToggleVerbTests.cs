@@ -8,8 +8,9 @@ namespace Norbix.Hub.Tests;
 /// <summary>
 /// Every module on/off switch (Database, Files, Email, SMS, Push, Payments,
 /// Logs, Membership, Code) changes project state, so the gateway serves it as
-/// <c>PUT</c> since refactoringV2 (it was <c>GET</c> before). This test calls
-/// all 18 generated methods against an in-memory handler and snapshots the
+/// <c>PUT</c> since refactoringV2 (it was <c>GET</c> before). Membership and
+/// Database are always on, so they have an enable switch and no disable
+/// switch. This test calls all 16 generated methods against an in-memory handler and snapshots the
 /// verb and path that actually left the client, so a regeneration that brings
 /// <c>GET</c> back fails here in one place.
 /// </summary>
@@ -24,7 +25,6 @@ public sealed class ModuleToggleVerbTests
         var client = fixture.Client;
 
         await client.Database.EnableDatabaseAsync(new EnableDatabase());
-        await client.Database.DisableDatabaseAsync(new DisableDatabase());
         await client.Files.EnableFilesAsync(new EnableFiles());
         await client.Files.DisableFilesAsync(new DisableFiles());
         await client.Notifications.EnableEmailAsync(new EnableEmail());
@@ -38,7 +38,6 @@ public sealed class ModuleToggleVerbTests
         await client.Logs.EnableLoggingAsync(new EnableLogging());
         await client.Logs.DisableLoggingAsync(new DisableLogging());
         await client.Membership.EnableMembershipAsync(new EnableMembership());
-        await client.Membership.DisableMembershipAsync(new DisableMembership());
         await client.Code.EnableCodeAsync(new EnableCode());
         await client.Code.DisableCodeAsync(new DisableCode());
 
