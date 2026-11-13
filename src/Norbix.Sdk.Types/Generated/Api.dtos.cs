@@ -2008,6 +2008,27 @@ namespace Norbix.Sdk.Types.Api;
     ///<summary>
     ///Membership
     ///</summary>
+    [NorbixRoute("/{version}/membership/auth/social/{Provider}/exchange", "POST")]
+    [DataContract]
+    public partial class ExchangeSocialSignInCodeRequest
+        : CodeMashRequestBase, INorbixRequest<SocialSignInTokenResponse>, INorbixOptionalAuth
+    {
+        ///<summary>
+        ///google, apple, microsoft, github, facebook, x or okta.
+        ///</summary>
+        [DataMember]
+        public virtual string Provider { get; set; }
+
+        ///<summary>
+        ///The one-time code from the callback URL (valid 2 minutes, once).
+        ///</summary>
+        [DataMember]
+        public virtual string Code { get; set; }
+    }
+
+    ///<summary>
+    ///Membership
+    ///</summary>
     [NorbixRoute("/{version}/membership/auth/invitation/finish", "POST")]
     [DataContract]
     public partial class FinishInvitationRequest
@@ -2274,7 +2295,7 @@ namespace Norbix.Sdk.Types.Api;
     ///<summary>
     ///Membership
     ///</summary>
-    [NorbixRoute("/{version}/membership/auth/{userId}/link-identity", "POST")]
+    [NorbixRoute("/{version}/membership/auth/{UserId}/link-identity", "POST")]
     [DataContract]
     public partial class LinkIdentityRequest
         : CodeMashRequestBase, INorbixRequest<EmptyResponse>
@@ -2283,16 +2304,7 @@ namespace Norbix.Sdk.Types.Api;
         public virtual string UserId { get; set; }
 
         [DataMember]
-        public virtual string Provider { get; set; }
-
-        [DataMember]
-        public virtual string ProviderToken { get; set; }
-
-        [DataMember]
-        public virtual string? EmailToVerify { get; set; }
-
-        [DataMember]
-        public virtual string? DatabaseIntegrationId { get; set; }
+        public virtual string Code { get; set; }
     }
 
     ///<summary>
@@ -2535,6 +2547,112 @@ namespace Norbix.Sdk.Types.Api;
         ///True to subscribe (unblock) the tag, false to block it.
         ///</summary>
         public virtual bool Subscribed { get; set; }
+    }
+
+    ///<summary>
+    ///Membership
+    ///</summary>
+    [NorbixRoute("/{version}/membership/auth/social/{Provider}/callback/{ProjectId}", "GET POST")]
+    [DataContract]
+    public partial class SocialSignInCallbackRequest
+        : CodeMashRequestBase, INorbixRequest<SocialSignInStartResponse>, INorbixOptionalAuth
+    {
+        [DataMember]
+        public virtual string Provider { get; set; }
+
+        [DataMember]
+        public virtual string? Code { get; set; }
+
+        [DataMember]
+        public virtual string? State { get; set; }
+
+        [DataMember]
+        public virtual string? Error { get; set; }
+    }
+
+    [DataContract]
+    public partial class SocialSignInStartResponse
+        : ResponseBase
+    {
+    }
+
+    [DataContract]
+    public partial class SocialSignInTokenResponse
+        : ResponseBase
+    {
+        [DataMember]
+        public virtual string? BearerToken { get; set; }
+
+        [DataMember]
+        public virtual string? UserId { get; set; }
+
+        [DataMember]
+        public virtual string? DisplayName { get; set; }
+
+        [DataMember]
+        public virtual DateTime? ExpiresAt { get; set; }
+
+        [DataMember]
+        public virtual Dictionary<string, string>? Meta { get; set; }
+    }
+
+    ///<summary>
+    ///Membership
+    ///</summary>
+    [NorbixRoute("/{version}/membership/auth/{UserId}/link-identity/start", "POST")]
+    [DataContract]
+    public partial class StartLinkIdentityRequest
+        : CodeMashRequestBase, INorbixRequest<StartLinkIdentityResponse>
+    {
+        [DataMember]
+        public virtual string UserId { get; set; }
+
+        ///<summary>
+        ///google, apple, microsoft, github, facebook, x or okta.
+        ///</summary>
+        [DataMember]
+        public virtual string Provider { get; set; }
+
+        [DataMember]
+        public virtual string? Mode { get; set; }
+
+        [DataMember]
+        public virtual string? ReturnUrl { get; set; }
+    }
+
+    [DataContract]
+    public partial class StartLinkIdentityResponse
+        : ResponseBase
+    {
+        [DataMember]
+        public virtual string? AuthorizeUrl { get; set; }
+    }
+
+    ///<summary>
+    ///Membership
+    ///</summary>
+    [NorbixRoute("/{version}/membership/auth/social/{Provider}", "GET")]
+    [DataContract]
+    public partial class StartSocialSignInRequest
+        : CodeMashRequestBase, INorbixRequest<SocialSignInStartResponse>, INorbixOptionalAuth
+    {
+        ///<summary>
+        ///google, apple, microsoft, github, facebook, x or okta.
+        ///</summary>
+        [DataMember]
+        public virtual string Provider { get; set; }
+
+        ///<summary>
+        ///Name of the integration's OAuth mode (which app page to come back to). Default: the only mode, else the first by name.
+        ///</summary>
+        [DataMember]
+        public virtual string? Mode { get; set; }
+
+        ///<summary>
+        ///Optional app page to come back to (success and failure). Absolute https (http only on localhost), origin in the project's allowed origins. Wins over the mode's pages.
+        ///</summary>
+        [DataMember]
+        public virtual string? ReturnUrl { get; set; }
     }
 
     ///<summary>
@@ -2985,6 +3103,7 @@ namespace Norbix.Sdk.Types.Api;
     public partial class PublicAuthDto
     {
         public virtual List<string> SocialProviders { get; set; } = [];
+        public virtual List<PublicSocialSignInDto> SocialSignIn { get; set; } = [];
         public virtual bool Passkey { get; set; }
         public virtual List<string>? Methods { get; set; }
         public virtual PublicPasswordPolicyDto? PasswordPolicy { get; set; }
@@ -3041,6 +3160,13 @@ namespace Norbix.Sdk.Types.Api;
         public virtual PublicBrandDto? Branding { get; set; }
         public virtual PublicAuthDto Auth { get; set; }
         public virtual PublicAiChatDto AiChat { get; set; }
+    }
+
+    public partial class PublicSocialSignInDto
+    {
+        public virtual string Provider { get; set; }
+        public virtual string DisplayName { get; set; }
+        public virtual string StartPath { get; set; }
     }
 
     public partial class AiChatEntryWireDto
@@ -7664,9 +7790,10 @@ namespace Norbix.Sdk.Types.Api;
 
     [NorbixRoute("/{version}/public/projects/{ProjectId}/config", "GET")]
     public partial class GetPublicProjectConfig
-        : RequestBase, INorbixRequest<PublicProjectConfigDto>, INorbixOptionalAuth
+        : RequestBase, INorbixRequest<PublicProjectConfigDto>, IHasEnv, INorbixOptionalAuth
     {
         public virtual string? ProjectId { get; set; }
+        public virtual string? Env { get; set; }
     }
 
     [NorbixRoute("/{version}/public/projects/{ProjectId}/legal/{Kind}", "GET")]

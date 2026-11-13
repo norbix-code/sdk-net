@@ -1,7 +1,7 @@
 ﻿{
   Target: Api,
   Group: membership,
-  Count: 56,
+  Count: 58,
   Endpoints: [
     {
       Target: Api,
@@ -737,6 +737,46 @@
     {
       Target: Api,
       Group: membership,
+      MethodName: ExchangeSocialSignInCodeAsync,
+      RequestType: ExchangeSocialSignInCodeRequest,
+      HttpMethod: POST,
+      Path: /{version}/membership/auth/social/{Provider}/exchange,
+      PathParams: [
+        Provider
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/membership/auth/social/test-provider/exchange,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        },
+        Body: {
+          code: test-code,
+          env: test-env
+        }
+      },
+      ResponseType: SocialSignInTokenResponse,
+      Response: {
+        BearerToken: test-bearerToken,
+        UserId: Guid_1,
+        DisplayName: test-displayName,
+        ExpiresAt: DateTime_1,
+        Meta: {
+          sample-key: test-string
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: membership,
       MethodName: FinishInvitationAsync,
       RequestType: FinishInvitationRequest,
       HttpMethod: POST,
@@ -959,9 +999,9 @@
       MethodName: LinkIdentityAsync,
       RequestType: LinkIdentityRequest,
       HttpMethod: POST,
-      Path: /{version}/membership/auth/{userId}/link-identity,
+      Path: /{version}/membership/auth/{UserId}/link-identity,
       PathParams: [
-        userId
+        UserId
       ],
       IsAccountScoped: false,
       IsUnauthenticated: false,
@@ -975,10 +1015,7 @@
           norbix-project-id: test-project
         },
         Body: {
-          provider: test-provider,
-          providerToken: test-providerToken,
-          emailToVerify: user@example.test,
-          databaseIntegrationId: Guid_1,
+          code: test-code,
           env: test-env
         }
       },
@@ -1516,6 +1553,42 @@
       },
       ResponseType: EmptyResponse,
       Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: membership,
+      MethodName: StartLinkIdentityAsync,
+      RequestType: StartLinkIdentityRequest,
+      HttpMethod: POST,
+      Path: /{version}/membership/auth/{UserId}/link-identity/start,
+      PathParams: [
+        UserId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/membership/auth/{guid}/link-identity/start,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        },
+        Body: {
+          provider: test-provider,
+          mode: test-mode,
+          returnUrl: https://example.test/returnUrl,
+          env: test-env
+        }
+      },
+      ResponseType: StartLinkIdentityResponse,
+      Response: {
+        AuthorizeUrl: https://example.test/authorizeUrl,
         ResponseStatus: {
           IsSuccess: true
         }
