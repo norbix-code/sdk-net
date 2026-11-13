@@ -142,4 +142,82 @@ public sealed class SocialSignInTests
         Assert.That(BodyJson(sent), Is.EqualTo("""{"code":"link-code"}"""));
         Assert.That(sent.Headers["Authorization"], Is.EqualTo("Bearer jwt-1"));
     }
+
+    [Test]
+    public void Pkce_matches_the_RFC_7636_appendix_B_vector()
+    {
+        Assert.That(
+            NorbixPkce.ChallengeOf("dBjftJeZ4CVP-mB92K27uhbUJU1p1r_wW1gFWFOEjXk"),
+            Is.EqualTo("E9Melhoa2OwvFrEMTJguCHaoeK1t8URWbuGJSstw-cM"));
+    }
+
+    [Test]
+    public void Pkce_Create_makes_a_43_character_verifier_and_its_challenge()
+    {
+        var a = NorbixPkce.Create();
+        var b = NorbixPkce.Create();
+        Assert.That(a.CodeVerifier, Does.Match("^[A-Za-z0-9_-]{43}$"));
+        Assert.That(a.CodeChallenge, Is.EqualTo(NorbixPkce.ChallengeOf(a.CodeVerifier)));
+        Assert.That(b.CodeVerifier, Is.Not.EqualTo(a.CodeVerifier));
+        Assert.Throws<ArgumentException>(() => NorbixPkce.ChallengeOf("short"));
+    }
+
+    private const string Verifier = "dBjftJeZ4CVP-mB92K27uhbUJU1p1r_wW1gFWFOEjXk";
+    private const string Challenge = "E9Melhoa2OwvFrEMTJguCHaoeK1t8URWbuGJSstw-cM";
+
+    [Test]
+    public void SocialSignInUrl_carries_the_codeChallenge_last()
+    {
+        using var fixture = NorbixTestFixture.Create(o => o.ApiBaseUrl = "https://api.test");
+
+        Assert.That(
+            fixture.Client.SocialSignInUrl("google", mode: "app", returnUrl: "https://app.test/cb", codeChallenge: Challenge),
+            Is.EqualTo("https://api.test/v2/membership/auth/social/google?projectId=test-project"
+                + "&mode=app&returnUrl=https%3A%2F%2Fapp.test%2Fcb&codeChallenge=" + Challenge));
+    }
+
+    [Test]
+    public async Task ExchangeSocialSignInCode_posts_code_and_codeVerifier()
+    {
+        using var fixture = NorbixTestFixture.Create();
+        fixture.Respond("/membership/auth/social/google/exchange", new { bearerToken = "a.b.c" });
+
+        await fixture.Client.Membership.ExchangeSocialSignInCodeAsync(
+            new ExchangeSocialSignInCodeRequest { Provider = "google", Code = "one-time", CodeVerifier = Verifier });
+
+        var sent = fixture.LastRequest!;
+        Assert.That(sent.Path, Is.EqualTo("/v2/membership/auth/social/google/exchange"));
+        Assert.That(BodyJson(sent), Is.EqualTo("{\"code\":\"one-time\",\"codeVerifier\":\"" + Verifier + "\"}"));
+    }
+
+    [Test]
+    public async Task StartLinkIdentity_posts_the_codeChallenge()
+    {
+        using var fixture = NorbixTestFixture.Create(o => o.BearerToken = "jwt-1");
+        fixture.Respond("/link-identity/start", new { authorizeUrl = "https://a" });
+
+        await fixture.Client.Membership.StartLinkIdentityAsync(new StartLinkIdentityRequest
+        {
+            UserId = "usr_1",
+            Provider = "github",
+            CodeChallenge = Challenge,
+        });
+
+        var sent = fixture.LastRequest!;
+        Assert.That(sent.Path, Is.EqualTo("/v2/membership/auth/usr_1/link-identity/start"));
+        Assert.That(BodyJson(sent), Is.EqualTo("{\"provider\":\"github\",\"codeChallenge\":\"" + Challenge + "\"}"));
+    }
+
+    [Test]
+    public async Task LinkIdentity_posts_code_and_codeVerifier()
+    {
+        using var fixture = NorbixTestFixture.Create(o => o.BearerToken = "jwt-1");
+
+        await fixture.Client.Membership.LinkIdentityAsync(
+            new LinkIdentityRequest { UserId = "usr_1", Code = "link-code", CodeVerifier = Verifier });
+
+        var sent = fixture.LastRequest!;
+        Assert.That(sent.Path, Is.EqualTo("/v2/membership/auth/usr_1/link-identity"));
+        Assert.That(BodyJson(sent), Is.EqualTo("{\"code\":\"link-code\",\"codeVerifier\":\"" + Verifier + "\"}"));
+    }
 }

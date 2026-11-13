@@ -2024,6 +2024,12 @@ namespace Norbix.Sdk.Types.Api;
         ///</summary>
         [DataMember]
         public virtual string Code { get; set; }
+
+        ///<summary>
+        ///The PKCE code verifier whose S256 was sent as codeChallenge at the start. Required when the start had a codeChallenge; must be left out when it had none (CM-ERRORS-MEMBERSHIP-058, the code is used up).
+        ///</summary>
+        [DataMember]
+        public virtual string? CodeVerifier { get; set; }
     }
 
     ///<summary>
@@ -2305,6 +2311,9 @@ namespace Norbix.Sdk.Types.Api;
 
         [DataMember]
         public virtual string Code { get; set; }
+
+        [DataMember]
+        public virtual string? CodeVerifier { get; set; }
     }
 
     ///<summary>
@@ -2618,6 +2627,9 @@ namespace Norbix.Sdk.Types.Api;
 
         [DataMember]
         public virtual string? ReturnUrl { get; set; }
+
+        [DataMember]
+        public virtual string? CodeChallenge { get; set; }
     }
 
     [DataContract]
@@ -2649,10 +2661,16 @@ namespace Norbix.Sdk.Types.Api;
         public virtual string? Mode { get; set; }
 
         ///<summary>
-        ///Optional app page to come back to (success and failure). Absolute https (http only on localhost), origin in the project's allowed origins. Wins over the mode's pages.
+        ///Optional app page to come back to (success and failure). Absolute https (http only on localhost), origin in the project's allowed origins or the project's own hosted Admin Portal. Wins over the mode's pages. Refused: the browser goes to the mode's failure page with error=return_url_not_allowed (JSON 052 when the mode has none).
         ///</summary>
         [DataMember]
         public virtual string? ReturnUrl { get; set; }
+
+        ///<summary>
+        ///Optional PKCE S256 challenge of the app: base64url (no padding) SHA-256 of a random code verifier the app keeps (43 characters). When set, the exchange needs the matching codeVerifier, so only the browser / app that started can use the one-time code. Strongly recommended for web apps.
+        ///</summary>
+        [DataMember]
+        public virtual string? CodeChallenge { get; set; }
     }
 
     ///<summary>

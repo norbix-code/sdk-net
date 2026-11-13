@@ -26,7 +26,7 @@ public sealed partial class NorbixApiClient
 
     /// <summary>
     /// The URL that starts a project social sign-in:
-    /// <c>GET {api}/{version}/membership/auth/social/{provider}?projectId=…[&amp;env=…][&amp;mode=…][&amp;returnUrl=…]</c>.
+    /// <c>GET {api}/{version}/membership/auth/social/{provider}?projectId=…[&amp;env=…][&amp;mode=…][&amp;returnUrl=…][&amp;codeChallenge=…]</c>.
     /// Not a call: send the browser there (on a phone, the system browser) and
     /// the gateway redirects to the provider. A navigation carries no headers,
     /// so the project id and a non-PROD env (<see cref="WithEnv"/>) travel in the
@@ -36,13 +36,14 @@ public sealed partial class NorbixApiClient
     /// </summary>
     /// <param name="provider"><c>google</c>, <c>apple</c>, <c>microsoft</c>, <c>github</c>, <c>facebook</c>, <c>x</c> or <c>okta</c>.</param>
     /// <param name="mode">Name of the integration's OAuth mode. Default: the only mode, else the first by name.</param>
-    /// <param name="returnUrl">App page to come back to: absolute https (http only on localhost), origin in the project's allowed origins.</param>
-    public string SocialSignInUrl(string provider, string? mode = null, string? returnUrl = null)
+    /// <param name="returnUrl">App page to come back to: absolute https (http only on localhost), origin in the project's allowed origins or the project's own hosted Admin Portal.</param>
+    /// <param name="codeChallenge">PKCE S256 challenge from <see cref="NorbixPkce.Create"/>; the exchange then needs its <c>CodeVerifier</c>.</param>
+    public string SocialSignInUrl(string provider, string? mode = null, string? returnUrl = null, string? codeChallenge = null)
     {
         ArgumentException.ThrowIfNullOrEmpty(provider);
         return _transport.NavigationUrl(
             NorbixTarget.Api,
             "/{version}/membership/auth/social/" + Uri.EscapeDataString(provider),
-            new KeyValuePair<string, string?>[] { new("mode", mode), new("returnUrl", returnUrl) });
+            new KeyValuePair<string, string?>[] { new("mode", mode), new("returnUrl", returnUrl), new("codeChallenge", codeChallenge) });
     }
 }

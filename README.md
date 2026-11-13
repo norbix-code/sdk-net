@@ -110,25 +110,31 @@ var forOtherProject = client.WithScope("proj_456");
 Project users can sign in with Google, Apple, Microsoft, GitHub, Facebook, X or Okta. The project's enabled providers are in the public config (`GetPublicProjectConfigAsync` → `Auth.SocialSignIn`: `Provider`, `DisplayName`, `StartPath`).
 
 ```csharp
-// 1. Send the browser (on a phone: the system browser) to the start URL. Not a call: it redirects.
-var url = client.SocialSignInUrl("google", returnUrl: "https://app.example.com/oauth/callback");
+// 1. PKCE: keep the verifier (memory on a device, the session on a server); only the challenge travels.
+var pkce = NorbixPkce.Create();
+// Send the browser (on a phone: the system browser) to the start URL. Not a call: it redirects.
+var url = client.SocialSignInUrl("google", returnUrl: "https://app.example.com/oauth/callback",
+    codeChallenge: pkce.CodeChallenge);
 
 // 2. The return page gets ?code=…&provider=google (or ?error=…). Trade the code within 2 minutes:
 var token = await client.Membership.ExchangeSocialSignInCodeAsync(
-    new ExchangeSocialSignInCodeRequest { Provider = "google", Code = code });
+    new ExchangeSocialSignInCodeRequest { Provider = "google", Code = code, CodeVerifier = pkce.CodeVerifier });
 var asUser = client.WithBearerToken(token!.BearerToken); // 14 days, no refresh token
 
 // Link another provider to the signed-in user (for yourself only):
-var start = await asUser.Membership.StartLinkIdentityAsync(
-    new StartLinkIdentityRequest { UserId = "usr_…", Provider = "github", ReturnUrl = "https://app.example.com/settings" });
+var linkPkce = NorbixPkce.Create();
+var start = await asUser.Membership.StartLinkIdentityAsync(new StartLinkIdentityRequest
+    { UserId = "usr_…", Provider = "github", ReturnUrl = "https://app.example.com/settings", CodeChallenge = linkPkce.CodeChallenge });
 // send the browser to start.AuthorizeUrl; it comes back with ?intent=link&code=…
-await asUser.Membership.LinkIdentityAsync(new LinkIdentityRequest { UserId = "usr_…", Code = linkCode });
+await asUser.Membership.LinkIdentityAsync(
+    new LinkIdentityRequest { UserId = "usr_…", Code = linkCode, CodeVerifier = linkPkce.CodeVerifier });
 ```
 
 - `SocialSignInUrl(provider, mode, returnUrl)` puts the project id and a non-PROD env (`WithEnv`) in the query, because a navigation sends no headers. `returnUrl` must be absolute https (http only on localhost) with an allowed origin; without it the mode's pages are used.
 - The start and the provider callback have no `…Async` method: they are browser navigations.
 - `ExchangeSocialSignInCodeAsync` sends no `Authorization` header, even when the client has a key or a JWT: the gateway refuses an old token on any route, and the exchange is how a user signs in again.
-- Refusals: `CM-ERRORS-MEMBERSHIP-051` (code used, expired or unknown), `-055` (409, the provider account belongs to another user), `-056` (403, not yourself).
+- PKCE (S256) is optional but strongly recommended: `NorbixPkce.Create()` gives `{ CodeVerifier, CodeChallenge }` (32 random bytes, base64url). A code started with a challenge needs its verifier; a verifier for a code started without one is refused too.
+- Refusals: `CM-ERRORS-MEMBERSHIP-051` (code used, expired or unknown), `-055` (409, the provider account belongs to another user), `-056` (403, not yourself), `-058` (PKCE: `context.Reason` `verifier_missing`, `verifier_wrong` or `challenge_missing`; the code is used up — "start again"), `-059` (the challenge is not a 43-character S256). A refused `returnUrl` sends the browser to the mode's failure page with `error=return_url_not_allowed`.
 
 ## Configuration from Environment
 
