@@ -16175,12 +16175,6 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual string AuthId { get; set; }
     }
 
-    [NorbixRoute("/{version}/database/enable", "PUT")]
-    public partial class EnableDatabase
-        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
-    {
-    }
-
     ///<summary>
     ///Delete saved Mongo aggregation
     ///</summary>
@@ -20404,12 +20398,6 @@ namespace Norbix.Sdk.Types.Hub;
         ///Logging integration id to test, from get_logging_integrations.
         ///</summary>
         public virtual string IntegrationId { get; set; }
-    }
-
-    [NorbixRoute("/{version}/membership/enable", "PUT")]
-    public partial class EnableMembership
-        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
-    {
     }
 
     public partial class CredentialsSettingsModeDto
