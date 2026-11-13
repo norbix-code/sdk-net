@@ -45,6 +45,7 @@
       Sent: {
         Method: GET,
         Path: /v2/public/projects/{guid}/config,
+        Query: ?env=test-env,
         Headers: {
           Authorization: Bearer test-bearer,
           norbix-account-id: test-account,
@@ -65,6 +66,9 @@
         Auth: {
           SocialProviders: [
             test-string
+          ],
+          SocialSignIn: [
+            {}
           ],
           Passkey: true,
           Methods: [

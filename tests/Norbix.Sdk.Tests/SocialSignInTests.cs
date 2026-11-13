@@ -78,9 +78,30 @@ public sealed class SocialSignInTests
         Assert.That(sent.Path, Is.EqualTo("/v2/membership/auth/social/google/exchange"));
         Assert.That(BodyJson(sent), Is.EqualTo("""{"code":"one-time"}"""));
         Assert.That(sent.Headers.ContainsKey("norbix-project-id"), Is.True);
+        Assert.That(sent.Headers.ContainsKey("Authorization"), Is.False, "an API key must not be sent");
         Assert.That(answer!.BearerToken, Is.EqualTo("a.b.c"));
         Assert.That(answer.UserId, Is.EqualTo("usr_1"));
         Assert.That(answer.Meta!["credentialVersion"], Is.EqualTo("v7"));
+    }
+
+    /// <summary>
+    /// The gateway judges any token it gets, even on this open route: a JWT
+    /// from before a password change is refused 401. The exchange is how a
+    /// user signs in again, so a client that still holds an old JWT and a key
+    /// sends neither.
+    /// </summary>
+    [Test]
+    public async Task ExchangeSocialSignInCode_sends_no_credentials_even_with_a_jwt()
+    {
+        using var fixture = NorbixTestFixture.Create(o => o.BearerToken = "old.jwt");
+        fixture.Respond("/membership/auth/social/google/exchange", new { bearerToken = "a.b.c" });
+
+        await fixture.Client.Membership.ExchangeSocialSignInCodeAsync(
+            new ExchangeSocialSignInCodeRequest { Provider = "google", Code = "one-time" });
+
+        var sent = fixture.LastRequest!;
+        Assert.That(sent.Headers.ContainsKey("Authorization"), Is.False);
+        Assert.That(sent.Headers["norbix-project-id"], Is.EqualTo("test-project"));
     }
 
     [Test]
