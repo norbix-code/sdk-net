@@ -10003,6 +10003,9 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual int MessageCount { get; set; }
 
         [DataMember]
+        public virtual HashSet<string>? CountedMessageIds { get; set; }
+
+        [DataMember]
         public virtual long? LastMessageOn { get; set; }
     }
 
@@ -10597,6 +10600,12 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember]
         public virtual Dictionary<string, string>? Payload { get; set; }
+
+        ///<summary>
+        ///Resume the run of the workflow that waits on this key instead of starting one. May hold @Model.Trigger.* tokens of the event. No waiting run = the trigger run is skipped (no-waiting-run).
+        ///</summary>
+        [DataMember]
+        public virtual string? ResumeKey { get; set; }
     }
 
     [DataContract]

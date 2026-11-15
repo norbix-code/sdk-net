@@ -150,12 +150,24 @@ public sealed class TriggerActionBodyVariantTests
                     Payload = new Dictionary<string, string> { ["source"] = "net" },
                 }
         ).SetName("Workflow");
+        // The same action resuming the run that waits on a key instead of starting one.
+        yield return new TestCaseData(
+            (TriggerActionDto)
+                new TriggerActionWorkflowDto
+                {
+                    Type = TriggerActionType.Workflow,
+                    WorkflowRef = "wf_onboard",
+                    ResumeKey = "purchase-@Model.Trigger.User.Id",
+                    Payload = new Dictionary<string, string> { ["plan"] = "@Model.Trigger.Record.plan" },
+                }
+        ).SetName("WorkflowResume");
     }
 
     private static Task VerifyActionAsync(object sent, string host, TriggerActionDto action)
     {
         var settings = VerifyConfig.VerifySettings;
-        settings.UseFileName($"TriggerActionBodyVariantTests.{host}.{action.Type}");
+        var variant = action is TriggerActionWorkflowDto { ResumeKey: not null } ? "Resume" : string.Empty;
+        settings.UseFileName($"TriggerActionBodyVariantTests.{host}.{action.Type}{variant}");
         return Verifier.Verify(sent, settings);
     }
 
