@@ -749,7 +749,6 @@ namespace Norbix.Sdk.Types.Hub;
         Fake,
     }
 
-    [NorbixRoute("/internal/_typegen", "GET")]
     public partial class InternalsTypeGen
     {
         public virtual SmtpEmailIntegrationRequest? Typegen_0_SmtpEmailIntegrationRequest { get; set; }
@@ -2090,16 +2089,6 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual string Currency { get; set; }
     }
 
-    public partial class CodeMashSubscriptionDto
-    {
-        public virtual string ViewId { get; set; }
-        public virtual string Domain { get; set; }
-        public virtual DateTime WillExpireOn { get; set; }
-        public virtual DateTime IssuedOn { get; set; }
-        public virtual bool IsTrial { get; set; }
-        public virtual string SubscriptionRefId { get; set; }
-    }
-
     [DataContract]
     public partial class CreateAiServiceUserResponse
         : ResponseBase
@@ -2200,212 +2189,6 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember]
         public virtual double? OperationsPerSecond { get; set; }
-    }
-
-    [DataContract]
-    public partial class InstallationLicenseDetailsDto
-    {
-        [DataMember(Name="domain")]
-        public virtual string? Domain { get; set; }
-
-        [DataMember(Name="accountId")]
-        public virtual string? AccountId { get; set; }
-
-        [DataMember(Name="email")]
-        public virtual string? Email { get; set; }
-
-        [DataMember(Name="release")]
-        public virtual string? Release { get; set; }
-
-        [DataMember(Name="expire")]
-        public virtual long Expire { get; set; }
-
-        [DataMember(Name="isTrial")]
-        public virtual bool IsTrial { get; set; }
-
-        [DataMember(Name="cap")]
-        public virtual int? ProjectsCap { get; set; }
-    }
-
-    [DataContract]
-    public partial class InstallationLicenseStatusDto
-    {
-        [DataMember(Name="storedMode")]
-        public virtual string StoredMode { get; set; }
-
-        [DataMember(Name="effectiveMode")]
-        public virtual string EffectiveMode { get; set; }
-
-        [DataMember(Name="isProduction")]
-        public virtual bool IsProduction { get; set; }
-
-        [DataMember(Name="graceDaysLeft")]
-        public virtual int? GraceDaysLeft { get; set; }
-
-        [DataMember(Name="graceUntilUtc")]
-        public virtual DateTime? GraceUntilUtc { get; set; }
-
-        [DataMember(Name="lastProvenAtUtc")]
-        public virtual DateTime? LastProvenAtUtc { get; set; }
-
-        [DataMember(Name="lastHeartbeatAtUtc")]
-        public virtual DateTime? LastHeartbeatAtUtc { get; set; }
-
-        [DataMember(Name="installationDomain")]
-        public virtual string? InstallationDomain { get; set; }
-
-        [DataMember(Name="licensedDomain")]
-        public virtual string? LicensedDomain { get; set; }
-
-        [DataMember(Name="hostKind")]
-        public virtual string? HostKind { get; set; }
-
-        [DataMember(Name="isTrialLicense")]
-        public virtual bool IsTrialLicense { get; set; }
-
-        [DataMember(Name="licenseExpireUtc")]
-        public virtual DateTime? LicenseExpireUtc { get; set; }
-
-        [DataMember(Name="lastHeartbeatOutcome")]
-        public virtual string? LastHeartbeatOutcome { get; set; }
-
-        [DataMember(Name="lastHeartbeatError")]
-        public virtual string? LastHeartbeatError { get; set; }
-
-        [DataMember(Name="message")]
-        public virtual string? Message { get; set; }
-
-        [DataMember(Name="license")]
-        public virtual InstallationLicenseDetailsDto? License { get; set; }
-
-        [DataMember(Name="licensingDocsUrl")]
-        public virtual string? LicensingDocsUrl { get; set; }
-
-        [DataMember(Name="askForEnterpriseLicenseEmail")]
-        public virtual string? AskForEnterpriseLicenseEmail { get; set; }
-    }
-
-    [DataContract]
-    public partial class LicenseDomainDnsRecordDto
-    {
-        [DataMember]
-        public virtual string Host { get; set; }
-
-        [DataMember]
-        public virtual string RecordType { get; set; }
-
-        [DataMember]
-        public virtual bool Resolved { get; set; }
-
-        [DataMember]
-        public virtual bool Required { get; set; }
-    }
-
-    [DataContract]
-    public partial class LicenseDomainDnsStatusDto
-    {
-        [DataMember]
-        public virtual string Domain { get; set; }
-
-        [DataMember]
-        public virtual bool AllRequiredResolved { get; set; }
-
-        [DataMember]
-        public virtual List<LicenseDomainDnsRecordDto> Records { get; set; } = [];
-    }
-
-    [DataContract]
-    public partial class LicenseDomainVerificationChallengeDto
-    {
-        [DataMember]
-        public virtual string Domain { get; set; }
-
-        [DataMember]
-        public virtual string TxtHost { get; set; }
-
-        [DataMember]
-        public virtual string TxtValue { get; set; }
-
-        [DataMember]
-        public virtual DateTime ExpiresAtUtc { get; set; }
-
-        [DataMember]
-        public virtual bool Verified { get; set; }
-
-        [DataMember]
-        public virtual DateTime? VerifiedAtUtc { get; set; }
-
-        [DataMember]
-        public virtual bool Skipped { get; set; }
-    }
-
-    [DataContract]
-    public partial class LicenseDomainVerificationStatusDto
-    {
-        [DataMember]
-        public virtual string Domain { get; set; }
-
-        [DataMember]
-        public virtual bool Verified { get; set; }
-
-        [DataMember]
-        public virtual bool Skipped { get; set; }
-
-        [DataMember]
-        public virtual string? TxtHost { get; set; }
-
-        [DataMember]
-        public virtual string? ExpectedTxtValue { get; set; }
-
-        [DataMember]
-        public virtual string? ObservedTxtValue { get; set; }
-
-        [DataMember]
-        public virtual DateTime? ExpiresAtUtc { get; set; }
-
-        [DataMember]
-        public virtual DateTime? VerifiedAtUtc { get; set; }
-
-        [DataMember]
-        public virtual string? Message { get; set; }
-    }
-
-    public partial class LicenseDto
-        : CodeMashSubscriptionDto
-    {
-        public virtual bool IsEnterprise { get; set; }
-        public virtual int? ProjectCap { get; set; }
-    }
-
-    [DataContract]
-    public partial class LicenseHeartbeatVerdictDto
-    {
-        [DataMember(Name="status")]
-        public virtual string Status { get; set; }
-
-        [DataMember(Name="proofToken")]
-        public virtual string? ProofToken { get; set; }
-
-        [DataMember(Name="serverTimeUtc")]
-        public virtual DateTime ServerTimeUtc { get; set; }
-
-        [DataMember(Name="graceUntilUtc")]
-        public virtual DateTime? GraceUntilUtc { get; set; }
-
-        [DataMember(Name="installationId")]
-        public virtual Guid InstallationId { get; set; }
-
-        [DataMember(Name="licenseAccountId")]
-        public virtual string? LicenseAccountId { get; set; }
-
-        [DataMember(Name="domain")]
-        public virtual string? Domain { get; set; }
-
-        [DataMember(Name="signature")]
-        public virtual string? Signature { get; set; }
-
-        [DataMember(Name="message")]
-        public virtual string? Message { get; set; }
     }
 
     [DataContract]
@@ -10479,9 +10262,6 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual FunctionRefDto? FunctionRef { get; set; }
 
         [DataMember]
-        public virtual string? RunAsUserId { get; set; }
-
-        [DataMember]
         public virtual CodeInvocationType InvocationType { get; set; }
 
         [DataMember]
@@ -11170,101 +10950,6 @@ namespace Norbix.Sdk.Types.Hub;
         ///The new name, unique in the account, e.g. "Claude Code on my laptop".
         ///</summary>
         public virtual string Name { get; set; }
-    }
-
-    [NorbixRoute("/{version}/account/licensing/status", "GET")]
-    public partial class GetInstallationLicenseStatus
-        : RequestBase, INorbixRequest<GetInstallationLicenseStatusResponse>
-    {
-    }
-
-    public partial class GetInstallationLicenseStatusResponse
-        : ResponseBase
-    {
-        public virtual InstallationLicenseStatusDto? Status { get; set; }
-    }
-
-    [NorbixRoute("/{version}/account/licensing/dns-status", "GET")]
-    public partial class GetLicenseDomainDnsStatus
-        : RequestBase, INorbixRequest<GetLicenseDomainDnsStatusResponse>
-    {
-        public virtual string? Domain { get; set; }
-    }
-
-    public partial class GetLicenseDomainDnsStatusResponse
-        : ResponseBase
-    {
-        public virtual LicenseDomainDnsStatusDto? Status { get; set; }
-    }
-
-    [NorbixRoute("/{version}/licensing/domain-verification/status", "GET")]
-    public partial class GetLicenseDomainVerificationStatus
-        : RequestBase, INorbixRequest<GetLicenseDomainVerificationStatusResponse>
-    {
-        public virtual string? Domain { get; set; }
-    }
-
-    public partial class GetLicenseDomainVerificationStatusResponse
-        : ResponseBase
-    {
-        public virtual LicenseDomainVerificationStatusDto? Status { get; set; }
-    }
-
-    [NorbixRoute("/{version}/account/licenses/{Id}/key", "GET")]
-    public partial class GetLicenseKey
-        : RequestBase, INorbixRequest<GetLicenseKeyResponse>
-    {
-        public virtual string? Id { get; set; }
-    }
-
-    public partial class GetLicenseKeyResponse
-        : ResponseBase
-    {
-        public virtual string? Key { get; set; }
-    }
-
-    [NorbixRoute("/{version}/account/licenses", "GET")]
-    public partial class GetLicenses
-        : RequestBase, INorbixRequest<GetLicensesResponse>
-    {
-    }
-
-    public partial class GetLicensesResponse
-        : ResponseBase
-    {
-        public virtual HashSet<LicenseDto>? List { get; set; }
-    }
-
-    [NorbixRoute("/{version}/licensing/heartbeat", "POST")]
-    public partial class PostLicenseHeartbeat
-        : RequestBase, INorbixRequest<PostLicenseHeartbeatResponse>, INorbixOptionalAuth
-    {
-        public virtual string? License { get; set; }
-        public virtual string? LicenseAccountId { get; set; }
-        public virtual Guid? InstallationId { get; set; }
-        public virtual string? Domain { get; set; }
-        public virtual string? HostKind { get; set; }
-        public virtual string? Release { get; set; }
-        public virtual string? InstanceVersion { get; set; }
-    }
-
-    public partial class PostLicenseHeartbeatResponse
-        : ResponseBase
-    {
-        public virtual LicenseHeartbeatVerdictDto? Verdict { get; set; }
-    }
-
-    [NorbixRoute("/{version}/licensing/domain-verification/start", "POST")]
-    public partial class StartLicenseDomainVerificationRequest
-        : RequestBase, INorbixRequest<StartLicenseDomainVerificationResponse>
-    {
-        public virtual string? Domain { get; set; }
-    }
-
-    public partial class StartLicenseDomainVerificationResponse
-        : ResponseBase
-    {
-        public virtual LicenseDomainVerificationChallengeDto? Challenge { get; set; }
     }
 
     [NorbixRoute("/{version}/account/me", "GET")]
