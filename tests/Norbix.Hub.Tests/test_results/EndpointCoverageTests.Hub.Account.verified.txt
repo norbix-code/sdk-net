@@ -1,7 +1,7 @@
 ﻿{
   Target: Hub,
   Group: account,
-  Count: 136,
+  Count: 132,
   Endpoints: [
     {
       Target: Hub,
@@ -653,132 +653,6 @@
         }
       },
       ResponseType: EmptyResponse,
-      Response: {
-        ResponseStatus: {
-          IsSuccess: true
-        }
-      }
-    },
-    {
-      Target: Hub,
-      Group: account,
-      MethodName: GetInstallationLicenseStatusAsync,
-      RequestType: GetInstallationLicenseStatus,
-      HttpMethod: GET,
-      Path: /{version}/account/licensing/status,
-      IsAccountScoped: false,
-      IsUnauthenticated: false,
-      Sent: {
-        Method: GET,
-        Path: /v2/account/licensing/status,
-        Headers: {
-          Authorization: Bearer test-bearer,
-          norbix-account-id: test-account,
-          norbix-project-id: test-project
-        }
-      },
-      ResponseType: GetInstallationLicenseStatusResponse,
-      Response: {
-        Status: {
-          storedMode: test-storedMode,
-          effectiveMode: test-effectiveMode,
-          isProduction: true,
-          graceDaysLeft: 7,
-          graceUntilUtc: DateTime_1,
-          lastProvenAtUtc: DateTime_1,
-          lastHeartbeatAtUtc: DateTime_1,
-          installationDomain: test-installationDomain,
-          isTrialLicense: false
-        },
-        ResponseStatus: {
-          IsSuccess: true
-        }
-      }
-    },
-    {
-      Target: Hub,
-      Group: account,
-      MethodName: GetLicenseDomainDnsStatusAsync,
-      RequestType: GetLicenseDomainDnsStatus,
-      HttpMethod: GET,
-      Path: /{version}/account/licensing/dns-status,
-      IsAccountScoped: false,
-      IsUnauthenticated: false,
-      Sent: {
-        Method: GET,
-        Path: /v2/account/licensing/dns-status,
-        Query: ?domain=test-domain,
-        Headers: {
-          Authorization: Bearer test-bearer,
-          norbix-account-id: test-account,
-          norbix-project-id: test-project
-        }
-      },
-      ResponseType: GetLicenseDomainDnsStatusResponse,
-      Response: {
-        Status: {
-          Domain: test-domain,
-          AllRequiredResolved: true,
-          Records: [
-            {
-              Resolved: false,
-              Required: false
-            }
-          ]
-        },
-        ResponseStatus: {
-          IsSuccess: true
-        }
-      }
-    },
-    {
-      Target: Hub,
-      Group: account,
-      MethodName: GetLicenseKeyAsync,
-      RequestType: GetLicenseKey,
-      HttpMethod: GET,
-      Path: /{version}/account/licenses/{Id}/key,
-      PathParams: [
-        Id
-      ],
-      IsAccountScoped: false,
-      IsUnauthenticated: false,
-      Sent: {
-        Method: GET,
-        Path: /v2/account/licenses/{guid}/key,
-        Headers: {
-          Authorization: Bearer test-bearer,
-          norbix-account-id: test-account,
-          norbix-project-id: test-project
-        }
-      },
-      ResponseType: GetLicenseKeyResponse,
-      Response: {
-        Key: test-key,
-        ResponseStatus: {
-          IsSuccess: true
-        }
-      }
-    },
-    {
-      Target: Hub,
-      Group: account,
-      MethodName: GetLicensesAsync,
-      RequestType: GetLicenses,
-      HttpMethod: GET,
-      Path: /{version}/account/licenses,
-      IsAccountScoped: false,
-      IsUnauthenticated: false,
-      Sent: {
-        Method: GET,
-        Path: /v2/account/licenses,
-        Headers: {
-          Authorization: Bearer test-bearer,
-          norbix-account-id: test-account,
-          norbix-project-id: test-project
-        }
-      },
-      ResponseType: GetLicensesResponse,
       Response: {
         ResponseStatus: {
           IsSuccess: true

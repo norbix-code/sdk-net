@@ -159,7 +159,7 @@ using var client = new NorbixApiClient(); // reads everything from env
 
 The SDK does not load `.env` files itself. Load them in your app bootstrap or deployment environment before constructing the client.
 
-You can also override gateways for self-hosted or local deployments:
+You can also override gateways for a custom domain or a local deployment:
 
 ```csharp
 var client = new NorbixApiClient(new NorbixClientOptions
@@ -218,11 +218,11 @@ When a region is resolved **and** the base URL is still the SDK default, the SDK
 | `https://hub.norbix.ai` (default) | `https://nb-eu-germany.hub.norbix.ai` |
 | Custom `ApiBaseUrl` / `HubBaseUrl` | Never rewritten — the `nb-region` header is still sent |
 
-Self-hosted and local deployments are unaffected: a custom base URL is never rewritten, and with no region configured nothing changes at all.
+A custom base URL is never rewritten, and with no region configured nothing changes at all.
 
 ### Discovering regions
 
-The echo endpoint reports the regions a deployment knows about, with their composed per-region endpoints (empty on SelfHosted deployments in practice):
+The echo endpoint reports the regions a deployment knows about, with their composed per-region endpoints:
 
 ```csharp
 var echo = await client.Echo.EchoAsync(new Echo());
