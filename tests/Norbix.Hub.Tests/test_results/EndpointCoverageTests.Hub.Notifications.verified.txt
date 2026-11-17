@@ -1475,6 +1475,8 @@
         Body: {
           code: test-code,
           isForPreview: true,
+          triggerSubjectUserId: Guid_1,
+          triggerSubjectBeforeUserId: Guid_1,
           env: test-env
         }
       },
