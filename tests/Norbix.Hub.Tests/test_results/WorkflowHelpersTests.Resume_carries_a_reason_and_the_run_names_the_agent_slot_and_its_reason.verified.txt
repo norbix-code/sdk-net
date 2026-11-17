@@ -1,0 +1,40 @@
+﻿{
+  Sent: [
+    {
+      Method: POST,
+      Path: /v2/code/workflows/runs/wfr_7Qk2abc/resume,
+      Headers: {
+        Authorization: Bearer test-bearer,
+        Content-Type: application/json; charset=utf-8,
+        norbix-account-id: test-account,
+        norbix-project-id: test-project
+      },
+      Body: {
+        decision: rejected,
+        reason: Over the monthly budget
+      }
+    },
+    {
+      Method: POST,
+      Path: /v2/code/workflows/wf_1/resume,
+      Headers: {
+        Authorization: Bearer test-bearer,
+        Content-Type: application/json; charset=utf-8,
+        norbix-account-id: test-account,
+        norbix-project-id: test-project
+      },
+      Body: {
+        key: order-o1,
+        decision: approved,
+        reason: Looks fine
+      }
+    }
+  ],
+  AgentSlot: {
+    Label: agent:reviewer,
+    Agent: reviewer,
+    Decision: approved,
+    Reason: The amount is within the limit.
+  },
+  AnswerReason: The amount is within the limit.
+}

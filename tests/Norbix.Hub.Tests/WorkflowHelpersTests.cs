@@ -236,6 +236,77 @@ public sealed class WorkflowHelpersTests
     }
 
     /// <summary>
+    /// An AI agent among the approvers (Code.Workflows.md §3.3c): a resume may carry a
+    /// <c>Reason</c>, by run id and by key; the waiting record names the agent's slot
+    /// (<c>Agent</c>) and the reason of its answer, on the slot and on the answer.
+    /// </summary>
+    [Test]
+    public async Task Resume_carries_a_reason_and_the_run_names_the_agent_slot_and_its_reason()
+    {
+        using var fixture = NewFixture();
+        var body = new
+        {
+            run = new
+            {
+                runId = RunId,
+                workflowId = "wf_1",
+                status = "waiting",
+                waitingOn = new[]
+                {
+                    new
+                    {
+                        stepId = "approve",
+                        kind = "approval",
+                        require = 2,
+                        slots = new object[]
+                        {
+                            new { label = "role:Accountant" },
+                            new
+                            {
+                                label = "agent:reviewer",
+                                userId = "usr_bot",
+                                agent = "reviewer",
+                                answeredBy = "usr_bot",
+                                decision = "approved",
+                                reason = "The amount is within the limit.",
+                            },
+                        },
+                        answers = new[]
+                        {
+                            new
+                            {
+                                userId = "usr_bot",
+                                kind = "agent",
+                                decision = "approved",
+                                at = "2026-11-17T10:15:00Z",
+                                reason = "The amount is within the limit.",
+                            },
+                        },
+                    },
+                },
+            },
+        };
+        fixture.RespondNext(body);
+        fixture.RespondNext(body);
+
+        var byRun = await fixture.Client.Code.ResumeCodeWorkflowRunAsync(
+            new ResumeCodeWorkflowRun { RunId = RunId, Decision = "rejected", Reason = "Over the monthly budget" });
+        await fixture.Client.Code.ResumeCodeWorkflowRunByKeyAsync(
+            new ResumeCodeWorkflowRunByKey { Id = "wf_1", Key = "order-o1", Decision = "approved", Reason = "Looks fine" });
+
+        var wait = byRun!.Run!.WaitingOn[0];
+        await Verifier.Verify(
+            new
+            {
+                Sent = fixture.RecordedRequests,
+                PersonSlotAgent = wait.Slots![0].Agent,
+                AgentSlot = new { wait.Slots[1].Label, wait.Slots[1].Agent, wait.Slots[1].Decision, wait.Slots[1].Reason },
+                AnswerReason = wait.Answers![0].Reason,
+            },
+            VerifyConfig.VerifySettings);
+    }
+
+    /// <summary>
     /// The signed resume links carry <c>INorbixOptionalAuth</c>: a client with no API key and no
     /// bearer token still sends them, with no <c>Authorization</c> header (a normal route throws
     /// <c>NORBIX_NOT_AUTHENTICATED</c>). The client constructor still asks for a project id.

@@ -2518,6 +2518,7 @@
           payload: {
             test-key: null
           },
+          reason: test-reason,
           env: test-env
         }
       },
@@ -2567,6 +2568,7 @@
           payload: {
             test-key: null
           },
+          reason: test-reason,
           env: test-env
         }
       },

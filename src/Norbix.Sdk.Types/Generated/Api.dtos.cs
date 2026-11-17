@@ -4131,6 +4131,9 @@ namespace Norbix.Sdk.Types.Api;
         public virtual string? Kind { get; set; }
 
         [DataMember]
+        public virtual string? Reason { get; set; }
+
+        [DataMember]
         public virtual string Decision { get; set; }
 
         ///<summary>
@@ -4215,6 +4218,18 @@ namespace Norbix.Sdk.Types.Api;
 
         [DataMember]
         public virtual bool? TeamRole { get; set; }
+
+        ///<summary>
+        ///Set when this slot is an AI agent's: the agent's id in the step. `userId` is then the agent's service user.
+        ///</summary>
+        [DataMember]
+        public virtual string? Agent { get; set; }
+
+        ///<summary>
+        ///The reason given with the answer that filled this slot. An AI agent always gives one.
+        ///</summary>
+        [DataMember]
+        public virtual string? Reason { get; set; }
 
         [DataMember]
         public virtual string? AnsweredBy { get; set; }
@@ -5812,6 +5827,12 @@ namespace Norbix.Sdk.Types.Api;
 
         [DataMember]
         public virtual Dictionary<string, Object>? Payload { get; set; }
+
+        ///<summary>
+        ///Optional: why — one or two sentences. Kept with the answer and shown on the run (at most 2 000 characters).
+        ///</summary>
+        [DataMember]
+        public virtual string? Reason { get; set; }
     }
 
     [NorbixRoute("/{version}/code/workflows/{Id}/resume", "POST")]
@@ -5842,6 +5863,12 @@ namespace Norbix.Sdk.Types.Api;
 
         [DataMember]
         public virtual Dictionary<string, Object>? Payload { get; set; }
+
+        ///<summary>
+        ///Optional: why — one or two sentences. Kept with the answer and shown on the run (at most 2 000 characters).
+        ///</summary>
+        [DataMember]
+        public virtual string? Reason { get; set; }
     }
 
     [NorbixRoute("/{version}/code/workflows/runs/{RunId}/retry", "POST")]
