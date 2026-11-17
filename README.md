@@ -214,11 +214,11 @@ When a region is resolved **and** the base URL is still the SDK default, the SDK
 
 | Base URL | With `Region = "nb-eu-germany"` |
 | --- | --- |
-| `https://api.norbix.ai` (default) | `https://nb-eu-germany.api.norbix.ai` |
 | `https://hub.norbix.ai` (default) | `https://nb-eu-germany.hub.norbix.ai` |
+| `https://api.norbix.ai` (default) | The project's own host, with **no** region label — see [Project host](#project-host). Only a project id that is not a Norbix id (a test id like `p1`) gives `https://nb-eu-germany.api.norbix.ai` |
 | Custom `ApiBaseUrl` / `HubBaseUrl` | Never rewritten — the `nb-region` header is still sent |
 
-A custom base URL is never rewritten, and with no region configured nothing changes at all.
+A custom base URL is never rewritten, and with no region configured the Hub URL does not change at all.
 
 ### Discovering regions
 
@@ -269,6 +269,31 @@ await client.Account.UpdateProjectRegionsAsync(new UpdateProjectRegions
 `ProjectDto` (returned by `client.Account.GetProjectAsync(...)`) exposes the same shape as `PrimaryRegion` / `AdditionalRegions` (`ProjectRegionDto`).
 
 Every other project setting (name, CORS, languages, admin URL, legal, Admin Portal, AI) is on [docs/hub/project.md](./docs/hub/project.md).
+
+## Project host
+
+On the SDK's default API address (`https://api.norbix.ai`) every API call of a project goes to the project's own host:
+
+```
+https://pr-<32 hex>.api.norbix.ai
+```
+
+The label is the project id written as hex — `pr_5XvmrTA6JVggZdmEE5bGdm` → `pr-022c4aca9f9e4df787ab0a20c83c44b6`. The SDK builds it locally, with no call; `NorbixProjectHost.Label(projectId)` returns it (or `null` for an id that is not a Norbix project id).
+
+What changes:
+
+- API calls — data, files, membership, login (`/auth`), notifications, payments, code, logs, echo — go to the project host. The host carries **no region label**, whatever the region is: the project's DNS record already points at its region.
+- `WithScope(otherProjectId)` gives a client on the other project's host. The host is computed per request, so it always names the same project as the `norbix-project-id` header.
+
+What does not change:
+
+- The `norbix-project-id` header is still sent, and `nb-region` too when a region is set.
+- Hub calls (`Norbix.Hub`) stay on `https://hub.norbix.ai`, or `https://<region>.hub.norbix.ai` with a region.
+- The link from `SocialSignInUrl(...)` stays on the shared API host (`https://api.norbix.ai`, or `https://<region>.api.norbix.ai`): the browser comes back to that host after the provider.
+- A custom `ApiBaseUrl` (option, configuration or `NORBIX_API_URL`) is never rewritten — a self-hosted gateway, staging and `localhost` work as before. The SDK compares the value with the default, so `https://api.norbix.ai` written out counts as the default, as it does for regions.
+- A project id that is not a Norbix id (`p1`, `proj_123`) keeps the shared host.
+
+**Firewalls:** if outgoing traffic is restricted by host name, allow `*.api.norbix.ai` (not only `api.norbix.ai`).
 
 ## Language
 
