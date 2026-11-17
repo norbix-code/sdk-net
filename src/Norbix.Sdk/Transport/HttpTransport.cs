@@ -420,9 +420,10 @@ internal sealed class HttpTransport : INorbixTransport, IDisposable
         string path,
         IEnumerable<KeyValuePair<string, string?>> query)
     {
-        var baseUrl = ComposeRegionalBaseUrl(
-            target == NorbixTarget.Api ? _options.ApiBaseUrl : _options.HubBaseUrl,
-            target);
+        // A link the browser navigates to stays on the shared host, never the
+        // project's own: the gateway's sign-in callback comes back to the shared
+        // host and its nonce cookie is host-only.
+        var baseUrl = ComposeBaseUrl(target, projectHost: false);
         var version = target == NorbixTarget.Api ? _options.ApiVersion : _options.HubVersion;
         var url = JoinUrl(baseUrl, path.Replace("{version}", Uri.EscapeDataString(version), StringComparison.Ordinal));
 
@@ -439,9 +440,7 @@ internal sealed class HttpTransport : INorbixTransport, IDisposable
 
     private (string Url, string? Body) BuildUrlAndBody(in NorbixRequestSpec spec)
     {
-        var baseUrl = ComposeRegionalBaseUrl(
-            spec.Target == NorbixTarget.Api ? _options.ApiBaseUrl : _options.HubBaseUrl,
-            spec.Target);
+        var baseUrl = ComposeBaseUrl(spec.Target, projectHost: true);
         var version = spec.Target == NorbixTarget.Api ? _options.ApiVersion : _options.HubVersion;
 
         var path = spec.Path.Replace("{version}", Uri.EscapeDataString(version), StringComparison.Ordinal);
@@ -468,22 +467,32 @@ internal sealed class HttpTransport : INorbixTransport, IDisposable
     }
 
     /// <summary>
-    /// When a region is resolved AND the base URL is still the SDK default,
-    /// compose the regional endpoint by prefixing the region code as a
-    /// subdomain (<c>https://{region}.api.norbix.ai</c>). A user-supplied
-    /// custom base URL is never rewritten. Composition happens here — per
-    /// request — because the transport always builds absolute request URIs
-    /// and never sets <c>HttpClient.BaseAddress</c>, so clients cloned via
-    /// <c>WithRegion(...)</c> can safely share one <see cref="HttpClient"/>.
+    /// The base URL of a request. A user-supplied custom base URL is never
+    /// rewritten. While the base URL is still the SDK default:
+    /// <list type="bullet">
+    ///   <item><description>an API call goes to the project's own host
+    ///   (<c>https://pr-&lt;hex&gt;.api.norbix.ai</c>, see
+    ///   <see cref="NorbixProjectHost.Label"/>) with no region label, whatever
+    ///   the region is — the project's DNS record already points at its
+    ///   region;</description></item>
+    ///   <item><description>a Hub call, a navigation link
+    ///   (<paramref name="projectHost"/> false) and an API call whose project
+    ///   id is not a Norbix id keep the shared host, with the region code as a
+    ///   subdomain when a region is resolved
+    ///   (<c>https://{region}.api.norbix.ai</c>).</description></item>
+    /// </list>
+    /// Composition happens here — per request, from the current options —
+    /// because the transport always builds absolute request URIs and never
+    /// sets <c>HttpClient.BaseAddress</c>: clients cloned via
+    /// <c>WithScope(...)</c> / <c>WithRegion(...)</c> safely share one
+    /// <see cref="HttpClient"/>, and the host always names the same project as
+    /// the <c>norbix-project-id</c> header.
     /// </summary>
-    private string ComposeRegionalBaseUrl(string baseUrl, NorbixTarget target)
+    private string ComposeBaseUrl(NorbixTarget target, bool projectHost)
     {
-        if (string.IsNullOrEmpty(_options.Region))
-        {
-            return baseUrl;
-        }
-
-        var defaultBase = target == NorbixTarget.Api
+        var isApi = target == NorbixTarget.Api;
+        var baseUrl = isApi ? _options.ApiBaseUrl : _options.HubBaseUrl;
+        var defaultBase = isApi
             ? NorbixClientOptions.DefaultApiBaseUrl
             : NorbixClientOptions.DefaultHubBaseUrl;
 
@@ -493,8 +502,15 @@ internal sealed class HttpTransport : INorbixTransport, IDisposable
             return baseUrl;
         }
 
+        var label = isApi && projectHost ? NorbixProjectHost.Label(_options.ProjectId) : null;
+        label ??= string.IsNullOrEmpty(_options.Region) ? null : _options.Region;
+        if (label is null)
+        {
+            return baseUrl;
+        }
+
         var uri = new Uri(defaultBase);
-        return $"{uri.Scheme}://{_options.Region}.{uri.Authority}";
+        return $"{uri.Scheme}://{label}.{uri.Authority}";
     }
 
     private static string ReplaceTokens(string path, object? request, HashSet<string> consumed)
