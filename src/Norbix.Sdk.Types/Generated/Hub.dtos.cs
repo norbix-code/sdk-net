@@ -7973,6 +7973,48 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual string Value { get; set; }
     }
 
+    [DataContract]
+    public partial class MembershipTriggerEventsDto
+    {
+        [DataMember]
+        public virtual List<MembershipTriggerEventValuesDto> Events { get; set; } = [];
+    }
+
+    [DataContract]
+    public partial class MembershipTriggerEventValueDto
+    {
+        [DataMember]
+        public virtual string Key { get; set; }
+
+        [DataMember]
+        public virtual string Owner { get; set; }
+
+        [DataMember]
+        public virtual string Label { get; set; }
+
+        [DataMember]
+        public virtual string Resolver { get; set; }
+    }
+
+    [DataContract]
+    public partial class MembershipTriggerEventValuesDto
+    {
+        [DataMember]
+        public virtual string When { get; set; }
+
+        [DataMember]
+        public virtual string? Subject { get; set; }
+
+        [DataMember]
+        public virtual string? SubjectBefore { get; set; }
+
+        [DataMember]
+        public virtual List<MembershipTriggerEventValueDto> Values { get; set; } = [];
+
+        [DataMember]
+        public virtual string InitiatorNote { get; set; }
+    }
+
     public partial class PasskeySettingsDto
     {
         public virtual bool Enabled { get; set; }
@@ -19077,6 +19119,16 @@ namespace Norbix.Sdk.Types.Hub;
         ///Set true when rendering for a preview (vs. a final save), to affect how missing tokens are handled.
         ///</summary>
         public virtual bool IsForPreview { get; set; }
+
+        ///<summary>
+        ///Membership trigger preview: the project user (usr_…) the simulated event is about — the 'Registered user'. Set = the event's User.* tokens and every New / Old binding in Tokens are resolved as the trigger send resolves them.
+        ///</summary>
+        public virtual string? TriggerSubjectUserId { get; set; }
+
+        ///<summary>
+        ///Membership trigger preview: the same person before the change (Old.User.* tokens), for update events.
+        ///</summary>
+        public virtual string? TriggerSubjectBeforeUserId { get; set; }
     }
 
     ///<summary>
@@ -21043,6 +21095,21 @@ namespace Norbix.Sdk.Types.Hub;
     public partial class GetMembershipTrigger
         : GetTrigger, INorbixRequest<GetMembershipTriggerResponse>
     {
+    }
+
+    ///<summary>
+    ///Lists the values each membership trigger event carries, by name, for token bindings.
+    ///</summary>
+    [NorbixRoute("/{version}/membership/triggers/event-values", "GET")]
+    public partial class GetMembershipTriggerEventValues
+        : CodeMashRequestBase, INorbixRequest<GetMembershipTriggerEventValuesResponse>
+    {
+    }
+
+    public partial class GetMembershipTriggerEventValuesResponse
+        : ResponseBase
+    {
+        public virtual MembershipTriggerEventsDto? Result { get; set; }
     }
 
     ///<summary>

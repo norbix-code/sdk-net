@@ -1,7 +1,7 @@
 ﻿{
   Target: Hub,
   Group: membership,
-  Count: 49,
+  Count: 50,
   Endpoints: [
     {
       Target: Hub,
@@ -1493,6 +1493,37 @@
           Description: test-description,
           IsEnabled: true,
           ActivationCode: test-activationCode
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: membership,
+      MethodName: GetMembershipTriggerEventValuesAsync,
+      RequestType: GetMembershipTriggerEventValues,
+      HttpMethod: GET,
+      Path: /{version}/membership/triggers/event-values,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/membership/triggers/event-values,
+        Query: ?env=test-env,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        }
+      },
+      ResponseType: GetMembershipTriggerEventValuesResponse,
+      Response: {
+        Result: {
+          Events: [
+            {}
+          ]
         },
         ResponseStatus: {
           IsSuccess: true
