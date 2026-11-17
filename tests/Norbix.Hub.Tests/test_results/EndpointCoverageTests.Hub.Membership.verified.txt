@@ -1,7 +1,7 @@
 ﻿{
   Target: Hub,
   Group: membership,
-  Count: 48,
+  Count: 49,
   Endpoints: [
     {
       Target: Hub,
@@ -533,6 +533,49 @@
     {
       Target: Hub,
       Group: membership,
+      MethodName: GetMembershipEmailBindingsAsync,
+      RequestType: GetMembershipEmailBindings,
+      HttpMethod: GET,
+      Path: /{version}/membership/settings/email-bindings,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/membership/settings/email-bindings,
+        Query: ?setting=test-setting&templateId={guid}&env=test-env,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        }
+      },
+      ResponseType: GetMembershipEmailBindingsResponse,
+      Response: {
+        Result: {
+          Event: test-event,
+          Env: test-env,
+          TemplateId: Guid_1,
+          TemplateName: test-templateName,
+          IsBuiltIn: true,
+          WithoutValueCount: 7,
+          Tokens: [
+            {
+              IsHelper: false,
+              HasValue: false
+            }
+          ],
+          Fields: [
+            {}
+          ]
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: membership,
       MethodName: UpdateAuthorizationSettingsAsync,
       RequestType: UpdateAuthorizationSettings,
       HttpMethod: PUT,
@@ -580,6 +623,11 @@
           resetPasswordEmailTemplate: user@example.test,
           resetPasswordTokenExpiration: 1.0,
           resetPasswordCallback: test-resetPasswordCallback,
+          welcomeEmailTemplate: user@example.test,
+          bindings: [
+            null
+          ],
+          bindingsEvent: test-bindingsEvent,
           minLength: 1.0,
           maxLength: 1.0,
           minNumbers: 1.0,

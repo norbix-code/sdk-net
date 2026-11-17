@@ -1,7 +1,7 @@
 ﻿{
   Target: Hub,
   Group: database,
-  Count: 72,
+  Count: 73,
   Endpoints: [
     {
       Target: Hub,
@@ -623,6 +623,35 @@
           StartingAfter: cursor-start,
           EndingBefore: cursor-end
         },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: database,
+      MethodName: GetNetworkAddressesAsync,
+      RequestType: GetNetworkAddresses,
+      HttpMethod: GET,
+      Path: /{version}/database/network-addresses,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/database/network-addresses,
+        Query: ?regionCode=test-regionCode&env=test-env,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        }
+      },
+      ResponseType: GetNetworkAddressesResponse,
+      Response: {
+        Regions: [
+          {}
+        ],
         ResponseStatus: {
           IsSuccess: true
         }
