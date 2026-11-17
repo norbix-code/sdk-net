@@ -749,7 +749,6 @@ namespace Norbix.Sdk.Types.Hub;
         Fake,
     }
 
-    [NorbixRoute("/internal/_typegen", "GET")]
     public partial class InternalsTypeGen
     {
         public virtual SmtpEmailIntegrationRequest? Typegen_0_SmtpEmailIntegrationRequest { get; set; }
@@ -2174,6 +2173,12 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember]
         public virtual List<string> NearLimits { get; set; } = [];
+
+        [DataMember]
+        public virtual string? NextTierCode { get; set; }
+
+        [DataMember]
+        public virtual string TopTierCode { get; set; }
     }
 
     [DataContract]
@@ -6286,6 +6291,16 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual string DisplayName { get; set; }
     }
 
+    [DataContract]
+    public partial class NetworkAddressesDto
+    {
+        [DataMember]
+        public virtual string RegionCode { get; set; }
+
+        [DataMember]
+        public virtual List<string> Addresses { get; set; } = [];
+    }
+
     public partial class MongoDbAtlasFlexManagedIntegrationDto
         : DatabaseIntegrationDto
     {
@@ -7793,6 +7808,9 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember]
         public virtual bool AllowAnyoneToSignUp { get; set; }
+
+        [DataMember]
+        public virtual List<string> WelcomeEmailTriggers { get; set; } = [];
     }
 
     [DataContract]
@@ -7841,6 +7859,34 @@ namespace Norbix.Sdk.Types.Hub;
     }
 
     [DataContract]
+    public partial class MembershipEmailBindingsDto
+    {
+        [DataMember]
+        public virtual string Event { get; set; }
+
+        [DataMember]
+        public virtual string Env { get; set; }
+
+        [DataMember]
+        public virtual string? TemplateId { get; set; }
+
+        [DataMember]
+        public virtual string? TemplateName { get; set; }
+
+        [DataMember]
+        public virtual bool IsBuiltIn { get; set; }
+
+        [DataMember]
+        public virtual int WithoutValueCount { get; set; }
+
+        [DataMember]
+        public virtual List<MembershipEmailTokenDto> Tokens { get; set; } = [];
+
+        [DataMember]
+        public virtual List<MembershipEventFieldDto> Fields { get; set; } = [];
+    }
+
+    [DataContract]
     public partial class MembershipEmailPreferencesDto
     {
         [DataMember]
@@ -7860,10 +7906,71 @@ namespace Norbix.Sdk.Types.Hub;
     }
 
     [DataContract]
+    public partial class MembershipEmailTokenDto
+    {
+        [DataMember]
+        public virtual string Token { get; set; }
+
+        [DataMember]
+        public virtual string Status { get; set; }
+
+        [DataMember]
+        public virtual string? Source { get; set; }
+
+        [DataMember]
+        public virtual string? Reason { get; set; }
+
+        [DataMember]
+        public virtual bool IsHelper { get; set; }
+
+        [DataMember]
+        public virtual MembershipTokenBindingDto? Resolver { get; set; }
+
+        [DataMember]
+        public virtual bool HasValue { get; set; }
+    }
+
+    [DataContract]
+    public partial class MembershipEventFieldDto
+    {
+        [DataMember]
+        public virtual string Key { get; set; }
+
+        [DataMember]
+        public virtual string Label { get; set; }
+    }
+
+    [DataContract]
     public partial class MembershipMessageTemplateDto
     {
         [DataMember]
         public virtual string? Id { get; set; }
+    }
+
+    [DataContract]
+    public partial class MembershipTokenBindingDto
+    {
+        [DataMember]
+        public virtual string Token { get; set; }
+
+        [DataMember]
+        public virtual string Kind { get; set; }
+
+        [DataMember]
+        public virtual string? Value { get; set; }
+
+        [DataMember]
+        public virtual List<MembershipTokenTranslationDto>? Translations { get; set; }
+    }
+
+    [DataContract]
+    public partial class MembershipTokenTranslationDto
+    {
+        [DataMember]
+        public virtual string Language { get; set; }
+
+        [DataMember]
+        public virtual string Value { get; set; }
     }
 
     public partial class PasskeySettingsDto
@@ -9256,6 +9363,9 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual long? UsersTotal { get; set; }
 
         [DataMember]
+        public virtual int PeriodDays { get; set; }
+
+        [DataMember]
         public virtual long? UsersNew30d { get; set; }
 
         [DataMember]
@@ -10278,9 +10388,6 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual FunctionRefDto? FunctionRef { get; set; }
 
         [DataMember]
-        public virtual string? RunAsUserId { get; set; }
-
-        [DataMember]
         public virtual CodeInvocationType InvocationType { get; set; }
 
         [DataMember]
@@ -11173,7 +11280,7 @@ namespace Norbix.Sdk.Types.Hub;
 
     [NorbixRoute("/{version}/account/password/reset/confirm", "POST")]
     public partial class ConfirmAccountPasswordResetRequest
-        : RequestBase, INorbixRequest<EmptyResponse>
+        : RequestBase, INorbixRequest<EmptyResponse>, INorbixOptionalAuth
     {
         public virtual string Token { get; set; }
         public virtual string NewPassword { get; set; }
@@ -11181,7 +11288,7 @@ namespace Norbix.Sdk.Types.Hub;
 
     [NorbixRoute("/{version}/account/password/reset/request", "POST")]
     public partial class RequestAccountPasswordResetRequest
-        : RequestBase, INorbixRequest<EmptyResponse>
+        : RequestBase, INorbixRequest<EmptyResponse>, INorbixOptionalAuth
     {
         public virtual string Email { get; set; }
     }
@@ -11710,6 +11817,12 @@ namespace Norbix.Sdk.Types.Hub;
         ///</summary>
         [DataMember]
         public virtual bool Refresh { get; set; }
+
+        ///<summary>
+        ///Days the user and e-mail numbers cover: 7, 30 (default) or 90. The problem list is the same for every period.
+        ///</summary>
+        [DataMember]
+        public virtual int? PeriodDays { get; set; }
     }
 
     [DataContract]
@@ -16359,6 +16472,25 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual PaginatedResponse<DatabaseIntegrationListProjection>? List { get; set; }
     }
 
+    ///<summary>
+    ///Returns the IP addresses Norbix connects to databases from, per region
+    ///</summary>
+    [NorbixRoute("/{version}/database/network-addresses", "GET")]
+    public partial class GetNetworkAddresses
+        : CodeMashRequestBase, INorbixRequest<GetNetworkAddressesResponse>
+    {
+        ///<summary>
+        ///A Norbix region code, e.g. nb-eu-germany; empty = every region
+        ///</summary>
+        public virtual string? RegionCode { get; set; }
+    }
+
+    public partial class GetNetworkAddressesResponse
+        : ResponseBase
+    {
+        public virtual List<NetworkAddressesDto>? Regions { get; set; }
+    }
+
     public partial class MongoDbAtlasFlexManagedDatabaseIntegrationRequest
         : DatabaseIntegrationRequest
     {
@@ -20250,6 +20382,30 @@ namespace Norbix.Sdk.Types.Hub;
     }
 
     ///<summary>
+    ///Lists the tokens of a membership e-mail template and how each one gets its value.
+    ///</summary>
+    [NorbixRoute("/{version}/membership/settings/email-bindings", "GET")]
+    public partial class GetMembershipEmailBindings
+        : CodeMashRequestBase, INorbixRequest<GetMembershipEmailBindingsResponse>
+    {
+        ///<summary>
+        ///Welcome, Verification, PasswordReset, Invitation, Deactivation or LoginAlert.
+        ///</summary>
+        public virtual string Setting { get; set; }
+
+        ///<summary>
+        ///The template to check (tmpl_…). Omit = the template chosen now, else the built-in one.
+        ///</summary>
+        public virtual string? TemplateId { get; set; }
+    }
+
+    public partial class GetMembershipEmailBindingsResponse
+        : ResponseBase
+    {
+        public virtual MembershipEmailBindingsDto? Result { get; set; }
+    }
+
+    ///<summary>
     ///Updates the project's membership authorization settings.
     ///</summary>
     [NorbixRoute("/{version}/membership/authorization", "PUT")]
@@ -20328,6 +20484,21 @@ namespace Norbix.Sdk.Types.Hub;
         ///Setting = 'PasswordResetCallback': your own "choose a new password" page (https://…, http only for localhost); the link is it + #token=…. Empty = the portal page.
         ///</summary>
         public virtual string? ResetPasswordCallback { get; set; }
+
+        ///<summary>
+        ///Setting = 'RegistrationTemplate': the welcome e-mail template id (tmpl_…) of this environment; empty = no welcome e-mail in this environment (a sign-up trigger may send it instead).
+        ///</summary>
+        public virtual string? WelcomeEmailTemplate { get; set; }
+
+        ///<summary>
+        ///With a template setting (RegistrationTemplate, PasswordResetTemplate, UserInvitationTemplate, UserVerificationTemplate, UserDeactivationTemplate) or Setting = 'EmailBindings': the values of the template's tokens Norbix does not fill (GET membership/settings/email-bindings lists them). Omit = keep the stored ones; the save is refused while a token has no value.
+        ///</summary>
+        public virtual List<MembershipTokenBindingDto>? Bindings { get; set; }
+
+        ///<summary>
+        ///Setting = 'EmailBindings': which e-mail the bindings are for (Welcome, Verification, PasswordReset, Invitation, Deactivation, LoginAlert).
+        ///</summary>
+        public virtual string? BindingsEvent { get; set; }
 
         public virtual int MinLength { get; set; }
         public virtual int? MaxLength { get; set; }

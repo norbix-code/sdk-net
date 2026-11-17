@@ -2123,7 +2123,7 @@
       Sent: {
         Method: GET,
         Path: /v2/account/projects/{guid}/health,
-        Query: ?refresh=True&env=test-env,
+        Query: ?refresh=True&periodDays=1&env=test-env,
         Headers: {
           Authorization: Bearer test-bearer,
           norbix-account-id: test-account,
