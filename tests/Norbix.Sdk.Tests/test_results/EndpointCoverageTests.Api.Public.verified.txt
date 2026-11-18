@@ -41,13 +41,12 @@
         ProjectId
       ],
       IsAccountScoped: false,
-      IsUnauthenticated: false,
+      IsUnauthenticated: true,
       Sent: {
         Method: GET,
         Path: /v2/public/projects/{guid}/config,
         Query: ?env=test-env,
         Headers: {
-          Authorization: Bearer test-bearer,
           norbix-account-id: test-account,
           norbix-project-id: test-project
         }
@@ -96,12 +95,11 @@
         Kind
       ],
       IsAccountScoped: false,
-      IsUnauthenticated: false,
+      IsUnauthenticated: true,
       Sent: {
         Method: GET,
         Path: /v2/public/projects/{guid}/legal/test-kind,
         Headers: {
-          Authorization: Bearer test-bearer,
           norbix-account-id: test-account,
           norbix-project-id: test-project
         }
