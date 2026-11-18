@@ -1,0 +1,23 @@
+﻿{
+  Sent: {
+    Method: POST,
+    Path: /v2/account/stripe/discount/check,
+    Headers: {
+      Authorization: Bearer test-bearer,
+      Content-Type: application/json; charset=utf-8,
+      norbix-project-id: test-project
+    },
+    Body: {
+      code: LAUNCH30,
+      bundle: growth,
+      billingPeriod: monthly
+    }
+  },
+  Discount: {
+    Code: LAUNCH30,
+    PercentOff: 30.0,
+    Currency: usd,
+    Months: 3,
+    EndsAt: DateTime_1
+  }
+}

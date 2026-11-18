@@ -30,6 +30,7 @@
         ApiVersion: test-apiVersion,
         HubVersion: test-hubVersion,
         AdminUrlTemplate: https://example.test/adminUrlTemplate,
+        ApiUrlTemplate: https://example.test/apiUrlTemplate,
         EmailServiceConfigured: true,
         RootBootstrapPasswordSource: test-rootBootstrapPasswordSource,
         Regions: [
