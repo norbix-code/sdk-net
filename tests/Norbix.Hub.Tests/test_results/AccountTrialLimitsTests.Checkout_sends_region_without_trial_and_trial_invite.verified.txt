@@ -1,0 +1,17 @@
+﻿{
+  Method: POST,
+  Path: /v2/account/stripe/create-checkout-session,
+  Headers: {
+    Authorization: Bearer test-bearer,
+    Content-Type: application/json; charset=utf-8,
+    norbix-project-id: test-project
+  },
+  Body: {
+    subscriptionType: managedService,
+    bundle: starter,
+    billingPeriod: monthly,
+    region: nb-eu-germany,
+    withoutTrial: false,
+    trialInvite: invite-token
+  }
+}
