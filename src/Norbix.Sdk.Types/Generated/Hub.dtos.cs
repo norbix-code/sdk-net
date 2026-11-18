@@ -749,6 +749,7 @@ namespace Norbix.Sdk.Types.Hub;
         Fake,
     }
 
+    [NorbixRoute("/internal/_typegen", "GET")]
     public partial class InternalsTypeGen
     {
         public virtual SmtpEmailIntegrationRequest? Typegen_0_SmtpEmailIntegrationRequest { get; set; }
@@ -1120,6 +1121,12 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember]
         public virtual bool IsTrial { get; set; }
+
+        [DataMember]
+        public virtual int ExtraRegions { get; set; }
+
+        [DataMember]
+        public virtual BundleDiscountDto? Discount { get; set; }
 
         [DataMember]
         public virtual DateTime? RenewsOn { get; set; }
@@ -2080,6 +2087,28 @@ namespace Norbix.Sdk.Types.Hub;
     }
 
     [DataContract]
+    public partial class BundleDiscountDto
+    {
+        [DataMember]
+        public virtual string? Code { get; set; }
+
+        [DataMember]
+        public virtual decimal? PercentOff { get; set; }
+
+        [DataMember]
+        public virtual long? AmountOff { get; set; }
+
+        [DataMember]
+        public virtual string? Currency { get; set; }
+
+        [DataMember]
+        public virtual int? Months { get; set; }
+
+        [DataMember]
+        public virtual DateTime? EndsAt { get; set; }
+    }
+
+    [DataContract]
     public partial class BundlePriceDto
     {
         [DataMember]
@@ -2120,6 +2149,16 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember]
         public virtual string? Note { get; set; }
+    }
+
+    [DataContract]
+    public partial class ExtraRegionPriceDto
+    {
+        [DataMember]
+        public virtual BundlePriceDto Monthly { get; set; }
+
+        [DataMember]
+        public virtual BundlePriceDto Annual { get; set; }
     }
 
     [DataContract]
@@ -2219,6 +2258,12 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember]
         public virtual BundlePriceDto Annual { get; set; }
+
+        [DataMember]
+        public virtual int? RegionCap { get; set; }
+
+        [DataMember]
+        public virtual ExtraRegionPriceDto? ExtraRegion { get; set; }
     }
 
     [DataContract]
@@ -2578,6 +2623,9 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember]
         public virtual DateTime RecordedAtUtc { get; set; }
+
+        [DataMember]
+        public virtual string? Waived { get; set; }
     }
 
     [DataContract]
@@ -10430,6 +10478,9 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual FunctionRefDto? FunctionRef { get; set; }
 
         [DataMember]
+        public virtual string? RunAsUserId { get; set; }
+
+        [DataMember]
         public virtual CodeInvocationType InvocationType { get; set; }
 
         [DataMember]
@@ -10770,6 +10821,15 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual IReadOnlyDictionary<string, string>? ExtraHeaders { get; set; }
     }
 
+    [NorbixRoute("/{version}/account/stripe/discount", "POST")]
+    [DataContract]
+    public partial class ApplyBundleDiscount
+        : RequestBase, INorbixRequest<EmptyResponse>
+    {
+        [DataMember]
+        public virtual string? Code { get; set; }
+    }
+
     [NorbixRoute("/{version}/account/stripe/change-bundle", "POST")]
     [DataContract]
     public partial class ChangeManagedServiceBundle
@@ -10780,6 +10840,29 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember]
         public virtual SubscriptionBillingPeriod? BillingPeriod { get; set; }
+    }
+
+    [NorbixRoute("/{version}/account/stripe/discount/check", "POST")]
+    [DataContract]
+    public partial class CheckBundleDiscount
+        : RequestBase, INorbixRequest<CheckBundleDiscountResponse>
+    {
+        [DataMember]
+        public virtual string? Code { get; set; }
+
+        [DataMember]
+        public virtual ManagedServiceBundle? Bundle { get; set; }
+
+        [DataMember]
+        public virtual SubscriptionBillingPeriod? BillingPeriod { get; set; }
+    }
+
+    [DataContract]
+    public partial class CheckBundleDiscountResponse
+        : ResponseBase
+    {
+        [DataMember]
+        public virtual BundleDiscountDto? Discount { get; set; }
     }
 
     [NorbixRoute("/{version}/account/stripe/create-checkout-session", "POST")]
@@ -10804,6 +10887,18 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember]
         public virtual string? ReturnUrl { get; set; }
+
+        [DataMember]
+        public virtual string? DiscountCode { get; set; }
+
+        [DataMember]
+        public virtual string? Region { get; set; }
+
+        [DataMember]
+        public virtual bool? WithoutTrial { get; set; }
+
+        [DataMember]
+        public virtual string? TrialInvite { get; set; }
     }
 
     [DataContract]
@@ -10947,10 +11042,95 @@ namespace Norbix.Sdk.Types.Hub;
     {
     }
 
+    [NorbixRoute("/{version}/account/trial-availability", "GET")]
+    [DataContract]
+    public partial class GetTrialAvailabilityRequest
+        : RequestBase, INorbixRequest<TrialAvailabilityResponse>
+    {
+        [DataMember]
+        public virtual string? Region { get; set; }
+    }
+
+    [NorbixRoute("/{version}/account/trial-waitlist", "POST")]
+    [DataContract]
+    public partial class JoinTrialWaitlistRequest
+        : RequestBase, INorbixRequest<TrialWaitlistResponse>
+    {
+        [DataMember]
+        public virtual string? Region { get; set; }
+
+        [DataMember]
+        public virtual bool Consent { get; set; }
+
+        [DataMember]
+        public virtual string? ConsentVersion { get; set; }
+    }
+
     [NorbixRoute("/{version}/account/verify/resend", "POST")]
     public partial class ResendAccountVerificationToken
         : RequestBase, INorbixRequest<EmptyResponse>
     {
+    }
+
+    [NorbixRoute("/{version}/account/stripe/extra-regions", "POST")]
+    [DataContract]
+    public partial class SetExtraRegions
+        : RequestBase, INorbixRequest<EmptyResponse>
+    {
+        [DataMember]
+        public virtual int? ExtraRegions { get; set; }
+    }
+
+    [DataContract]
+    public partial class TrialAvailabilityResponse
+        : ResponseBase
+    {
+        [DataMember]
+        public virtual bool LimitsOn { get; set; }
+
+        [DataMember]
+        public virtual string? Region { get; set; }
+
+        [DataMember]
+        public virtual bool TrialsOpen { get; set; }
+
+        [DataMember]
+        public virtual bool WaitlistOpen { get; set; }
+
+        [DataMember]
+        public virtual bool OnWaitlist { get; set; }
+
+        [DataMember]
+        public virtual string? Refusal { get; set; }
+    }
+
+    [NorbixRoute("/{version}/account/trial-waitlist/intake", "POST")]
+    [DataContract]
+    public partial class TrialWaitlistIntakeRequest
+        : RequestBase, INorbixRequest<TrialWaitlistResponse>
+    {
+        [DataMember]
+        public virtual string? Email { get; set; }
+
+        [DataMember]
+        public virtual string? Region { get; set; }
+
+        [DataMember]
+        public virtual bool Consent { get; set; }
+
+        [DataMember]
+        public virtual string? ConsentVersion { get; set; }
+    }
+
+    [DataContract]
+    public partial class TrialWaitlistResponse
+        : ResponseBase
+    {
+        [DataMember]
+        public virtual string? Status { get; set; }
+
+        [DataMember]
+        public virtual string? Message { get; set; }
     }
 
     [NorbixRoute("/{version}/account/profile", "PUT")]
@@ -24806,6 +24986,7 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual string ApiVersion { get; set; }
         public virtual string HubVersion { get; set; }
         public virtual string? AdminUrlTemplate { get; set; }
+        public virtual string? ApiUrlTemplate { get; set; }
         public virtual bool EmailServiceConfigured { get; set; }
         public virtual string? RootBootstrapPasswordSource { get; set; }
         public virtual List<EchoRegionDto>? Regions { get; set; }

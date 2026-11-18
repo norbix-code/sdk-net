@@ -1,8 +1,37 @@
 ﻿{
   Target: Hub,
   Group: account,
-  Count: 134,
+  Count: 140,
   Endpoints: [
+    {
+      Target: Hub,
+      Group: account,
+      MethodName: ApplyBundleDiscountAsync,
+      RequestType: ApplyBundleDiscount,
+      HttpMethod: POST,
+      Path: /{version}/account/stripe/discount,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/account/stripe/discount,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        },
+        Body: {
+          code: test-code
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
     {
       Target: Hub,
       Group: account,
@@ -36,6 +65,45 @@
     {
       Target: Hub,
       Group: account,
+      MethodName: CheckBundleDiscountAsync,
+      RequestType: CheckBundleDiscount,
+      HttpMethod: POST,
+      Path: /{version}/account/stripe/discount/check,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/account/stripe/discount/check,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        },
+        Body: {
+          code: test-code,
+          bundle: starter,
+          billingPeriod: monthly
+        }
+      },
+      ResponseType: CheckBundleDiscountResponse,
+      Response: {
+        Discount: {
+          Code: test-code,
+          PercentOff: 3.14,
+          AmountOff: 42,
+          Currency: test-currency,
+          Months: 7,
+          EndsAt: DateTime_1
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: account,
       MethodName: CreateStripeCheckoutSessionAsync,
       RequestType: CreateStripeCheckoutSession,
       HttpMethod: POST,
@@ -57,7 +125,11 @@
           billingPeriod: monthly,
           domain: test-domain,
           newProjectSessionId: Guid_1,
-          returnUrl: https://example.test/returnUrl
+          returnUrl: https://example.test/returnUrl,
+          discountCode: test-discountCode,
+          region: test-region,
+          withoutTrial: true,
+          trialInvite: test-trialInvite
         }
       },
       ResponseType: CreateStripeCheckoutSessionResponse,
@@ -316,6 +388,71 @@
     {
       Target: Hub,
       Group: account,
+      MethodName: GetTrialAvailabilityAsync,
+      RequestType: GetTrialAvailabilityRequest,
+      HttpMethod: GET,
+      Path: /{version}/account/trial-availability,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/account/trial-availability,
+        Query: ?region=test-region,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        }
+      },
+      ResponseType: TrialAvailabilityResponse,
+      Response: {
+        LimitsOn: true,
+        Region: test-region,
+        TrialsOpen: true,
+        WaitlistOpen: true,
+        OnWaitlist: true,
+        Refusal: test-refusal,
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: account,
+      MethodName: JoinTrialWaitlistAsync,
+      RequestType: JoinTrialWaitlistRequest,
+      HttpMethod: POST,
+      Path: /{version}/account/trial-waitlist,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/account/trial-waitlist,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        },
+        Body: {
+          region: test-region,
+          consent: true,
+          consentVersion: test-consentVersion
+        }
+      },
+      ResponseType: TrialWaitlistResponse,
+      Response: {
+        Status: test-status,
+        Message: test-message,
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: account,
       MethodName: ResendAccountVerificationTokenAsync,
       RequestType: ResendAccountVerificationToken,
       HttpMethod: POST,
@@ -333,6 +470,69 @@
       },
       ResponseType: EmptyResponse,
       Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: account,
+      MethodName: SetExtraRegionsAsync,
+      RequestType: SetExtraRegions,
+      HttpMethod: POST,
+      Path: /{version}/account/stripe/extra-regions,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/account/stripe/extra-regions,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        },
+        Body: {
+          extraRegions: 1.0
+        }
+      },
+      ResponseType: EmptyResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: account,
+      MethodName: TrialWaitlistIntakeAsync,
+      RequestType: TrialWaitlistIntakeRequest,
+      HttpMethod: POST,
+      Path: /{version}/account/trial-waitlist/intake,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/account/trial-waitlist/intake,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        },
+        Body: {
+          email: user@example.test,
+          region: test-region,
+          consent: true,
+          consentVersion: test-consentVersion
+        }
+      },
+      ResponseType: TrialWaitlistResponse,
+      Response: {
+        Status: test-status,
+        Message: test-message,
         ResponseStatus: {
           IsSuccess: true
         }

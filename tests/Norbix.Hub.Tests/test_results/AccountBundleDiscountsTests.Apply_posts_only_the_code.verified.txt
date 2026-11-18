@@ -1,0 +1,12 @@
+﻿{
+  Method: POST,
+  Path: /v2/account/stripe/discount,
+  Headers: {
+    Authorization: Bearer test-bearer,
+    Content-Type: application/json; charset=utf-8,
+    norbix-project-id: test-project
+  },
+  Body: {
+    code: LAUNCH30
+  }
+}
