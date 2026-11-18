@@ -1,0 +1,6 @@
+﻿{
+  StatusCode: 403,
+  Code: AiChatChannelRefused,
+  Message: Not your channel.,
+  Calls: 1
+}

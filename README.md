@@ -395,7 +395,7 @@ The public endpoint surface is generated from gateway DTOs at compile time. The 
 
 | Module | Endpoints | Description |
 | --- | ---: | --- |
-| `ai` | 18 | End-user AI chat for a signed-in project user: availability, sessions, entries, feedback, attachments, memory, `StartEndUserChatTurnAsync` (answers at once with a turn id; the answer streams on the user's channel `ai-chat:{projectId}:{authId}`), plus the end-user tools. |
+| `ai` | 18 | End-user AI chat for a signed-in project user: availability, sessions, entries, feedback, attachments, memory, `StartEndUserChatTurnAsync` (answers at once with a turn id; the answer streams on the user's channel `ai-chat:{projectId}:{authId}` — read it with `client.AiChatAsync(authId)`, see [End-user AI chat stream](#end-user-ai-chat-stream)), plus the end-user tools. |
 | `code` | 4 | Beta: workflows for a signed-in project user — the waiting inbox (`GetCodeWorkflowWaitingRunsAsync`), `ResumeCodeWorkflowRunAsync`, and the signed resume links (`OpenCodeWorkflowResumeLinkAsync`, `UseCodeWorkflowResumeLinkAsync` — no key needed, the link's token is the key). See [Workflows (beta)](#workflows-beta). |
 | `database` | 22 | Collection CRUD (`FindAsync`, `FindOneAsync`, `FindOwnAsync`, insert / update / replace / delete one or many), count, distinct, aggregate, saved aggregate execution (`ExecuteAggregateAsync`), `ChangeResponsibilityAsync`, schema reads, taxonomy and term reads (`FindTermsAsync`, `FindTermsChildrenAsync`, `FindTaxonomyTreeAsync`, `FindTermTreeAsync`, `FindMergedTermTreeAsync`). |
 | `echo` | 1 | Smoke-test echo endpoint. |
@@ -1299,6 +1299,43 @@ await hub.Code.SetMarketplaceIntegrationRoleAccessAsync(new SetMarketplaceIntegr
     Package = MarketplaceAccessLevel.ReadOnly,
 });
 ```
+
+## End-user AI chat stream
+
+`StartEndUserChatTurnAsync` answers at once with a turn id; the answer arrives
+as server-sent events on the signed-in user's own channel. `AiChatAsync`
+(`Norbix.Api` only; the twin of TypeScript `norbix.aiChat`) opens
+`GET /event-stream?channels=ai-chat:{projectId}:{authId}` on the API host with
+the client's token and yields each `AiChatEvent` (`EventName`, `Payload` with
+the `turnId` and, for `ai.chat.turn.token`, the `text`, and the SSE `FrameId`).
+Heartbeats and notices are skipped.
+
+- Stop by leaving the `await foreach` or cancelling the token (the enumeration
+  then ends with an `OperationCanceledException`).
+- A dropped stream is reopened with backoff and `Last-Event-Id`, as in
+  TypeScript (`AiChatStreamOptions`: `Reconnect`, `BaseDelay` 500 ms, `MaxDelay`
+  10 s). The gateway does not replay what was missed: read the entries
+  (`GetEndUserChatEntriesAsync`) after a gap.
+- Another user's channel is refused with HTTP 403 and code
+  `AiChatChannelRefused` before the stream starts: `NorbixException` is thrown
+  at once and never retried.
+- `AiChatChannel.Of(projectId, authId)` builds the channel name.
+
+```csharp
+var turn = await client.Ai.StartEndUserChatTurnAsync(new StartEndUserChatTurnRequest
+{
+    SessionId = sessionId,
+    Message = "Where is my order?",
+});
+await foreach (var e in client.AiChatAsync(authId, cancellationToken: ct))
+{
+    if (e.EventName == "ai.chat.turn.token") Console.Write(e.Payload?.GetProperty("text").GetString());
+    if (e.EventName is "ai.chat.turn.completed" or "ai.chat.turn.failed") break;
+}
+```
+
+Tests: `tests/Norbix.Sdk.Tests/AiChatStreamTests.cs` (fake SSE server: the
+request, frame parsing, reconnect, refusal, cancellation).
 
 ## Coverage Notes
 

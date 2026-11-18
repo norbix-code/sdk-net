@@ -410,6 +410,93 @@ internal sealed class HttpTransport : INorbixTransport, IDisposable
     }
 
     /// <summary>
+    /// Opens a server-sent events stream with <c>GET</c> and yields its frames
+    /// until the server closes it or <paramref name="cancellationToken"/> fires.
+    /// <paramref name="path"/> is the stream path (the gateway's is
+    /// <c>/event-stream</c>, unversioned); <paramref name="query"/> goes in the URL.
+    /// The headers are those of the TypeScript SDK's SSE client —
+    /// <c>Accept: text/event-stream</c>, <c>Cache-Control: no-cache</c>,
+    /// <c>Authorization</c> and, on a reconnect, <c>Last-Event-Id</c> — plus the
+    /// project header every call carries. The client timeout covers only the
+    /// wait for the response headers; the stream itself stays open. A
+    /// 4xx / 5xx answer throws the gateway's <see cref="NorbixException"/>
+    /// before any frame. No retry here: the caller owns the reconnect policy.
+    /// </summary>
+    internal async IAsyncEnumerable<SseFrame> StreamAsync(
+        NorbixTarget target,
+        string path,
+        IEnumerable<KeyValuePair<string, string>> query,
+        string? lastEventId,
+        [System.Runtime.CompilerServices.EnumeratorCancellation] CancellationToken cancellationToken = default)
+    {
+        var url = JoinUrl(ComposeBaseUrl(target, projectHost: true), path);
+        var qs = string.Join("&", query.Select(kv => $"{Uri.EscapeDataString(kv.Key)}={Uri.EscapeDataString(kv.Value)}"));
+        if (qs.Length > 0)
+        {
+            url = $"{url}?{qs}";
+        }
+
+        var token = !string.IsNullOrEmpty(_options.BearerToken) ? _options.BearerToken : _options.ApiKey;
+        if (string.IsNullOrEmpty(token))
+        {
+            throw new NorbixException(
+                "Norbix is not authenticated. Provide ApiKey, BearerToken, or call LoginAsync(...) first.",
+                code: NorbixErrorCodes.NotAuthenticated,
+                url: url);
+        }
+
+        using var request = new HttpRequestMessage(HttpMethod.Get, url);
+        request.Headers.TryAddWithoutValidation("Accept", "text/event-stream");
+        request.Headers.TryAddWithoutValidation("Cache-Control", "no-cache");
+        request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        if (!string.IsNullOrEmpty(lastEventId))
+        {
+            request.Headers.TryAddWithoutValidation("Last-Event-Id", lastEventId);
+        }
+        if (!string.IsNullOrEmpty(_options.ProjectId))
+        {
+            request.Headers.TryAddWithoutValidation("norbix-project-id", _options.ProjectId);
+        }
+
+        HttpResponseMessage response;
+        try
+        {
+            response = await _http.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cancellationToken)
+                .ConfigureAwait(false);
+        }
+        catch (TaskCanceledException ex) when (!cancellationToken.IsCancellationRequested)
+        {
+            throw new NorbixException(
+                $"Request timed out after {_options.Timeout.TotalMilliseconds}ms",
+                code: NorbixErrorCodes.NetworkError,
+                url: url,
+                innerException: ex);
+        }
+        catch (HttpRequestException ex)
+        {
+            throw new NorbixException(ex.Message, code: NorbixErrorCodes.NetworkError, url: url, innerException: ex);
+        }
+
+        using (response)
+        {
+            await using var stream = await response.Content.ReadAsStreamAsync(cancellationToken).ConfigureAwait(false);
+            if (!response.IsSuccessStatusCode)
+            {
+                using var ms = new MemoryStream();
+                await stream.CopyToAsync(ms, cancellationToken).ConfigureAwait(false);
+                ms.Position = 0;
+                throw await BuildExceptionAsync(ms, (int)response.StatusCode, url, RetryAfterSecondsOf(response), cancellationToken)
+                    .ConfigureAwait(false);
+            }
+
+            await foreach (var frame in SseReader.ReadAsync(stream, cancellationToken).ConfigureAwait(false))
+            {
+                yield return frame;
+            }
+        }
+    }
+
+    /// <summary>
     /// The full URL of a <c>GET</c> route that a browser navigates to (a link or
     /// a redirect, not a call). A navigation carries no headers, so the project
     /// id and a non-PROD env go into the query (<c>?projectId=…&amp;env=…</c>),
