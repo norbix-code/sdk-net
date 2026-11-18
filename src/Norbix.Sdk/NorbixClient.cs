@@ -146,10 +146,10 @@ public sealed partial class NorbixApiClient : IDisposable, IAsyncDisposable
     }
 
     /// <summary>
-    /// Create a new client with a different project/account scope. On the
-    /// SDK-default API address its calls go to the new project's own host
-    /// (<see cref="NorbixProjectHost"/>): host and <c>norbix-project-id</c>
-    /// header always name the same project.
+    /// Create a new client with a different project/account scope. Wherever the
+    /// API address serves project hosts its calls go to the new project's own
+    /// host (<see cref="NorbixProjectHost.ApiBaseUrl"/>): host and
+    /// <c>norbix-project-id</c> header always name the same project.
     /// </summary>
     public Client WithScope(string projectId, string? accountId = null)
     {
@@ -186,7 +186,8 @@ public sealed partial class NorbixApiClient : IDisposable, IAsyncDisposable
     /// (<c>https://{region}.hub.norbix.ai</c>) per request; API requests go to
     /// the project's own host (<see cref="NorbixProjectHost"/>), which carries
     /// no region label, or to <c>https://{region}.api.norbix.ai</c> when the
-    /// project id is not a Norbix id. A custom base URL is never rewritten.
+    /// project id is not a Norbix id. A custom Hub URL is never rewritten; a
+    /// custom API URL follows <see cref="NorbixProjectHost.ApiBaseUrl"/>.
     /// Use this for per-call or per-scope region
     /// overrides, e.g.
     /// <c>await client.WithRegion("nb-eu-germany").Echo.EchoAsync(new())</c>.

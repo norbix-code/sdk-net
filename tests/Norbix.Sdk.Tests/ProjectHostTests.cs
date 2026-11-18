@@ -5,11 +5,13 @@ using NUnit.Framework;
 namespace Norbix.Sdk.Tests;
 
 /// <summary>
-/// The project's own API host: on the SDK-default API address every API call
-/// goes to <c>https://pr-&lt;32 hex&gt;.api.norbix.ai</c>, built from the
-/// project id with no call. Hub calls, the social sign-in link, a project id
-/// that is not a Norbix id and every custom base URL keep today's host.
-/// Design and test vectors: devops docs/tasks/clients-project-host.md.
+/// The project's own API host: wherever the API address serves one (the
+/// default or a written-out norbix.ai address, a <c>{projectHostLabel}</c>
+/// template, a pasted project host) every API call goes to the project's host,
+/// built from the project id with no call. Hub calls, the social sign-in link,
+/// a project id that is not a Norbix id and any other address keep the shared
+/// host. Design and test vectors: devops docs/tasks/clients-project-host.md
+/// (rounds 1 and 2).
 /// </summary>
 [TestFixture]
 public sealed class ProjectHostTests
@@ -271,10 +273,10 @@ public sealed class ProjectHostTests
             Does.StartWith("https://nb-eu-germany.api.norbix.ai/v2/membership/auth/social/google?"));
     }
 
-    // ── A custom base URL is never rewritten ────────────────────────────────
+    // ── Another address is used as given ─────────────────────────────────────
 
     [Test]
-    public async Task Custom_base_urls_are_never_rewritten()
+    public async Task Another_address_is_used_as_given()
     {
         using var fixture = NorbixTestFixture.Create(o =>
         {
@@ -302,8 +304,25 @@ public sealed class ProjectHostTests
             Does.StartWith("https://api.norbix.io/v2/membership/auth/social/google?"));
     }
 
+    [TestCase("https://api.customer.com")]
+    [TestCase("https://api.norbix.io")]
+    [TestCase("http://localhost:5002")]
+    [TestCase("http://api.norbix.ai")]
+    public async Task A_plain_own_domain_staging_localhost_and_http_are_used_as_given(string api)
+    {
+        using var fixture = NorbixTestFixture.Create(o =>
+        {
+            o.ProjectId = Virginia;
+            o.ApiBaseUrl = api;
+        });
+        await fixture.Client.Echo.EchoAsync(new Norbix.Sdk.Types.Api.Echo());
+
+        Assert.That(fixture.LastRequestUri!.AbsoluteUri, Does.StartWith(api + "/"));
+        Assert.That(fixture.LastRequest!.Headers["norbix-project-id"], Is.EqualTo(Virginia));
+    }
+
     [Test]
-    public async Task NORBIX_API_URL_is_never_rewritten()
+    public async Task NORBIX_API_URL_with_another_address_is_used_as_given()
     {
         var options = new NorbixClientOptions { ApiKey = "k" }
             .ApplyEnvironment(new Dictionary<string, string?>
@@ -335,5 +354,165 @@ public sealed class ProjectHostTests
         Assert.That(Host(fixture), Is.EqualTo("http://localhost:5002"));
         await HubCall(fixture.Client);
         Assert.That(Host(fixture), Is.EqualTo("https://nb-eu-germany.hub.norbix.ai"));
+    }
+
+    // ── A norbix.ai address written out (round 2) ───────────────────────────
+
+    [Test]
+    public async Task NORBIX_API_URL_with_the_default_address_written_out_goes_to_the_project_host()
+    {
+        var options = new NorbixClientOptions { ApiKey = "k" }
+            .ApplyEnvironment(new Dictionary<string, string?>
+            {
+                ["NORBIX_PROJECT_ID"] = Virginia,
+                ["NORBIX_API_URL"] = "https://api.norbix.ai",
+            });
+        using var fixture = NorbixTestFixture.Create(o =>
+        {
+            o.ProjectId = options.ProjectId;
+            o.ApiBaseUrl = options.ApiBaseUrl;
+        });
+        await fixture.Client.Echo.EchoAsync(new Norbix.Sdk.Types.Api.Echo());
+
+        Assert.That(Host(fixture), Is.EqualTo(VirginiaHost));
+    }
+
+    [Test]
+    public async Task A_regional_norbix_ai_address_written_out_goes_to_the_project_host()
+    {
+        using var fixture = NorbixTestFixture.Create(o =>
+        {
+            o.ProjectId = Germany;
+            o.ApiBaseUrl = "https://nb-eu-germany.api.norbix.ai";
+        });
+        await fixture.Client.Echo.EchoAsync(new Norbix.Sdk.Types.Api.Echo());
+
+        Assert.That(Host(fixture), Is.EqualTo(GermanyHost));
+        Assert.That(fixture.LastRequest!.Headers["norbix-project-id"], Is.EqualTo(Germany));
+        Assert.That(
+            fixture.Client.SocialSignInUrl("google"),
+            Does.StartWith("https://nb-eu-germany.api.norbix.ai/v2/membership/auth/social/google?"));
+    }
+
+    [Test]
+    public async Task A_norbix_ai_address_with_a_version_path_keeps_the_path()
+    {
+        using var fixture = NorbixTestFixture.Create(o =>
+        {
+            o.ProjectId = Virginia;
+            o.ApiBaseUrl = "https://api.norbix.ai/v3";
+        });
+        await fixture.Client.Echo.EchoAsync(new Norbix.Sdk.Types.Api.Echo());
+
+        Assert.That(fixture.LastRequestUri!.AbsoluteUri, Does.StartWith(VirginiaHost + "/v3/"));
+    }
+
+    // ── An install on its own domain (round 2) ──────────────────────────────
+
+    private const string Template = "https://{projectHostLabel}.api.customer.com";
+
+    [Test]
+    public async Task A_template_is_filled_and_switching_project_moves_host_and_header_together()
+    {
+        using var fixture = NorbixTestFixture.Create(o =>
+        {
+            o.ProjectId = Virginia;
+            o.ApiBaseUrl = Template;
+            o.HubBaseUrl = "https://hub.customer.com";
+        });
+
+        await fixture.Client.Echo.EchoAsync(new Norbix.Sdk.Types.Api.Echo());
+        Assert.That(Host(fixture), Is.EqualTo("https://pr-022c4aca9f9e4df787ab0a20c83c44b6.api.customer.com"));
+        Assert.That(fixture.LastRequest!.Headers["norbix-project-id"], Is.EqualTo(Virginia));
+
+        var germany = fixture.Client.WithScope(Germany);
+        await germany.Echo.EchoAsync(new Norbix.Sdk.Types.Api.Echo());
+        Assert.That(Host(fixture), Is.EqualTo("https://pr-184336d00e2141c3be5138e8dcf52e81.api.customer.com"));
+        Assert.That(fixture.LastRequest!.Headers["norbix-project-id"], Is.EqualTo(Germany));
+
+        await HubCall(germany);
+        Assert.That(Host(fixture), Is.EqualTo("https://hub.customer.com"));
+
+        Assert.That(
+            germany.SocialSignInUrl("google"),
+            Does.StartWith("https://api.customer.com/v2/membership/auth/social/google?"));
+    }
+
+    [Test]
+    public async Task A_template_from_NORBIX_API_URL_with_a_port()
+    {
+        var options = new NorbixClientOptions { ApiKey = "k" }
+            .ApplyEnvironment(new Dictionary<string, string?>
+            {
+                ["NORBIX_PROJECT_ID"] = Virginia,
+                ["NORBIX_API_URL"] = "http://{projectHostLabel}.api.local.norbix.test:8443",
+            });
+        using var fixture = NorbixTestFixture.Create(o =>
+        {
+            o.ProjectId = options.ProjectId;
+            o.ApiBaseUrl = options.ApiBaseUrl;
+        });
+        await fixture.Client.Echo.EchoAsync(new Norbix.Sdk.Types.Api.Echo());
+
+        Assert.That(
+            fixture.LastRequestUri!.AbsoluteUri,
+            Does.StartWith("http://pr-022c4aca9f9e4df787ab0a20c83c44b6.api.local.norbix.test:8443/"));
+    }
+
+    [Test]
+    public async Task A_template_with_an_id_that_is_not_a_Norbix_id_drops_the_label()
+    {
+        using var fixture = NorbixTestFixture.Create(o =>
+        {
+            o.ProjectId = "p1";
+            o.ApiBaseUrl = Template;
+        });
+        await fixture.Client.Echo.EchoAsync(new Norbix.Sdk.Types.Api.Echo());
+
+        Assert.That(Host(fixture), Is.EqualTo("https://api.customer.com"));
+    }
+
+    [Test]
+    public async Task A_pasted_project_host_follows_the_clients_project()
+    {
+        using var fixture = NorbixTestFixture.Create(o =>
+        {
+            o.ProjectId = Germany;
+            o.ApiBaseUrl = "https://pr-022c4aca9f9e4df787ab0a20c83c44b6.api.customer.com";
+        });
+        await fixture.Client.Echo.EchoAsync(new Norbix.Sdk.Types.Api.Echo());
+
+        Assert.That(Host(fixture), Is.EqualTo("https://pr-184336d00e2141c3be5138e8dcf52e81.api.customer.com"));
+        Assert.That(fixture.LastRequest!.Headers["norbix-project-id"], Is.EqualTo(Germany));
+        Assert.That(
+            fixture.Client.SocialSignInUrl("google"),
+            Does.StartWith("https://api.customer.com/v2/membership/auth/social/google?"));
+    }
+
+    // ── The helper ──────────────────────────────────────────────────────────
+
+    [TestCase("https://api.norbix.ai", Virginia, VirginiaHost, "https://api.norbix.ai")]
+    [TestCase("https://api.norbix.ai/", Virginia, VirginiaHost + "/", "https://api.norbix.ai/")]
+    [TestCase("https://nb-eu-germany.api.norbix.ai/v3", Germany, GermanyHost + "/v3", "https://nb-eu-germany.api.norbix.ai/v3")]
+    [TestCase("https://API.Norbix.AI", Virginia, VirginiaHost, "https://API.Norbix.AI")]
+    [TestCase("https://api.norbix.ai:8443", Virginia, "https://pr-022c4aca9f9e4df787ab0a20c83c44b6.api.norbix.ai:8443", "https://api.norbix.ai:8443")]
+    [TestCase("https://api.norbix.ai", "p1", "https://api.norbix.ai", "https://api.norbix.ai")]
+    [TestCase("https://a.b.api.norbix.ai", Virginia, "https://a.b.api.norbix.ai", "https://a.b.api.norbix.ai")]
+    [TestCase("https://{projectHostLabel}.api.customer.com/v3", Virginia, "https://pr-022c4aca9f9e4df787ab0a20c83c44b6.api.customer.com/v3", "https://api.customer.com/v3")]
+    [TestCase("https://{projectHostLabel}.api.customer.com", "p1", "https://api.customer.com", "https://api.customer.com")]
+    [TestCase("https://PR-022C4ACA9F9E4DF787AB0A20C83C44B6.api.customer.com", Germany, "https://pr-184336d00e2141c3be5138e8dcf52e81.api.customer.com", "https://api.customer.com")]
+    [TestCase("https://pr-022c4aca9f9e4df787ab0a20c83c44b6.api.norbix.ai", "p1", "https://api.norbix.ai", "https://api.norbix.ai")]
+    [TestCase("https://pr-123.api.customer.com", Virginia, "https://pr-123.api.customer.com", "https://pr-123.api.customer.com")]
+    [TestCase("not a url", Virginia, "not a url", "not a url")]
+    [TestCase("", Virginia, "", "")]
+    public void ApiBaseUrl_follows_the_rule(string baseUrl, string projectId, string project, string shared)
+    {
+        Assert.That(NorbixProjectHost.ApiBaseUrl(baseUrl, projectId), Is.EqualTo((project, shared)));
+    }
+
+    [Test]
+    public void The_placeholder_is_the_one_in_the_install_template()
+    {
+        Assert.That(NorbixProjectHost.LabelPlaceholder, Is.EqualTo("{projectHostLabel}"));
     }
 }

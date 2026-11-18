@@ -467,26 +467,26 @@ internal sealed class HttpTransport : INorbixTransport, IDisposable
     }
 
     /// <summary>
-    /// The base URL of a request. A user-supplied custom base URL is never
-    /// rewritten. While the base URL is still the SDK default:
+    /// The base URL of a request, from the current options — per request:
     /// <list type="bullet">
-    ///   <item><description>an API call goes to the project's own host
-    ///   (<c>https://pr-&lt;hex&gt;.api.norbix.ai</c>, see
-    ///   <see cref="NorbixProjectHost.Label"/>) with no region label, whatever
-    ///   the region is — the project's DNS record already points at its
-    ///   region;</description></item>
-    ///   <item><description>a Hub call, a navigation link
-    ///   (<paramref name="projectHost"/> false) and an API call whose project
-    ///   id is not a Norbix id keep the shared host, with the region code as a
-    ///   subdomain when a region is resolved
-    ///   (<c>https://{region}.api.norbix.ai</c>).</description></item>
+    ///   <item><description>API: the configured address (the SDK default, with
+    ///   the region code as a subdomain when a region is resolved —
+    ///   <c>https://{region}.api.norbix.ai</c> — or the user's value as given)
+    ///   goes through <see cref="NorbixProjectHost.ApiBaseUrl"/>. A call
+    ///   (<paramref name="projectHost"/> true) uses its <c>Project</c> address:
+    ///   <c>https://pr-&lt;hex&gt;.api.norbix.ai</c> on a norbix.ai address, the
+    ///   filled template, or a pasted project host with the current project's
+    ///   label; any other address as given. A navigation link uses
+    ///   <c>Shared</c>.</description></item>
+    ///   <item><description>Hub: while it is the SDK default, the regional Hub
+    ///   host when a region is resolved (<c>https://{region}.hub.norbix.ai</c>);
+    ///   a custom Hub URL is never rewritten.</description></item>
     /// </list>
-    /// Composition happens here — per request, from the current options —
-    /// because the transport always builds absolute request URIs and never
-    /// sets <c>HttpClient.BaseAddress</c>: clients cloned via
-    /// <c>WithScope(...)</c> / <c>WithRegion(...)</c> safely share one
-    /// <see cref="HttpClient"/>, and the host always names the same project as
-    /// the <c>norbix-project-id</c> header.
+    /// Composition happens here because the transport always builds absolute
+    /// request URIs and never sets <c>HttpClient.BaseAddress</c>: clients
+    /// cloned via <c>WithScope(...)</c> / <c>WithRegion(...)</c> safely share
+    /// one <see cref="HttpClient"/>, and the host always names the same
+    /// project as the <c>norbix-project-id</c> header.
     /// </summary>
     private string ComposeBaseUrl(NorbixTarget target, bool projectHost)
     {
@@ -497,20 +497,20 @@ internal sealed class HttpTransport : INorbixTransport, IDisposable
             : NorbixClientOptions.DefaultHubBaseUrl;
 
         var trimmed = baseUrl.EndsWith('/') ? baseUrl[..^1] : baseUrl;
-        if (!string.Equals(trimmed, defaultBase, StringComparison.OrdinalIgnoreCase))
+        if (string.Equals(trimmed, defaultBase, StringComparison.OrdinalIgnoreCase) &&
+            !string.IsNullOrEmpty(_options.Region))
+        {
+            var uri = new Uri(defaultBase);
+            baseUrl = $"{uri.Scheme}://{_options.Region}.{uri.Authority}";
+        }
+
+        if (!isApi)
         {
             return baseUrl;
         }
 
-        var label = isApi && projectHost ? NorbixProjectHost.Label(_options.ProjectId) : null;
-        label ??= string.IsNullOrEmpty(_options.Region) ? null : _options.Region;
-        if (label is null)
-        {
-            return baseUrl;
-        }
-
-        var uri = new Uri(defaultBase);
-        return $"{uri.Scheme}://{label}.{uri.Authority}";
+        var (project, shared) = NorbixProjectHost.ApiBaseUrl(baseUrl, _options.ProjectId);
+        return projectHost ? project : shared;
     }
 
     private static string ReplaceTokens(string path, object? request, HashSet<string> consumed)
