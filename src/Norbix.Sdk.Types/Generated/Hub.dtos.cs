@@ -2982,91 +2982,6 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual List<AiChatEntryAttachmentWireDto> Attachments { get; set; } = [];
     }
 
-    public partial class WorkItemArtifactWireDto
-    {
-        public virtual string ArtifactId { get; set; }
-        public virtual string What { get; set; }
-        public virtual int Step { get; set; }
-        public virtual string? PlanEntryId { get; set; }
-        public virtual string? Kind { get; set; }
-        public virtual string? Name { get; set; }
-    }
-
-    public partial class WorkItemDoneConditionWireDto
-    {
-        public virtual int Condition { get; set; }
-        public virtual bool Holds { get; set; }
-        public virtual string Reason { get; set; }
-    }
-
-    public partial class WorkItemEntryRefWireDto
-    {
-        public virtual string SessionId { get; set; }
-        public virtual string EntryId { get; set; }
-    }
-
-    public partial class WorkItemMovedOutWireDto
-    {
-        public virtual string Text { get; set; }
-        public virtual string Reason { get; set; }
-        public virtual string? MovedTo { get; set; }
-        public virtual string Source { get; set; }
-        public virtual WorkItemEntryRefWireDto? EntryRef { get; set; }
-        public virtual DateTime AtUtc { get; set; }
-    }
-
-    public partial class WorkItemNeedsYouWireDto
-    {
-        public virtual string Text { get; set; }
-        public virtual string Kind { get; set; }
-        public virtual WorkItemEntryRefWireDto? EntryRef { get; set; }
-        public virtual bool Done { get; set; }
-        public virtual DateTime? DoneAtUtc { get; set; }
-        public virtual string? DoneByUserAuthId { get; set; }
-    }
-
-    public partial class WorkItemOpenQuestionWireDto
-    {
-        public virtual WorkItemEntryRefWireDto EntryRef { get; set; }
-        public virtual bool Blocking { get; set; }
-        public virtual string Text { get; set; }
-        public virtual DateTime AtUtc { get; set; }
-    }
-
-    public partial class WorkItemRunRefWireDto
-    {
-        public virtual string SessionId { get; set; }
-        public virtual string PlanEntryId { get; set; }
-        public virtual string? RunId { get; set; }
-    }
-
-    public partial class WorkItemWireDto
-    {
-        public virtual string Id { get; set; }
-        public virtual string? ProjectId { get; set; }
-        public virtual string Status { get; set; }
-        public virtual string Goal { get; set; }
-        public virtual List<string> NotInScope { get; set; } = [];
-        public virtual List<string> ScopeRequirementIds { get; set; } = [];
-        public virtual int? Difficulty { get; set; }
-        public virtual string? DifficultyReason { get; set; }
-        public virtual List<WorkItemEntryRefWireDto> PlanEntryRefs { get; set; } = [];
-        public virtual List<WorkItemRunRefWireDto> RunRefs { get; set; } = [];
-        public virtual List<WorkItemArtifactWireDto> Artifacts { get; set; } = [];
-        public virtual List<WorkItemMovedOutWireDto> MovedOut { get; set; } = [];
-        public virtual List<WorkItemNeedsYouWireDto> NeedsYou { get; set; } = [];
-        public virtual List<WorkItemOpenQuestionWireDto> OpenQuestions { get; set; } = [];
-        public virtual List<string> SessionIds { get; set; } = [];
-        public virtual string? ParentId { get; set; }
-        public virtual List<string> Children { get; set; } = [];
-        public virtual WorkItemEntryRefWireDto? SummaryEntryRef { get; set; }
-        public virtual string? CreatedBy { get; set; }
-        public virtual DateTime CreatedAtUtc { get; set; }
-        public virtual DateTime UpdatedAtUtc { get; set; }
-        public virtual string? DoneVerdict { get; set; }
-        public virtual List<WorkItemDoneConditionWireDto> DoneConditions { get; set; } = [];
-    }
-
     public partial class BatchStatusChangeEntryDto
     {
         public virtual DateTime Time { get; set; }
@@ -12900,23 +12815,6 @@ namespace Norbix.Sdk.Types.Hub;
     }
 
     ///<summary>
-    ///Exports one AI work item as markdown in the long-task shape: Goal, Plan, Changes, Rejected / moved out, Needs you, Open questions.
-    ///</summary>
-    [NorbixRoute("/{version}/projects/{projectId}/ai/work-items/{WorkItemId}/export.md", "GET")]
-    public partial class ExportWorkItemRequest
-        : CodeMashRequestBase, INorbixRequest<ExportWorkItemResponse>
-    {
-        public virtual string WorkItemId { get; set; }
-    }
-
-    public partial class ExportWorkItemResponse
-        : ResponseBase
-    {
-        public virtual string? WorkItemId { get; set; }
-        public virtual string? Markdown { get; set; }
-    }
-
-    ///<summary>
     ///Paste-ready prompt and client snippets to connect an AI tool to this installation.
     ///</summary>
     [NorbixRoute("/{version}/account/agent/onboarding", "GET")]
@@ -12998,44 +12896,6 @@ namespace Norbix.Sdk.Types.Hub;
     }
 
     ///<summary>
-    ///Reads one AI work item: the six long-task sections and the definition-of-done verdict.
-    ///</summary>
-    [NorbixRoute("/{version}/projects/{projectId}/ai/work-items/{WorkItemId}", "GET")]
-    public partial class GetWorkItemRequest
-        : CodeMashRequestBase, INorbixRequest<GetWorkItemResponse>
-    {
-        public virtual string WorkItemId { get; set; }
-    }
-
-    public partial class GetWorkItemResponse
-        : ResponseBase
-    {
-        public virtual WorkItemWireDto? WorkItem { get; set; }
-        public virtual List<AiChatEntryWireDto>? Plans { get; set; }
-        public virtual List<AiChatEntryWireDto>? Steps { get; set; }
-    }
-
-    ///<summary>
-    ///Lists a project's AI work items: one serious ask each, with its goal, plans, changes, moved-out items, needs-you list and open questions.
-    ///</summary>
-    [NorbixRoute("/{version}/projects/{projectId}/ai/work-items", "GET")]
-    public partial class GetWorkItemsRequest
-        : CodeMashRequestBase, INorbixRequest<GetWorkItemsResponse>
-    {
-        ///<summary>
-        ///Filter by status: proposed, active, waiting, done, partly-done or dropped. Omit for all.
-        ///</summary>
-        public virtual string? Status { get; set; }
-    }
-
-    public partial class GetWorkItemsResponse
-        : ResponseBase
-    {
-        public virtual string? ProjectId { get; set; }
-        public virtual List<WorkItemWireDto>? WorkItems { get; set; }
-    }
-
-    ///<summary>
     ///Invokes one AI tool directly (external-agent bridge).
     ///</summary>
     [NorbixRoute("/{version}/account/ai/tools/{ToolName}", "POST")]
@@ -13050,21 +12910,6 @@ namespace Norbix.Sdk.Types.Hub;
         : ResponseBase
     {
         public virtual string? Result { get; set; }
-    }
-
-    ///<summary>
-    ///Ticks one manual line of a work item's "Needs you" checklist — the one write a human makes to a work item directly.
-    ///</summary>
-    [NorbixRoute("/{version}/projects/{projectId}/ai/work-items/{WorkItemId}/needs-you/{Index}/done", "POST")]
-    public partial class MarkNeedsYouDoneRequest
-        : CodeMashRequestBase, INorbixRequest<IdResponse>
-    {
-        public virtual string WorkItemId { get; set; }
-        public virtual int Index { get; set; }
-        ///<summary>
-        ///Set false to un-tick the line. Default true.
-        ///</summary>
-        public virtual bool? Done { get; set; }
     }
 
     ///<summary>
