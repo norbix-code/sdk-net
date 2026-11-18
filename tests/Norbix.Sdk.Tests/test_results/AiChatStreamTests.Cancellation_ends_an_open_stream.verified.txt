@@ -1,0 +1,11 @@
+﻿{
+  Events: [
+    {
+      EventName: ai.chat.turn.started,
+      FrameId: 1,
+      TurnId: trn_1
+    }
+  ],
+  Ended: OperationCanceledException,
+  Calls: 1
+}

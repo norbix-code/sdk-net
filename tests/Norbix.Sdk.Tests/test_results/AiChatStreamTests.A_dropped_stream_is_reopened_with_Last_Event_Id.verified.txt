@@ -1,0 +1,51 @@
+﻿{
+  Sent: [
+    {
+      Method: GET,
+      Host: api.test,
+      AbsolutePath: /event-stream,
+      Query: channels=ai-chat%3Atest-project%3Ausr_1,
+      Accept: text/event-stream,
+      CacheControl: no-cache,
+      Authorization: Bearer test-api-key,
+      ProjectId: test-project,
+      HasBody: false
+    },
+    {
+      Method: GET,
+      Host: api.test,
+      AbsolutePath: /event-stream,
+      Query: channels=ai-chat%3Atest-project%3Ausr_1,
+      Accept: text/event-stream,
+      CacheControl: no-cache,
+      Authorization: Bearer test-api-key,
+      LastEventId: 2,
+      ProjectId: test-project,
+      HasBody: false
+    }
+  ],
+  Events: [
+    {
+      EventName: ai.chat.turn.started,
+      FrameId: 1,
+      TurnId: trn_1
+    },
+    {
+      EventName: ai.chat.turn.token,
+      FrameId: 2,
+      TurnId: trn_1,
+      Text: Your order 
+    },
+    {
+      EventName: ai.chat.turn.token,
+      FrameId: 3,
+      TurnId: trn_1,
+      Text: has shipped.
+    },
+    {
+      EventName: ai.chat.turn.completed,
+      FrameId: 4,
+      TurnId: trn_1
+    }
+  ]
+}

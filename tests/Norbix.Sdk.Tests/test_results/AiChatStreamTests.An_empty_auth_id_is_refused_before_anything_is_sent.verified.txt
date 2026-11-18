@@ -1,0 +1,4 @@
+﻿{
+  Thrown: ArgumentException,
+  Channel: ai-chat:pr_x:usr_y
+}

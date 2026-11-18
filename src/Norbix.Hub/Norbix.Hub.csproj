@@ -40,7 +40,7 @@
   <ItemGroup>
     <!-- Share the same runtime sources as Norbix.Api (no extra package). -->
     <Compile Include="..\Norbix.Sdk\**\*.cs"
-             Exclude="..\Norbix.Sdk\bin\**\*;..\Norbix.Sdk\obj\**\*;..\Norbix.Sdk\HealthChecks\**\*;..\Norbix.Sdk\NorbixApiClient.Convenience.cs;..\Norbix.Sdk\NorbixApiServiceCollectionExtensions.cs"
+             Exclude="..\Norbix.Sdk\bin\**\*;..\Norbix.Sdk\obj\**\*;..\Norbix.Sdk\HealthChecks\**\*;..\Norbix.Sdk\NorbixApiClient.Convenience.cs;..\Norbix.Sdk\NorbixApiClient.AiChat.cs;..\Norbix.Sdk\NorbixApiServiceCollectionExtensions.cs"
              LinkBase="SharedSdk" />
   </ItemGroup>
 
