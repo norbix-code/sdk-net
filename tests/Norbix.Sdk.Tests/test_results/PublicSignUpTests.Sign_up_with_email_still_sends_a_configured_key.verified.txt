@@ -1,0 +1,14 @@
+﻿{
+  Method: POST,
+  Path: /v2/membership/auth/register/email,
+  Headers: {
+    Authorization: Bearer test-api-key,
+    Content-Type: application/json; charset=utf-8,
+    norbix-project-id: test-project
+  },
+  Body: {
+    password: pw-1,
+    email: ada@example.test,
+    ignoreUserRegistersAsRole: false
+  }
+}
