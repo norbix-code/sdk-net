@@ -58,8 +58,8 @@ public sealed class NorbixClientOptions
     /// request. API calls go to the project's own host
     /// (<see cref="NorbixProjectHost"/>), which carries no region label; only
     /// a project id that is not a Norbix id falls back to
-    /// <c>https://{region}.api.norbix.ai</c>. A custom base URL is never
-    /// rewritten.
+    /// <c>https://{region}.api.norbix.ai</c>. A custom Hub URL is never
+    /// rewritten; for a custom API URL see <see cref="ApiBaseUrl"/>.
     /// </summary>
     public string? Region { get; set; }
 
@@ -78,9 +78,13 @@ public sealed class NorbixClientOptions
 
     /// <summary>
     /// API gateway base URL. Default <c>https://api.norbix.ai</c> (or <c>NORBIX_API_URL</c>).
-    /// While it is the default, API calls are sent to the project's own host,
-    /// <c>https://pr-&lt;hex&gt;.api.norbix.ai</c> (<see cref="NorbixProjectHost"/>);
-    /// any other value is used as given.
+    /// A project's API calls go to its own host wherever the address serves one
+    /// (<see cref="NorbixProjectHost.ApiBaseUrl"/>): the default and a written-out
+    /// <c>https://api.norbix.ai</c> / <c>https://&lt;region&gt;.api.norbix.ai</c>
+    /// give <c>https://pr-&lt;hex&gt;.api.norbix.ai</c>; a template with
+    /// <c>{projectHostLabel}</c> (an install's <c>/echo</c> → <c>apiUrlTemplate</c>)
+    /// is filled with the project's label; a pasted project host gets the
+    /// current project's label. Any other value is used as given.
     /// </summary>
     public string ApiBaseUrl { get; set; } = DefaultApiBaseUrl;
 

@@ -216,9 +216,10 @@ When a region is resolved **and** the base URL is still the SDK default, the SDK
 | --- | --- |
 | `https://hub.norbix.ai` (default) | `https://nb-eu-germany.hub.norbix.ai` |
 | `https://api.norbix.ai` (default) | The project's own host, with **no** region label — see [Project host](#project-host). Only a project id that is not a Norbix id (a test id like `p1`) gives `https://nb-eu-germany.api.norbix.ai` |
-| Custom `ApiBaseUrl` / `HubBaseUrl` | Never rewritten — the `nb-region` header is still sent |
+| Custom `HubBaseUrl` | Never rewritten — the `nb-region` header is still sent |
+| Custom `ApiBaseUrl` | No region label is added — see [Project host](#project-host) for where calls go; the `nb-region` header is still sent |
 
-A custom base URL is never rewritten, and with no region configured the Hub URL does not change at all.
+A custom Hub URL is never rewritten, and with no region configured the Hub URL does not change at all.
 
 ### Discovering regions
 
@@ -272,13 +273,33 @@ Every other project setting (name, CORS, languages, admin URL, legal, Admin Port
 
 ## Project host
 
-On the SDK's default API address (`https://api.norbix.ai`) every API call of a project goes to the project's own host:
+Every API call of a project goes to the project's own host wherever the API address serves one — on the SDK's default address that is:
 
 ```
 https://pr-<32 hex>.api.norbix.ai
 ```
 
 The label is the project id written as hex — `pr_5XvmrTA6JVggZdmEE5bGdm` → `pr-022c4aca9f9e4df787ab0a20c83c44b6`. The SDK builds it locally, with no call; `NorbixProjectHost.Label(projectId)` returns it (or `null` for an id that is not a Norbix project id).
+
+Which address a project's API calls use, from the `ApiBaseUrl` the client has (option, configuration or `NORBIX_API_URL`):
+
+| `ApiBaseUrl` | calls go to |
+| --- | --- |
+| none (the default), `https://api.norbix.ai`, `https://nb-eu-germany.api.norbix.ai` | `https://pr-<hex>.api.norbix.ai` |
+| a template, `https://{projectHostLabel}.api.example.com` | `https://pr-<hex>.api.example.com` |
+| a project's host already, `https://pr-<hex>.api.example.com` | the same, with the current project's label |
+| anything else (`https://api.example.com`, staging, `localhost`, `http://`) | as given |
+
+An install on its own domain gives its template in `GET /v3/echo` → `apiUrlTemplate` when it serves project hosts; put that as `ApiBaseUrl` (or `NORBIX_API_URL`). Without it the install's plain address is used as given. Scheme, port and path (`/v3`) are kept as written.
+
+`NorbixProjectHost.ApiBaseUrl(baseUrl, projectId)` applies the same rule and returns both addresses; `NorbixProjectHost.LabelPlaceholder` is `{projectHostLabel}`:
+
+```csharp
+var (project, shared) = NorbixProjectHost.ApiBaseUrl(
+    "https://{projectHostLabel}.api.example.com", "pr_5XvmrTA6JVggZdmEE5bGdm");
+// project: https://pr-022c4aca9f9e4df787ab0a20c83c44b6.api.example.com
+// shared:  https://api.example.com
+```
 
 What changes:
 
@@ -288,9 +309,8 @@ What changes:
 What does not change:
 
 - The `norbix-project-id` header is still sent, and `nb-region` too when a region is set.
-- Hub calls (`Norbix.Hub`) stay on `https://hub.norbix.ai`, or `https://<region>.hub.norbix.ai` with a region.
-- The link from `SocialSignInUrl(...)` stays on the shared API host (`https://api.norbix.ai`, or `https://<region>.api.norbix.ai`): the browser comes back to that host after the provider.
-- A custom `ApiBaseUrl` (option, configuration or `NORBIX_API_URL`) is never rewritten — a self-hosted gateway, staging and `localhost` work as before. The SDK compares the value with the default, so `https://api.norbix.ai` written out counts as the default, as it does for regions.
+- Hub calls (`Norbix.Hub`) stay on `https://hub.norbix.ai`, `https://<region>.hub.norbix.ai` with a region, or your own `HubBaseUrl`.
+- The link from `SocialSignInUrl(...)` stays on the shared API host (`https://api.norbix.ai`, `https://<region>.api.norbix.ai`, or the template without the label — `https://api.example.com`): the browser comes back to that host after the provider.
 - A project id that is not a Norbix id (`p1`, `proj_123`) keeps the shared host.
 
 **Firewalls:** if outgoing traffic is restricted by host name, allow `*.api.norbix.ai` (not only `api.norbix.ai`).
