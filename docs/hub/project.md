@@ -422,20 +422,22 @@ string? raw = await norbix.Account.McpAsync(new McpRequest { Toolsets = "databas
 Read by the project's Admin Portal before anyone signs in; the gateway does
 not ask for a key. In an app use the `Norbix.Api` package.
 
-The .NET SDK does not mark these two requests as public yet, so the client
-still needs credentials (an API key or a signed-in user) or it throws
-`NORBIX_NOT_AUTHENTICATED` before sending.
+The requests are public: a client with no API key and no token can call them,
+and a client that has one does not send it (no `Authorization` header). The
+brand logo / icon (`GetPublicProjectBrandAssetAsync`, the bytes of the
+picture) works the same way.
 
 | method | verb | path |
 |---|---|---|
 | `GetPublicProjectConfigAsync` | `GET` | `/public/projects/{ProjectId}/config` |
 | `GetPublicProjectLegalAsync` | `GET` | `/public/projects/{ProjectId}/legal/{Kind}` |
+| `GetPublicProjectBrandAssetAsync` | `GET` | `/public/projects/{ProjectId}/brand/{Kind}` (`logo` or `icon`, answers the image bytes) |
 
 ```csharp
 using Norbix.Sdk;
 using Norbix.Sdk.Types.Api;
 
-using var app = new NorbixApiClient(new NorbixClientOptions { ApiKey = "<api_key>", ProjectId = "proj_123" });
+using var app = new NorbixApiClient(new NorbixClientOptions { ProjectId = "proj_123" }); // no key needed
 
 var config = await app.Public.GetPublicProjectConfigAsync(
     new GetPublicProjectConfig { ProjectId = "proj_123" });

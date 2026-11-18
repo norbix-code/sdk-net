@@ -1,0 +1,16 @@
+﻿[
+  {
+    Method: GET,
+    Path: /v2/public/projects/pr_1/config,
+    Headers: {
+      norbix-project-id: test-project
+    }
+  },
+  {
+    Method: GET,
+    Path: /v2/public/projects/pr_1/legal/privacy,
+    Headers: {
+      norbix-project-id: test-project
+    }
+  }
+]

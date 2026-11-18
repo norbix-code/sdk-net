@@ -15,6 +15,7 @@
     <Compile Remove="PushCampaignEndpoints.cs" />
     <Compile Remove="PushIntegrationEndpoints.cs" />
     <Compile Remove="AccountPublicEndpoints.cs" />
+    <Compile Remove="PublicProjectEndpoints.Hub.cs" />
     <Compile Remove="TaxonomyTreeEndpoints.cs" />
     <Compile Remove="INorbixRequest.cs" />
     <Compile Remove="ResponseStatus.cs" />
