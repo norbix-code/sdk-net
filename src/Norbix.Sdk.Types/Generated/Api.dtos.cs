@@ -2334,7 +2334,7 @@ namespace Norbix.Sdk.Types.Api;
     [NorbixRoute("/{version}/membership/auth/register/email", "POST")]
     [DataContract]
     public partial class SaveEmailUser
-        : SaveUser, INorbixRequest<IdResponse>, IPublicRegistrationRequest
+        : SaveUser, INorbixRequest<IdResponse>, IPublicRegistrationRequest, INorbixOptionalAuth
     {
         [DataMember]
         public virtual string Password { get; set; }
@@ -2457,7 +2457,7 @@ namespace Norbix.Sdk.Types.Api;
     [NorbixRoute("/{version}/membership/auth/register/user-name", "POST")]
     [DataContract]
     public partial class SaveUserNameUser
-        : SaveUser, INorbixRequest<IdResponse>, IPublicRegistrationRequest
+        : SaveUser, INorbixRequest<IdResponse>, IPublicRegistrationRequest, INorbixOptionalAuth
     {
         [DataMember]
         public virtual string Password { get; set; }
