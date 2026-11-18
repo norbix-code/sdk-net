@@ -1,7 +1,7 @@
 ﻿{
   Target: Hub,
   Group: account,
-  Count: 140,
+  Count: 139,
   Endpoints: [
     {
       Target: Hub,
@@ -499,40 +499,6 @@
       },
       ResponseType: EmptyResponse,
       Response: {
-        ResponseStatus: {
-          IsSuccess: true
-        }
-      }
-    },
-    {
-      Target: Hub,
-      Group: account,
-      MethodName: TrialWaitlistIntakeAsync,
-      RequestType: TrialWaitlistIntakeRequest,
-      HttpMethod: POST,
-      Path: /{version}/account/trial-waitlist/intake,
-      IsAccountScoped: false,
-      IsUnauthenticated: false,
-      Sent: {
-        Method: POST,
-        Path: /v2/account/trial-waitlist/intake,
-        Headers: {
-          Authorization: Bearer test-bearer,
-          Content-Type: application/json; charset=utf-8,
-          norbix-account-id: test-account,
-          norbix-project-id: test-project
-        },
-        Body: {
-          email: user@example.test,
-          region: test-region,
-          consent: true,
-          consentVersion: test-consentVersion
-        }
-      },
-      ResponseType: TrialWaitlistResponse,
-      Response: {
-        Status: test-status,
-        Message: test-message,
         ResponseStatus: {
           IsSuccess: true
         }

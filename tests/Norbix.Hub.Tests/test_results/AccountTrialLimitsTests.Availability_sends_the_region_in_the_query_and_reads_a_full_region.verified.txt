@@ -1,0 +1,19 @@
+﻿{
+  Sent: {
+    Method: GET,
+    Path: /v2/account/trial-availability,
+    Query: ?region=nb-eu-germany,
+    Headers: {
+      Authorization: Bearer test-bearer,
+      norbix-project-id: test-project
+    }
+  },
+  response: {
+    LimitsOn: true,
+    Region: nb-eu-germany,
+    TrialsOpen: false,
+    WaitlistOpen: true,
+    OnWaitlist: false,
+    Refusal: 
+  }
+}

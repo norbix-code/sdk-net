@@ -1,0 +1,20 @@
+﻿{
+  Sent: {
+    Method: POST,
+    Path: /v2/account/trial-waitlist,
+    Headers: {
+      Authorization: Bearer test-bearer,
+      Content-Type: application/json; charset=utf-8,
+      norbix-project-id: test-project
+    },
+    Body: {
+      region: nb-eu-germany,
+      consent: true,
+      consentVersion: 2026-11
+    }
+  },
+  response: {
+    Status: added,
+    Message: You are on the waiting list.
+  }
+}

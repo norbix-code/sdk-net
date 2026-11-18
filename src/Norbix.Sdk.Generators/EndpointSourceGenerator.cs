@@ -265,6 +265,7 @@ public sealed class EndpointSourceGenerator : IIncrementalGenerator
         endpoints = endpoints
             .Where(e => !e.Routes.All(r => r.Path.StartsWith("/internal/", StringComparison.Ordinal)))
             .Where(e => !IsBrowserNavigation(e))
+            .Where(e => !IsWebsiteServerOnly(e))
             .ToImmutableArray();
 
         var apiEndpoints = endpoints.Where(e => e.Target == EndpointTarget.Api).ToImmutableArray();
@@ -374,6 +375,11 @@ public sealed class EndpointSourceGenerator : IIncrementalGenerator
         e.Routes.All(r =>
             r.Path == "/{version}/membership/auth/social/{Provider}"
             || r.Path == "/{version}/membership/auth/social/{Provider}/callback/{ProjectId}");
+
+    // The trial waiting-list intake is called only by the norbix.ai website
+    // server with a shared key header; it is not SDK surface.
+    private static bool IsWebsiteServerOnly(EndpointModel e) =>
+        e.Routes.All(r => r.Path == "/{version}/account/trial-waitlist/intake");
 
     private static string MethodNameFromClass(string className)
     {
