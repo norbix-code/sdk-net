@@ -2839,12 +2839,6 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual List<AiChatEntrySourceWireDto> Sources { get; set; } = [];
     }
 
-    public partial class ChatScreenContextDto
-    {
-        public virtual string Kind { get; set; }
-        public virtual string? ViewId { get; set; }
-    }
-
     public partial class ConversationSnapshotEntryWireDto
         : AiChatEntryWireDto
     {
@@ -12906,121 +12900,6 @@ namespace Norbix.Sdk.Types.Hub;
     }
 
     ///<summary>
-    ///Answers one open AI chat question — or a prepared change's Apply / Skip — and continues the conversation.
-    ///</summary>
-    [NorbixRoute("/{version}/account/chat/sessions/{SessionId}/questions/{EntryId}/answer", "POST")]
-    public partial class AnswerChatQuestionRequest
-        : RequestBase, INorbixRequest<IdResponse>
-    {
-        public virtual string SessionId { get; set; }
-        public virtual string EntryId { get; set; }
-        public virtual Dictionary<string, string>? Answers { get; set; }
-    }
-
-    ///<summary>
-    ///Reports AI chat availability and the model-picker menu.
-    ///</summary>
-    [NorbixRoute("/{version}/account/chat/availability", "GET")]
-    public partial class ChatAvailabilityRequest
-        : RequestBase, INorbixRequest<ChatAvailabilityResponse>
-    {
-        public virtual string? ProjectId { get; set; }
-        public virtual string? Env { get; set; }
-    }
-
-    public partial class ChatAvailabilityResponse
-        : ResponseBase
-    {
-        public virtual bool Available { get; set; }
-        public virtual string? Reason { get; set; }
-        public virtual List<string>? Profiles { get; set; }
-        public virtual List<ChatModelOption>? Models { get; set; }
-    }
-
-    public partial class ChatMemoryNote
-    {
-        public virtual string Id { get; set; }
-        public virtual string Kind { get; set; }
-        public virtual string Text { get; set; }
-        public virtual string? ProjectId { get; set; }
-        public virtual DateTime CreatedAtUtc { get; set; }
-    }
-
-    public partial class ChatModelOption
-    {
-        public virtual string? LlmIntegrationId { get; set; }
-        public virtual string Kind { get; set; }
-        public virtual string Provider { get; set; }
-        public virtual string Model { get; set; }
-        public virtual string Label { get; set; }
-        public virtual bool IsDefault { get; set; }
-        public virtual bool IsAuto { get; set; }
-        public virtual int ContextWindow { get; set; }
-    }
-
-    public partial class ChatSessionListItem
-    {
-        public virtual string SessionId { get; set; }
-        public virtual string Profile { get; set; }
-        public virtual string? ProjectId { get; set; }
-        public virtual string? Env { get; set; }
-        public virtual string? Title { get; set; }
-        public virtual DateTime UpdatedAtUtc { get; set; }
-        public virtual bool IsArchived { get; set; }
-        public virtual bool IsPinned { get; set; }
-    }
-
-    ///<summary>
-    ///Runs one AI chat conversation turn.
-    ///</summary>
-    [NorbixRoute("/{version}/account/chat/turn", "POST")]
-    public partial class ChatTurnRequest
-        : RequestBase, INorbixRequest<ChatTurnResponse>
-    {
-        public virtual string? SessionId { get; set; }
-        public virtual string Message { get; set; }
-        public virtual string? Profile { get; set; }
-        public virtual string? Topic { get; set; }
-        public virtual string? LlmIntegrationId { get; set; }
-        public virtual string? Model { get; set; }
-        public virtual string? ProjectId { get; set; }
-        public virtual string? Env { get; set; }
-        public virtual ChatScreenContextDto? ScreenContext { get; set; }
-    }
-
-    public partial class ChatTurnResponse
-        : ResponseBase
-    {
-        public virtual string? SessionId { get; set; }
-        public virtual string? Reply { get; set; }
-        public virtual ChatScreenContextDto? ScreenPatch { get; set; }
-        public virtual List<string>? ToolTrace { get; set; }
-    }
-
-    ///<summary>
-    ///Approves or rejects a proposed AI chat plan.
-    ///</summary>
-    [NorbixRoute("/{version}/account/chat/sessions/{SessionId}/plans/{EntryId}/decision", "POST")]
-    public partial class DecideChatPlanRequest
-        : RequestBase, INorbixRequest<IdResponse>
-    {
-        public virtual string SessionId { get; set; }
-        public virtual string EntryId { get; set; }
-        public virtual string Decision { get; set; }
-        public virtual string? Comment { get; set; }
-    }
-
-    ///<summary>
-    ///Deletes an AI chat session (soft delete).
-    ///</summary>
-    [NorbixRoute("/{version}/account/chat/sessions/{SessionId}", "DELETE")]
-    public partial class DeleteChatSessionRequest
-        : RequestBase, INorbixRequest<IdResponse>
-    {
-        public virtual string SessionId { get; set; }
-    }
-
-    ///<summary>
     ///Exports one AI work item as markdown in the long-task shape: Goal, Plan, Changes, Rejected / moved out, Needs you, Open questions.
     ///</summary>
     [NorbixRoute("/{version}/projects/{projectId}/ai/work-items/{WorkItemId}/export.md", "GET")]
@@ -13035,16 +12914,6 @@ namespace Norbix.Sdk.Types.Hub;
     {
         public virtual string? WorkItemId { get; set; }
         public virtual string? Markdown { get; set; }
-    }
-
-    ///<summary>
-    ///Deletes one AI memory note ('forget this').
-    ///</summary>
-    [NorbixRoute("/{version}/account/chat/memory/{NoteId}", "DELETE")]
-    public partial class ForgetChatMemoryRequest
-        : RequestBase, INorbixRequest<EmptyResponse>
-    {
-        public virtual string NoteId { get; set; }
     }
 
     ///<summary>
@@ -13104,62 +12973,6 @@ namespace Norbix.Sdk.Types.Hub;
         : ResponseBase
     {
         public virtual List<AiToolManifestItem>? Tools { get; set; }
-    }
-
-    ///<summary>
-    ///Lists what the AI assistant remembers about this account.
-    ///</summary>
-    [NorbixRoute("/{version}/account/chat/memory", "GET")]
-    public partial class GetChatMemoryRequest
-        : RequestBase, INorbixRequest<GetChatMemoryResponse>
-    {
-        public virtual string? ProjectId { get; set; }
-    }
-
-    public partial class GetChatMemoryResponse
-        : ResponseBase
-    {
-        public virtual List<ChatMemoryNote>? Notes { get; set; }
-    }
-
-    ///<summary>
-    ///Returns one AI chat session's conversation entries — the transcript.
-    ///</summary>
-    [NorbixRoute("/{version}/account/chat/sessions/{SessionId}/entries", "GET")]
-    public partial class GetChatSessionEntriesRequest
-        : RequestBase, INorbixRequest<GetChatSessionEntriesResponse>
-    {
-        public virtual string SessionId { get; set; }
-        public virtual long? SinceSeq { get; set; }
-    }
-
-    public partial class GetChatSessionEntriesResponse
-        : ResponseBase
-    {
-        public virtual string? SessionId { get; set; }
-        public virtual string? Profile { get; set; }
-        public virtual string? ProjectId { get; set; }
-        public virtual string? Env { get; set; }
-        public virtual List<AiChatEntryWireDto>? Entries { get; set; }
-        public virtual long LastSeq { get; set; }
-        public virtual List<string>? ActiveWorkItemIds { get; set; }
-    }
-
-    ///<summary>
-    ///Lists the account's recent AI chat sessions.
-    ///</summary>
-    [NorbixRoute("/{version}/account/chat/sessions", "GET")]
-    public partial class GetChatSessionsRequest
-        : RequestBase, INorbixRequest<GetChatSessionsResponse>
-    {
-        public virtual int? Take { get; set; }
-        public virtual bool? IncludeArchived { get; set; }
-    }
-
-    public partial class GetChatSessionsResponse
-        : ResponseBase
-    {
-        public virtual List<ChatSessionListItem>? Sessions { get; set; }
     }
 
     ///<summary>
@@ -13364,86 +13177,6 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual string? DashboardUrl { get; set; }
         public virtual string? Note { get; set; }
         public virtual IReadOnlyList<string>? Errors { get; set; }
-    }
-
-    ///<summary>
-    ///Records like / dislike feedback on one AI chat entry, or clears it.
-    ///</summary>
-    [NorbixRoute("/{version}/account/chat/sessions/{SessionId}/entries/{EntryId}/feedback", "POST")]
-    public partial class SetChatEntryFeedbackRequest
-        : RequestBase, INorbixRequest<IdResponse>
-    {
-        public virtual string SessionId { get; set; }
-        public virtual string EntryId { get; set; }
-        public virtual string? Feedback { get; set; }
-    }
-
-    ///<summary>
-    ///Archives or unarchives an AI chat session.
-    ///</summary>
-    [NorbixRoute("/{version}/account/chat/sessions/{SessionId}/archive", "PATCH")]
-    public partial class SetChatSessionArchivedRequest
-        : RequestBase, INorbixRequest<IdResponse>
-    {
-        public virtual string SessionId { get; set; }
-        public virtual bool Archived { get; set; }
-    }
-
-    ///<summary>
-    ///Pins or unpins an AI chat session.
-    ///</summary>
-    [NorbixRoute("/{version}/account/chat/sessions/{SessionId}/pin", "PATCH")]
-    public partial class SetChatSessionPinnedRequest
-        : RequestBase, INorbixRequest<IdResponse>
-    {
-        public virtual string SessionId { get; set; }
-        public virtual bool Pinned { get; set; }
-    }
-
-    ///<summary>
-    ///Marks or unmarks an AI chat session as "do not share".
-    ///</summary>
-    [NorbixRoute("/{version}/account/chat/sessions/{SessionId}/sharing", "PATCH")]
-    public partial class SetChatSessionSharingRequest
-        : RequestBase, INorbixRequest<IdResponse>
-    {
-        public virtual string SessionId { get; set; }
-        public virtual bool DoNotShare { get; set; }
-    }
-
-    ///<summary>
-    ///Stops one running step of an AI chat plan run.
-    ///</summary>
-    [NorbixRoute("/{version}/account/chat/sessions/{SessionId}/steps/{EntryId}/stop", "POST")]
-    public partial class StopChatRunStepRequest
-        : RequestBase, INorbixRequest<IdResponse>
-    {
-        public virtual string SessionId { get; set; }
-        public virtual string EntryId { get; set; }
-    }
-
-    ///<summary>
-    ///Uploads a file into an AI chat session.
-    ///</summary>
-    [NorbixRoute("/{version}/account/chat/attachments", "POST")]
-    public partial class UploadChatAttachmentRequest
-        : RequestBase, INorbixRequest<UploadChatAttachmentResponse>
-    {
-        public virtual string? SessionId { get; set; }
-        public virtual string FileName { get; set; }
-        public virtual string ContentType { get; set; }
-        public virtual string Base64Content { get; set; }
-        public virtual string? Profile { get; set; }
-        public virtual string? Topic { get; set; }
-        public virtual string? ProjectId { get; set; }
-        public virtual string? Env { get; set; }
-    }
-
-    public partial class UploadChatAttachmentResponse
-        : ResponseBase
-    {
-        public virtual string? Id { get; set; }
-        public virtual string? SessionId { get; set; }
     }
 
     ///<summary>
