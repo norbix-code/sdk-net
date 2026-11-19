@@ -54,7 +54,6 @@
       ResponseType: PublicProjectConfigDto,
       Response: {
         DisplayName: test-displayName,
-        AdminPortalEnabled: true,
         Branding: {
           DisplayName: test-displayName,
           MainColor: test-mainColor,

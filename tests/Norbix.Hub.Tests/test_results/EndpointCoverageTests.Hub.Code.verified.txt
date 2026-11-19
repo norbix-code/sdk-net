@@ -1,7 +1,7 @@
 ﻿{
   Target: Hub,
   Group: code,
-  Count: 71,
+  Count: 72,
   Endpoints: [
     {
       Target: Hub,
@@ -2665,6 +2665,52 @@
               test-key: null
             }
           },
+          canvas: test-canvas,
+          env: test-env
+        }
+      },
+      ResponseType: WorkflowResponse,
+      Response: {
+        Workflow: {
+          WorkflowId: Guid_1,
+          Env: test-env,
+          Definition: {
+            IsEnabled: false
+          },
+          Version: 7,
+          IsPublished: true,
+          HasDraft: true,
+          IsEnabled: true,
+          DisabledReason: test-disabledReason
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: code,
+      MethodName: SaveCodeWorkflowCanvasAsync,
+      RequestType: SaveCodeWorkflowCanvas,
+      HttpMethod: PUT,
+      Path: /{version}/code/workflows/{Id}/canvas,
+      PathParams: [
+        Id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: PUT,
+        Path: /v2/code/workflows/{guid}/canvas,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        },
+        Body: {
+          canvas: test-canvas,
           env: test-env
         }
       },

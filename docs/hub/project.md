@@ -214,14 +214,10 @@ await norbix.Account.UpdateProjectExposeAuthAsync(
 
 | method | verb | path |
 |---|---|---|
-| `SetAdminPortalEnabledAsync` | `PUT` | `/account/projects/{projectId}/admin-portal/enabled` |
 | `GetAdminPortalStructureAsync` | `GET` | `/account/projects/{projectId}/admin-portal/structure` |
 | `AssignAdminPortalServiceUserAsync` | `PUT` | `/account/projects/{projectId}/settings/admin-portal/service-user` |
 
 ```csharp
-await norbix.Account.SetAdminPortalEnabledAsync(
-    new SetAdminPortalEnabledRequest { ProjectId = projectId, Enabled = true });
-
 var structure = await norbix.Account.GetAdminPortalStructureAsync(
     new GetAdminPortalStructure { ProjectId = projectId });
 foreach (var module in structure!.Modules)
@@ -441,7 +437,7 @@ using var app = new NorbixApiClient(new NorbixClientOptions { ProjectId = "proj_
 
 var config = await app.Public.GetPublicProjectConfigAsync(
     new GetPublicProjectConfig { ProjectId = "proj_123" });
-Console.WriteLine($"{config!.DisplayName}, portal on: {config.AdminPortalEnabled}");
+Console.WriteLine(config!.DisplayName);
 
 var terms = await app.Public.GetPublicProjectLegalAsync(
     new GetPublicProjectLegal { ProjectId = "proj_123", Kind = "terms" });

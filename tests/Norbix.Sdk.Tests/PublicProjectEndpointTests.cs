@@ -24,7 +24,7 @@ public sealed class PublicProjectEndpointTests
     public async Task Config_legal_and_brand_go_out_from_a_client_with_no_credentials()
     {
         using var fixture = NorbixTestFixture.Create(o => o.ApiKey = null);
-        fixture.Respond("/config", new { displayName = "Shop", adminPortalEnabled = true });
+        fixture.Respond("/config", new { displayName = "Shop" });
         fixture.Respond("/legal/terms", new { kind = "terms", title = "Terms", body = "# Terms", available = true });
         fixture.RespondBytes("/brand/logo", Png, "image/png");
 
