@@ -1696,19 +1696,10 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual List<ProjectEnvironmentExecutionIdentityDto>? DefaultExecutionIdentities { get; set; }
 
         [DataMember]
-        public virtual bool ExposeBrandToAdminPortal { get; set; }
-
-        [DataMember]
-        public virtual bool ExposeAuthToAdminPortal { get; set; }
-
-        [DataMember]
         public virtual string? AdminPortalServiceUserId { get; set; }
 
         [DataMember]
         public virtual List<AuthenticationFlowSummaryDto>? MembershipAuthenticationFlows { get; set; }
-
-        [DataMember]
-        public virtual bool ExposeLegalToAdminPortal { get; set; }
 
         [DataMember]
         public virtual ProjectAiSettingsDto? AiChat { get; set; }
@@ -12652,45 +12643,6 @@ namespace Norbix.Sdk.Types.Hub;
         ///The new description text. Omit (null) to clear the description.
         ///</summary>
         public virtual string? Description { get; set; }
-    }
-
-    ///<summary>
-    ///Sets whether the project's sign-in methods and password policy are returned by the public Admin Portal config
-    ///</summary>
-    [NorbixRoute("/{version}/account/projects/{projectId}/settings/auth/expose", "PATCH")]
-    public partial class UpdateProjectExposeAuth
-        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
-    {
-        ///<summary>
-        ///True to return sign-in methods and password policy in the public Admin Portal config, false to hide them.
-        ///</summary>
-        public virtual bool Exposed { get; set; }
-    }
-
-    ///<summary>
-    ///Sets whether the project's brand is returned by the public Admin Portal config
-    ///</summary>
-    [NorbixRoute("/{version}/account/projects/{projectId}/settings/brand/expose", "PATCH")]
-    public partial class UpdateProjectExposeBrand
-        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
-    {
-        ///<summary>
-        ///True to return the brand in the public Admin Portal config, false to hide it.
-        ///</summary>
-        public virtual bool Exposed { get; set; }
-    }
-
-    ///<summary>
-    ///Sets whether the project's legal documents are publicly readable via the Admin Portal
-    ///</summary>
-    [NorbixRoute("/{version}/account/projects/{projectId}/settings/legal/expose", "PATCH")]
-    public partial class UpdateProjectExposeLegal
-        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
-    {
-        ///<summary>
-        ///True to make the legal documents publicly readable via the Admin Portal, false to hide them.
-        ///</summary>
-        public virtual bool Exposed { get; set; }
     }
 
     ///<summary>

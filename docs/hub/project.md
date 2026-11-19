@@ -172,11 +172,9 @@ await norbix.Account.UpdateProjectAdminUrlAsync(
 | method | verb | path |
 |---|---|---|
 | `UpdateProjectLegalDocumentsAsync` | `PATCH` | `/account/projects/{projectId}/settings/legal` |
-| `UpdateProjectExposeLegalAsync` | `PATCH` | `/account/projects/{projectId}/settings/legal/expose` |
 
-Terms and privacy are Markdown. They are public (see
-[Public config and legal](#public-config-and-legal-no-sign-in)) only after
-`Exposed = true`.
+Terms and privacy are Markdown. A saved document is public (see
+[Public config and legal](#public-config-and-legal-no-sign-in)).
 
 ```csharp
 await norbix.Account.UpdateProjectLegalDocumentsAsync(new UpdateProjectLegalDocuments
@@ -185,30 +183,14 @@ await norbix.Account.UpdateProjectLegalDocumentsAsync(new UpdateProjectLegalDocu
     TermsMarkdown = "# Terms\n\n…",
     PrivacyMarkdown = "# Privacy\n\n…",
 });
-await norbix.Account.UpdateProjectExposeLegalAsync(
-    new UpdateProjectExposeLegal { ProjectId = projectId, Exposed = true });
 ```
 
 ## What the public Admin Portal config shows
 
-| method | verb | path |
-|---|---|---|
-| `UpdateProjectExposeBrandAsync` | `PATCH` | `/account/projects/{projectId}/settings/brand/expose` |
-| `UpdateProjectExposeAuthAsync` | `PATCH` | `/account/projects/{projectId}/settings/auth/expose` |
-
 The public config ([Public config and legal](#public-config-and-legal-no-sign-in))
-returns the brand (name, colors, logo, icon) by default and hides the sign-in
-methods (email / phone / username) and the password policy. Social providers and
-the passkey yes/no are always returned. Two switches change that:
-
-```csharp
-// Hide the brand from the public config.
-await norbix.Account.UpdateProjectExposeBrandAsync(
-    new UpdateProjectExposeBrand { ProjectId = projectId, Exposed = false });
-// Show the sign-in methods and the password policy.
-await norbix.Account.UpdateProjectExposeAuthAsync(
-    new UpdateProjectExposeAuth { ProjectId = projectId, Exposed = true });
-```
+always returns the brand (name, colors, logo, icon), the sign-in methods
+(email / phone / username), the password policy, the social providers and the
+passkey yes/no.
 
 ## Admin Portal
 
@@ -446,5 +428,5 @@ if (terms!.Available)
 ```
 
 `Kind` is `terms` or `privacy`. `Available` is `false` until the project
-exposes its legal documents (`UpdateProjectExposeLegalAsync`). The `Norbix.Hub`
+saves that document (`UpdateProjectLegalDocumentsAsync`). The `Norbix.Hub`
 package has the same two calls on `norbix.Public`.
