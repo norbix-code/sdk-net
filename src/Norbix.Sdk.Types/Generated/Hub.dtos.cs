@@ -749,7 +749,6 @@ namespace Norbix.Sdk.Types.Hub;
         Fake,
     }
 
-    [NorbixRoute("/internal/_typegen", "GET")]
     public partial class InternalsTypeGen
     {
         public virtual SmtpEmailIntegrationRequest? Typegen_0_SmtpEmailIntegrationRequest { get; set; }
@@ -1151,7 +1150,6 @@ namespace Norbix.Sdk.Types.Hub;
     public partial class AdminPortalStructureDto
     {
         public virtual string ProjectId { get; set; }
-        public virtual bool AdminPortalEnabled { get; set; }
         public virtual string DisplayName { get; set; }
         public virtual List<AdminPortalModuleDto> Modules { get; set; } = [];
     }
@@ -1659,9 +1657,6 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual string? MarketingUrl { get; set; }
 
         [DataMember]
-        public virtual string? CanonicalAdminUrl { get; set; }
-
-        [DataMember]
         public virtual string? AdminUrl { get; set; }
 
         [DataMember]
@@ -1705,9 +1700,6 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember]
         public virtual bool ExposeAuthToAdminPortal { get; set; }
-
-        [DataMember]
-        public virtual bool AdminPortalEnabled { get; set; }
 
         [DataMember]
         public virtual string? AdminPortalServiceUserId { get; set; }
@@ -1936,7 +1928,6 @@ namespace Norbix.Sdk.Types.Hub;
     public partial class PublicProjectConfigDto
     {
         public virtual string DisplayName { get; set; }
-        public virtual bool AdminPortalEnabled { get; set; }
         public virtual PublicBrandDto? Branding { get; set; }
         public virtual PublicAuthDto Auth { get; set; }
         public virtual PublicAiChatDto AiChat { get; set; }
@@ -2808,7 +2799,6 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual string? ApiHost { get; set; }
         public virtual string? AdminUrl { get; set; }
         public virtual string? MarketingUrl { get; set; }
-        public virtual bool? AdminPortalEnabled { get; set; }
         public virtual List<AiProjectContextModuleWireDto>? Modules { get; set; }
     }
 
@@ -5291,6 +5281,9 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember]
         public virtual List<WorkflowValidationIssueDto> Warnings { get; set; } = [];
+
+        [DataMember]
+        public virtual string? Canvas { get; set; }
     }
 
     [DataContract]
@@ -10387,9 +10380,6 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual FunctionRefDto? FunctionRef { get; set; }
 
         [DataMember]
-        public virtual string? RunAsUserId { get; set; }
-
-        [DataMember]
         public virtual CodeInvocationType InvocationType { get; set; }
 
         [DataMember]
@@ -11016,7 +11006,7 @@ namespace Norbix.Sdk.Types.Hub;
     [NorbixRoute("/{version}/account/trial-waitlist/intake", "POST")]
     [DataContract]
     public partial class TrialWaitlistIntakeRequest
-        : RequestBase, INorbixRequest<TrialWaitlistResponse>
+        : RequestBase, INorbixRequest<TrialWaitlistResponse>, INorbixOptionalAuth
     {
         [DataMember]
         public virtual string? Email { get; set; }
@@ -11422,6 +11412,137 @@ namespace Norbix.Sdk.Types.Hub;
         : RequestBase, INorbixRequest<EmptyResponse>, INorbixOptionalAuth
     {
         public virtual string Email { get; set; }
+    }
+
+    [NorbixRoute("/{version}/account/session/api-token", "POST")]
+    public partial class CreateDashboardApiToken
+        : RequestBase, INorbixRequest<CreateDashboardApiTokenResponse>
+    {
+    }
+
+    [DataContract]
+    public partial class CreateDashboardApiTokenResponse
+        : ResponseBase
+    {
+        [DataMember]
+        public virtual string? AccessToken { get; set; }
+
+        [DataMember]
+        public virtual DateTimeOffset? ExpiresAt { get; set; }
+    }
+
+    public partial class AccountAuthenticatorSetupResponse
+        : ResponseBase
+    {
+        public virtual string? Secret { get; set; }
+        public virtual string? SetupLink { get; set; }
+        public virtual DateTime? ExpiresAtUtc { get; set; }
+    }
+
+    public partial class AccountTeamTwoFactorMemberDto
+    {
+        public virtual string Id { get; set; }
+        public virtual string? Email { get; set; }
+        public virtual string? DisplayName { get; set; }
+        public virtual bool IsOwner { get; set; }
+        public virtual bool AuthenticatorEnabled { get; set; }
+        public virtual DateTime? AuthenticatorEnabledAtUtc { get; set; }
+    }
+
+    public partial class AccountTeamTwoFactorResponse
+        : ResponseBase
+    {
+        public virtual bool RequireAuthenticatorApp { get; set; }
+        public virtual bool SetupAvailable { get; set; }
+        public virtual List<AccountTeamTwoFactorMemberDto> Members { get; set; } = [];
+    }
+
+    public partial class AccountTrustedDeviceDto
+    {
+        public virtual string Id { get; set; }
+        public virtual string Label { get; set; }
+        public virtual DateTime RememberedAtUtc { get; set; }
+        public virtual DateTime LastUsedAtUtc { get; set; }
+        public virtual DateTime ExpiresAtUtc { get; set; }
+        public virtual bool IsThisDevice { get; set; }
+    }
+
+    public partial class AccountTrustedDevicesResponse
+        : ResponseBase
+    {
+        public virtual List<AccountTrustedDeviceDto> Devices { get; set; } = [];
+    }
+
+    public partial class AccountTwoFactorResponse
+        : ResponseBase
+    {
+        public virtual bool SetupAvailable { get; set; }
+        public virtual bool AuthenticatorEnabled { get; set; }
+        public virtual DateTime? AuthenticatorEnabledAtUtc { get; set; }
+        public virtual bool TeamRequiresAuthenticatorApp { get; set; }
+    }
+
+    [NorbixRoute("/{version}/account/2fa/authenticator/confirm", "POST")]
+    public partial class ConfirmAccountAuthenticatorRequest
+        : RequestBase, INorbixRequest<AccountTwoFactorResponse>
+    {
+        public virtual string Code { get; set; }
+    }
+
+    [NorbixRoute("/{version}/account/2fa/team", "GET")]
+    public partial class GetAccountTeamTwoFactorRequest
+        : RequestBase, INorbixRequest<AccountTeamTwoFactorResponse>
+    {
+    }
+
+    [NorbixRoute("/{version}/account/2fa/devices", "GET")]
+    public partial class GetAccountTrustedDevicesRequest
+        : RequestBase, INorbixRequest<AccountTrustedDevicesResponse>
+    {
+    }
+
+    [NorbixRoute("/{version}/account/2fa", "GET")]
+    public partial class GetAccountTwoFactorRequest
+        : RequestBase, INorbixRequest<AccountTwoFactorResponse>
+    {
+    }
+
+    [NorbixRoute("/{version}/account/2fa/authenticator/remove", "POST")]
+    public partial class RemoveAccountAuthenticatorRequest
+        : RequestBase, INorbixRequest<AccountTwoFactorResponse>
+    {
+        public virtual string CurrentPassword { get; set; }
+    }
+
+    [NorbixRoute("/{version}/account/2fa/devices/remove", "POST")]
+    public partial class RemoveAccountTrustedDevicesRequest
+        : RequestBase, INorbixRequest<AccountTrustedDevicesResponse>
+    {
+        public virtual string? Id { get; set; }
+        public virtual bool All { get; set; }
+    }
+
+    [NorbixRoute("/{version}/account/2fa/team/reset", "POST")]
+    public partial class ResetTeamMemberAuthenticatorRequest
+        : RequestBase, INorbixRequest<AccountTeamTwoFactorResponse>
+    {
+        public virtual string MemberId { get; set; }
+        public virtual string CurrentPassword { get; set; }
+    }
+
+    [NorbixRoute("/{version}/account/2fa/team/policy", "PUT")]
+    public partial class SetAccountTwoFactorPolicyRequest
+        : RequestBase, INorbixRequest<AccountTeamTwoFactorResponse>
+    {
+        public virtual bool RequireAuthenticatorApp { get; set; }
+        public virtual string CurrentPassword { get; set; }
+    }
+
+    [NorbixRoute("/{version}/account/2fa/authenticator/start", "POST")]
+    public partial class StartAccountAuthenticatorRequest
+        : RequestBase, INorbixRequest<AccountAuthenticatorSetupResponse>
+    {
+        public virtual string CurrentPassword { get; set; }
     }
 
     public partial class AccountPasswordPolicyDto
@@ -12337,7 +12458,7 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual string? SystemPrompt { get; set; }
 
         ///<summary>
-        ///Own-scope toolsets the assistant may use: own:records (the user's own database records), own:profile (their profile), own:preferences (their marketing preferences), own:knowledge (search_knowledge — the user's own and the project-wide knowledge). Any other name is refused.
+        ///Own-scope toolsets the assistant may use: own:records (the user's own database records), own:profile (their profile), own:preferences (their marketing preferences), own:knowledge (the assistant may search the user's own and the project-wide knowledge). Any other name is refused.
         ///</summary>
         public virtual List<string>? Toolsets { get; set; }
 
@@ -12378,19 +12499,6 @@ namespace Norbix.Sdk.Types.Hub;
     }
 
     ///<summary>
-    ///Turns the project's managed Admin Portal on or off
-    ///</summary>
-    [NorbixRoute("/{version}/account/projects/{projectId}/admin-portal/enabled", "PUT")]
-    public partial class SetAdminPortalEnabledRequest
-        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
-    {
-        ///<summary>
-        ///true turns the managed Admin Portal on; false turns it off.
-        ///</summary>
-        public virtual bool Enabled { get; set; }
-    }
-
-    ///<summary>
     ///Updates project accent color
     ///</summary>
     [NorbixRoute("/{version}/account/projects/{projectId}/settings/accent-color", "PATCH")]
@@ -12411,7 +12519,7 @@ namespace Norbix.Sdk.Types.Hub;
         : CodeMashRequestBase, INorbixRequest<EmptyResponse>
     {
         ///<summary>
-        ///Custom admin-portal URL to use instead of the canonical address. Null/empty restores the canonical pr-{project hex}.admin.{host} address.
+        ///The address where you host the project's Admin Portal (for example https://admin.example.com). Its origin is added to the Allowed Origins. Null/empty: the project has no Admin Portal.
         ///</summary>
         public virtual string? Url { get; set; }
     }
@@ -12515,7 +12623,7 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual HashSet<string>? Origins { get; set; }
 
         ///<summary>
-        ///Optional. true removes the project's own Admin Portal origin (pr-{project hex}.{admin host}) on purpose. Without it, a list that drops that origin is rejected with CM-ERRORS-PROJECTS-037, because the Norbix-generated end-user portal could no longer call the project's API.
+        ///Optional. true removes the origin of the project's admin URL (where you host the Admin Portal) on purpose. Without it, a list that drops that origin is rejected with CM-ERRORS-PROJECTS-037, because your portal could no longer call the project's API.
         ///</summary>
         public virtual bool? RemoveAdminPortalOrigin { get; set; }
     }
@@ -12814,6 +12922,36 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual string? Description { get; set; }
     }
 
+    public partial class AppTemplateCardDto
+    {
+        public virtual string Id { get; set; }
+        public virtual string Name { get; set; }
+        public virtual int Version { get; set; }
+        public virtual List<string> Tags { get; set; } = [];
+        public virtual string Summary { get; set; }
+        public virtual List<AppTemplateCollectionDto> Collections { get; set; } = [];
+        public virtual List<string> MatchedTags { get; set; } = [];
+    }
+
+    public partial class AppTemplateCollectionDto
+    {
+        public virtual string Entity { get; set; }
+        public virtual string Tier { get; set; }
+    }
+
+    public partial class AppTemplateCollectionSpecDto
+    {
+        public virtual string FileName { get; set; }
+        public virtual string Json { get; set; }
+    }
+
+    public partial class EntityGraphEntityDto
+    {
+        public virtual string Id { get; set; }
+        public virtual List<string> Related { get; set; } = [];
+        public virtual string IfDocument { get; set; }
+    }
+
     ///<summary>
     ///Paste-ready prompt and client snippets to connect an AI tool to this installation.
     ///</summary>
@@ -12871,6 +13009,72 @@ namespace Norbix.Sdk.Types.Hub;
         : ResponseBase
     {
         public virtual List<AiToolManifestItem>? Tools { get; set; }
+    }
+
+    ///<summary>
+    ///Reads one app template: its guide and its collection specs.
+    ///</summary>
+    [NorbixRoute("/{version}/account/ai/templates/apps/{Id}", "GET")]
+    public partial class GetAppTemplateRequest
+        : RequestBase, INorbixRequest<GetAppTemplateResponse>
+    {
+        ///<summary>
+        ///The template id, e.g. hr.
+        ///</summary>
+        public virtual string Id { get; set; }
+    }
+
+    public partial class GetAppTemplateResponse
+        : ResponseBase
+    {
+        public virtual AppTemplateCardDto? Template { get; set; }
+        public virtual string? Guide { get; set; }
+        public virtual List<AppTemplateCollectionSpecDto> CollectionSpecs { get; set; } = [];
+    }
+
+    ///<summary>
+    ///Lists the app templates: reviewed starting points for a whole backend (blog, CRM, HR …).
+    ///</summary>
+    [NorbixRoute("/{version}/account/ai/templates/apps", "GET")]
+    public partial class GetAppTemplatesRequest
+        : RequestBase, INorbixRequest<GetAppTemplatesResponse>
+    {
+        ///<summary>
+        ///A few words about the app being built. Templates whose tags match come first. Optional.
+        ///</summary>
+        public virtual string? Query { get; set; }
+    }
+
+    public partial class GetAppTemplatesResponse
+        : ResponseBase
+    {
+        public virtual List<AppTemplateCardDto> Templates { get; set; } = [];
+    }
+
+    ///<summary>
+    ///Reads schema registry entities with their related ones.
+    ///</summary>
+    [NorbixRoute("/{version}/account/ai/templates/schemas/graph", "GET")]
+    public partial class GetEntityGraphRequest
+        : RequestBase, INorbixRequest<GetEntityGraphResponse>
+    {
+        ///<summary>
+        ///Comma-separated entity ids, e.g. blog_posts,comments.
+        ///</summary>
+        public virtual string Names { get; set; }
+
+        ///<summary>
+        ///0 = named only, 1 = with directly related entities (default), 3 at most.
+        ///</summary>
+        public virtual int? Depth { get; set; }
+    }
+
+    public partial class GetEntityGraphResponse
+        : ResponseBase
+    {
+        public virtual bool Capped { get; set; }
+        public virtual List<string> Unknown { get; set; } = [];
+        public virtual List<EntityGraphEntityDto> Entities { get; set; } = [];
     }
 
     ///<summary>
@@ -13022,6 +13226,44 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual string? DashboardUrl { get; set; }
         public virtual string? Note { get; set; }
         public virtual IReadOnlyList<string>? Errors { get; set; }
+    }
+
+    public partial class SchemaTemplateCardDto
+    {
+        public virtual string Id { get; set; }
+        public virtual string Title { get; set; }
+        public virtual string Summary { get; set; }
+        public virtual List<string> Aliases { get; set; } = [];
+        public virtual List<string> Tags { get; set; } = [];
+        public virtual List<string> UsesBlocks { get; set; } = [];
+        public virtual List<string> UsesTaxonomies { get; set; } = [];
+        public virtual List<string> Related { get; set; } = [];
+        public virtual List<string> MatchedOn { get; set; } = [];
+    }
+
+    ///<summary>
+    ///Searches the schema registry: reviewed collection shapes to build from.
+    ///</summary>
+    [NorbixRoute("/{version}/account/ai/templates/schemas", "GET")]
+    public partial class SearchSchemaTemplatesRequest
+        : RequestBase, INorbixRequest<SearchSchemaTemplatesResponse>
+    {
+        ///<summary>
+        ///One or a few words, e.g. employee. Empty lists the first entities by id.
+        ///</summary>
+        public virtual string? Query { get; set; }
+
+        ///<summary>
+        ///How many hits to return: 10 by default, 25 at most.
+        ///</summary>
+        public virtual int? Take { get; set; }
+    }
+
+    public partial class SearchSchemaTemplatesResponse
+        : ResponseBase
+    {
+        public virtual int Total { get; set; }
+        public virtual List<SchemaTemplateCardDto> Templates { get; set; } = [];
     }
 
     ///<summary>
@@ -15244,6 +15486,30 @@ namespace Norbix.Sdk.Types.Hub;
         ///</summary>
         [DataMember]
         public virtual WorkflowDefinitionDto Definition { get; set; }
+
+        ///<summary>
+        ///The canvas document of the Cloud visual builder (JSON text, where the steps are drawn). Leave it out: the stored one stays.
+        ///</summary>
+        [DataMember]
+        public virtual string? Canvas { get; set; }
+    }
+
+    [NorbixRoute("/{version}/code/workflows/{Id}/canvas", "PUT")]
+    [DataContract]
+    public partial class SaveCodeWorkflowCanvas
+        : CodeMashRequestBase, INorbixRequest<WorkflowResponse>
+    {
+        ///<summary>
+        ///wf_…
+        ///</summary>
+        [DataMember]
+        public virtual string Id { get; set; }
+
+        ///<summary>
+        ///The canvas document as JSON text (an object, 64 KB at most). Empty or absent: back to the automatic layout.
+        ///</summary>
+        [DataMember]
+        public virtual string? Canvas { get; set; }
     }
 
     ///<summary>
@@ -24563,7 +24829,6 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual string ApiUrl { get; set; }
         public virtual string ApiVersion { get; set; }
         public virtual string HubVersion { get; set; }
-        public virtual string? AdminUrlTemplate { get; set; }
         public virtual string? ApiUrlTemplate { get; set; }
         public virtual bool EmailServiceConfigured { get; set; }
         public virtual string? RootBootstrapPasswordSource { get; set; }

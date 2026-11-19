@@ -1,7 +1,7 @@
 ﻿{
   Target: Hub,
   Group: account,
-  Count: 124,
+  Count: 137,
   Endpoints: [
     {
       Target: Hub,
@@ -1329,6 +1329,334 @@
     {
       Target: Hub,
       Group: account,
+      MethodName: CreateDashboardApiTokenAsync,
+      RequestType: CreateDashboardApiToken,
+      HttpMethod: POST,
+      Path: /{version}/account/session/api-token,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/account/session/api-token,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        }
+      },
+      ResponseType: CreateDashboardApiTokenResponse,
+      Response: {
+        AccessToken: test-accessToken,
+        ExpiresAt: DateTimeOffset_1,
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: account,
+      MethodName: ConfirmAccountAuthenticatorAsync,
+      RequestType: ConfirmAccountAuthenticatorRequest,
+      HttpMethod: POST,
+      Path: /{version}/account/2fa/authenticator/confirm,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/account/2fa/authenticator/confirm,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        },
+        Body: {
+          code: test-code
+        }
+      },
+      ResponseType: AccountTwoFactorResponse,
+      Response: {
+        SetupAvailable: true,
+        AuthenticatorEnabled: true,
+        AuthenticatorEnabledAtUtc: DateTime_1,
+        TeamRequiresAuthenticatorApp: true,
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: account,
+      MethodName: GetAccountTeamTwoFactorAsync,
+      RequestType: GetAccountTeamTwoFactorRequest,
+      HttpMethod: GET,
+      Path: /{version}/account/2fa/team,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/account/2fa/team,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        }
+      },
+      ResponseType: AccountTeamTwoFactorResponse,
+      Response: {
+        RequireAuthenticatorApp: true,
+        SetupAvailable: true,
+        Members: [
+          {
+            IsOwner: false,
+            AuthenticatorEnabled: false
+          }
+        ],
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: account,
+      MethodName: GetAccountTrustedDevicesAsync,
+      RequestType: GetAccountTrustedDevicesRequest,
+      HttpMethod: GET,
+      Path: /{version}/account/2fa/devices,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/account/2fa/devices,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        }
+      },
+      ResponseType: AccountTrustedDevicesResponse,
+      Response: {
+        Devices: [
+          {
+            IsThisDevice: false
+          }
+        ],
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: account,
+      MethodName: GetAccountTwoFactorAsync,
+      RequestType: GetAccountTwoFactorRequest,
+      HttpMethod: GET,
+      Path: /{version}/account/2fa,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/account/2fa,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        }
+      },
+      ResponseType: AccountTwoFactorResponse,
+      Response: {
+        SetupAvailable: true,
+        AuthenticatorEnabled: true,
+        AuthenticatorEnabledAtUtc: DateTime_1,
+        TeamRequiresAuthenticatorApp: true,
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: account,
+      MethodName: RemoveAccountAuthenticatorAsync,
+      RequestType: RemoveAccountAuthenticatorRequest,
+      HttpMethod: POST,
+      Path: /{version}/account/2fa/authenticator/remove,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/account/2fa/authenticator/remove,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        },
+        Body: {
+          currentPassword: test-currentPassword
+        }
+      },
+      ResponseType: AccountTwoFactorResponse,
+      Response: {
+        SetupAvailable: true,
+        AuthenticatorEnabled: true,
+        AuthenticatorEnabledAtUtc: DateTime_1,
+        TeamRequiresAuthenticatorApp: true,
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: account,
+      MethodName: RemoveAccountTrustedDevicesAsync,
+      RequestType: RemoveAccountTrustedDevicesRequest,
+      HttpMethod: POST,
+      Path: /{version}/account/2fa/devices/remove,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/account/2fa/devices/remove,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        },
+        Body: {
+          id: Guid_1,
+          all: true
+        }
+      },
+      ResponseType: AccountTrustedDevicesResponse,
+      Response: {
+        Devices: [
+          {
+            IsThisDevice: false
+          }
+        ],
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: account,
+      MethodName: ResetTeamMemberAuthenticatorAsync,
+      RequestType: ResetTeamMemberAuthenticatorRequest,
+      HttpMethod: POST,
+      Path: /{version}/account/2fa/team/reset,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/account/2fa/team/reset,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        },
+        Body: {
+          memberId: Guid_1,
+          currentPassword: test-currentPassword
+        }
+      },
+      ResponseType: AccountTeamTwoFactorResponse,
+      Response: {
+        RequireAuthenticatorApp: true,
+        SetupAvailable: true,
+        Members: [
+          {
+            IsOwner: false,
+            AuthenticatorEnabled: false
+          }
+        ],
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: account,
+      MethodName: SetAccountTwoFactorPolicyAsync,
+      RequestType: SetAccountTwoFactorPolicyRequest,
+      HttpMethod: PUT,
+      Path: /{version}/account/2fa/team/policy,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: PUT,
+        Path: /v2/account/2fa/team/policy,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        },
+        Body: {
+          requireAuthenticatorApp: true,
+          currentPassword: test-currentPassword
+        }
+      },
+      ResponseType: AccountTeamTwoFactorResponse,
+      Response: {
+        RequireAuthenticatorApp: true,
+        SetupAvailable: true,
+        Members: [
+          {
+            IsOwner: false,
+            AuthenticatorEnabled: false
+          }
+        ],
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: account,
+      MethodName: StartAccountAuthenticatorAsync,
+      RequestType: StartAccountAuthenticatorRequest,
+      HttpMethod: POST,
+      Path: /{version}/account/2fa/authenticator/start,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/account/2fa/authenticator/start,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        },
+        Body: {
+          currentPassword: test-currentPassword
+        }
+      },
+      ResponseType: AccountAuthenticatorSetupResponse,
+      Response: {
+        Secret: test-secret,
+        SetupLink: test-setupLink,
+        ExpiresAtUtc: DateTime_1,
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: account,
       MethodName: CancelTeamInvitationAsync,
       RequestType: CancelTeamInvitation,
       HttpMethod: DELETE,
@@ -2218,7 +2546,6 @@
           EmailClickTracking: false,
           ExposeBrandToAdminPortal: false,
           ExposeAuthToAdminPortal: false,
-          AdminPortalEnabled: false,
           ExposeLegalToAdminPortal: false,
           DatabaseEnabled: false,
           EmailEnabled: false,
@@ -2887,7 +3214,6 @@
       ResponseType: AdminPortalStructureDto,
       Response: {
         ProjectId: Guid_1,
-        AdminPortalEnabled: true,
         DisplayName: test-displayName,
         Modules: [
           {
@@ -3054,39 +3380,6 @@
             {}
           ]
         },
-        ResponseStatus: {
-          IsSuccess: true
-        }
-      }
-    },
-    {
-      Target: Hub,
-      Group: account,
-      MethodName: SetAdminPortalEnabledAsync,
-      RequestType: SetAdminPortalEnabledRequest,
-      HttpMethod: PUT,
-      Path: /{version}/account/projects/{projectId}/admin-portal/enabled,
-      PathParams: [
-        projectId
-      ],
-      IsAccountScoped: false,
-      IsUnauthenticated: false,
-      Sent: {
-        Method: PUT,
-        Path: /v2/account/projects/{guid}/admin-portal/enabled,
-        Headers: {
-          Authorization: Bearer test-bearer,
-          Content-Type: application/json; charset=utf-8,
-          norbix-account-id: test-account,
-          norbix-project-id: test-project
-        },
-        Body: {
-          enabled: true,
-          env: test-env
-        }
-      },
-      ResponseType: EmptyResponse,
-      Response: {
         ResponseStatus: {
           IsSuccess: true
         }
@@ -4124,6 +4417,115 @@
     {
       Target: Hub,
       Group: account,
+      MethodName: GetAppTemplateAsync,
+      RequestType: GetAppTemplateRequest,
+      HttpMethod: GET,
+      Path: /{version}/account/ai/templates/apps/{Id},
+      PathParams: [
+        Id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/account/ai/templates/apps/{guid},
+        Headers: {
+          Authorization: Bearer test-bearer,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        }
+      },
+      ResponseType: GetAppTemplateResponse,
+      Response: {
+        Template: {
+          Id: Guid_1,
+          Name: test-name,
+          Version: 7,
+          Tags: [
+            test-string
+          ],
+          Summary: test-summary,
+          Collections: [
+            {}
+          ],
+          MatchedTags: [
+            test-string
+          ]
+        },
+        Guide: test-guide,
+        CollectionSpecs: [
+          {}
+        ],
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: account,
+      MethodName: GetAppTemplatesAsync,
+      RequestType: GetAppTemplatesRequest,
+      HttpMethod: GET,
+      Path: /{version}/account/ai/templates/apps,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/account/ai/templates/apps,
+        Query: ?query=test-query,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        }
+      },
+      ResponseType: GetAppTemplatesResponse,
+      Response: {
+        Templates: [
+          {}
+        ],
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: account,
+      MethodName: GetEntityGraphAsync,
+      RequestType: GetEntityGraphRequest,
+      HttpMethod: GET,
+      Path: /{version}/account/ai/templates/schemas/graph,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/account/ai/templates/schemas/graph,
+        Query: ?names=test-names&depth=1,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        }
+      },
+      ResponseType: GetEntityGraphResponse,
+      Response: {
+        Capped: true,
+        Unknown: [
+          test-string
+        ],
+        Entities: [
+          {}
+        ],
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: account,
       MethodName: InvokeAiToolAsync,
       RequestType: InvokeAiToolRequest,
       HttpMethod: POST,
@@ -4270,6 +4672,36 @@
             {}
           ]
         },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: account,
+      MethodName: SearchSchemaTemplatesAsync,
+      RequestType: SearchSchemaTemplatesRequest,
+      HttpMethod: GET,
+      Path: /{version}/account/ai/templates/schemas,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/account/ai/templates/schemas,
+        Query: ?query=test-query&take=1,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        }
+      },
+      ResponseType: SearchSchemaTemplatesResponse,
+      Response: {
+        Total: 7,
+        Templates: [
+          {}
+        ],
         ResponseStatus: {
           IsSuccess: true
         }
