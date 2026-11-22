@@ -1399,6 +1399,9 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember]
         public virtual AuthenticationFlowPasswordPolicyDto? PasswordComplexity { get; set; }
+
+        [DataMember]
+        public virtual bool? RequireEmailVerification { get; set; }
     }
 
     [DataContract]
@@ -7752,6 +7755,9 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember]
         public virtual List<string> WelcomeEmailTriggers { get; set; } = [];
+
+        [DataMember]
+        public virtual bool RequireEmailVerification { get; set; }
     }
 
     [DataContract]
@@ -20512,6 +20518,16 @@ namespace Norbix.Sdk.Types.Hub;
         ///Setting = 'PasswordResetCallback': your own "choose a new password" page (https://…, http only for localhost); the link is it + #token=…. Empty = the portal page.
         ///</summary>
         public virtual string? ResetPasswordCallback { get; set; }
+
+        ///<summary>
+        ///Setting = 'RequireEmailVerification': true = a password sign-in is refused (CM-ERRORS-MEMBERSHIP-USERS-052) until the user opened the verification link. Needs verification e-mails on ('AllowUserVerification'). Default false.
+        ///</summary>
+        public virtual bool? RequireEmailVerification { get; set; }
+
+        ///<summary>
+        ///Setting = 'UserVerificationCallback': your app's "confirm your e-mail" page (https://…, http only for localhost); the link is it + #token=…, and the page confirms the token. Empty = the admin portal page.
+        ///</summary>
+        public virtual string? VerificationCallback { get; set; }
 
         ///<summary>
         ///Setting = 'RegistrationTemplate': the welcome e-mail template id (tmpl_…) of this environment; empty = no welcome e-mail in this environment (a sign-up trigger may send it instead).
