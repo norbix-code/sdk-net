@@ -523,7 +523,8 @@
           AllowEmailRegistration: false,
           AllowUsernameRegistration: false,
           InviteOnly: false,
-          AllowAnyoneToSignUp: false
+          AllowAnyoneToSignUp: false,
+          RequireEmailVerification: false
         },
         ResponseStatus: {
           IsSuccess: true
@@ -623,6 +624,8 @@
           resetPasswordEmailTemplate: user@example.test,
           resetPasswordTokenExpiration: 1.0,
           resetPasswordCallback: test-resetPasswordCallback,
+          requireEmailVerification: true,
+          verificationCallback: test-verificationCallback,
           welcomeEmailTemplate: user@example.test,
           bindings: [
             null

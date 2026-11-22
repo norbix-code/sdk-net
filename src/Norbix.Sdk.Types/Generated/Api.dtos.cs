@@ -1850,6 +1850,17 @@ namespace Norbix.Sdk.Types.Api;
         public virtual string? CredentialVersion { get; set; }
     }
 
+    [DataContract]
+    public partial class EmailAddressVerifiedResponse
+        : ResponseBase
+    {
+        [DataMember]
+        public virtual string? AuthId { get; set; }
+
+        [DataMember]
+        public virtual DateTime? VerifiedAtUtc { get; set; }
+    }
+
     ///<summary>
     ///Membership · Password
     ///</summary>
@@ -1863,6 +1874,27 @@ namespace Norbix.Sdk.Types.Api;
         ///</summary>
         [DataMember]
         public virtual string Email { get; set; }
+    }
+
+    ///<summary>
+    ///Membership · E-mail verification
+    ///</summary>
+    [NorbixRoute("/{version}/membership/userauth/email-verification/resend", "POST")]
+    [DataContract]
+    public partial class ResendEmailAddressVerificationRequest
+        : CodeMashRequestBase, INorbixRequest<PasskeyOkResponse>, INorbixOptionalAuth
+    {
+        ///<summary>
+        ///The e-mail address the user signed up with.
+        ///</summary>
+        [DataMember]
+        public virtual string Email { get; set; }
+
+        ///<summary>
+        ///Database integration id. Optional — defaults to the request environment's default integration.
+        ///</summary>
+        [DataMember]
+        public virtual string? DatabaseIntegrationId { get; set; }
     }
 
     ///<summary>
@@ -1934,6 +1966,27 @@ namespace Norbix.Sdk.Types.Api;
 
         [DataMember]
         public virtual string? MjmlRenderer { get; set; }
+    }
+
+    ///<summary>
+    ///Membership · E-mail verification
+    ///</summary>
+    [NorbixRoute("/{version}/membership/userauth/email-verification/confirm", "POST")]
+    [DataContract]
+    public partial class VerifyEmailAddressRequest
+        : CodeMashRequestBase, INorbixRequest<EmailAddressVerifiedResponse>, INorbixOptionalAuth
+    {
+        ///<summary>
+        ///The one-time token from the verification link (the part after #token=).
+        ///</summary>
+        [DataMember]
+        public virtual string Token { get; set; }
+
+        ///<summary>
+        ///Database integration id. Optional — defaults to the request environment's default integration.
+        ///</summary>
+        [DataMember]
+        public virtual string? DatabaseIntegrationId { get; set; }
     }
 
     ///<summary>

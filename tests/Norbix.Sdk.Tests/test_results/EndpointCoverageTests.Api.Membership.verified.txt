@@ -1,7 +1,7 @@
 ﻿{
   Target: Api,
   Group: membership,
-  Count: 58,
+  Count: 60,
   Endpoints: [
     {
       Target: Api,
@@ -597,6 +597,37 @@
     {
       Target: Api,
       Group: membership,
+      MethodName: ResendEmailAddressVerificationAsync,
+      RequestType: ResendEmailAddressVerificationRequest,
+      HttpMethod: POST,
+      Path: /{version}/membership/userauth/email-verification/resend,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/membership/userauth/email-verification/resend,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        },
+        Body: {
+          email: user@example.test,
+          databaseIntegrationId: Guid_1,
+          env: test-env
+        }
+      },
+      ResponseType: PasskeyOkResponse,
+      Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: membership,
       MethodName: SendTestPasswordResetAsync,
       RequestType: SendTestPasswordResetRequest,
       HttpMethod: POST,
@@ -638,6 +669,39 @@
         ],
         Fallback: test-fallback,
         MjmlRenderer: test-mjmlRenderer,
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: membership,
+      MethodName: VerifyEmailAddressAsync,
+      RequestType: VerifyEmailAddressRequest,
+      HttpMethod: POST,
+      Path: /{version}/membership/userauth/email-verification/confirm,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/membership/userauth/email-verification/confirm,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        },
+        Body: {
+          token: test-token,
+          databaseIntegrationId: Guid_1,
+          env: test-env
+        }
+      },
+      ResponseType: EmailAddressVerifiedResponse,
+      Response: {
+        AuthId: Guid_1,
+        VerifiedAtUtc: DateTime_1,
         ResponseStatus: {
           IsSuccess: true
         }
