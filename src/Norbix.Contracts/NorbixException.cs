@@ -64,6 +64,17 @@ public sealed class NorbixException : Exception
         RawBody = rawBody;
         RetryAfterSeconds = retryAfterSeconds;
     }
+
+    /// <summary>
+    /// True when this is the "e-mail not verified" sign-in refusal
+    /// (<see cref="NorbixErrorCodes.EmailNotVerified"/>): the password was right,
+    /// but the project blocks sign-in until the user opened the verification link.
+    /// Show "check your inbox" and offer
+    /// <c>Membership.ResendEmailAddressVerificationAsync</c>.
+    /// </summary>
+    public bool IsEmailNotVerified =>
+        Code == NorbixErrorCodes.EmailNotVerified
+        || FieldErrors.Any(e => e.ErrorCode == NorbixErrorCodes.EmailNotVerified);
 }
 
 /// <summary>Stable string codes the SDK uses for client-side errors.</summary>
@@ -79,4 +90,15 @@ public static class NorbixErrorCodes
 
     /// <summary>A cloud function received an envelope with a <c>specVersion</c> this SDK does not read.</summary>
     public const string UnsupportedFunctionEvent = "NORBIX_FUNCTION_EVENT_UNSUPPORTED";
+
+    /// <summary>
+    /// Gateway code of the password sign-in refusal (HTTP 401) while the
+    /// project requires a verified e-mail address and this user's address is not
+    /// verified yet. Test for it with <see cref="IsEmailNotVerified"/>.
+    /// </summary>
+    public const string EmailNotVerified = "CM-ERRORS-MEMBERSHIP-USERS-052";
+
+    /// <summary>True when <paramref name="error"/> is the "e-mail not verified" sign-in refusal (<see cref="EmailNotVerified"/>).</summary>
+    public static bool IsEmailNotVerified(Exception? error) =>
+        error is NorbixException { IsEmailNotVerified: true };
 }
