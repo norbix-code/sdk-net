@@ -136,6 +136,36 @@ await asUser.Membership.LinkIdentityAsync(
 - PKCE (S256) is optional but strongly recommended: `NorbixPkce.Create()` gives `{ CodeVerifier, CodeChallenge }` (32 random bytes, base64url). A code started with a challenge needs its verifier; a verifier for a code started without one is refused too.
 - Refusals: `CM-ERRORS-MEMBERSHIP-051` (code used, expired or unknown), `-055` (409, the provider account belongs to another user), `-056` (403, not yourself), `-058` (PKCE: `context.Reason` `verifier_missing`, `verifier_wrong` or `challenge_missing`; the code is used up — "start again"), `-059` (the challenge is not a 43-character S256). A refused `returnUrl` sends the browser to the mode's failure page with `error=return_url_not_allowed`.
 
+### E-mail address verification
+
+A project can ask users who sign up with an e-mail and a password to confirm their address. Norbix sends a link to the project's "confirm your e-mail" page (Hub setting `UserVerificationCallback`) with `#token=…` after it; that page confirms the token. Both calls are public: no API key or user token is needed, and none is demanded.
+
+```csharp
+// The confirm page: the token is the part after #token= in the link.
+var verified = await client.Membership.VerifyEmailAddressAsync(
+    new VerifyEmailAddressRequest { Token = token });
+// verified.AuthId, verified.VerifiedAtUtc
+
+// "Send the link again" — always answers OK, so it never tells whether the address exists.
+await client.Membership.ResendEmailAddressVerificationAsync(
+    new ResendEmailAddressVerificationRequest { Email = "ada@example.com" });
+
+// While the project requires a verified address (Hub setting `RequireEmailVerification`),
+// a password sign-in of an unverified user is refused: HTTP 401, CM-ERRORS-MEMBERSHIP-USERS-052.
+try
+{
+    await client.LoginAsync(new() { UserName = "ada@example.com", Password = password });
+}
+catch (NorbixException ex) when (ex.IsEmailNotVerified)
+{
+    // show "check your inbox" and offer ResendEmailAddressVerificationAsync
+}
+```
+
+- `NorbixErrorCodes.EmailNotVerified` is `"CM-ERRORS-MEMBERSHIP-USERS-052"`; `NorbixErrorCodes.IsEmailNotVerified(exception)` is the same test for any `Exception`.
+- `VerifyEmailAddressAsync` refusals: `CM-ERRORS-MEMBERSHIP-USERS-051` (the link is invalid, expired, already used or replaced by a newer one) and `-049` (the link belongs to another environment).
+- `DatabaseIntegrationId` is optional on both requests; the default is the request environment's default integration.
+
 ## Configuration from Environment
 
 Any field you do not set on `NorbixClientOptions` is read from environment variables.
@@ -391,7 +421,7 @@ public sealed class OrdersController(NorbixApiClient norbix) : ControllerBase
 
 The public endpoint surface is generated from gateway DTOs at compile time. The test snapshots in `tests/Norbix.Sdk.Tests/test_results` verify every generated module by sending a request and deserializing a representative response.
 
-### API — project-scoped data (98 endpoints)
+### API — project-scoped data (100 endpoints)
 
 | Module | Endpoints | Description |
 | --- | ---: | --- |
@@ -401,7 +431,7 @@ The public endpoint surface is generated from gateway DTOs at compile time. The 
 | `echo` | 1 | Smoke-test echo endpoint. |
 | `files` | 13 | List, info, signed URL, upload URL + commit, download, delete one / many, public links, and a file by its stored id (`GetFileByIdAsync`). |
 | `logs` | 1 | `WriteLogsAsync` sends your app's own log entries to the project's logs: 1–100 `WriteLogEntry` per call (`Title` up to 200 characters; optional `Level` `information` / `warning` / `error`, `Message`, `EventCode` stored as `app:<code>`, `CorrelationId`, `Timestamp`, `Meta` up to 20 keys). It answers `Accepted` at once — the entries are queued. Over the project's per-minute quota it throws `NorbixException` with `HttpStatus` 429 and `CM-ERRORS-LOGGING-003`; `RetryAfterSeconds` says how many seconds to wait before sending again (the SDK never resends a POST itself); `CM-ERRORS-LOGGING-002` means the Logs module is off. |
-| `membership` | 18 | User CRUD, registration, preferences, roles, and permissions; social sign-in (`ExchangeSocialSignInCodeAsync`) and linking a social account (`StartLinkIdentityAsync`, `LinkIdentityAsync`). See [Social sign-in](#social-sign-in). |
+| `membership` | 20 | User CRUD, registration, preferences, roles, and permissions; social sign-in (`ExchangeSocialSignInCodeAsync`) and linking a social account (`StartLinkIdentityAsync`, `LinkIdentityAsync`); e-mail address verification (`VerifyEmailAddressAsync`, `ResendEmailAddressVerificationAsync`). See [Social sign-in](#social-sign-in) and [E-mail address verification](#e-mail-address-verification). |
 | `payments` | 4 | Payment orders and checkout: `CreatePaymentOrderAsync`, `GetPaymentOrderAsync`, `GetPaymentOrdersAsync`, `StartPaymentCheckoutAsync`. See [Payment orders and checkout](#payment-orders-and-checkout). |
 | `public` | 3 | The project's public config, legal documents and brand logo / icon, read by the Admin Portal before sign-in with no credentials (`GetPublicProjectConfigAsync`, `GetPublicProjectLegalAsync`, `GetPublicProjectBrandAssetAsync`). See [docs/hub/project.md](./docs/hub/project.md#public-config-and-legal-no-sign-in). |
 

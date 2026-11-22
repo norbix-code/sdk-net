@@ -1,0 +1,13 @@
+﻿{
+  Method: POST,
+  Path: /v2/membership/userauth/email-verification/confirm,
+  Headers: {
+    Authorization: Bearer test-api-key,
+    Content-Type: application/json; charset=utf-8,
+    norbix-project-id: test-project
+  },
+  Body: {
+    token: tok-1,
+    databaseIntegrationId: int_db
+  }
+}
