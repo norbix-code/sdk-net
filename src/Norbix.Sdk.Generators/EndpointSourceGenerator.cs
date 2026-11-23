@@ -266,6 +266,7 @@ public sealed class EndpointSourceGenerator : IIncrementalGenerator
             .Where(e => !e.Routes.All(r => r.Path.StartsWith("/internal/", StringComparison.Ordinal)))
             .Where(e => !IsBrowserNavigation(e))
             .Where(e => !IsWebsiteServerOnly(e))
+            .Where(e => !IsMultipartUpload(e))
             .ToImmutableArray();
 
         var apiEndpoints = endpoints.Where(e => e.Target == EndpointTarget.Api).ToImmutableArray();
@@ -378,6 +379,11 @@ public sealed class EndpointSourceGenerator : IIncrementalGenerator
 
     // The trial waiting-list intake is called only by the norbix.ai website
     // server with a shared key header; it is not SDK surface.
+    // A multipart file upload cannot be sent as JSON: the client has a
+    // hand-written method for it (NorbixHubClient.Support.cs).
+    private static bool IsMultipartUpload(EndpointModel e) =>
+        e.Routes.All(r => r.Path == "/{version}/support/cases/{CaseId}/attachments" && r.Verbs.Contains("POST"));
+
     private static bool IsWebsiteServerOnly(EndpointModel e) =>
         e.Routes.All(r => r.Path == "/{version}/account/trial-waitlist/intake");
 

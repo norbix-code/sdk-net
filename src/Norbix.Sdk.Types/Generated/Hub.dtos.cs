@@ -580,6 +580,15 @@ namespace Norbix.Sdk.Types.Hub;
         S4 = 4,
     }
 
+    public enum SupportCaseSource
+    {
+        Cloud,
+        Api,
+        Cli,
+        Sdk,
+        Mcp,
+    }
+
     public enum SupportCaseStatus
     {
         Open,
@@ -749,6 +758,7 @@ namespace Norbix.Sdk.Types.Hub;
         Fake,
     }
 
+    [NorbixRoute("/internal/_typegen", "GET")]
     public partial class InternalsTypeGen
     {
         public virtual SmtpEmailIntegrationRequest? Typegen_0_SmtpEmailIntegrationRequest { get; set; }
@@ -1844,6 +1854,9 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember]
         public virtual int UsersCount { get; set; }
+
+        [DataMember]
+        public virtual FileResourceRefDto? Icon { get; set; }
     }
 
     public partial class ProjectRegionDto
@@ -9529,6 +9542,23 @@ namespace Norbix.Sdk.Types.Hub;
     }
 
     [DataContract]
+    public partial class StartPaymentsIntegrationTestPaymentResponse
+        : ResponseBase
+    {
+        [DataMember]
+        public virtual string? PayUrl { get; set; }
+
+        [DataMember]
+        public virtual string? Reference { get; set; }
+
+        [DataMember]
+        public virtual long AmountMinor { get; set; }
+
+        [DataMember]
+        public virtual string? Currency { get; set; }
+    }
+
+    [DataContract]
     public partial class TestCodeIntegrationResponse
         : ResponseBase
     {
@@ -9827,6 +9857,40 @@ namespace Norbix.Sdk.Types.Hub;
     }
 
     [DataContract]
+    public partial class SupportCaseAttachmentDto
+    {
+        [DataMember]
+        public virtual string Id { get; set; }
+
+        [DataMember]
+        public virtual string CaseId { get; set; }
+
+        [DataMember]
+        public virtual string FileName { get; set; }
+
+        [DataMember]
+        public virtual long SizeBytes { get; set; }
+
+        [DataMember]
+        public virtual string ContentType { get; set; }
+
+        [DataMember]
+        public virtual SupportMessageAuthorKind AddedByKind { get; set; }
+
+        [DataMember]
+        public virtual string? AddedById { get; set; }
+
+        [DataMember]
+        public virtual long AddedOn { get; set; }
+
+        [DataMember]
+        public virtual bool AddedByYou { get; set; }
+
+        [DataMember]
+        public virtual bool CanDelete { get; set; }
+    }
+
+    [DataContract]
     public partial class SupportCaseDetailDto
     {
         [DataMember]
@@ -9834,6 +9898,9 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember]
         public virtual List<SupportCaseMessageDto> Messages { get; set; } = [];
+
+        [DataMember]
+        public virtual List<SupportCaseAttachmentDto> Attachments { get; set; } = [];
     }
 
     [DataContract]
@@ -9898,6 +9965,21 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual string? Resolution { get; set; }
 
         [DataMember]
+        public virtual string? AssigneeId { get; set; }
+
+        [DataMember]
+        public virtual string? AssigneeName { get; set; }
+
+        [DataMember]
+        public virtual SupportCaseSource? Source { get; set; }
+
+        [DataMember]
+        public virtual bool Automatic { get; set; }
+
+        [DataMember]
+        public virtual string? ReportedBy { get; set; }
+
+        [DataMember]
         public virtual int MessageCount { get; set; }
 
         [DataMember]
@@ -9905,6 +9987,15 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember]
         public virtual long? LastMessageOn { get; set; }
+
+        [DataMember]
+        public virtual int AttachmentCount { get; set; }
+
+        [DataMember]
+        public virtual HashSet<string>? AttachmentIds { get; set; }
+
+        [DataMember]
+        public virtual HashSet<string>? RemovedAttachmentIds { get; set; }
     }
 
     [DataContract]
@@ -9940,6 +10031,15 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember]
         public virtual long? LastMessageOn { get; set; }
+
+        [DataMember]
+        public virtual SupportCaseSource? Source { get; set; }
+
+        [DataMember]
+        public virtual bool Automatic { get; set; }
+
+        [DataMember]
+        public virtual int AttachmentCount { get; set; }
     }
 
     [DataContract]
@@ -9965,6 +10065,9 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember]
         public virtual long SentOn { get; set; }
+
+        [DataMember]
+        public virtual Dictionary<string, string>? Evidence { get; set; }
     }
 
     public enum SupportCustomerStatus
@@ -10375,6 +10478,9 @@ namespace Norbix.Sdk.Types.Hub;
     {
         [DataMember]
         public virtual FunctionRefDto? FunctionRef { get; set; }
+
+        [DataMember]
+        public virtual string? RunAsUserId { get; set; }
 
         [DataMember]
         public virtual CodeInvocationType InvocationType { get; set; }
@@ -10795,6 +10901,9 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember]
         public virtual string? TrialInvite { get; set; }
+
+        [DataMember]
+        public virtual bool? Embedded { get; set; }
     }
 
     [DataContract]
@@ -10806,6 +10915,12 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember]
         public virtual string? NoTrialReason { get; set; }
+
+        [DataMember]
+        public virtual string? ClientSecret { get; set; }
+
+        [DataMember]
+        public virtual string? PublishableKey { get; set; }
     }
 
     [NorbixRoute("/{version}/account/team/member", "POST")]
@@ -21594,6 +21709,11 @@ namespace Norbix.Sdk.Types.Hub;
         ///AccessKey: true = I accept that Norbix stores this long-lived secret (required with AuthMode AccessKey; may be omitted otherwise).
         ///</summary>
         public virtual bool? AcceptKeyRisk { get; set; }
+
+        ///<summary>
+        ///Re-save only: true removes the saved key or token. An empty privateKeyOrToken keeps the saved one (review batch 3, D3).
+        ///</summary>
+        public virtual bool? RemovePrivateKeyOrToken { get; set; }
     }
 
     public partial class LemonSqueezyPaymentIntegrationRequest
@@ -21692,6 +21812,27 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual PaymentGatewayPlatform Provider { get; set; }
         public virtual string ShopDomain { get; set; }
         public virtual string WebhookSecret { get; set; }
+    }
+
+    ///<summary>
+    ///Opens a 0.01 test payment at the provider of a payments integration and returns the link to pay it.
+    ///</summary>
+    [NorbixRoute("/{version}/payments/integrations/test-payment", "POST")]
+    [DataContract]
+    public partial class StartPaymentsIntegrationTestPaymentRequest
+        : CodeMashRequestBase, INorbixRequest<StartPaymentsIntegrationTestPaymentResponse>
+    {
+        ///<summary>
+        ///The id of the payments integration to test with a real payment.
+        ///</summary>
+        [DataMember]
+        public virtual string IntegrationId { get; set; }
+
+        ///<summary>
+        ///Where the provider sends the payer back after paying: an absolute https URL (http only for localhost).
+        ///</summary>
+        [DataMember]
+        public virtual string ReturnUrl { get; set; }
     }
 
     public partial class StripePaymentIntegrationRequest
@@ -24095,6 +24236,42 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual string ViewId { get; set; }
     }
 
+    [NorbixRoute("/{version}/support/cases/{CaseId}/attachments", "POST")]
+    public partial class AddSupportCaseAttachmentRequest
+        : RequestBase, INorbixRequest<IdResponse>
+    {
+        public virtual string CaseId { get; set; }
+    }
+
+    [NorbixRoute("/{version}/support/cases/{CaseId}/attachments/{AttachmentId}", "DELETE")]
+    public partial class DeleteSupportCaseAttachmentRequest
+        : RequestBase, INorbixRequest<IdResponse>
+    {
+        public virtual string CaseId { get; set; }
+        public virtual string AttachmentId { get; set; }
+    }
+
+    [NorbixRoute("/{version}/support/cases/{CaseId}/attachments/{AttachmentId}/download", "GET")]
+    public partial class DownloadSupportCaseAttachmentRequest
+        : RequestBase, INorbixRequest<byte[]>
+    {
+        public virtual string CaseId { get; set; }
+        public virtual string AttachmentId { get; set; }
+    }
+
+    [NorbixRoute("/{version}/support/cases/{CaseId}/attachments", "GET")]
+    public partial class GetSupportCaseAttachmentsRequest
+        : RequestBase, INorbixRequest<GetSupportCaseAttachmentsResponse>
+    {
+        public virtual string CaseId { get; set; }
+    }
+
+    public partial class GetSupportCaseAttachmentsResponse
+        : ResponseBase
+    {
+        public virtual List<SupportCaseAttachmentDto>? Result { get; set; }
+    }
+
     [NorbixRoute("/{version}/support/cases/{CaseId}", "GET")]
     public partial class GetSupportCase
         : RequestBase, INorbixRequest<GetSupportCaseResponse>
@@ -24130,6 +24307,50 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual string Subject { get; set; }
         public virtual string Message { get; set; }
         public virtual string? ProjectId { get; set; }
+    }
+
+    ///<summary>
+    ///Report a problem in Norbix itself to Norbix support.
+    ///</summary>
+    [NorbixRoute("/{version}/support/issues", "POST")]
+    [DataContract]
+    public partial class ReportNorbixIssueRequest
+        : RequestBase, INorbixRequest<ReportNorbixIssueResponse>
+    {
+        [DataMember]
+        public virtual string Subject { get; set; }
+
+        [DataMember]
+        public virtual string Message { get; set; }
+
+        [DataMember]
+        public virtual string? Kind { get; set; }
+
+        [DataMember]
+        public virtual string? Severity { get; set; }
+
+        [DataMember]
+        public virtual string? ProjectId { get; set; }
+
+        [DataMember]
+        public virtual string? Source { get; set; }
+
+        [DataMember]
+        public virtual bool? Automatic { get; set; }
+
+        [DataMember]
+        public virtual string? ReportedBy { get; set; }
+
+        [DataMember]
+        public virtual Dictionary<string, string>? Evidence { get; set; }
+    }
+
+    public partial class ReportNorbixIssueResponse
+        : ResponseBase
+    {
+        public virtual string? CaseId { get; set; }
+        public virtual bool AlreadyReported { get; set; }
+        public virtual int TimesReported { get; set; }
     }
 
     [NorbixRoute("/{version}/support/cases/{CaseId}/messages", "POST")]

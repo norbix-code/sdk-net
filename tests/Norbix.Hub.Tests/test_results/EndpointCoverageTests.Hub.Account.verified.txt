@@ -129,13 +129,16 @@
           discountCode: test-discountCode,
           region: test-region,
           withoutTrial: true,
-          trialInvite: test-trialInvite
+          trialInvite: test-trialInvite,
+          embedded: true
         }
       },
       ResponseType: CreateStripeCheckoutSessionResponse,
       Response: {
         TrialIncluded: true,
         NoTrialReason: test-noTrialReason,
+        ClientSecret: test-clientSecret,
+        PublishableKey: test-publishableKey,
         Id: Guid_1,
         Status: test-status,
         Warnings: [

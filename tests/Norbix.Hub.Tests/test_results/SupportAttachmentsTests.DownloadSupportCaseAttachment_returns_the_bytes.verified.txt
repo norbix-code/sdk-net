@@ -1,0 +1,11 @@
+﻿{
+  Sent: {
+    Method: GET,
+    Path: /v2/support/cases/case_1/attachments/supf_1/download,
+    Headers: {
+      Authorization: Bearer test-api-key,
+      norbix-project-id: test-project
+    }
+  },
+  Bytes: AQID
+}

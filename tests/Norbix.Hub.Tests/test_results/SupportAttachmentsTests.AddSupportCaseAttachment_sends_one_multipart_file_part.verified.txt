@@ -1,0 +1,10 @@
+﻿{
+  Method: POST,
+  Path: /v2/support/cases/case_1/attachments,
+  MediaType: multipart/form-data,
+  PartIsNamedFile: true,
+  PartHasFileName: true,
+  PartHasContentType: true,
+  PartHasBytes: true,
+  Id: supf_1
+}
