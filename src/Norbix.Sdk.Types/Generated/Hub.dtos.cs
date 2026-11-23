@@ -7340,6 +7340,14 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual bool RequiresHumanDeliveryConfirmation { get; set; }
     }
 
+    public partial class IntegrationSecretDto
+    {
+        public virtual string Key { get; set; }
+        public virtual string Field { get; set; }
+        public virtual bool IsSet { get; set; }
+        public virtual bool IsOptional { get; set; }
+    }
+
     [DataContract]
     public partial class QuickConnectProviderDto
     {
@@ -15585,6 +15593,66 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual string? Canvas { get; set; }
     }
 
+    [NorbixRoute("/{version}/code/workflows/{Id}/test", "POST")]
+    [DataContract]
+    public partial class TestCodeWorkflow
+        : CodeMashRequestBase, INorbixRequest<InvokeCodeWorkflowResponse>
+    {
+        ///<summary>
+        ///wf_…
+        ///</summary>
+        [DataMember]
+        public virtual string Id { get; set; }
+
+        ///<summary>
+        ///database | membership | manual.
+        ///</summary>
+        [DataMember]
+        public virtual string Source { get; set; }
+
+        ///<summary>
+        ///The event name, e.g. database.record.inserted; absent = inserted (database) or updated (membership).
+        ///</summary>
+        [DataMember]
+        public virtual string? Event { get; set; }
+
+        ///<summary>
+        ///database: the collection the record is in.
+        ///</summary>
+        [DataMember]
+        public virtual string? Collection { get; set; }
+
+        ///<summary>
+        ///database: the record's id.
+        ///</summary>
+        [DataMember]
+        public virtual string? RecordId { get; set; }
+
+        ///<summary>
+        ///membership: the user's id (usr_…).
+        ///</summary>
+        [DataMember]
+        public virtual string? UserId { get; set; }
+
+        ///<summary>
+        ///An update only: fields laid over the record or user as its new state (null removes a field).
+        ///</summary>
+        [DataMember]
+        public virtual Dictionary<string, Object>? Edits { get; set; }
+
+        ///<summary>
+        ///The @Model.Request object; for a manual test it is checked against the definition's inputs.
+        ///</summary>
+        [DataMember]
+        public virtual Dictionary<string, Object>? Payload { get; set; }
+
+        ///<summary>
+        ///"draft" or a version number; absent = the draft when there is one, else the latest published.
+        ///</summary>
+        [DataMember]
+        public virtual string? RunVersion { get; set; }
+    }
+
     ///<summary>
     ///Beta: answers a workflow's waiting step with a one-click link — no sign-in; the run goes on as the workflow's execution identity.
     ///</summary>
@@ -17108,6 +17176,11 @@ namespace Norbix.Sdk.Types.Hub;
         ///Optional MongoDB arrayFilters — a JSON array of filter documents, one per $[name] identifier used in the Update paths, e.g. [{"line.sku":"A-1"}] for {"lines.$[line].qty":3}.
         ///</summary>
         public virtual string? ArrayFilters { get; set; }
+
+        ///<summary>
+        ///Optional condition — a MongoDB extended-JSON filter the record must also match to be changed, e.g. {"revision":4}. When the record exists but does not match, nothing is written and the call fails with CM-ERRORS-DATABASE-070 (409).
+        ///</summary>
+        public virtual string? Condition { get; set; }
     }
 
     [DataContract]
@@ -19745,6 +19818,22 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual List<FileProvider> AvailableProviders { get; set; } = [];
     }
 
+    [NorbixRoute("/{version}/integrations/{IntegrationId}/secrets", "GET")]
+    public partial class GetIntegrationSecrets
+        : CodeMashRequestBase, INorbixRequest<GetIntegrationSecretsResponse>
+    {
+        ///<summary>
+        ///The integration id (any module).
+        ///</summary>
+        public virtual string IntegrationId { get; set; }
+    }
+
+    public partial class GetIntegrationSecretsResponse
+        : ResponseBase
+    {
+        public virtual List<IntegrationSecretDto> Result { get; set; } = [];
+    }
+
     [NorbixRoute("/{version}/integrations/keyless/setup", "GET")]
     public partial class GetKeylessIntegrationSetup
         : CodeMashRequestBase, INorbixRequest<GetKeylessIntegrationSetupResponse>
@@ -19846,6 +19935,21 @@ namespace Norbix.Sdk.Types.Hub;
     {
         public virtual FileProvider Provider { get; set; }
         public virtual string? RootPath { get; set; }
+    }
+
+    [NorbixRoute("/{version}/integrations/{IntegrationId}/secrets/remove", "POST")]
+    public partial class RemoveIntegrationSecretsRequest
+        : CodeMashRequestBase, INorbixRequest<IdResponse>
+    {
+        ///<summary>
+        ///The integration id (any module).
+        ///</summary>
+        public virtual string IntegrationId { get; set; }
+
+        ///<summary>
+        ///Secret keys to remove, as GET /integrations/{integrationId}/secrets lists them (only optional ones).
+        ///</summary>
+        public virtual List<string> Keys { get; set; } = [];
     }
 
     [NorbixRoute("/{version}/files/integrations", "POST")]
