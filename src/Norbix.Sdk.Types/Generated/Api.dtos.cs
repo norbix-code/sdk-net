@@ -934,6 +934,9 @@ namespace Norbix.Sdk.Types.Api;
 
         [DataMember]
         public virtual string? ArrayFilters { get; set; }
+
+        [DataMember]
+        public virtual string? Condition { get; set; }
     }
 
     ///<summary>
@@ -5954,6 +5957,66 @@ namespace Norbix.Sdk.Types.Api;
         ///</summary>
         [DataMember]
         public virtual string? StepId { get; set; }
+    }
+
+    [NorbixRoute("/{version}/code/workflows/{Id}/test", "POST")]
+    [DataContract]
+    public partial class TestCodeWorkflow
+        : CodeMashRequestBase, INorbixRequest<InvokeCodeWorkflowResponse>
+    {
+        ///<summary>
+        ///wf_…
+        ///</summary>
+        [DataMember]
+        public virtual string Id { get; set; }
+
+        ///<summary>
+        ///database | membership | manual.
+        ///</summary>
+        [DataMember]
+        public virtual string Source { get; set; }
+
+        ///<summary>
+        ///The event name, e.g. database.record.inserted; absent = inserted (database) or updated (membership).
+        ///</summary>
+        [DataMember]
+        public virtual string? Event { get; set; }
+
+        ///<summary>
+        ///database: the collection the record is in.
+        ///</summary>
+        [DataMember]
+        public virtual string? Collection { get; set; }
+
+        ///<summary>
+        ///database: the record's id.
+        ///</summary>
+        [DataMember]
+        public virtual string? RecordId { get; set; }
+
+        ///<summary>
+        ///membership: the user's id (usr_…).
+        ///</summary>
+        [DataMember]
+        public virtual string? UserId { get; set; }
+
+        ///<summary>
+        ///An update only: fields laid over the record or user as its new state (null removes a field).
+        ///</summary>
+        [DataMember]
+        public virtual Dictionary<string, Object>? Edits { get; set; }
+
+        ///<summary>
+        ///The @Model.Request object; for a manual test it is checked against the definition's inputs.
+        ///</summary>
+        [DataMember]
+        public virtual Dictionary<string, Object>? Payload { get; set; }
+
+        ///<summary>
+        ///"draft" or a version number; absent = the draft when there is one, else the latest published.
+        ///</summary>
+        [DataMember]
+        public virtual string? RunVersion { get; set; }
     }
 
     ///<summary>

@@ -526,6 +526,7 @@
           databaseIntegrationId: Guid_1,
           update: test-update,
           arrayFilters: test-arrayFilters,
+          condition: test-condition,
           env: test-env
         }
       },

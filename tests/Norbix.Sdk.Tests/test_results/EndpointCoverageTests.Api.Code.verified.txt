@@ -1,7 +1,7 @@
 ﻿{
   Target: Api,
   Group: code,
-  Count: 12,
+  Count: 13,
   Endpoints: [
     {
       Target: Api,
@@ -469,6 +469,73 @@
       },
       ResponseType: WorkflowRunResponse,
       Response: {
+        Run: {
+          RunId: Guid_1,
+          WorkflowId: Guid_1,
+          Version: 7,
+          IsDraft: true,
+          Status: test-status,
+          Source: test-source,
+          StartedBy: {},
+          TriggerId: Guid_1,
+          ExecutionIdentityIsDefault: false
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: code,
+      MethodName: TestCodeWorkflowAsync,
+      RequestType: TestCodeWorkflow,
+      HttpMethod: POST,
+      Path: /{version}/code/workflows/{Id}/test,
+      PathParams: [
+        Id
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/code/workflows/{guid}/test,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        },
+        Body: {
+          source: test-source,
+          event: test-event,
+          collection: test-collection,
+          recordId: Guid_1,
+          userId: Guid_1,
+          edits: {
+            test-key: null
+          },
+          payload: {
+            test-key: null
+          },
+          runVersion: test-runVersion,
+          env: test-env
+        }
+      },
+      ResponseType: InvokeCodeWorkflowResponse,
+      Response: {
+        RunId: Guid_1,
+        Status: test-status,
+        Output: {
+          ValueKind: Object
+        },
+        DurationMs: 42,
+        Error: {
+          Code: test-code,
+          StepId: Guid_1,
+          Reason: test-reason,
+          Message: test-message
+        },
         Run: {
           RunId: Guid_1,
           WorkflowId: Guid_1,
