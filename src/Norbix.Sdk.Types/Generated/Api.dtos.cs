@@ -8,8 +8,8 @@
 #pragma warning disable CS0114, CS1570, CS0102, CS0108, CS0618
 
 using System;
-using System.Collections;
 using System.IO;
+using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using Norbix.Sdk.Types;
@@ -231,6 +231,21 @@ namespace Norbix.Sdk.Types.Api;
     {
         public virtual string? AssistantId { get; set; }
         public virtual string? Title { get; set; }
+    }
+
+    ///<summary>
+    ///Applies or dismisses an action the caller's AI chat held for them.
+    ///</summary>
+    [NorbixRoute("/{version}/ai/chat/sessions/{SessionId}/actions/{EntryId}", "POST")]
+    public partial class DecideEndUserChatActionRequest
+        : CodeMashRequestBase, INorbixRequest<IdResponse>
+    {
+        public virtual string SessionId { get; set; }
+        public virtual string EntryId { get; set; }
+        ///<summary>
+        ///apply (runs the held action once, as you) or dismiss (runs nothing).
+        ///</summary>
+        public virtual string Decision { get; set; }
     }
 
     ///<summary>

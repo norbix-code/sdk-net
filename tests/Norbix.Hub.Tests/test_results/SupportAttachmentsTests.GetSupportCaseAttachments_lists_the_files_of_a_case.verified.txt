@@ -1,0 +1,18 @@
+﻿{
+  Sent: {
+    Method: GET,
+    Path: /v2/support/cases/case_1/attachments,
+    Headers: {
+      Authorization: Bearer test-api-key,
+      norbix-project-id: test-project
+    }
+  },
+  Files: [
+    {
+      Id: supf_1,
+      FileName: app.log,
+      SizeBytes: 8,
+      CanDelete: true
+    }
+  ]
+}

@@ -1,7 +1,7 @@
 ﻿{
   Target: Hub,
   Group: payments,
-  Count: 22,
+  Count: 23,
   Endpoints: [
     {
       Target: Hub,
@@ -298,6 +298,41 @@
         Warnings: [
           test-string
         ],
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: payments,
+      MethodName: StartPaymentsIntegrationTestPaymentAsync,
+      RequestType: StartPaymentsIntegrationTestPaymentRequest,
+      HttpMethod: POST,
+      Path: /{version}/payments/integrations/test-payment,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/payments/integrations/test-payment,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        },
+        Body: {
+          integrationId: Guid_1,
+          returnUrl: https://example.test/returnUrl,
+          env: test-env
+        }
+      },
+      ResponseType: StartPaymentsIntegrationTestPaymentResponse,
+      Response: {
+        PayUrl: https://example.test/payUrl,
+        Reference: test-reference,
+        AmountMinor: 42,
+        Currency: test-currency,
         ResponseStatus: {
           IsSuccess: true
         }

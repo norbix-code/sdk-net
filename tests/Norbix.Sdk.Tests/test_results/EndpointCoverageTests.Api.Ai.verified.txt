@@ -1,7 +1,7 @@
 ﻿{
   Target: Api,
   Group: ai,
-  Count: 18,
+  Count: 19,
   Endpoints: [
     {
       Target: Api,
@@ -57,6 +57,45 @@
         Body: {
           assistantId: Guid_1,
           title: test-title,
+          env: test-env
+        }
+      },
+      ResponseType: IdResponse,
+      Response: {
+        Id: Guid_1,
+        Status: test-status,
+        Warnings: [
+          test-string
+        ],
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Api,
+      Group: ai,
+      MethodName: DecideEndUserChatActionAsync,
+      RequestType: DecideEndUserChatActionRequest,
+      HttpMethod: POST,
+      Path: /{version}/ai/chat/sessions/{SessionId}/actions/{EntryId},
+      PathParams: [
+        SessionId,
+        EntryId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/ai/chat/sessions/{guid}/actions/{guid},
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        },
+        Body: {
+          decision: test-decision,
           env: test-env
         }
       },

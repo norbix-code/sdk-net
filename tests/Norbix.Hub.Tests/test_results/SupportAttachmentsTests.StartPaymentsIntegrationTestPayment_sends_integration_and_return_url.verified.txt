@@ -1,0 +1,19 @@
+﻿{
+  Sent: {
+    Method: POST,
+    Path: /v2/payments/integrations/test-payment,
+    Headers: {
+      Authorization: Bearer test-api-key,
+      Content-Type: application/json; charset=utf-8,
+      norbix-project-id: test-project
+    },
+    Body: {
+      integrationId: int_neopay,
+      returnUrl: https://app.example.test/back
+    }
+  },
+  PayUrl: https://pay.example.test/1,
+  Reference: ref-1,
+  AmountMinor: 1,
+  Currency: EUR
+}

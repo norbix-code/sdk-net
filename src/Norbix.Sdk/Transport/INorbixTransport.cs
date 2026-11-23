@@ -28,6 +28,12 @@ internal readonly struct NorbixRequestSpec
     public object? Request { get; init; }
     public IReadOnlyList<string> PathParams { get; init; }
     public NorbixScope Scope { get; init; }
+
+    /// <summary>
+    /// A ready-made body (a multipart file upload). When set it is sent as it
+    /// is instead of the JSON body; <see cref="Request"/> still fills the path.
+    /// </summary>
+    public HttpContent? Content { get; init; }
 }
 
 internal enum NorbixTarget

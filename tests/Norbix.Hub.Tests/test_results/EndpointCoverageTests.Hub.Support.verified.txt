@@ -1,8 +1,103 @@
 ﻿{
   Target: Hub,
   Group: support,
-  Count: 7,
+  Count: 11,
   Endpoints: [
+    {
+      Target: Hub,
+      Group: support,
+      MethodName: DeleteSupportCaseAttachmentAsync,
+      RequestType: DeleteSupportCaseAttachmentRequest,
+      HttpMethod: DELETE,
+      Path: /{version}/support/cases/{CaseId}/attachments/{AttachmentId},
+      PathParams: [
+        CaseId,
+        AttachmentId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: DELETE,
+        Path: /v2/support/cases/{guid}/attachments/{guid},
+        Headers: {
+          Authorization: Bearer test-bearer,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        }
+      },
+      ResponseType: IdResponse,
+      Response: {
+        Id: Guid_1,
+        Status: test-status,
+        Warnings: [
+          test-string
+        ],
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: support,
+      MethodName: DownloadSupportCaseAttachmentAsync,
+      RequestType: DownloadSupportCaseAttachmentRequest,
+      HttpMethod: GET,
+      Path: /{version}/support/cases/{CaseId}/attachments/{AttachmentId}/download,
+      PathParams: [
+        CaseId,
+        AttachmentId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/support/cases/{guid}/attachments/{guid}/download,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        }
+      },
+      ResponseType: Byte[],
+      Response: {
+        BinaryLength: 49
+      }
+    },
+    {
+      Target: Hub,
+      Group: support,
+      MethodName: GetSupportCaseAttachmentsAsync,
+      RequestType: GetSupportCaseAttachmentsRequest,
+      HttpMethod: GET,
+      Path: /{version}/support/cases/{CaseId}/attachments,
+      PathParams: [
+        CaseId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/support/cases/{guid}/attachments,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        }
+      },
+      ResponseType: GetSupportCaseAttachmentsResponse,
+      Response: {
+        Result: [
+          {
+            AddedByYou: false,
+            CanDelete: false
+          }
+        ],
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
     {
       Target: Hub,
       Group: support,
@@ -27,9 +122,17 @@
       ResponseType: GetSupportCaseResponse,
       Response: {
         Result: {
-          Case: {},
+          Case: {
+            Automatic: false
+          },
           Messages: [
             {}
+          ],
+          Attachments: [
+            {
+              AddedByYou: false,
+              CanDelete: false
+            }
           ]
         },
         ResponseStatus: {
@@ -60,7 +163,9 @@
       Response: {
         List: {
           Items: [
-            {}
+            {
+              Automatic: false
+            }
           ],
           HasMore: false,
           HasPrevious: false,
@@ -104,6 +209,47 @@
         Warnings: [
           test-string
         ],
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: support,
+      MethodName: ReportNorbixIssueAsync,
+      RequestType: ReportNorbixIssueRequest,
+      HttpMethod: POST,
+      Path: /{version}/support/issues,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/support/issues,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        },
+        Body: {
+          subject: test-subject,
+          message: test-message,
+          kind: test-kind,
+          severity: test-severity,
+          source: test-source,
+          automatic: true,
+          reportedBy: test-reportedBy,
+          evidence: {
+            test-key: test-string
+          }
+        }
+      },
+      ResponseType: ReportNorbixIssueResponse,
+      Response: {
+        CaseId: Guid_1,
+        AlreadyReported: true,
+        TimesReported: 7,
         ResponseStatus: {
           IsSuccess: true
         }

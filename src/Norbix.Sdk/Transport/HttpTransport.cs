@@ -177,7 +177,11 @@ internal sealed class HttpTransport : INorbixTransport, IDisposable
             request.Headers.TryAddWithoutValidation(k, v);
         }
 
-        if (body is not null)
+        if (spec.Content is not null)
+        {
+            request.Content = spec.Content;
+        }
+        else if (body is not null)
         {
             request.Content = new StringContent(body, Encoding.UTF8, "application/json");
         }
