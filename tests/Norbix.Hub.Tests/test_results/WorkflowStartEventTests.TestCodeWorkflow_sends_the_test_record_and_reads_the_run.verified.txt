@@ -1,0 +1,24 @@
+﻿{
+  Sent: {
+    Method: POST,
+    Path: /v2/code/workflows/wf_3kQ9mZ2vXc8LpR4wT7yH1n/test,
+    Headers: {
+      Authorization: Bearer test-api-key,
+      Content-Type: application/json; charset=utf-8,
+      norbix-project-id: test-project
+    },
+    Body: {
+      source: database,
+      event: database.record.updated,
+      collection: moto_listings,
+      recordId: rec_1,
+      edits: {
+        status: review
+      }
+    }
+  },
+  Response: {
+    RunId: wfr_4hT2b9QkLm3XcT1yRfGh7a,
+    Status: running
+  }
+}
