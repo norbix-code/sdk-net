@@ -28,11 +28,14 @@
         IsActive: false
       },
       ValidationIntegrationId: Guid_1,
+      AttachmentFileIds: [
+        test-string
+      ],
       TemplateIsSystem: true,
       ViewId: Guid_1,
       CreatedOn: DateTime_1,
       Language: test-language,
-      ForceCampaignLanguage: true
+      ForceCampaignLanguage: false
     },
     ResponseStatus: {
       IsSuccess: true

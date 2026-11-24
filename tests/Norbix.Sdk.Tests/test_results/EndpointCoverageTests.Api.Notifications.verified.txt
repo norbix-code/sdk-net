@@ -336,11 +336,14 @@
             IsActive: false
           },
           ValidationIntegrationId: Guid_1,
+          AttachmentFileIds: [
+            test-string
+          ],
           TemplateIsSystem: true,
           ViewId: Guid_1,
           CreatedOn: DateTime_1,
           Language: test-language,
-          ForceCampaignLanguage: true
+          ForceCampaignLanguage: false
         },
         ResponseStatus: {
           IsSuccess: true
@@ -420,10 +423,12 @@
             {}
           ],
           Content: {},
+          Attachments: [
+            {}
+          ],
           TransactionalKind: test-transactionalKind,
           CampaignId: Guid_1,
-          BatchId: Guid_1,
-          NotificationId: Guid_1
+          BatchId: Guid_1
         },
         ResponseStatus: {
           IsSuccess: true

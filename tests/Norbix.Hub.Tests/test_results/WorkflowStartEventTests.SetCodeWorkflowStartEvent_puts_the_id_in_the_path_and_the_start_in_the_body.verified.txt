@@ -1,0 +1,38 @@
+﻿{
+  Sent: {
+    Method: PUT,
+    Path: /v2/code/workflows/wf_3kQ9mZ2vXc8LpR4wT7yH1n/start-event,
+    Headers: {
+      Authorization: Bearer test-api-key,
+      Content-Type: application/json; charset=utf-8,
+      norbix-project-id: test-project
+    },
+    Body: {
+      start: {
+        source: database,
+        event: database.record.inserted,
+        schema: moto_listings,
+        condition: return New.status == "review";
+      }
+    }
+  },
+  Response: {
+    Workflow: {
+      WorkflowId: wf_3kQ9mZ2vXc8LpR4wT7yH1n,
+      Env: TEST,
+      Definition: {
+        Name: Review new listings,
+        IsEnabled: false,
+        Trigger: {
+          Source: database,
+          Event: database.record.inserted,
+          Schema: moto_listings
+        }
+      },
+      Version: 1,
+      IsPublished: false,
+      HasDraft: true,
+      IsEnabled: false
+    }
+  }
+}

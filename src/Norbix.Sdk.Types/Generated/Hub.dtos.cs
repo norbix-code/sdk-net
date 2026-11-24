@@ -3203,6 +3203,9 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual EmailMessageContentDto? Content { get; set; }
 
         [DataMember]
+        public virtual List<SentAttachmentDto>? Attachments { get; set; }
+
+        [DataMember]
         public virtual string? TransactionalKind { get; set; }
     }
 
@@ -3233,6 +3236,9 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember]
         public virtual string? ValidationIntegrationId { get; set; }
+
+        [DataMember]
+        public virtual List<string>? AttachmentFileIds { get; set; }
 
         [DataMember]
         public virtual bool TemplateIsSystem { get; set; }
@@ -3720,6 +3726,19 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember]
         public virtual string? Tag { get; set; }
+    }
+
+    [DataContract]
+    public partial class SentAttachmentDto
+    {
+        [DataMember]
+        public virtual string FileName { get; set; }
+
+        [DataMember]
+        public virtual long SizeBytes { get; set; }
+
+        [DataMember]
+        public virtual string ContentType { get; set; }
     }
 
     [DataContract]
@@ -4606,6 +4625,7 @@ namespace Norbix.Sdk.Types.Hub;
         Prompt,
         Web,
         MembershipUser,
+        Document,
     }
 
     [DataContract]
@@ -5225,6 +5245,12 @@ namespace Norbix.Sdk.Types.Hub;
         [DataMember]
         public virtual Dictionary<string, Object>? Inputs { get; set; }
 
+        ///<summary>
+        ///Optional: the event that starts the workflow — { source: database | membership | files | payments | ai, event: e.g. database.record.inserted, schema: the collection (database only), condition: optional sandbox code that must return true }. Publishing writes the matching trigger; the trigger screens cannot change it.
+        ///</summary>
+        [DataMember]
+        public virtual WorkflowStartEventDto? Trigger { get; set; }
+
         [DataMember]
         public virtual string? Start { get; set; }
 
@@ -5644,6 +5670,34 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember]
         public virtual List<WorkflowBindingFamilyDto> Bindings { get; set; } = [];
+    }
+
+    [DataContract]
+    public partial class WorkflowStartEventDto
+    {
+        ///<summary>
+        ///database | membership | files | payments | ai.
+        ///</summary>
+        [DataMember]
+        public virtual string Source { get; set; }
+
+        ///<summary>
+        ///The event name, e.g. database.record.inserted, database.record.updated, membership.user.registered, files.file.uploaded, payments.order.paid.
+        ///</summary>
+        [DataMember]
+        public virtual string Event { get; set; }
+
+        ///<summary>
+        ///Database only: the collection (schema unique name).
+        ///</summary>
+        [DataMember]
+        public virtual string? Schema { get; set; }
+
+        ///<summary>
+        ///Optional sandbox code that must return true for a run to start (like a trigger's pre-execute code).
+        ///</summary>
+        [DataMember]
+        public virtual string? Condition { get; set; }
     }
 
     [DataContract]
@@ -10604,6 +10658,9 @@ namespace Norbix.Sdk.Types.Hub;
     public partial class TriggerActionWorkflowDto
         : TriggerActionDto
     {
+        ///<summary>
+        ///The workflow (wf_…). From a trigger screen a Workflow action must have resumeKey (it resumes a waiting run); to START a workflow on an event, set the workflow's start event with set_code_workflow_start_event (PUT /code/workflows/{id}/start-event) and publish — a start saved here is refused (CM-ERRORS-WORKFLOWS-053).
+        ///</summary>
         [DataMember]
         public virtual string? WorkflowRef { get; set; }
 
@@ -10666,6 +10723,9 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember]
         public virtual ExecutionIdentitySummaryDto? ExecutionIdentity { get; set; }
+
+        [DataMember]
+        public virtual string? ManagedByWorkflowId { get; set; }
     }
 
     [DataContract]
@@ -10689,6 +10749,9 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember]
         public virtual string? ExecutionIdentityId { get; set; }
+
+        [DataMember]
+        public virtual string? ManagedByWorkflowId { get; set; }
     }
 
     [DataContract]
@@ -15593,6 +15656,24 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual string? Canvas { get; set; }
     }
 
+    [NorbixRoute("/{version}/code/workflows/{Id}/start-event", "PUT")]
+    [DataContract]
+    public partial class SetCodeWorkflowStartEvent
+        : CodeMashRequestBase, INorbixRequest<WorkflowResponse>
+    {
+        ///<summary>
+        ///wf_…
+        ///</summary>
+        [DataMember]
+        public virtual string Id { get; set; }
+
+        ///<summary>
+        ///{ source, event, schema? (database), condition? }
+        ///</summary>
+        [DataMember]
+        public virtual WorkflowStartEventDto Start { get; set; }
+    }
+
     [NorbixRoute("/{version}/code/workflows/{Id}/test", "POST")]
     [DataContract]
     public partial class TestCodeWorkflow
@@ -18291,6 +18372,9 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember]
         public virtual long? CampaignTime { get; set; }
+
+        [DataMember]
+        public virtual List<string>? Attachments { get; set; }
     }
 
     public partial class EmailToAccountUsersDeliverySettingsRequest

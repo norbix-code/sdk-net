@@ -3494,6 +3494,9 @@ namespace Norbix.Sdk.Types.Api;
         public virtual EmailMessageContentDto? Content { get; set; }
 
         [DataMember]
+        public virtual List<SentAttachmentDto>? Attachments { get; set; }
+
+        [DataMember]
         public virtual string? TransactionalKind { get; set; }
     }
 
@@ -3524,6 +3527,9 @@ namespace Norbix.Sdk.Types.Api;
 
         [DataMember]
         public virtual string? ValidationIntegrationId { get; set; }
+
+        [DataMember]
+        public virtual List<string>? AttachmentFileIds { get; set; }
 
         [DataMember]
         public virtual bool TemplateIsSystem { get; set; }
@@ -3832,6 +3838,19 @@ namespace Norbix.Sdk.Types.Api;
 
         [DataMember]
         public virtual string? Tag { get; set; }
+    }
+
+    [DataContract]
+    public partial class SentAttachmentDto
+    {
+        [DataMember]
+        public virtual string FileName { get; set; }
+
+        [DataMember]
+        public virtual long SizeBytes { get; set; }
+
+        [DataMember]
+        public virtual string ContentType { get; set; }
     }
 
     [DataContract]
@@ -5633,6 +5652,9 @@ namespace Norbix.Sdk.Types.Api;
 
         [DataMember]
         public virtual ExecutionIdentitySummaryDto? ExecutionIdentity { get; set; }
+
+        [DataMember]
+        public virtual string? ManagedByWorkflowId { get; set; }
     }
 
     [NorbixRoute("/{version}/code/marketplace/functions/{FunctionViewId}/invoke", "POST")]
@@ -6621,6 +6643,9 @@ namespace Norbix.Sdk.Types.Api;
 
         [DataMember]
         public virtual long? CampaignTime { get; set; }
+
+        [DataMember]
+        public virtual List<string>? Attachments { get; set; }
     }
 
     ///<summary>
