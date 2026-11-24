@@ -2227,7 +2227,18 @@
           ],
           Bindings: [
             {}
-          ]
+          ],
+          Formats: [
+            {}
+          ],
+          StartEvents: [
+            {}
+          ],
+          TriggerSchemas: {
+            sample-key: {
+              ValueKind: Object
+            }
+          }
         },
         ResponseStatus: {
           IsSuccess: true
@@ -2932,6 +2943,13 @@
         Warnings: [
           {}
         ],
+        Ports: {
+          Start: {},
+          StartEvent: test-startEvent,
+          Steps: [
+            {}
+          ]
+        },
         ResponseStatus: {
           IsSuccess: true
         }
