@@ -54,6 +54,7 @@
       ResponseType: PublicProjectConfigDto,
       Response: {
         DisplayName: test-displayName,
+        WebsiteUrl: https://example.test/websiteUrl,
         Branding: {
           DisplayName: test-displayName,
           MainColor: test-mainColor,

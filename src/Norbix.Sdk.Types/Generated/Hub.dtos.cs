@@ -758,7 +758,6 @@ namespace Norbix.Sdk.Types.Hub;
         Fake,
     }
 
-    [NorbixRoute("/internal/_typegen", "GET")]
     public partial class InternalsTypeGen
     {
         public virtual SmtpEmailIntegrationRequest? Typegen_0_SmtpEmailIntegrationRequest { get; set; }
@@ -1935,6 +1934,7 @@ namespace Norbix.Sdk.Types.Hub;
     public partial class PublicProjectConfigDto
     {
         public virtual string DisplayName { get; set; }
+        public virtual string? WebsiteUrl { get; set; }
         public virtual PublicBrandDto? Branding { get; set; }
         public virtual PublicAuthDto Auth { get; set; }
         public virtual PublicAiChatDto AiChat { get; set; }
@@ -5320,6 +5320,19 @@ namespace Norbix.Sdk.Types.Hub;
     }
 
     [DataContract]
+    public partial class WorkflowFormatDto
+    {
+        [DataMember]
+        public virtual string Id { get; set; }
+
+        [DataMember]
+        public virtual string Label { get; set; }
+
+        [DataMember]
+        public virtual string Description { get; set; }
+    }
+
+    [DataContract]
     public partial class WorkflowLastRunDto
     {
         [DataMember]
@@ -5436,6 +5449,77 @@ namespace Norbix.Sdk.Types.Hub;
         ///</summary>
         [DataMember]
         public virtual string? Goto { get; set; }
+    }
+
+    [DataContract]
+    public partial class WorkflowPortInputDto
+    {
+        [DataMember]
+        public virtual string From { get; set; }
+
+        [DataMember]
+        public virtual string Exit { get; set; }
+
+        [DataMember]
+        public virtual string Format { get; set; }
+
+        [DataMember]
+        public virtual string? Collection { get; set; }
+    }
+
+    [DataContract]
+    public partial class WorkflowPortOutputDto
+    {
+        [DataMember]
+        public virtual string Format { get; set; }
+
+        [DataMember]
+        public virtual string? Collection { get; set; }
+
+        [DataMember]
+        public virtual List<string> Choices { get; set; } = [];
+
+        [DataMember]
+        public virtual string? Description { get; set; }
+
+        [DataMember]
+        public virtual string? Value { get; set; }
+    }
+
+    [DataContract]
+    public partial class WorkflowPortsDto
+    {
+        [DataMember]
+        public virtual WorkflowPortOutputDto Start { get; set; }
+
+        [DataMember]
+        public virtual string? StartEvent { get; set; }
+
+        [DataMember]
+        public virtual List<WorkflowStepPortsDto> Steps { get; set; } = [];
+    }
+
+    [DataContract]
+    public partial class WorkflowPortTakeDto
+    {
+        [DataMember]
+        public virtual string Field { get; set; }
+
+        [DataMember]
+        public virtual List<string> Accepts { get; set; } = [];
+    }
+
+    [DataContract]
+    public partial class WorkflowPortUsedDto
+    {
+        [DataMember]
+        public virtual string StepId { get; set; }
+
+        [DataMember]
+        public virtual string Format { get; set; }
+
+        [DataMember]
+        public virtual string? Collection { get; set; }
     }
 
     [DataContract]
@@ -5670,6 +5754,15 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember]
         public virtual List<WorkflowBindingFamilyDto> Bindings { get; set; } = [];
+
+        [DataMember]
+        public virtual List<WorkflowFormatDto> Formats { get; set; } = [];
+
+        [DataMember]
+        public virtual List<WorkflowStartOutputDto> StartEvents { get; set; } = [];
+
+        [DataMember]
+        public virtual Dictionary<string, Object> TriggerSchemas { get; set; } = new();
     }
 
     [DataContract]
@@ -5698,6 +5791,25 @@ namespace Norbix.Sdk.Types.Hub;
         ///</summary>
         [DataMember]
         public virtual string? Condition { get; set; }
+    }
+
+    [DataContract]
+    public partial class WorkflowStartOutputDto
+    {
+        [DataMember]
+        public virtual string Source { get; set; }
+
+        [DataMember]
+        public virtual string? Event { get; set; }
+
+        [DataMember]
+        public virtual string Format { get; set; }
+
+        [DataMember]
+        public virtual List<string> Reads { get; set; } = [];
+
+        [DataMember]
+        public virtual string Description { get; set; }
     }
 
     [DataContract]
@@ -5758,6 +5870,12 @@ namespace Norbix.Sdk.Types.Hub;
         [DataMember]
         public virtual string? OnTimeout { get; set; }
 
+        ///<summary>
+        ///The earlier steps whose output this step also uses, beside its input (the output of the step it was reached from, @Model.Input): step ids. The step reads each as @Model.Steps.<id>.Output; the run keeps every step's output, so nothing has to be carried along.
+        ///</summary>
+        [DataMember]
+        public virtual List<string>? Uses { get; set; }
+
         [DataMember]
         public virtual WorkflowStepRetryDto? Retry { get; set; }
 
@@ -5799,7 +5917,32 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual Dictionary<string, Object>? OutputSchema { get; set; }
 
         [DataMember]
+        public virtual List<string> OutputFormats { get; set; } = [];
+
+        [DataMember]
+        public virtual string? OutputDescription { get; set; }
+
+        [DataMember]
         public virtual List<string> Requires { get; set; } = [];
+    }
+
+    [DataContract]
+    public partial class WorkflowStepPortsDto
+    {
+        [DataMember]
+        public virtual string StepId { get; set; }
+
+        [DataMember]
+        public virtual List<WorkflowPortInputDto> Inputs { get; set; } = [];
+
+        [DataMember]
+        public virtual WorkflowPortOutputDto Output { get; set; }
+
+        [DataMember]
+        public virtual List<WorkflowPortUsedDto> Uses { get; set; } = [];
+
+        [DataMember]
+        public virtual List<WorkflowPortTakeDto> Takes { get; set; } = [];
     }
 
     [DataContract]
@@ -10540,9 +10683,6 @@ namespace Norbix.Sdk.Types.Hub;
     {
         [DataMember]
         public virtual FunctionRefDto? FunctionRef { get; set; }
-
-        [DataMember]
-        public virtual string? RunAsUserId { get; set; }
 
         [DataMember]
         public virtual CodeInvocationType InvocationType { get; set; }
@@ -15770,6 +15910,9 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember]
         public virtual List<WorkflowValidationIssueDto> Warnings { get; set; } = [];
+
+        [DataMember]
+        public virtual WorkflowPortsDto? Ports { get; set; }
     }
 
     [DataContract]

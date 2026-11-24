@@ -1,0 +1,112 @@
+﻿{
+  Sent: {
+    Method: POST,
+    Path: /v2/code/workflows/validate,
+    Headers: {
+      Authorization: Bearer test-api-key,
+      Content-Type: application/json; charset=utf-8,
+      norbix-project-id: test-project
+    },
+    Body: {
+      definition: {
+        name: Ad check,
+        isEnabled: false,
+        trigger: {
+          source: database,
+          event: database.record.inserted,
+          schema: ads
+        },
+        steps: [
+          {
+            id: checkAd,
+            kind: ai.invoke,
+            next: decide,
+            config: {
+              prompt: Is this ad fine?,
+              context: @Model.Input,
+              contextExclude: [
+                ownerPhone
+              ],
+              reask: 1.0
+            }
+          },
+          {
+            id: approve,
+            kind: database.update,
+            uses: [
+              checkAd
+            ]
+          }
+        ]
+      }
+    }
+  },
+  Response: {
+    IsValid: true,
+    Ports: {
+      Start: {
+        Format: record,
+        Collection: ads,
+        Choices: [
+          record
+        ]
+      },
+      StartEvent: database.record.inserted,
+      Steps: [
+        {
+          StepId: checkAd,
+          Inputs: [
+            {
+              From: start,
+              Exit: start,
+              Format: record,
+              Collection: ads
+            }
+          ],
+          Output: {
+            Format: json,
+            Choices: [
+              text,
+              json
+            ],
+            Value: json
+          },
+          Takes: [
+            {
+              Field: config.context,
+              Accepts: [
+                text,
+                json,
+                record,
+                records,
+                event
+              ]
+            }
+          ]
+        },
+        {
+          StepId: approve,
+          Inputs: [
+            {
+              From: decide,
+              Exit: then,
+              Format: boolean
+            }
+          ],
+          Output: {
+            Format: json,
+            Choices: [
+              json
+            ]
+          },
+          Uses: [
+            {
+              StepId: checkAd,
+              Format: json
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

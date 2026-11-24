@@ -8,8 +8,8 @@
 #pragma warning disable CS0114, CS1570, CS0102, CS0108, CS0618
 
 using System;
-using System.IO;
 using System.Collections;
+using System.IO;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using Norbix.Sdk.Types;
@@ -3245,6 +3245,7 @@ namespace Norbix.Sdk.Types.Api;
     public partial class PublicProjectConfigDto
     {
         public virtual string DisplayName { get; set; }
+        public virtual string? WebsiteUrl { get; set; }
         public virtual PublicBrandDto? Branding { get; set; }
         public virtual PublicAuthDto Auth { get; set; }
         public virtual PublicAiChatDto AiChat { get; set; }
