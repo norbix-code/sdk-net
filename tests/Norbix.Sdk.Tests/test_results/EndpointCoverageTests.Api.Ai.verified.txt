@@ -267,8 +267,7 @@
           Used: 42,
           Remaining: 42,
           Attachments: true,
-          Rag: true,
-          Memory: false
+          Memory: true
         },
         ResponseStatus: {
           IsSuccess: true

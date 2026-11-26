@@ -180,7 +180,7 @@
       Sent: {
         Method: GET,
         Path: /v2/code/workflows/{guid}/runs,
-        Query: ?status=test-status&from=2026-04-27T12%3a00%3a00.0000000Z&to=2026-04-27T12%3a00%3a00.0000000Z&env=test-env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1,
+        Query: ?status=test-status&from=2026-04-27T12%3a00%3a00.0000000Z&to=2026-04-27T12%3a00%3a00.0000000Z&workflowVersion=1&env=test-env&startingAfter=test-startingAfter&endingBefore=test-endingBefore&pageSize=1,
         Headers: {
           Authorization: Bearer test-bearer,
           norbix-account-id: test-account,

@@ -1,7 +1,7 @@
 ﻿{
   Target: Hub,
   Group: account,
-  Count: 134,
+  Count: 136,
   Endpoints: [
     {
       Target: Hub,
@@ -889,6 +889,68 @@
       },
       ResponseType: EmptyResponse,
       Response: {
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: account,
+      MethodName: OpenOnboardingEmailsLinkAsync,
+      RequestType: OpenOnboardingEmailsLink,
+      HttpMethod: GET,
+      Path: /{version}/account/emails/onboarding/{Token},
+      PathParams: [
+        Token
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/account/emails/onboarding/test-token,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        }
+      },
+      ResponseType: OnboardingEmailsResponse,
+      Response: {
+        Stopped: true,
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: account,
+      MethodName: UseOnboardingEmailsLinkAsync,
+      RequestType: UseOnboardingEmailsLink,
+      HttpMethod: POST,
+      Path: /{version}/account/emails/onboarding/{Token},
+      PathParams: [
+        Token
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: POST,
+        Path: /v2/account/emails/onboarding/test-token,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          Content-Type: application/json; charset=utf-8,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        },
+        Body: {
+          action: test-action
+        }
+      },
+      ResponseType: OnboardingEmailsResponse,
+      Response: {
+        Stopped: true,
         ResponseStatus: {
           IsSuccess: true
         }
@@ -2066,6 +2128,44 @@
     {
       Target: Hub,
       Group: account,
+      MethodName: GetTeamMemberAsync,
+      RequestType: GetTeamMember,
+      HttpMethod: GET,
+      Path: /{version}/account/team/member/{MemberId},
+      PathParams: [
+        MemberId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/account/team/member/{guid},
+        Headers: {
+          Authorization: Bearer test-bearer,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        }
+      },
+      ResponseType: GetTeamMemberResponse,
+      Response: {
+        Item: {
+          Id: Guid_1,
+          Email: user@example.test,
+          DisplayName: test-displayName,
+          FirstName: test-firstName,
+          LastName: test-lastName,
+          FullName: test-fullName,
+          Phone: test-phone,
+          IsAccountOwner: false
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: account,
       MethodName: RemoveTeamMemberAsync,
       RequestType: RemoveTeamMember,
       HttpMethod: DELETE,
@@ -2302,7 +2402,8 @@
           displayName: test-displayName,
           roles: [
             null
-          ]
+          ],
+          phone: test-phone
         }
       },
       ResponseType: IdResponse,
@@ -2616,7 +2717,7 @@
       Sent: {
         Method: GET,
         Path: /v2/account/projects/{guid}/health,
-        Query: ?refresh=True&periodDays=1&env=test-env,
+        Query: ?refresh=True&periodDays=1&severity=Warning&module=Account&pageNumber=1&pageSize=1&env=test-env,
         Headers: {
           Authorization: Bearer test-bearer,
           norbix-account-id: test-account,
@@ -2631,6 +2732,9 @@
           Warnings: [
             {}
           ],
+          WarningsTotal: 7,
+          PageNumber: 7,
+          PageSize: 7,
           Stats: {},
           SkippedChecks: [
             {}
@@ -3345,40 +3449,6 @@
             {}
           ],
           Wallet: {}
-        },
-        ResponseStatus: {
-          IsSuccess: true
-        }
-      }
-    },
-    {
-      Target: Hub,
-      Group: account,
-      MethodName: GetProjectAiUserPlansAsync,
-      RequestType: GetProjectAiUserPlans,
-      HttpMethod: GET,
-      Path: /{version}/account/projects/{projectId}/ai/plans/users,
-      PathParams: [
-        projectId
-      ],
-      IsAccountScoped: false,
-      IsUnauthenticated: false,
-      Sent: {
-        Method: GET,
-        Path: /v2/account/projects/{guid}/ai/plans/users,
-        Query: ?env=test-env,
-        Headers: {
-          Authorization: Bearer test-bearer,
-          norbix-account-id: test-account,
-          norbix-project-id: test-project
-        }
-      },
-      ResponseType: GetProjectAiUserPlansResponse,
-      Response: {
-        Result: {
-          Users: [
-            {}
-          ]
         },
         ResponseStatus: {
           IsSuccess: true
