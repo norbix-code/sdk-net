@@ -40,6 +40,12 @@ internal sealed class HttpTransport : INorbixTransport, IDisposable
                 new EventId(1100, nameof(RequestTimedOut)),
                 "Norbix request timed out {Method} {Url}");
 
+        public static readonly Action<ILogger, Exception?> SessionTokenCallbackFailed =
+            LoggerMessage.Define(
+                LogLevel.Warning,
+                new EventId(1102, nameof(SessionTokenCallbackFailed)),
+                "Norbix OnSessionToken callback threw; the new token is still in use");
+
         public static readonly Action<ILogger, string, string, Exception?> NetworkError =
             LoggerMessage.Define<string, string>(
                 LogLevel.Warning,
@@ -106,13 +112,16 @@ internal sealed class HttpTransport : INorbixTransport, IDisposable
         using var request = new HttpRequestMessage(new HttpMethod(spec.Method), url);
         var started = System.Diagnostics.Stopwatch.GetTimestamp();
 
+        // The user JWT this call carries, if any: only then may an answer's
+        // norbix-session-token header replace it.
+        string? sentBearer = null;
+
         if (spec.Scope == NorbixScope.Optional)
         {
             // Public link routes: the link itself is the key. Send a token
             // when there is one (a signed-in caller), never demand one.
-            var optionalToken = !string.IsNullOrEmpty(_options.BearerToken)
-                ? _options.BearerToken
-                : _options.ApiKey;
+            sentBearer = NullIfEmpty(_options.BearerToken);
+            var optionalToken = sentBearer ?? _options.ApiKey;
             if (!string.IsNullOrEmpty(optionalToken))
             {
                 request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", optionalToken);
@@ -120,9 +129,8 @@ internal sealed class HttpTransport : INorbixTransport, IDisposable
         }
         else if (spec.Scope != NorbixScope.Unauthenticated)
         {
-            var token = !string.IsNullOrEmpty(_options.BearerToken)
-                ? _options.BearerToken
-                : _options.ApiKey;
+            sentBearer = NullIfEmpty(_options.BearerToken);
+            var token = sentBearer ?? _options.ApiKey;
             if (string.IsNullOrEmpty(token))
             {
                 throw new NorbixException(
@@ -229,6 +237,8 @@ internal sealed class HttpTransport : INorbixTransport, IDisposable
             }
         }
 
+        ApplySessionToken(response, sentBearer);
+
         await using var stream = await response.Content.ReadAsStreamAsync(cancellationToken)
             .ConfigureAwait(false);
 
@@ -299,6 +309,47 @@ internal sealed class HttpTransport : INorbixTransport, IDisposable
                 innerException: ex);
         }
     }
+
+    /// <summary>The answer header with a renewed user JWT (gateway D18).</summary>
+    internal const string SessionTokenHeader = "norbix-session-token";
+
+    private readonly object _sessionTokenLock = new();
+
+    /// <summary>
+    /// When the answer carries <c>norbix-session-token</c> and this call sent
+    /// the client's own JWT (<paramref name="sentBearer"/>), the header value
+    /// replaces <see cref="NorbixClientOptions.BearerToken"/> and
+    /// <see cref="NorbixClientOptions.OnSessionToken"/> is called with it.
+    /// An API-key call, an empty value, or a token already changed by another
+    /// call in the meantime leaves everything as it is.
+    /// </summary>
+    private void ApplySessionToken(HttpResponseMessage response, string? sentBearer)
+    {
+        if (sentBearer is null) return;
+        if (!response.Headers.TryGetValues(SessionTokenHeader, out var values)) return;
+        var fresh = values.Select(v => v.Trim()).FirstOrDefault(v => v.Length > 0);
+        if (fresh is null || fresh == sentBearer) return;
+
+        lock (_sessionTokenLock)
+        {
+            if (!string.Equals(_options.BearerToken, sentBearer, StringComparison.Ordinal)) return;
+            _options.BearerToken = fresh;
+        }
+
+        try
+        {
+            _options.OnSessionToken?.Invoke(fresh);
+        }
+        catch (Exception ex)
+        {
+            if (_logger is { } logger && logger.IsEnabled(LogLevel.Warning))
+            {
+                Log.SessionTokenCallbackFailed(logger, ex);
+            }
+        }
+    }
+
+    private static string? NullIfEmpty(string? s) => string.IsNullOrEmpty(s) ? null : s;
 
     /// <summary>
     /// <c>true</c> when the body carries <c>responseStatus.isSuccess = false</c>.
@@ -440,7 +491,8 @@ internal sealed class HttpTransport : INorbixTransport, IDisposable
             url = $"{url}?{qs}";
         }
 
-        var token = !string.IsNullOrEmpty(_options.BearerToken) ? _options.BearerToken : _options.ApiKey;
+        var sentBearer = NullIfEmpty(_options.BearerToken);
+        var token = sentBearer ?? _options.ApiKey;
         if (string.IsNullOrEmpty(token))
         {
             throw new NorbixException(
@@ -483,6 +535,7 @@ internal sealed class HttpTransport : INorbixTransport, IDisposable
 
         using (response)
         {
+            ApplySessionToken(response, sentBearer);
             await using var stream = await response.Content.ReadAsStreamAsync(cancellationToken).ConfigureAwait(false);
             if (!response.IsSuccessStatusCode)
             {

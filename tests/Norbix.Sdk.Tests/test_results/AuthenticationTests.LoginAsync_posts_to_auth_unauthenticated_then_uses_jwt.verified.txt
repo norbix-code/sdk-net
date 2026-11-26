@@ -22,7 +22,8 @@
       Body: {
         provider: credentials,
         userName: alice,
-        password: secret
+        password: secret,
+        rememberMe: false
       }
     },
     {

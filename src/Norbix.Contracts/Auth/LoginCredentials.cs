@@ -12,6 +12,11 @@ public sealed class LoginCredentials
 
     public string? UserName { get; set; }
     public string? Password { get; set; }
+    /// <summary>
+    /// Keep the user signed in for longer. <c>false</c> (the default, sent
+    /// when empty): the sign-in lasts 12 hours, sliding. <c>true</c>: 30 days,
+    /// sliding. Never more than 90 days from the sign-in.
+    /// </summary>
     public bool? RememberMe { get; set; }
 
     /// <summary>OAuth-style access token + secret, used for federated providers.</summary>

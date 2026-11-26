@@ -222,7 +222,10 @@ public sealed partial class NorbixApiClient : IDisposable, IAsyncDisposable
     /// <summary>
     /// Exchange credentials for a JWT bearer token. On success, the token is
     /// returned to the caller. Use <see cref="WithBearerToken"/> to create an
-    /// authenticated client for follow-up calls.
+    /// authenticated client for follow-up calls. <see cref="LoginCredentials.RememberMe"/>
+    /// is always sent (<c>false</c> when empty): 12 hours, or 30 days with
+    /// <c>true</c>. See <see cref="NorbixClientOptions.OnSessionToken"/> for
+    /// how a renewed token reaches the app.
     /// </summary>
     public async Task<LoginResponse> LoginAsync(
         LoginCredentials credentials,
@@ -230,6 +233,7 @@ public sealed partial class NorbixApiClient : IDisposable, IAsyncDisposable
     {
         ArgumentNullException.ThrowIfNull(credentials);
         if (string.IsNullOrEmpty(credentials.Provider)) credentials.Provider = "credentials";
+        credentials.RememberMe ??= false;
 
         var response = await _transport.SendAsync<LoginResponse>(
             new NorbixRequestSpec
