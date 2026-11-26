@@ -324,7 +324,6 @@ namespace Norbix.Sdk.Types.Api;
         public virtual long Used { get; set; }
         public virtual long Remaining { get; set; }
         public virtual bool Attachments { get; set; }
-        public virtual bool Rag { get; set; }
         public virtual bool Memory { get; set; }
     }
 
@@ -3258,6 +3257,25 @@ namespace Norbix.Sdk.Types.Api;
         public virtual string StartPath { get; set; }
     }
 
+    [DataContract]
+    public partial class UserAiPlanDto
+    {
+        [DataMember]
+        public virtual string UserId { get; set; }
+
+        [DataMember]
+        public virtual string? PlanId { get; set; }
+
+        [DataMember]
+        public virtual string? PlanName { get; set; }
+
+        [DataMember]
+        public virtual string Reason { get; set; }
+
+        [DataMember]
+        public virtual string? RoleId { get; set; }
+    }
+
     public partial class AiChatEntryWireDto
     {
         public virtual string Kind { get; set; }
@@ -5789,6 +5807,12 @@ namespace Norbix.Sdk.Types.Api;
 
         [DataMember]
         public virtual DateTime? To { get; set; }
+
+        ///<summary>
+        ///Only runs of this published workflow version (1, 2, …). Empty = every version.
+        ///</summary>
+        [DataMember]
+        public virtual int? WorkflowVersion { get; set; }
     }
 
     [NorbixRoute("/{version}/code/workflows/runs", "GET")]
@@ -6252,6 +6276,30 @@ namespace Norbix.Sdk.Types.Api;
     }
 
     ///<summary>
+    ///Reads which end-user AI plan one user gets and why
+    ///</summary>
+    [NorbixRoute("/{version}/membership/users/{userId}/ai-plan", "GET")]
+    public partial class GetUserAiPlan
+        : CodeMashRequestBase, INorbixRequest<GetUserAiPlanResponse>
+    {
+        ///<summary>
+        ///The human user id (ct_…).
+        ///</summary>
+        public virtual string UserId { get; set; }
+
+        ///<summary>
+        ///Database integration id. Optional — defaults to the request environment's default integration.
+        ///</summary>
+        public virtual string? DatabaseIntegrationId { get; set; }
+    }
+
+    public partial class GetUserAiPlanResponse
+        : ResponseBase
+    {
+        public virtual UserAiPlanDto? Item { get; set; }
+    }
+
+    ///<summary>
     ///Merge contacts
     ///</summary>
     [NorbixRoute("/{version}/membership/users/merge", "POST")]
@@ -6286,29 +6334,6 @@ namespace Norbix.Sdk.Types.Api;
         : ResponseBase
     {
         public virtual ContactRolesRepairDto? Result { get; set; }
-    }
-
-    ///<summary>
-    ///Sets or removes one user's own end-user AI plan
-    ///</summary>
-    [NorbixRoute("/{version}/membership/users/{userId}/ai-plan", "PUT")]
-    public partial class SetUserAiPlan
-        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
-    {
-        ///<summary>
-        ///The human user id (ct_…).
-        ///</summary>
-        public virtual string UserId { get; set; }
-
-        ///<summary>
-        ///The plan id (aip_…). Empty removes the user's own plan.
-        ///</summary>
-        public virtual string? PlanId { get; set; }
-
-        ///<summary>
-        ///Database integration id. Optional — defaults to the request environment's default integration.
-        ///</summary>
-        public virtual string? DatabaseIntegrationId { get; set; }
     }
 
     ///<summary>

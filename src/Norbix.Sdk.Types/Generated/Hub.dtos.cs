@@ -1273,9 +1273,6 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual bool Attachments { get; set; }
 
         [DataMember]
-        public virtual bool Rag { get; set; }
-
-        [DataMember]
         public virtual bool Memory { get; set; }
     }
 
@@ -1328,23 +1325,6 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember]
         public virtual long Credits { get; set; }
-    }
-
-    [DataContract]
-    public partial class AiUserPlanAssignmentDto
-    {
-        [DataMember]
-        public virtual string UserId { get; set; }
-
-        [DataMember]
-        public virtual string PlanId { get; set; }
-    }
-
-    [DataContract]
-    public partial class AiUserPlansDto
-    {
-        [DataMember]
-        public virtual List<AiUserPlanAssignmentDto> Users { get; set; } = [];
     }
 
     [DataContract]
@@ -1632,6 +1612,12 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember]
         public virtual FileResourceRefDto? Icon { get; set; }
+
+        [DataMember]
+        public virtual string? LogoEnv { get; set; }
+
+        [DataMember]
+        public virtual string? IconEnv { get; set; }
     }
 
     [DataContract]
@@ -1856,6 +1842,9 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember]
         public virtual FileResourceRefDto? Icon { get; set; }
+
+        [DataMember]
+        public virtual string? IconEnv { get; set; }
     }
 
     public partial class ProjectRegionDto
@@ -1992,6 +1981,25 @@ namespace Norbix.Sdk.Types.Hub;
     {
         [DataMember]
         public virtual Dictionary<DeliveryChannel, bool> DefaultDelivery { get; set; } = new();
+    }
+
+    [DataContract]
+    public partial class UserAiPlanDto
+    {
+        [DataMember]
+        public virtual string UserId { get; set; }
+
+        [DataMember]
+        public virtual string? PlanId { get; set; }
+
+        [DataMember]
+        public virtual string? PlanName { get; set; }
+
+        [DataMember]
+        public virtual string Reason { get; set; }
+
+        [DataMember]
+        public virtual string? RoleId { get; set; }
     }
 
     [DataContract]
@@ -2656,6 +2664,90 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember]
         public virtual long StepRuns { get; set; }
+    }
+
+    [DataContract]
+    public partial class TeamMemberDetailsDto
+    {
+        [DataMember]
+        public virtual string Id { get; set; }
+
+        [DataMember]
+        public virtual string? Email { get; set; }
+
+        [DataMember]
+        public virtual string? DisplayName { get; set; }
+
+        [DataMember]
+        public virtual string? FirstName { get; set; }
+
+        [DataMember]
+        public virtual string? LastName { get; set; }
+
+        [DataMember]
+        public virtual string? FullName { get; set; }
+
+        [DataMember]
+        public virtual string? Phone { get; set; }
+
+        [DataMember]
+        public virtual AuthStatus Status { get; set; }
+
+        [DataMember]
+        public virtual bool IsAccountOwner { get; set; }
+
+        [DataMember]
+        public virtual List<TeamMemberRoleDto> Roles { get; set; } = [];
+
+        [DataMember]
+        public virtual List<TeamMemberPushDeviceDto> PushDevices { get; set; } = [];
+
+        [DataMember]
+        public virtual DateTime CreatedOn { get; set; }
+    }
+
+    [DataContract]
+    public partial class TeamMemberPushDeviceDto
+    {
+        [DataMember]
+        public virtual string Id { get; set; }
+
+        [DataMember]
+        public virtual string DeviceOs { get; set; }
+
+        [DataMember]
+        public virtual string? DeviceName { get; set; }
+
+        [DataMember]
+        public virtual string? Brand { get; set; }
+
+        [DataMember]
+        public virtual string? ModelName { get; set; }
+
+        [DataMember]
+        public virtual string? OsName { get; set; }
+
+        [DataMember]
+        public virtual string? OsVersion { get; set; }
+
+        [DataMember]
+        public virtual string? AppVersion { get; set; }
+
+        [DataMember]
+        public virtual DateTime? UpdatedAtUtc { get; set; }
+    }
+
+    [DataContract]
+    public partial class TeamMemberRoleDto
+    {
+        [DataMember]
+        public virtual string RoleId { get; set; }
+
+        [DataMember]
+        public virtual List<string> Environments { get; set; } = [];
+
+        [DataMember]
+        public virtual List<string> Projects { get; set; } = [];
     }
 
     public partial class ActionPendingEntryWireDto
@@ -8481,6 +8573,43 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual decimal OutputCreditRate { get; set; }
     }
 
+    [DataContract]
+    public partial class LlmModelSuggestionDto
+    {
+        [DataMember]
+        public virtual string Id { get; set; }
+
+        [DataMember]
+        public virtual LlmProvider Provider { get; set; }
+
+        [DataMember]
+        public virtual string Vendor { get; set; }
+
+        [DataMember]
+        public virtual string ModelId { get; set; }
+
+        [DataMember]
+        public virtual string DisplayName { get; set; }
+
+        [DataMember]
+        public virtual string? Description { get; set; }
+
+        [DataMember]
+        public virtual List<string> Tags { get; set; } = [];
+
+        [DataMember]
+        public virtual int? ContextWindow { get; set; }
+
+        [DataMember]
+        public virtual int Order { get; set; }
+
+        [DataMember]
+        public virtual string? ModelsPageUrl { get; set; }
+
+        [DataMember]
+        public virtual string CheckedOn { get; set; }
+    }
+
     public partial class McpIntegrationDto
         : IntegrationDto
     {
@@ -9463,6 +9592,7 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual int? Deliveries { get; set; }
         public virtual string NorbixEvent { get; set; }
         public virtual DateTime At { get; set; }
+        public virtual string? TriggerRunId { get; set; }
     }
 
     public partial class PaymentsWebhookRunDetailsDto
@@ -9539,6 +9669,15 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember]
         public virtual List<ProjectHealthWarningDto> Warnings { get; set; } = [];
+
+        [DataMember]
+        public virtual int WarningsTotal { get; set; }
+
+        [DataMember]
+        public virtual int PageNumber { get; set; }
+
+        [DataMember]
+        public virtual int? PageSize { get; set; }
 
         [DataMember]
         public virtual ProjectHealthStatsDto Stats { get; set; }
@@ -9737,6 +9876,9 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember]
         public virtual IReadOnlyList<string>? Errors { get; set; }
+
+        [DataMember]
+        public virtual string? Detail { get; set; }
     }
 
     [DataContract]
@@ -11546,6 +11688,35 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual string? Phone { get; set; }
     }
 
+    [DataContract]
+    public partial class OnboardingEmailsResponse
+        : ResponseBase
+    {
+        [DataMember]
+        public virtual bool Stopped { get; set; }
+    }
+
+    [NorbixRoute("/{version}/account/emails/onboarding/{Token}", "GET")]
+    [DataContract]
+    public partial class OpenOnboardingEmailsLink
+        : RequestBase, INorbixRequest<OnboardingEmailsResponse>, INorbixOptionalAuth
+    {
+        [DataMember]
+        public virtual string Token { get; set; }
+    }
+
+    [NorbixRoute("/{version}/account/emails/onboarding/{Token}", "POST")]
+    [DataContract]
+    public partial class UseOnboardingEmailsLink
+        : RequestBase, INorbixRequest<OnboardingEmailsResponse>, INorbixOptionalAuth
+    {
+        [DataMember]
+        public virtual string Token { get; set; }
+
+        [DataMember]
+        public virtual string? Action { get; set; }
+    }
+
     [NorbixRoute("/{version}/account/userauth/email/confirm-verification", "POST")]
     [DataContract]
     public partial class AccountConfirmEmailVerificationRequest
@@ -12092,6 +12263,25 @@ namespace Norbix.Sdk.Types.Hub;
     }
 
     ///<summary>
+    ///Gets one team member: names, e-mail, phone, account roles and push devices
+    ///</summary>
+    [NorbixRoute("/{version}/account/team/member/{MemberId}", "GET")]
+    public partial class GetTeamMember
+        : RequestBase, INorbixRequest<GetTeamMemberResponse>
+    {
+        ///<summary>
+        ///The team member's id (usr_…).
+        ///</summary>
+        public virtual string MemberId { get; set; }
+    }
+
+    public partial class GetTeamMemberResponse
+        : ResponseBase
+    {
+        public virtual TeamMemberDetailsDto? Item { get; set; }
+    }
+
+    ///<summary>
     ///Removes a team member from the account
     ///</summary>
     [NorbixRoute("/{version}/account/team/member/{MemberId}", "DELETE")]
@@ -12236,7 +12426,7 @@ namespace Norbix.Sdk.Types.Hub;
     }
 
     ///<summary>
-    ///Updates a team member's display name and/or account roles
+    ///Updates a team member's display name, phone and/or account roles
     ///</summary>
     [NorbixRoute("/{version}/account/team/member", "PUT")]
     public partial class UpdateTeamMember
@@ -12256,6 +12446,11 @@ namespace Norbix.Sdk.Types.Hub;
         ///The member's account roles after the change — REPLACES the current ones. Omit to keep the roles; an empty list removes every account role (the member stays on the team).
         ///</summary>
         public virtual List<TeamMemberRoleInput>? Roles { get; set; }
+
+        ///<summary>
+        ///The member's phone in E.164 format (+ and the country code, then digits, e.g. +37060000000). Omit to keep it; an empty string removes it.
+        ///</summary>
+        public virtual string? Phone { get; set; }
     }
 
     [NorbixRoute("/{version}/account/projects/environments", "POST")]
@@ -12398,6 +12593,30 @@ namespace Norbix.Sdk.Types.Hub;
         ///</summary>
         [DataMember]
         public virtual int? PeriodDays { get; set; }
+
+        ///<summary>
+        ///Only problems of this severity: Warning or Error. Empty = both.
+        ///</summary>
+        [DataMember]
+        public virtual ProjectHealthSeverity? Severity { get; set; }
+
+        ///<summary>
+        ///Only problems of this module (Email, Files, Payments, …). Empty = every module.
+        ///</summary>
+        [DataMember]
+        public virtual ApplicationModule? Module { get; set; }
+
+        ///<summary>
+        ///The page of problems to return, 0-based. Used with pageSize.
+        ///</summary>
+        [DataMember]
+        public virtual int PageNumber { get; set; }
+
+        ///<summary>
+        ///Problems per page, 1 to 100. Empty = every matching problem. warningsTotal says how many match.
+        ///</summary>
+        [DataMember]
+        public virtual int? PageSize { get; set; }
     }
 
     [DataContract]
@@ -12747,21 +12966,6 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual ProjectAiUsageDto? Result { get; set; }
     }
 
-    ///<summary>
-    ///Lists the users that have their own end-user AI plan
-    ///</summary>
-    [NorbixRoute("/{version}/account/projects/{projectId}/ai/plans/users", "GET")]
-    public partial class GetProjectAiUserPlans
-        : CodeMashRequestBase, INorbixRequest<GetProjectAiUserPlansResponse>
-    {
-    }
-
-    public partial class GetProjectAiUserPlansResponse
-        : ResponseBase
-    {
-        public virtual AiUserPlansDto? Result { get; set; }
-    }
-
     public partial class ProjectAiAssistantRequestBase
         : CodeMashRequestBase
     {
@@ -12886,7 +13090,7 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual List<AiPlanRoleAssignmentDto>? Roles { get; set; }
 
         ///<summary>
-        ///Plan id (aip_…) of users with no per-user plan and no mapped role. Empty = no default.
+        ///Plan id (aip_…) of users with no mapped role. Empty = no default.
         ///</summary>
         public virtual string? DefaultPlanId { get; set; }
     }
@@ -13727,6 +13931,19 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual PaginatedResponse<LlmIntegrationListProjection>? List { get; set; }
     }
 
+    [NorbixRoute("/{version}/ai/integrations/llms/model-suggestions", "GET")]
+    public partial class GetLlmModelSuggestions
+        : CodeMashRequestBase, INorbixRequest<GetLlmModelSuggestionsResponse>
+    {
+        public virtual string? Provider { get; set; }
+    }
+
+    public partial class GetLlmModelSuggestionsResponse
+        : ResponseBase
+    {
+        public virtual List<LlmModelSuggestionDto> Items { get; set; } = [];
+    }
+
     [NorbixRoute("/{version}/ai/integrations/mcp/{id}", "GET")]
     public partial class GetMcpIntegration
         : CodeMashRequestBase, INorbixRequest<GetMcpIntegrationResponse>
@@ -14042,6 +14259,7 @@ namespace Norbix.Sdk.Types.Hub;
         public virtual string? UserCode { get; set; }
         public virtual string? VerificationUri { get; set; }
         public virtual string? VerificationUriComplete { get; set; }
+        public virtual string? SignInText { get; set; }
         public virtual int ExpiresIn { get; set; }
         public virtual int Interval { get; set; }
     }
@@ -15500,6 +15718,12 @@ namespace Norbix.Sdk.Types.Hub;
 
         [DataMember]
         public virtual DateTime? To { get; set; }
+
+        ///<summary>
+        ///Only runs of this published workflow version (1, 2, …). Empty = every version.
+        ///</summary>
+        [DataMember]
+        public virtual int? WorkflowVersion { get; set; }
     }
 
     [NorbixRoute("/{version}/code/workflows", "GET")]
@@ -15512,6 +15736,12 @@ namespace Norbix.Sdk.Types.Hub;
         ///</summary>
         [DataMember]
         public virtual bool? IsEnabled { get; set; }
+
+        ///<summary>
+        ///Only workflows whose name contains this text (any case). Empty = every workflow.
+        ///</summary>
+        [DataMember]
+        public virtual string? Search { get; set; }
     }
 
     [NorbixRoute("/{version}/code/workflows/schema", "GET")]
@@ -16319,6 +16549,30 @@ namespace Norbix.Sdk.Types.Hub;
     }
 
     ///<summary>
+    ///Reads which end-user AI plan one user gets and why
+    ///</summary>
+    [NorbixRoute("/{version}/membership/users/{userId}/ai-plan", "GET")]
+    public partial class GetUserAiPlan
+        : CodeMashRequestBase, INorbixRequest<GetUserAiPlanResponse>
+    {
+        ///<summary>
+        ///The human user id (ct_…).
+        ///</summary>
+        public virtual string UserId { get; set; }
+
+        ///<summary>
+        ///Database integration id. Optional — defaults to the request environment's default integration.
+        ///</summary>
+        public virtual string? DatabaseIntegrationId { get; set; }
+    }
+
+    public partial class GetUserAiPlanResponse
+        : ResponseBase
+    {
+        public virtual UserAiPlanDto? Item { get; set; }
+    }
+
+    ///<summary>
     ///Merge contacts
     ///</summary>
     [NorbixRoute("/{version}/membership/users/merge", "POST")]
@@ -16353,29 +16607,6 @@ namespace Norbix.Sdk.Types.Hub;
         : ResponseBase
     {
         public virtual ContactRolesRepairDto? Result { get; set; }
-    }
-
-    ///<summary>
-    ///Sets or removes one user's own end-user AI plan
-    ///</summary>
-    [NorbixRoute("/{version}/membership/users/{userId}/ai-plan", "PUT")]
-    public partial class SetUserAiPlan
-        : CodeMashRequestBase, INorbixRequest<EmptyResponse>
-    {
-        ///<summary>
-        ///The human user id (ct_…).
-        ///</summary>
-        public virtual string UserId { get; set; }
-
-        ///<summary>
-        ///The plan id (aip_…). Empty removes the user's own plan.
-        ///</summary>
-        public virtual string? PlanId { get; set; }
-
-        ///<summary>
-        ///Database integration id. Optional — defaults to the request environment's default integration.
-        ///</summary>
-        public virtual string? DatabaseIntegrationId { get; set; }
     }
 
     ///<summary>
