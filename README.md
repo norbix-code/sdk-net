@@ -122,7 +122,7 @@ using var asUser = new NorbixApiClient(new NorbixClientOptions
 });
 ```
 
-The swap happens only when the call sent the client's own `BearerToken`. A call made with an API key, or with no token, never swaps, and an empty header is ignored.
+The swap happens only when the call sent the client's own `BearerToken`. A call made with an API key, or with no token, never swaps, and an empty header is ignored. The swap changes only the client that made the call: a client made with `WithEnv`, `WithRegion`, `WithScope` or `WithLanguage` has its own copy of the token. Save the token from `OnSessionToken` and build later clients from the saved one.
 
 ### Social sign-in
 

@@ -42,6 +42,48 @@ public sealed class SessionTokenTests
     }
 
     [Test]
+    public async Task A_call_that_needs_a_token_swaps_too()
+    {
+        var seen = new List<string>();
+        using var fixture = NorbixTestFixture.Create(o =>
+        {
+            o.ApiKey = null;
+            o.BearerToken = "old-jwt";
+            o.OnSessionToken = seen.Add;
+        });
+        fixture.Respond("/count", new { count = 1 }, headers: FreshToken);
+
+        await fixture.Client.Database.CountAsync(new Norbix.Sdk.Types.Api.CountRequest { CollectionName = "c" });
+        await fixture.Client.Database.CountAsync(new Norbix.Sdk.Types.Api.CountRequest { CollectionName = "c" });
+
+        Assert.That(seen, Has.Count.EqualTo(1));
+        Assert.That(fixture.Client.Options.BearerToken, Is.EqualTo("fresh-jwt"));
+        Assert.That(fixture.LastRequest!.Headers["Authorization"], Is.EqualTo("Bearer fresh-jwt"));
+    }
+
+    [Test]
+    public async Task The_swap_stays_on_the_client_that_made_the_call()
+    {
+        // A With… clone has its own options: the parent keeps its token, and
+        // the app learns the new one from OnSessionToken.
+        var seen = new List<string>();
+        using var fixture = NorbixTestFixture.Create(o =>
+        {
+            o.ApiKey = null;
+            o.BearerToken = "old-jwt";
+            o.OnSessionToken = seen.Add;
+        });
+        fixture.Respond("/echo", new { }, headers: FreshToken);
+
+        using var test = fixture.Client.WithEnv("TEST");
+        await test.Echo.EchoAsync(new Norbix.Sdk.Types.Api.Echo());
+
+        Assert.That(seen, Has.Count.EqualTo(1));
+        Assert.That(test.Options.BearerToken, Is.EqualTo("fresh-jwt"));
+        Assert.That(fixture.Client.Options.BearerToken, Is.EqualTo("old-jwt"));
+    }
+
+    [Test]
     public async Task No_header_leaves_the_token_as_it_is()
     {
         var seen = new List<string>();
