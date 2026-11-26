@@ -27,6 +27,19 @@ public sealed class NorbixClientOptions
     /// <summary>Short-lived JWT bearer (or <c>NORBIX_BEARER_TOKEN</c> / <c>LoginAsync</c> on the client).</summary>
     public string? BearerToken { get; set; }
 
+    /// <summary>
+    /// Called with the new token when the gateway renews a signed-in user's
+    /// JWT. A project sign-in lasts 12 hours (30 days with
+    /// <c>RememberMe</c>), sliding, and never more than 90 days from the
+    /// sign-in. Past half its window an answer carries a fresh JWT in the
+    /// <c>norbix-session-token</c> header; the client then puts it in
+    /// <see cref="BearerToken"/> and calls this so the app can save it. Only
+    /// when the client sent its own <see cref="BearerToken"/> on that call:
+    /// an API-key call never swaps, and an empty header is ignored. Keep it
+    /// short; an exception from it is logged and does not fail the call.
+    /// </summary>
+    public Action<string>? OnSessionToken { get; set; }
+
     /// <summary>Project the SDK operates against. Required (or <c>NORBIX_PROJECT_ID</c>).</summary>
     public string? ProjectId { get; set; }
 
@@ -134,6 +147,7 @@ public sealed class NorbixClientOptions
             ApiVersion = ApiVersion,
             HubVersion = HubVersion,
             Timeout = Timeout,
+            OnSessionToken = OnSessionToken,
         };
 
         foreach (var (k, v) in DefaultHeaders)
