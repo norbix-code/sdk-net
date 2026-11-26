@@ -1,7 +1,7 @@
 ﻿{
   Target: Hub,
   Group: ai,
-  Count: 26,
+  Count: 27,
   Endpoints: [
     {
       Target: Hub,
@@ -373,6 +373,35 @@
           StartingAfter: cursor-start,
           EndingBefore: cursor-end
         },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: ai,
+      MethodName: GetLlmModelSuggestionsAsync,
+      RequestType: GetLlmModelSuggestions,
+      HttpMethod: GET,
+      Path: /{version}/ai/integrations/llms/model-suggestions,
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/ai/integrations/llms/model-suggestions,
+        Query: ?provider=test-provider&env=test-env,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        }
+      },
+      ResponseType: GetLlmModelSuggestionsResponse,
+      Response: {
+        Items: [
+          {}
+        ],
         ResponseStatus: {
           IsSuccess: true
         }

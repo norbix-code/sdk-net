@@ -174,6 +174,42 @@
     {
       Target: Hub,
       Group: membership,
+      MethodName: GetUserAiPlanAsync,
+      RequestType: GetUserAiPlan,
+      HttpMethod: GET,
+      Path: /{version}/membership/users/{userId}/ai-plan,
+      PathParams: [
+        userId
+      ],
+      IsAccountScoped: false,
+      IsUnauthenticated: false,
+      Sent: {
+        Method: GET,
+        Path: /v2/membership/users/{guid}/ai-plan,
+        Query: ?databaseIntegrationId={guid}&env=test-env,
+        Headers: {
+          Authorization: Bearer test-bearer,
+          norbix-account-id: test-account,
+          norbix-project-id: test-project
+        }
+      },
+      ResponseType: GetUserAiPlanResponse,
+      Response: {
+        Item: {
+          UserId: Guid_1,
+          PlanId: Guid_1,
+          PlanName: test-planName,
+          Reason: test-reason,
+          RoleId: Guid_1
+        },
+        ResponseStatus: {
+          IsSuccess: true
+        }
+      }
+    },
+    {
+      Target: Hub,
+      Group: membership,
       MethodName: MergeContactsAsync,
       RequestType: MergeContactsRequest,
       HttpMethod: POST,
@@ -237,40 +273,6 @@
           contactsWithoutLoginRoleIds: 7,
           legacyRoleNamesIgnored: 7
         },
-        ResponseStatus: {
-          IsSuccess: true
-        }
-      }
-    },
-    {
-      Target: Hub,
-      Group: membership,
-      MethodName: SetUserAiPlanAsync,
-      RequestType: SetUserAiPlan,
-      HttpMethod: PUT,
-      Path: /{version}/membership/users/{userId}/ai-plan,
-      PathParams: [
-        userId
-      ],
-      IsAccountScoped: false,
-      IsUnauthenticated: false,
-      Sent: {
-        Method: PUT,
-        Path: /v2/membership/users/{guid}/ai-plan,
-        Headers: {
-          Authorization: Bearer test-bearer,
-          Content-Type: application/json; charset=utf-8,
-          norbix-account-id: test-account,
-          norbix-project-id: test-project
-        },
-        Body: {
-          planId: Guid_1,
-          databaseIntegrationId: Guid_1,
-          env: test-env
-        }
-      },
-      ResponseType: EmptyResponse,
-      Response: {
         ResponseStatus: {
           IsSuccess: true
         }

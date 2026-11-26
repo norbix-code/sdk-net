@@ -106,6 +106,7 @@
         UserCode: test-userCode,
         VerificationUri: https://example.test/verificationUri,
         VerificationUriComplete: https://example.test/verificationUriComplete,
+        SignInText: test-signInText,
         ExpiresIn: 7,
         Interval: 7,
         ResponseStatus: {
